@@ -22,21 +22,21 @@ const MenuPage: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(() => 
+  const [isDarkMode, setIsDarkMode] = useState(() =>
     document.body.classList.contains('dark-theme')
   );
-  
+
   // Get theme from body class
   React.useEffect(() => {
     const observer = new MutationObserver(() => {
       setIsDarkMode(document.body.classList.contains('dark-theme'));
     });
-    
+
     observer.observe(document.body, {
       attributes: true,
       attributeFilter: ['class']
     });
-    
+
     return () => observer.disconnect();
   }, []);
 
@@ -55,90 +55,90 @@ const MenuPage: React.FC = () => {
     }
   };
   const menuItems: MenuItem[] = [
-    { 
+    {
       id: 'overview',
       label: 'Overview de cuentas',
-      icon: <LayoutDashboard size={32} className="text-blue-500" />,
+      icon: <LayoutDashboard size={35} className="text-blue-500" />,
       color: '',
       path: '/overview-main'
     },
-    { 
+    {
+      id: 'workhub',
+      label: 'WorkHub',
+      icon: <Users size={35} className="text-emerald-500" />,
+      color: ''
+    },
+    {
       id: 'trackline',
       label: 'TrackLine',
-      icon: <Briefcase size={32} className="text-red-500" />,
+      icon: <Briefcase size={35} className="text-red-500" />,
       color: '',
       path: '/construction'
     },
-    { 
-      id: 'workhub',
-      label: 'WorkHub',
-      icon: <Users size={32} className="text-emerald-500" />,
-      color: ''
-    },
-    { 
+    {
       id: 'sales-force',
       label: 'Sales Force',
-      icon: <DollarSign size={32} className="text-purple-500" />,
+      icon: <DollarSign size={35} className="text-purple-500" />,
       color: ''
     },
-    { 
+    {
       id: 'gestion-acuerdos',
       label: 'Gestión de Acuerdos',
-      icon: <FileText size={32} className="text-green-500" />,
+      icon: <FileText size={35} className="text-green-500" />,
       color: ''
     },
-    { 
+    {
       id: 'agenda',
       label: 'Agenda Espora',
-      icon: <Calendar size={32} className="text-yellow-500" />,
+      icon: <Calendar size={35} className="text-yellow-500" />,
       color: ''
     },
-    { 
+    {
       id: 'moneyflow',
       label: 'MoneyFlow',
-      icon: <Wallet size={32} className="text-blue-400" />,
+      icon: <Wallet size={35} className="text-blue-400" />,
       color: ''
     },
-    { 
+    {
       id: 'knowledge',
       label: 'Knowledge Base',
-      icon: <BookOpen size={32} className="text-orange-500" />,
+      icon: <BookOpen size={35} className="text-orange-500" />,
       color: ''
     },
-    { 
+    {
       id: 'people-ops',
       label: 'People Operations',
-      icon: <UserCog size={32} className="text-teal-500" />,
+      icon: <UserCog size={35} className="text-teal-500" />,
       color: ''
     },
-    { 
+    {
       id: 'chat',
       label: 'Espora Chat',
-      icon: <MessageSquare size={32} className="text-violet-500" />,
+      icon: <MessageSquare size={35} className="text-violet-500" />,
       color: ''
     },
-    { 
+    {
       id: 'boveda-cliente',
       label: 'Bóveda del Cliente',
-      icon: <FolderLock size={32} className="text-green-600" />,
+      icon: <FolderLock size={35} className="text-green-600" />,
       color: ''
     },
-    { 
+    {
       id: 'boveda-espora',
       label: 'Bóveda Espora',
-      icon: <Lock size={32} className="text-amber-500" />,
+      icon: <Lock size={35} className="text-amber-500" />,
       color: ''
     },
-    { 
+    {
       id: 'lab',
       label: 'Espora Lab',
-      icon: <Flask size={32} className="text-slate-500" />,
+      icon: <Flask size={35} className="text-slate-500" />,
       color: ''
     },
-    { 
+    {
       id: 'campus',
       label: 'Espora Campus',
-      icon: <GraduationCap size={32} className="text-red-600" />,
+      icon: <GraduationCap size={35} className="text-red-600" />,
       color: ''
     }
   ];
@@ -151,9 +151,9 @@ const MenuPage: React.FC = () => {
       <div className="menu-header">
         <div className="header-content">
           <Logo />
-          <ThemeToggle 
-            isDarkMode={isDarkMode} 
-            onToggle={handleThemeToggle} 
+          <ThemeToggle
+            isDarkMode={isDarkMode}
+            onToggle={handleThemeToggle}
           />
         </div>
       </div>
@@ -166,7 +166,7 @@ const MenuPage: React.FC = () => {
         {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
       </button>
 
-      <button 
+      <button
         className="logout-button"
         onClick={() => setShowLogoutDialog(true)}
       >

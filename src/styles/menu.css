@@ -15,20 +15,19 @@
 
 /* Light theme menu page */
 .menu-page.light-theme {
-  background: linear-gradient(135deg, 
-    #FDFDFE 0%, 
-    #F8F8F6 25%, 
-    #F5F4F6 50%, 
-    #D4EBF6 75%, 
-    #F5F4F6 100%
-  );
+  background: linear-gradient(135deg,
+      #FDFDFE 0%,
+      #F8F8F6 25%,
+      #F5F4F6 50%,
+      #D4EBF6 75%,
+      #F5F4F6 100%);
 }
 
 .menu-page.light-theme::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: 
+  background:
     radial-gradient(circle at 20% 20%, rgba(1, 113, 226, 0.08) 0%, transparent 50%),
     radial-gradient(circle at 80% 80%, rgba(212, 235, 246, 0.15) 0%, transparent 50%);
   pointer-events: none;
@@ -94,7 +93,7 @@
   color: #005bb5;
   border-color: #005bb5;
   transform: translateY(-1px);
-  box-shadow: 
+  box-shadow:
     0 8px 24px rgba(0, 0, 0, 0.15),
     0 0 20px rgba(1, 113, 226, 0.2);
 }
@@ -143,7 +142,7 @@
   color: #005bb5;
   border-color: #005bb5;
   transform: translateY(-1px);
-  box-shadow: 
+  box-shadow:
     0 8px 24px rgba(0, 0, 0, 0.15),
     0 0 20px rgba(1, 113, 226, 0.2);
 }
@@ -173,10 +172,10 @@
 .menu-item-wrapper {
   display: flex;
   flex-direction: column;
-  width: 130px;
+  width: 143px;
   backdrop-filter: blur(10px);
   border-radius: 16px;
-  padding: 0.75rem;
+  padding: 0.825rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
 }
@@ -230,8 +229,8 @@
 }
 
 .menu-item {
-  width: 70px;
-  height: 70px;
+  width: 77px;
+  height: 77px;
   margin: 0 auto;
   position: relative;
   border-radius: 12px;
@@ -241,7 +240,7 @@
   justify-content: center;
   gap: 0.25rem;
   cursor: pointer;
-  padding: 0.5rem;
+  padding: 0.55rem;
   position: relative;
   overflow: hidden;
   transform-style: preserve-3d;
@@ -263,6 +262,7 @@
   opacity: 1 !important;
   visibility: visible !important;
 }
+
 .menu-item-reflection {
   display: none;
 }
@@ -282,7 +282,7 @@
 }
 
 .menu-item-icon {
-  height: 35px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -294,13 +294,13 @@
 }
 
 .menu-item-label {
-  font-size: 0.9rem;
+  font-size: 0.99rem;
   text-align: center;
-  margin-top: 0.75rem;
+  margin-top: 0.825rem;
   line-height: 1.2;
   font-weight: 600;
-  max-width: 115px;
-  padding: 0 0.25rem;
+  max-width: 126px;
+  padding: 0 0.275rem;
   position: relative;
   z-index: 1;
   word-break: break-word;
