@@ -82,9 +82,9 @@ const MenuPage: React.FC = () => {
       color: ''
     },
     {
-      id: 'gestion-acuerdos',
-      label: 'Gestión de Acuerdos',
-      icon: <FileText size={35} className="text-green-500" />,
+      id: 'people-ops',
+      label: 'People Operations',
+      icon: <UserCog size={35} className="text-teal-500" />,
       color: ''
     },
     {
@@ -106,9 +106,9 @@ const MenuPage: React.FC = () => {
       color: ''
     },
     {
-      id: 'people-ops',
-      label: 'People Operations',
-      icon: <UserCog size={35} className="text-teal-500" />,
+      id: 'gestion-acuerdos',
+      label: 'Gestión de Acuerdos',
+      icon: <FileText size={35} className="text-green-500" />,
       color: ''
     },
     {
