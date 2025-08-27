@@ -10,6 +10,7 @@
 /* Dark theme footer styles for all containers */
 .overview-clean.dark-theme .clean-footer,
 .overview-main-page.dark-theme .clean-footer,
+.overview-page.dark-theme .clean-footer,
 .active-accounts-page.dark-theme .clean-footer,
 .inactive-accounts-page.dark-theme .clean-footer,
 .account-page.dark-theme .clean-footer,
@@ -23,6 +24,7 @@
 /* Light theme footer styles for all containers */
 .overview-clean.light-theme .clean-footer,
 .overview-main-page.light-theme .clean-footer,
+.overview-page.light-theme .clean-footer,
 .active-accounts-page.light-theme .clean-footer,
 .inactive-accounts-page.light-theme .clean-footer,
 .account-page.light-theme .clean-footer,
@@ -51,6 +53,7 @@
 /* Dark theme footer text */
 .overview-clean.dark-theme .footer-text,
 .overview-main-page.dark-theme .footer-text,
+.overview-page.dark-theme .footer-text,
 .active-accounts-page.dark-theme .footer-text,
 .inactive-accounts-page.dark-theme .footer-text,
 .account-page.dark-theme .footer-text,
@@ -63,6 +66,7 @@
 /* Light theme footer text */
 .overview-clean.light-theme .footer-text,
 .overview-main-page.light-theme .footer-text,
+.overview-page.light-theme .footer-text,
 .active-accounts-page.light-theme .footer-text,
 .inactive-accounts-page.light-theme .footer-text,
 .account-page.light-theme .footer-text,
@@ -88,6 +92,7 @@
 /* Dark theme logout button styles for all containers */
 .overview-clean.dark-theme .logout-btn,
 .overview-main-page.dark-theme .logout-btn,
+.overview-page.dark-theme .logout-btn,
 .active-accounts-page.dark-theme .logout-btn,
 .inactive-accounts-page.dark-theme .logout-btn,
 .account-page.dark-theme .logout-btn,
@@ -101,6 +106,7 @@
 
 .overview-clean.dark-theme .logout-btn:hover,
 .overview-main-page.dark-theme .logout-btn:hover,
+.overview-page.dark-theme .logout-btn:hover,
 .active-accounts-page.dark-theme .logout-btn:hover,
 .inactive-accounts-page.dark-theme .logout-btn:hover,
 .account-page.dark-theme .logout-btn:hover,
@@ -114,6 +120,7 @@
 /* Light theme logout button styles for all containers */
 .overview-clean.light-theme .logout-btn,
 .overview-main-page.light-theme .logout-btn,
+.overview-page.light-theme .logout-btn,
 .active-accounts-page.light-theme .logout-btn,
 .inactive-accounts-page.light-theme .logout-btn,
 .account-page.light-theme .logout-btn,
@@ -127,6 +134,7 @@
 
 .overview-clean.light-theme .logout-btn:hover,
 .overview-main-page.light-theme .logout-btn:hover,
+.overview-page.light-theme .logout-btn:hover,
 .active-accounts-page.light-theme .logout-btn:hover,
 .inactive-accounts-page.light-theme .logout-btn:hover,
 .account-page.light-theme .logout-btn:hover,

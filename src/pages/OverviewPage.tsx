@@ -8,7 +8,7 @@ import PageFooter from '@/components/generals/PageFooter';
 import CreateAccountModal from '@/components/CreateAccountModal';
 import SelectAccountModal from '@/components/SelectAccountModal';
 import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
-import '../styles/overview-clean.css';
+import '../styles/overview-page.css';
 
 const OverviewPage: React.FC = () => {
   const navigate = useNavigate();
@@ -86,7 +86,7 @@ const OverviewPage: React.FC = () => {
   ];
 
   return (
-    <div className={`overview-clean ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
+    <div className={`overview-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       <PageHeader
         title="Configuración de cuentas"
         subtitle="Crear y gestionar cuentas del sistema"
@@ -100,52 +100,37 @@ const OverviewPage: React.FC = () => {
       />
 
       {/* Main Content */}
-      <main className={`clean-main ${isVisible ? 'visible' : ''}`}>
-        <div className="content-container">
+      <main className={`overview-page-main-content ${isVisible ? 'visible' : ''}`}>
+        <div className="overview-page-content-container">
           {/* Configuration Options Grid */}
           <section className="actions-section">
-            <div className="actions-grid" style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '2rem',
-              maxWidth: '800px',
-              margin: '0 auto'
-            }}>
+            <div className="overview-page-grid">
               {configurationOptions.map((option, index) => (
                 <div
                   key={option.id}
-                  className="icloud-account-card"
+                  className={`overview-page-card ${option.id}`}
                   style={{
-                    animationDelay: `${index * 0.1}s`,
-                    position: 'relative',
-                    background: option.id === 'create-account'
-                      ? 'linear-gradient(135deg, #4FC3F7 0%, #29B6F6 25%, #03A9F4 50%, #0288D1 75%, #0277BD 100%)'
-                      : 'linear-gradient(135deg, #374151 0%, #1F2937 25%, #111827 50%, #0F172A 75%, #020617 100%)',
-                    boxShadow: option.id === 'create-account'
-                      ? '0 8px 32px rgba(3, 169, 244, 0.3), 0 4px 16px rgba(3, 169, 244, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1)'
-                      : '0 8px 32px rgba(55, 65, 81, 0.4), 0 4px 16px rgba(31, 41, 55, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)'
+                    animationDelay: `${index * 0.1}s`
                   }}
                   onClick={option.action}
                 >
-                  {/* User avatar circle */}
-                  <div className="user-avatar-circle">
-                    <div className="avatar-icon">
+                  {/* User Avatar */}
+                  <div className="overview-page-avatar">
+                    <div className="overview-page-avatar-icon">
                       {option.id === 'create-account' ? (
-                        <UserPlus size={24} color="rgba(255, 255, 255, 0.8)" />
+                        <UserPlus size={24} />
                       ) : (
-                        <Users size={24} color="rgba(255, 255, 255, 0.8)" />
+                        <Users size={24} />
                       )}
                     </div>
                   </div>
 
-                  {/* Account info */}
-                  <div className="account-info">
-                    <h3 className="account-name">{option.name}</h3>
-                  </div>
-
-                  {/* Position badge */}
-                  <div className="position-badge">
-                    {option.position}
+                  {/* Account Info */}
+                  <div className="overview-page-info">
+                    <h3 className="overview-page-name">{option.name}</h3>
+                    <div className="overview-page-position">
+                      {option.position}
+                    </div>
                   </div>
                 </div>
               ))}
