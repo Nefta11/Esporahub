@@ -344,7 +344,7 @@ const WorkHubPage: React.FC = () => {
           {/* Tab Navigation - Apple Style */}
           <section className="workhub-actions-section">
             <div className="workhub-section-header">
-              <h2>Centro de Trabajo</h2>
+              <h2>Mi WorkHub</h2>
               <p>Gestiona tus tareas y proyectos</p>
             </div>
 
@@ -495,7 +495,7 @@ const WorkHubPage: React.FC = () => {
                           top: 0,
                           background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
                           backdropFilter: 'blur(20px)'
-                        }}>Updates</th>
+                        }}>Actualizaciones</th>
                         <th style={{
                           padding: '16px 12px',
                           textAlign: 'left',
@@ -507,7 +507,7 @@ const WorkHubPage: React.FC = () => {
                           top: 0,
                           background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
                           backdropFilter: 'blur(20px)'
-                        }}>Subele...</th>
+                        }}>Nivel de Progreso</th>
                         <th style={{
                           padding: '16px 12px',
                           textAlign: 'left',
@@ -519,7 +519,7 @@ const WorkHubPage: React.FC = () => {
                           top: 0,
                           background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
                           backdropFilter: 'blur(20px)'
-                        }}>Fase</th>
+                        }}>Fase del Proyecto</th>
                         <th style={{
                           padding: '16px 12px',
                           textAlign: 'left',
@@ -531,7 +531,7 @@ const WorkHubPage: React.FC = () => {
                           top: 0,
                           background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
                           backdropFilter: 'blur(20px)'
-                        }}>Línea estratégica</th>
+                        }}>Línea Estratégica</th>
                         <th style={{
                           padding: '16px 12px',
                           textAlign: 'left',
@@ -555,7 +555,7 @@ const WorkHubPage: React.FC = () => {
                           top: 0,
                           background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
                           backdropFilter: 'blur(20px)'
-                        }}>Estatus</th>
+                        }}>Estado Actual</th>
                         <th style={{
                           padding: '16px 12px',
                           textAlign: 'left',
@@ -567,7 +567,7 @@ const WorkHubPage: React.FC = () => {
                           top: 0,
                           background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
                           backdropFilter: 'blur(20px)'
-                        }}>Gerente</th>
+                        }}>Gerente de Proyecto</th>
                         <th style={{
                           padding: '16px 12px',
                           textAlign: 'left',
@@ -579,7 +579,7 @@ const WorkHubPage: React.FC = () => {
                           top: 0,
                           background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
                           backdropFilter: 'blur(20px)'
-                        }}>Colaboradores</th>
+                        }}>Equipo de Trabajo</th>
                         <th style={{
                           padding: '16px 12px',
                           textAlign: 'left',
@@ -591,7 +591,7 @@ const WorkHubPage: React.FC = () => {
                           top: 0,
                           background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
                           backdropFilter: 'blur(20px)'
-                        }}>Nombre del colaborador</th>
+                        }}>Nombre del Colaborador</th>
                         <th style={{
                           padding: '16px 12px',
                           textAlign: 'left',
@@ -603,7 +603,7 @@ const WorkHubPage: React.FC = () => {
                           top: 0,
                           background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
                           backdropFilter: 'blur(20px)'
-                        }}>Perfil de colaborador</th>
+                        }}>Perfil Profesional</th>
                         <th style={{
                           padding: '16px 12px',
                           textAlign: 'left',
@@ -615,7 +615,7 @@ const WorkHubPage: React.FC = () => {
                           top: 0,
                           background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
                           backdropFilter: 'blur(20px)'
-                        }}>Solicitud y entrega</th>
+                        }}>Fechas de Entrega</th>
                         <th style={{
                           padding: '16px 12px',
                           textAlign: 'left',
@@ -627,7 +627,7 @@ const WorkHubPage: React.FC = () => {
                           top: 0,
                           background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
                           backdropFilter: 'blur(20px)'
-                        }}>Semana en curso</th>
+                        }}>Semana Actual</th>
                         <th style={{
                           padding: '16px 12px',
                           textAlign: 'left',
@@ -639,7 +639,7 @@ const WorkHubPage: React.FC = () => {
                           top: 0,
                           background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
                           backdropFilter: 'blur(20px)'
-                        }}>Tipo de item</th>
+                        }}>Tipo de Elemento</th>
                         <th style={{
                           padding: '16px 12px',
                           textAlign: 'left',
@@ -651,7 +651,7 @@ const WorkHubPage: React.FC = () => {
                           top: 0,
                           background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
                           backdropFilter: 'blur(20px)'
-                        }}>Cantidad V...</th>
+                        }}>Cantidad Total</th>
                         <th style={{
                           padding: '16px 12px',
                           textAlign: 'left',
@@ -663,7 +663,7 @@ const WorkHubPage: React.FC = () => {
                           top: 0,
                           background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
                           backdropFilter: 'blur(20px)'
-                        }}>Cantidad Pr...</th>
+                        }}>Cantidad en Proceso</th>
                         <th style={{
                           padding: '16px 12px',
                           textAlign: 'left',
@@ -675,7 +675,7 @@ const WorkHubPage: React.FC = () => {
                           top: 0,
                           background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
                           backdropFilter: 'blur(20px)'
-                        }}>Cantidad A...</th>
+                        }}>Cantidad Aprobada</th>
                         <th style={{
                           padding: '16px 12px',
                           textAlign: 'left',
@@ -687,7 +687,7 @@ const WorkHubPage: React.FC = () => {
                           top: 0,
                           background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
                           backdropFilter: 'blur(20px)'
-                        }}>Fecha de finalización</th>
+                        }}>Fecha de Finalización</th>
                         <th style={{
                           padding: '16px 12px',
                           textAlign: 'left',
@@ -699,7 +699,7 @@ const WorkHubPage: React.FC = () => {
                           top: 0,
                           background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
                           backdropFilter: 'blur(20px)'
-                        }}>Repositorio de co...</th>
+                        }}>Repositorio de Contenido</th>
                         <th style={{
                           padding: '16px 12px',
                           textAlign: 'left',
@@ -711,7 +711,7 @@ const WorkHubPage: React.FC = () => {
                           top: 0,
                           background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
                           backdropFilter: 'blur(20px)'
-                        }}>Repositorio firma...</th>
+                        }}>Repositorio de Firmas</th>
                         <th style={{
                           padding: '16px 12px',
                           textAlign: 'left',
@@ -723,7 +723,7 @@ const WorkHubPage: React.FC = () => {
                           top: 0,
                           background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
                           backdropFilter: 'blur(20px)'
-                        }}>Enlace de repositorio</th>
+                        }}>Enlaces de Repositorio</th>
                         <th style={{
                           padding: '16px 12px',
                           textAlign: 'left',

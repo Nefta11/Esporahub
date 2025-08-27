@@ -198,7 +198,9 @@
   opacity: 0;
   transform: translateY(20px);
   transition: all 0.6s ease;
-  padding: 1.5rem 0;
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .workhub-main.visible {
@@ -207,12 +209,13 @@
 }
 
 .workhub-content-container {
-  max-width: 1200px;
+  max-width: 1500px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 1rem;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
+  flex: 1;
 }
 
 /* Actions Section */
@@ -297,7 +300,7 @@
   border-radius: 18px;
   padding: 1.25rem 1.5rem;
   border: 1px solid rgba(0, 0, 0, 0.04);
-  box-shadow: 
+  box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.05),
     0 4px 16px rgba(0, 0, 0, 0.02);
   transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -325,7 +328,7 @@
 .workhub-page.dark-theme .workhub-task-item {
   background: rgba(44, 44, 46, 0.9);
   border-color: rgba(84, 84, 88, 0.2);
-  box-shadow: 
+  box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.2),
     0 4px 16px rgba(0, 0, 0, 0.08);
 }
@@ -336,7 +339,7 @@
 
 .workhub-task-item:hover {
   transform: none;
-  box-shadow: 
+  box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.08),
     0 4px 16px rgba(0, 0, 0, 0.04);
   border-color: rgba(0, 0, 0, 0.08);
@@ -347,7 +350,7 @@
 }
 
 .workhub-page.dark-theme .workhub-task-item:hover {
-  box-shadow: 
+  box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.25),
     0 4px 16px rgba(0, 0, 0, 0.1);
   border-color: rgba(84, 84, 88, 0.4);
@@ -356,7 +359,7 @@
 .workhub-task-item.completed {
   background: rgba(52, 199, 89, 0.1);
   border-color: rgba(52, 199, 89, 0.2);
-  box-shadow: 
+  box-shadow:
     0 1px 3px rgba(52, 199, 89, 0.1),
     0 4px 16px rgba(52, 199, 89, 0.05);
 }
@@ -508,7 +511,7 @@
   position: relative;
   flex-shrink: 0;
   min-width: 140px;
-  box-shadow: 
+  box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.05),
     0 4px 16px rgba(0, 0, 0, 0.03);
   overflow: hidden;
@@ -517,7 +520,7 @@
 .workhub-page.dark-theme .workhub-category-card {
   background: rgba(44, 44, 46, 0.85);
   border-color: rgba(84, 84, 88, 0.2);
-  box-shadow: 
+  box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.2),
     0 4px 16px rgba(0, 0, 0, 0.1);
 }
@@ -540,7 +543,7 @@
 
 .workhub-category-card:hover {
   transform: none;
-  box-shadow: 
+  box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.08),
     0 4px 16px rgba(0, 0, 0, 0.04);
 }
@@ -550,7 +553,7 @@
 }
 
 .workhub-page.dark-theme .workhub-category-card:hover {
-  box-shadow: 
+  box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.25),
     0 4px 16px rgba(0, 0, 0, 0.1);
 }
@@ -559,14 +562,14 @@
   background: rgba(0, 122, 255, 0.95);
   border-color: rgba(0, 122, 255, 0.6);
   transform: none;
-  box-shadow: 
+  box-shadow:
     0 2px 8px rgba(0, 122, 255, 0.2),
     0 1px 4px rgba(0, 122, 255, 0.1);
 }
 
 .workhub-page.dark-theme .workhub-category-card.active {
   background: rgba(0, 122, 255, 0.9);
-  box-shadow: 
+  box-shadow:
     0 2px 8px rgba(0, 122, 255, 0.25),
     0 1px 4px rgba(0, 122, 255, 0.15);
 }
@@ -599,7 +602,7 @@
   background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
   color: #007AFF;
   transform: none;
-  box-shadow: 
+  box-shadow:
     0 0 0 2px rgba(255, 255, 255, 0.3),
     0 2px 8px rgba(255, 255, 255, 0.15);
 }
@@ -798,93 +801,136 @@
   margin-top: auto;
 }
 
-/* Table Styles */
+/* Project Table Styles - Enhanced Design */
 .workhub-table-container {
-  border-radius: 16px;
-  padding: 2rem;
-  border: 1px solid;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.06);
   box-shadow:
-    0 4px 16px rgba(0, 0, 0, 0.15);
-  overflow: auto;
-  max-height: 600px;
+    0 4px 24px rgba(0, 0, 0, 0.04),
+    0 1px 6px rgba(0, 0, 0, 0.02);
+  overflow: hidden;
+  max-height: 60vh;
+  min-height: 50vh;
+  margin: 0;
 }
 
 .workhub-page.dark-theme .workhub-table-container {
-  background: rgba(28, 28, 30, 0.6);
-  border-color: rgba(84, 84, 88, 0.65);
-}
-
-.workhub-page.light-theme .workhub-table-container {
-  background: rgba(255, 255, 255, 0.8);
-  border-color: rgba(0, 0, 0, 0.1);
+  background: rgba(28, 28, 30, 0.95);
+  border-color: rgba(84, 84, 88, 0.3);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.2),
+    0 1px 6px rgba(0, 0, 0, 0.1);
 }
 
 .workhub-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  fontSize: 14px;
+  font-size: 15px;
   min-width: 2000px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
 }
 
 .workhub-table th {
-  padding: 16px 12px;
+  padding: 20px 16px;
   text-align: left;
   font-weight: 600;
-  fontSize: 13px;
+  font-size: 14px;
   position: sticky;
   top: 0;
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 10;
+  letter-spacing: -0.2px;
 }
 
 .workhub-page.dark-theme .workhub-table th {
-  color: rgba(255, 255, 255, 0.8);
-  border-bottom: 1px solid rgba(84, 84, 88, 0.65);
-  background: rgba(28, 28, 30, 0.9);
+  color: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(84, 84, 88, 0.4);
+  background: rgba(28, 28, 30, 0.95);
 }
 
 .workhub-page.light-theme .workhub-table th {
-  color: #1a202c;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.9);
+  color: #1d1d1f;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.95);
 }
 
 .workhub-table td {
-  padding: 12px;
+  padding: 16px;
+  border-bottom: 1px solid;
+  vertical-align: middle;
 }
 
 .workhub-table tr {
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
 }
 
-.workhub-page.dark-theme .workhub-table tr {
-  border-bottom: 1px solid rgba(84, 84, 88, 0.65);
+.workhub-table tbody tr:hover {
+  background: rgba(0, 122, 255, 0.04);
+  transform: none;
 }
 
-.workhub-page.light-theme .workhub-table tr {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+.workhub-page.dark-theme .workhub-table td {
+  border-bottom-color: rgba(84, 84, 88, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.workhub-page.light-theme .workhub-table td {
+  border-bottom-color: rgba(0, 0, 0, 0.06);
+  color: #1d1d1f;
+}
+
+.workhub-page.dark-theme .workhub-table tbody tr:hover {
+  background: rgba(0, 122, 255, 0.08);
+}
+
+.workhub-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 .workhub-table input {
   width: 100%;
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
   border: 1px solid;
-  fontSize: 14px;
+  font-size: 14px;
   outline: none;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
+  font-family: inherit;
+  background: transparent;
+}
+
+.workhub-table input:focus {
+  border-color: #007AFF;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
 }
 
 .workhub-page.dark-theme .workhub-table input {
-  border-color: rgba(118, 118, 128, 0.24);
-  background: rgba(118, 118, 128, 0.12);
+  border-color: rgba(84, 84, 88, 0.3);
   color: white;
+}
+
+.workhub-page.dark-theme .workhub-table input:focus {
+  border-color: #0A84FF;
+  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.15);
 }
 
 .workhub-page.light-theme .workhub-table input {
   border-color: rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.8);
-  color: #1a202c;
+  color: #1d1d1f;
+}
+
+.workhub-page.light-theme .workhub-table input::placeholder {
+  color: rgba(60, 60, 67, 0.6);
+}
+
+.workhub-page.dark-theme .workhub-table input::placeholder {
+  color: rgba(235, 235, 245, 0.6);
 }
 
 /* Footer */
