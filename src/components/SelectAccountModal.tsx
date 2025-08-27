@@ -24,7 +24,7 @@ const SelectAccountModal: React.FC<SelectAccountModalProps> = ({ isOpen, onClose
     const select = document.getElementById('accountSelect') as HTMLSelectElement;
     const selectedOption = select.options[select.selectedIndex];
     onClose();
-    navigate('/account', { state: { clientName: selectedOption.text } });
+    navigate('/acuerdo-colaboracion', { state: { clientName: selectedOption.text } });
   };
 
   const accounts = [

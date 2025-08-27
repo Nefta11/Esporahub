@@ -77,7 +77,7 @@ const ClientDashboardPage: React.FC = () => {
       label: 'EHO',
       icon: <Settings size={32} />,
       color: '#AF52DE',
-      path: '/account'
+      path: '/acuerdo-colaboracion'
     },
     {
       id: 'presentacion',
@@ -102,7 +102,7 @@ const ClientDashboardPage: React.FC = () => {
         navigate('/expediente-electronico', { state: { clientName } });
         break;
       case 'acuerdo':
-        navigate('/account', { state: { clientName } });
+        navigate('/acuerdo-colaboracion', { state: { clientName } });
         break;
       case 'eho':
         navigate('/eho', { state: { clientName } });

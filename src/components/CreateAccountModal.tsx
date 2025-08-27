@@ -34,7 +34,7 @@ const CreateAccountModal: React.FC<CreateAccountModalProps> = ({ isOpen, onClose
     e.preventDefault();
     onCreateAccount?.(formData.clientName);
     onClose();
-    navigate('/account', { state: { clientName: formData.clientName } });
+    navigate('/acuerdo-colaboracion', { state: { clientName: formData.clientName } });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

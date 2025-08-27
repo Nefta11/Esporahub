@@ -4,7 +4,7 @@ import PageHeader from '@/components/generals/PageHeader';
 import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
 import { useAuthStore } from '@/stores/authStore';
 import { hasPermission } from '@/data/users';
-import '@/styles/account.css';
+import '@/styles/collaboration-agreement.css';
 import { storage } from '@/utils/storage';
 
 interface FormData {
@@ -16,7 +16,7 @@ interface FormData {
   subtotal: number;
 }
 
-const AccountPage: React.FC = () => {
+const CollaborationAgreementPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isVisible, setIsVisible] = useState(false);
@@ -498,4 +498,4 @@ const AccountPage: React.FC = () => {
   );
 };
 
-export default AccountPage; 
+export default CollaborationAgreementPage; 

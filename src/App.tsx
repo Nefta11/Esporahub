@@ -6,7 +6,7 @@ import LoginPage from '@/pages/auth/LoginPage';
 import MenuPage from '@/pages/MenuPage';
 import OverviewMainPage from '@/pages/overview/OverviewMainPage';
 import OverviewPage from '@/pages/OverviewPage';
-import AccountPage from '@/pages/overview/clientDashboard/AccountPage';
+import CollaborationAgreementPage from '@/pages/overview/clientDashboard/CollaborationAgreementPage';
 import ConstructionPage from '@/pages/ConstructionPage';
 import EHOPage from '@/pages/overview/clientDashboard/EHOPage';
 import SelectAccountPage from '@/pages/SelectAccountPage';
@@ -80,9 +80,9 @@ const AnimatedRoutes = () => {
               <InactiveAccountsPage />
             </ProtectedRoute>
           } />
-          <Route path="/account" element={
+          <Route path="/acuerdo-colaboracion" element={
             <ProtectedRoute>
-              <AccountPage />
+              <CollaborationAgreementPage />
             </ProtectedRoute>
           } />
           <Route path="/construction" element={
