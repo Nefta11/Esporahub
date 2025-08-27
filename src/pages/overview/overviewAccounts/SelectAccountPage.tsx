@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/generals/PageHeader';
 import PageFooter from '@/components/generals/PageFooter';
-import '../styles/select-account.css';
+import '@/styles/overview/select-account.css';
 
 const SelectAccountPage: React.FC = () => {
   const navigate = useNavigate();

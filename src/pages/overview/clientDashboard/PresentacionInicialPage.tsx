@@ -157,7 +157,7 @@ const PresentacionInicialPage: React.FC = () => {
           { label: 'Menú', onClick: () => navigate('/dashboard') },
           { label: 'Overview', onClick: () => navigate('/overview-menu') },
           { label: 'Configuración', onClick: () => navigate('/overview') },
-          { label: 'Seleccionar', onClick: () => navigate('/select-account') },
+          { label: 'Seleccionar', onClick: () => navigate('/seleccionar-cuenta') },
           { label: clientName ? clientName.split(' - ')[0] : 'Cliente', onClick: () => navigate('/cliente-dashboard', { state: { clientName } }) },
         ]}
         isDarkMode={isDarkMode}

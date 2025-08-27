@@ -9,7 +9,7 @@ import OverviewPage from '@/pages/OverviewPage';
 import CollaborationAgreementPage from '@/pages/overview/clientDashboard/CollaborationAgreementPage';
 import ConstructionPage from '@/pages/ConstructionPage';
 import EHOPage from '@/pages/overview/clientDashboard/EHOPage';
-import SelectAccountPage from '@/pages/SelectAccountPage';
+import SelectAccountPage from '@/pages/overview/overviewAccounts/SelectAccountPage';
 import ClientDashboardPage from '@/pages/overview/clientDashboard/ClientDashboardPage';
 import ActiveAccountsPage from '@/pages/overview/overviewAccounts/ActiveAccountsPage';
 import InactiveAccountsPage from '@/pages/overview/overviewAccounts/InactiveAccountsPage';
@@ -60,7 +60,7 @@ const AnimatedRoutes = () => {
               <OverviewPage />
             </ProtectedRoute>
           } />
-          <Route path="/select-account" element={
+          <Route path="/seleccionar-cuenta" element={
             <ProtectedRoute>
               <SelectAccountPage />
             </ProtectedRoute>

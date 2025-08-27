@@ -43,7 +43,7 @@ const ChecklistHeader: React.FC<ChecklistHeaderProps> = ({
                     </button>
                     <span className="breadcrumb-separator">/</span>
                     <button
-                        onClick={() => navigate('/select-account')}
+                        onClick={() => navigate('/seleccionar-cuenta')}
                         className="breadcrumb-link"
                     >
                         Seleccionar

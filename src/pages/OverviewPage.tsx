@@ -62,7 +62,7 @@ const OverviewPage: React.FC = () => {
   };
 
   const handleSelectAccountClick = () => {
-    navigate('/select-account');
+    navigate('/seleccionar-cuenta');
   };
 
   // Opciones de configuración de cuentas
