@@ -307,7 +307,7 @@ const AccountPage: React.FC = () => {
         // Guardar el estado actual de los datos del formulario
         storage.setItem('formData', formData);
 
-        navigate('/EHO-Page', {
+        navigate('/eho', {
           state: {
             clientName,
             selectedItems: checkedItems,

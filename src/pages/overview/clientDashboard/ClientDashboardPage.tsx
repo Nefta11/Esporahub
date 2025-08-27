@@ -105,7 +105,7 @@ const ClientDashboardPage: React.FC = () => {
         navigate('/account', { state: { clientName } });
         break;
       case 'eho':
-        navigate('/EHO-Page', { state: { clientName } });
+        navigate('/eho', { state: { clientName } });
         break;
       case 'presentacion':
         navigate('/presentacion-inicial', { state: { clientName } });

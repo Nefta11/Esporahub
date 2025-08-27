@@ -100,7 +100,7 @@ const AnimatedRoutes = () => {
               <PresentacionInicialPage />
             </ProtectedRoute>
           } />
-          <Route path="/EHO-Page" element={
+          <Route path="/eho" element={
             <ProtectedRoute>
               <EHOPage />
             </ProtectedRoute>
