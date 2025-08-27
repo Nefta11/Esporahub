@@ -164,8 +164,8 @@
 /* Actions Grid */
 .overview-actions-grid {
   display: grid;
-  grid-template-columns: repeat(3, 270px);
-  gap: 2rem;
+  grid-template-columns: repeat(3, 260px);
+  gap: 3.5rem;
   justify-content: center;
   max-width: 900px;
   margin: 0 auto;
