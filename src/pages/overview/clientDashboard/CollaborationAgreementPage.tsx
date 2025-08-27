@@ -338,7 +338,7 @@ const CollaborationAgreementPage: React.FC = () => {
           { label: 'Menú', onClick: () => navigate('/dashboard') },
           { label: 'Overview', onClick: () => navigate('/overview-menu') },
           { label: 'Configuración', onClick: () => navigate('/overview') },
-          { label: cleanClientName, onClick: () => navigate('/client-dashboard', { state: { clientName } }) }
+          { label: cleanClientName, onClick: () => navigate('/cliente-dashboard', { state: { clientName } }) }
         ]}
         isDarkMode={isDarkMode}
         onThemeToggle={handleThemeToggle}
@@ -350,7 +350,7 @@ const CollaborationAgreementPage: React.FC = () => {
         isOpen={showAccessDeniedModal}
         onClose={() => {
           setShowAccessDeniedModal(false);
-          navigate('/client-dashboard', { state: { clientName } });
+          navigate('/cliente-dashboard', { state: { clientName } });
         }}
         featureName="Acuerdo de Colaboración"
       />

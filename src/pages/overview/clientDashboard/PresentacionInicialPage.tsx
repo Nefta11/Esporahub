@@ -158,7 +158,7 @@ const PresentacionInicialPage: React.FC = () => {
           { label: 'Overview', onClick: () => navigate('/overview-menu') },
           { label: 'Configuración', onClick: () => navigate('/overview') },
           { label: 'Seleccionar', onClick: () => navigate('/select-account') },
-          { label: clientName ? clientName.split(' - ')[0] : 'Cliente', onClick: () => navigate('/client-dashboard', { state: { clientName } }) },
+          { label: clientName ? clientName.split(' - ')[0] : 'Cliente', onClick: () => navigate('/cliente-dashboard', { state: { clientName } }) },
         ]}
         isDarkMode={isDarkMode}
         onThemeToggle={handleThemeToggle}
@@ -304,7 +304,7 @@ const PresentacionInicialPage: React.FC = () => {
         isOpen={showAccessDeniedModal}
         onClose={() => {
           setShowAccessDeniedModal(false);
-          navigate('/client-dashboard', { state: { clientName } });
+          navigate('/cliente-dashboard', { state: { clientName } });
         }}
         featureName="Presentación Inicial"
       />

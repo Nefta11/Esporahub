@@ -65,7 +65,7 @@ const AnimatedRoutes = () => {
               <SelectAccountPage />
             </ProtectedRoute>
           } />
-          <Route path="/client-dashboard" element={
+          <Route path="/cliente-dashboard" element={
             <ProtectedRoute>
               <ClientDashboardPage />
             </ProtectedRoute>

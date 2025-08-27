@@ -60,7 +60,7 @@ const SelectAccountPage: React.FC = () => {
   });
 
   const handleAccountSelect = (accountName: string, position: string) => {
-    navigate('/client-dashboard', {
+    navigate('/cliente-dashboard', {
       state: {
         clientName: `${accountName} - ${position}`
       }

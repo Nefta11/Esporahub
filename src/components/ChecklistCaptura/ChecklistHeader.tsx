@@ -50,7 +50,7 @@ const ChecklistHeader: React.FC<ChecklistHeaderProps> = ({
                     </button>
                     <span className="breadcrumb-separator">/</span>
                     <button
-                        onClick={() => navigate('/client-dashboard', { state: { clientName } })}
+                        onClick={() => navigate('/cliente-dashboard', { state: { clientName } })}
                         className="breadcrumb-link"
                     >
                         {clientName ? clientName.split(' - ')[0] : 'Cliente'}
