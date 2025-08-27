@@ -15,7 +15,7 @@ import ActiveAccountsPage from '@/pages/ActiveAccountsPage';
 import InactiveAccountsPage from '@/pages/InactiveAccountsPage';
 import ExpedienteElectronicoPage from '@/pages/ExpedienteElectronicoPage';
 import PresentacionInicialPage from '@/pages/PresentacionInicialPage';
-import WorkHubPage from '@/pages/WorkHubPage';
+import WorkHubPage from '@/pages/worhub/WorkHubPage';
 import '@/styles/global.css';
 
 const AnimatedRoutes = () => {
