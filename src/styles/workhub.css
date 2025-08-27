@@ -837,7 +837,7 @@
 
 .workhub-table th {
   padding: 20px 16px;
-  text-align: left;
+  text-align: center;
   font-weight: 600;
   font-size: 14px;
   position: sticky;
@@ -864,6 +864,7 @@
   padding: 16px;
   border-bottom: 1px solid;
   vertical-align: middle;
+  text-align: center;
 }
 
 .workhub-table tr {
