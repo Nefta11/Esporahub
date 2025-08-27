@@ -4,7 +4,7 @@ import PageHeader from '@/components/generals/PageHeader';
 import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
 import { useAuthStore } from '@/stores/authStore';
 import { hasPermission } from '@/data/users';
-import '../styles/account.css';
+import '@/styles/account.css';
 import { storage } from '@/utils/storage';
 
 interface FormData {
@@ -307,7 +307,7 @@ const AccountPage: React.FC = () => {
         // Guardar el estado actual de los datos del formulario
         storage.setItem('formData', formData);
 
-        navigate('/checklist-captura', {
+        navigate('/EHO-Page', {
           state: {
             clientName,
             selectedItems: checkedItems,

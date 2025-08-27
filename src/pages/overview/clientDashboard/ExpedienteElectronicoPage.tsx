@@ -6,7 +6,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { hasPermission } from '@/data/users';
 import PageFooter from '@/components/generals/PageFooter';
 import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
-import '../styles/expediente-electronico.css';
+import '@/styles/expediente-electronico.css';
 
 interface FormData {
   // Datos de registro

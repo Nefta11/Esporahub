@@ -6,15 +6,15 @@ import LoginPage from '@/pages/auth/LoginPage';
 import MenuPage from '@/pages/MenuPage';
 import OverviewMainPage from '@/pages/overview/OverviewMainPage';
 import OverviewPage from '@/pages/OverviewPage';
-import AccountPage from '@/pages/AccountPage';
+import AccountPage from '@/pages/overview/clientDashboard/AccountPage';
 import ConstructionPage from '@/pages/ConstructionPage';
-import ChecklistCapturaPage from '@/pages/ChecklistCapturaPage';
+import EHOPage from '@/pages/overview/clientDashboard/EHOPage';
 import SelectAccountPage from '@/pages/SelectAccountPage';
-import ClientDashboardPage from '@/pages/ClientDashboardPage';
+import ClientDashboardPage from '@/pages/overview/clientDashboard/ClientDashboardPage';
 import ActiveAccountsPage from '@/pages/ActiveAccountsPage';
 import InactiveAccountsPage from '@/pages/InactiveAccountsPage';
-import ExpedienteElectronicoPage from '@/pages/ExpedienteElectronicoPage';
-import PresentacionInicialPage from '@/pages/PresentacionInicialPage';
+import ExpedienteElectronicoPage from '@/pages/overview/clientDashboard/ExpedienteElectronicoPage';
+import PresentacionInicialPage from '@/pages/overview/clientDashboard/PresentacionInicialPage';
 import WorkHubPage from '@/pages/worhub/WorkHubPage';
 import '@/styles/global.css';
 
@@ -100,9 +100,9 @@ const AnimatedRoutes = () => {
               <PresentacionInicialPage />
             </ProtectedRoute>
           } />
-          <Route path="/checklist-captura" element={
+          <Route path="/EHO-Page" element={
             <ProtectedRoute>
-              <ChecklistCapturaPage />
+              <EHOPage />
             </ProtectedRoute>
           } />
           <Route path="/workhub" element={

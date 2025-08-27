@@ -6,7 +6,7 @@ import { hasPermission } from '@/data/users';
 import PageHeader from '@/components/generals/PageHeader';
 import PageFooter from '@/components/generals/PageFooter';
 import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
-import '../styles/client-dashboard.css';
+import '@/styles/client-dashboard.css';
 
 const ClientDashboardPage: React.FC = () => {
   const navigate = useNavigate();
@@ -105,7 +105,7 @@ const ClientDashboardPage: React.FC = () => {
         navigate('/account', { state: { clientName } });
         break;
       case 'eho':
-        navigate('/checklist-captura', { state: { clientName } });
+        navigate('/EHO-Page', { state: { clientName } });
         break;
       case 'presentacion':
         navigate('/presentacion-inicial', { state: { clientName } });
