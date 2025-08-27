@@ -159,7 +159,6 @@ const PresentacionInicialPage: React.FC = () => {
           { label: 'Configuración', onClick: () => navigate('/overview') },
           { label: 'Seleccionar', onClick: () => navigate('/select-account') },
           { label: clientName ? clientName.split(' - ')[0] : 'Cliente', onClick: () => navigate('/client-dashboard', { state: { clientName } }) },
-          { label: 'presentacion-inicial', onClick: () => {} }
         ]}
         isDarkMode={isDarkMode}
         onThemeToggle={handleThemeToggle}
