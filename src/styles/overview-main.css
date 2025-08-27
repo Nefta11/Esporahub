@@ -164,10 +164,10 @@
 /* Actions Grid */
 .overview-actions-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 270px);
   gap: 2rem;
   justify-content: center;
-  max-width: 1000px;
+  max-width: 900px;
   margin: 0 auto;
   align-items: stretch;
 }
@@ -298,21 +298,21 @@
 /* Notification Badge */
 .overview-notification-badge {
   position: absolute;
-  top: -6px;
-  right: -6px;
+  top: -10px;
+  right: 59px;
   background: #FF3B30;
   color: white;
-  font-size: 11px;
-  font-weight: 600;
-  min-width: 20px;
-  min-height: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 22px;
+  min-height: 22px;
   padding: 0 6px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 2px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 2px 6px rgba(255, 59, 48, 0.3);
+  box-shadow: 0 2px 8px rgba(255, 59, 48, 0.4);
   z-index: 5;
 }
 
@@ -392,7 +392,7 @@
 @media (max-width: 900px) {
   .overview-actions-grid {
     grid-template-columns: 1fr;
-    max-width: 400px;
+    max-width: 320px;
   }
 }
 
