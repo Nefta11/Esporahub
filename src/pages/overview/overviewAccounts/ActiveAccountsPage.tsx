@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { User } from 'lucide-react';
 import PageHeader from '@/components/generals/PageHeader';
 import PageFooter from '@/components/generals/PageFooter';
-import '@/styles/active-accounts.css';
+import '@/styles/overview/active-accounts.css';
 
 const ActiveAccountsPage: React.FC = () => {
   const navigate = useNavigate();
