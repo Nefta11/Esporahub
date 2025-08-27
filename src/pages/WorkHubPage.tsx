@@ -8,7 +8,7 @@ import UserAvatar from '@/components/generals/UserAvatar';
 import ThemeToggle from '@/components/generals/ThemeToggle';
 import { storage } from '@/utils/storage';
 import InputModal from '@/components/generals/InputModal';
-import '../styles/overview-clean.css';
+import '../styles/workhub.css';
 
 interface TaskAssignment {
   itemId: string;
@@ -306,29 +306,29 @@ const WorkHubPage: React.FC = () => {
   };
 
   return (
-    <div className={`overview-clean ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
+    <div className={`workhub-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       {/* Clean Header */}
-      <header className="clean-header">
-        <div className="header-content">
-          <div className="header-left">
+      <header className="workhub-header">
+        <div className="workhub-header-content">
+          <div className="workhub-header-left">
             <button
               onClick={() => navigate('/dashboard')}
-              className="back-button"
+              className="workhub-back-button"
             >
               <ArrowLeft size={20} />
               <span>Menú</span>
             </button>
           </div>
 
-          <div className="header-center">
+          <div className="workhub-header-center">
             <Logo />
-            <div className="header-title">
+            <div className="workhub-header-title">
               <h1>WorkHub</h1>
               <p>Centro de colaboración y gestión de tareas</p>
             </div>
           </div>
 
-          <div className="header-right">
+          <div className="workhub-header-right">
             <UserAvatar showName size="md" />
             <ThemeToggle
               isDarkMode={isDarkMode}
@@ -339,11 +339,11 @@ const WorkHubPage: React.FC = () => {
       </header>
 
       {/* Main Content */}
-      <main className={`clean-main ${isVisible ? 'visible' : ''}`}>
-        <div className="content-container">
+      <main className={`workhub-main ${isVisible ? 'visible' : ''}`}>
+        <div className="workhub-content-container">
           {/* Tab Navigation - Apple Style */}
-          <section className="actions-section">
-            <div className="section-header">
+          <section className="workhub-actions-section">
+            <div className="workhub-section-header">
               <h2>Centro de Trabajo</h2>
               <p>Gestiona tus tareas y proyectos</p>
             </div>
@@ -407,224 +407,81 @@ const WorkHubPage: React.FC = () => {
 
             {/* Time Categories - Solo mostrar cuando el tab activo es 'tareas' */}
             {activeTab === 'tareas' && (
-              <div style={{ marginBottom: '2rem' }}>
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-                  gap: '1rem',
-                  maxWidth: '1200px',
-                  margin: '0 auto'
-                }}>
-                  {timeCategories.map(category => (
-                    <div
-                      key={category.id}
-                      className="action-card"
-                      style={{
-                        cursor: 'pointer',
-                        position: 'relative',
-                        ...(selectedCategory === category.id ? {
-                          background: isDarkMode
-                            ? 'rgba(0, 122, 255, 0.2)'
-                            : 'rgba(0, 122, 255, 0.1)',
-                          borderColor: isDarkMode
-                            ? 'rgba(0, 122, 255, 0.4)'
-                            : 'rgba(0, 122, 255, 0.3)',
-                          transform: 'translateY(-2px)',
-                          boxShadow: isDarkMode
-                            ? '0 8px 25px rgba(0, 122, 255, 0.3)'
-                            : '0 8px 25px rgba(0, 122, 255, 0.2)'
-                        } : {})
-                      }}
-                      onClick={() => handleCategoryClick(category.id)}
-                    >
-                      <div className="card-header">
-                        <div
-                          className="card-icon"
-                          style={{
-                            backgroundColor: getTaskCountForCategory(category.id) === 0
-                              ? (isDarkMode ? '#8E8E93' : '#8E8E93')
-                              : '#007AFF'
-                          }}
-                        >
-                          {category.icon}
-                        </div>
-                        {getTaskCountForCategory(category.id) > 0 && (
-                          <div className="card-badge">
-                            {getTaskCountForCategory(category.id)}
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="card-content">
-                        <h3>{category.label}</h3>
-                        <p>{getTaskCountForCategory(category.id)} tareas</p>
-                      </div>
-
-                      {selectedCategory === category.id && (
-                        <div style={{
-                          position: 'absolute',
-                          top: '8px',
-                          right: '8px',
-                          color: '#007AFF',
-                          background: 'rgba(0, 122, 255, 0.1)',
-                          borderRadius: '50%',
-                          padding: '4px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}>
-                          <CheckCircle size={16} />
-                        </div>
-                      )}
+              <div className="workhub-categories-grid">
+                {timeCategories.map(category => (
+                  <div
+                    key={category.id}
+                    className={`workhub-category-card ${selectedCategory === category.id ? 'active' : ''}`}
+                    onClick={() => handleCategoryClick(category.id)}
+                  >
+                    <div className="workhub-category-icon">
+                      {category.icon}
                     </div>
-                  ))}
-                </div>
+                    <h3 className="workhub-category-title">{category.label}</h3>
+                    <p className="workhub-category-count">{getTaskCountForCategory(category.id)} tareas</p>
+                  </div>
+                ))}
               </div>
             )}
 
             {/* Content Area */}
             {activeTab === 'tareas' ? (
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-                gap: '1.5rem',
-                maxWidth: '1200px',
-                margin: '0 auto'
-              }}>
+              <div className="workhub-tasks-container">
                 {filteredTasks && filteredTasks.length > 0 ? (
                   filteredTasks.map((task) => (
                     <div
                       key={task.itemId}
-                      className="action-card"
-                      style={{
-                        height: '160px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-between',
-                        position: 'relative',
-                        ...(task.completed ? {
-                          background: isDarkMode
-                            ? 'rgba(52, 199, 89, 0.15)'
-                            : 'rgba(52, 199, 89, 0.1)',
-                          borderColor: isDarkMode
-                            ? 'rgba(52, 199, 89, 0.3)'
-                            : 'rgba(52, 199, 89, 0.2)'
-                        } : {})
-                      }}
+                      className={`workhub-task-item ${task.completed ? 'completed' : ''}`}
                     >
-                      <div className="card-header">
-                        <div
-                          className="card-icon"
-                          style={{
-                            backgroundColor: task.completed ? '#34C759' : '#007AFF',
-                            fontSize: '20px'
-                          }}
-                        >
-                          {task.completed ? <CheckCircle size={24} /> : <Clock size={24} />}
-                        </div>
-                        {task.completed && (
-                          <div className="card-badge" style={{ background: '#34C759' }}>
-                            ✓
-                          </div>
-                        )}
+                      <div className={`workhub-task-icon ${task.completed ? 'status-completed' : 'status-pending'}`}>
+                        {task.completed ? <CheckCircle size={20} /> : <Clock size={20} />}
                       </div>
 
-                      <div className="card-content">
-                        <h3 style={{
-                          fontSize: '15px',
-                          lineHeight: '1.3',
-                          marginBottom: '8px',
-                          display: '-webkit-box',
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: 'vertical',
-                          overflow: 'hidden'
-                        }}>
+                      <div className="workhub-task-content">
+                        <h3 className="workhub-task-title">
                           {task.concept || "Tarea sin nombre"}
                         </h3>
-                        <p style={{
-                          fontSize: '13px',
-                          opacity: 0.8,
-                          marginBottom: '8px'
-                        }}>
+                        <p className="workhub-task-section">
                           {task.section}
                         </p>
-                        <p style={{
-                          fontSize: '13px',
-                          opacity: 0.6,
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '4px'
-                        }}>
-                          <Calendar size={12} />
-                          {task.dueDate ? new Date(task.dueDate).toLocaleDateString('es-ES', {
-                            month: 'short',
-                            day: 'numeric'
-                          }) : 'Sin fecha'}
-                        </p>
+                        <div className="workhub-task-meta">
+                          <div className="workhub-task-date">
+                            <Calendar size={14} />
+                            {task.dueDate ? new Date(task.dueDate).toLocaleDateString('es-ES', {
+                              weekday: 'short',
+                              month: 'short',
+                              day: 'numeric'
+                            }) : 'Sin fecha'}
+                          </div>
+                          <div className="workhub-task-id">
+                            {task.itemId || task.code}
+                          </div>
+                        </div>
                       </div>
 
-                      <div className="card-footer">
-                        <div style={{
-                          fontSize: '11px',
-                          fontWeight: '600',
-                          color: isDarkMode ? 'rgba(0, 122, 255, 0.8)' : '#007AFF',
-                          background: isDarkMode ? 'rgba(0, 122, 255, 0.1)' : 'rgba(0, 122, 255, 0.1)',
-                          padding: '4px 8px',
-                          borderRadius: '8px'
-                        }}>
-                          {task.itemId || task.code}
-                        </div>
+                      <div className={`workhub-task-status ${task.completed ? 'completed' : 'pending'}`}>
+                        {task.completed ? 'Completada' : 'Pendiente'}
                       </div>
                     </div>
                   ))
                 ) : (
-                  <div style={{
-                    gridColumn: '1 / -1',
-                    textAlign: 'center',
-                    padding: '4rem 2rem',
-                    opacity: 0.6
-                  }}>
-                    <AlertCircle size={64} style={{
-                      marginBottom: '1rem',
-                      color: isDarkMode ? 'rgba(0, 122, 255, 0.6)' : 'rgba(0, 122, 255, 0.6)'
-                    }} />
-                    <h3 style={{
-                      fontSize: '1.5rem',
-                      fontWeight: 600,
-                      marginBottom: '0.5rem',
-                      color: isDarkMode ? 'rgba(255, 255, 255, 0.9)' : '#1a202c'
-                    }}>
+                  <div className="workhub-empty-state">
+                    <div className="workhub-empty-icon">
+                      <AlertCircle size={32} />
+                    </div>
+                    <h3 className="workhub-empty-title">
                       No tienes tareas asignadas
                     </h3>
-                    <p style={{
-                      fontSize: '1rem',
-                      color: isDarkMode ? 'rgba(255, 255, 255, 0.7)' : '#4a5568'
-                    }}>
+                    <p className="workhub-empty-description">
                       No se encontraron tareas en esta categoría
                     </p>
                   </div>
                 )}
               </div>
             ) : (
-              <div style={{
-                background: isDarkMode ? 'rgba(28, 28, 30, 0.6)' : 'rgba(255, 255, 255, 0.8)',
-                borderRadius: '16px',
-                padding: '2rem',
-                border: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                boxShadow: isDarkMode
-                  ? '0 4px 16px rgba(0, 0, 0, 0.15)'
-                  : '0 8px 24px rgba(0, 0, 0, 0.08)',
-                overflow: 'auto',
-                maxHeight: '600px'
-              }}>
+              <div className="workhub-table-container">
                 <div style={{ overflowX: 'auto' }}>
-                  <table style={{
-                    width: '100%',
-                    borderCollapse: 'separate',
-                    borderSpacing: '0',
-                    fontSize: '14px',
-                    minWidth: '2000px'
-                  }}>
+                  <table className="workhub-table">
                     <thead>
                       <tr>
                         <th style={{
@@ -1466,14 +1323,14 @@ const WorkHubPage: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="clean-footer">
-        <div className="footer-content">
+      <footer className="workhub-footer">
+        <div className="workhub-footer-content">
           <div className="footer-left">
-            <span className="footer-text">© 2025 Espora Hub</span>
+            <span className="workhub-footer-text">© 2025 Espora Hub</span>
           </div>
           <div className="footer-right">
             <button
-              className="logout-btn"
+              className="workhub-logout-btn"
               onClick={() => setShowLogoutDialog(true)}
             >
               <LogOut size={16} />
