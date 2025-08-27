@@ -69,7 +69,7 @@ const ActiveAccountsPage: React.FC = () => {
         title="Cuentas activas"
         subtitle="Gestión de cuentas activas del sistema"
         backButtonText="Menú"
-        backButtonPath="/dashboard"
+        backButtonPath="/overview-main"
         isDarkMode={isDarkMode}
         onThemeToggle={handleThemeToggle}
         showUserAvatar={true}

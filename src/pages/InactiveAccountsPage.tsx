@@ -70,7 +70,7 @@ const InactiveAccountsPage: React.FC = () => {
         title="Cuentas inactivas"
         subtitle="Gestión de cuentas inactivas del sistema"
         backButtonText="Menú"
-        backButtonPath="/dashboard"
+        backButtonPath="/overview-main"
         isDarkMode={isDarkMode}
         onThemeToggle={handleThemeToggle}
         showUserAvatar={true}
