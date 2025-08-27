@@ -8,7 +8,7 @@ import PageFooter from '@/components/generals/PageFooter';
 import CreateAccountModal from '@/components/CreateAccountModal';
 import SelectAccountModal from '@/components/SelectAccountModal';
 import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
-import '../styles/overview-page.css';
+import '@/styles/overview/overview-page.css';
 
 const AccountSettings: React.FC = () => {
   const navigate = useNavigate();

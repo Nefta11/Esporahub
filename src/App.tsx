@@ -5,7 +5,7 @@ import ProtectedRoute from '@/components/generals/ProtectedRoute';
 import LoginPage from '@/pages/auth/LoginPage';
 import MenuPage from '@/pages/MenuPage';
 import OverviewMainPage from '@/pages/overview/OverviewMainPage';
-import AccountSettings from '@/pages/AccountSettings';
+import AccountSettings from '@/pages/overview/overviewAccounts/AccountSettings';
 import CollaborationAgreementPage from '@/pages/overview/clientDashboard/CollaborationAgreementPage';
 import ConstructionPage from '@/pages/ConstructionPage';
 import EHOPage from '@/pages/overview/clientDashboard/EHOPage';
