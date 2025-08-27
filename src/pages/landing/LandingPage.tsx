@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import LoginButton from './LoginButton';
-import Logo from './generals/Logo';
+import LoginButton from '@/components/LoginButton';
+import Logo from '@/components/generals/Logo';
 // import FlowEffect from './FlowEffect'; // Temporalmente deshabilitado
-import MeltingText from './MeltingText';
-import '../styles/header.css';
+import MeltingText from '@/components/MeltingText';
+import '@/styles/header.css';
 
 const Header: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);

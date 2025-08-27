@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserCheck, UserX, Settings } from 'lucide-react';
 import PageHeader from '@/components/generals/PageHeader';
 import PageFooter from '@/components/generals/PageFooter';
-import '../styles/overview-main.css';
+import '@/styles/overview-main.css';
 
 const OverviewMainPage: React.FC = () => {
   const navigate = useNavigate();

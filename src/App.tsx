@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import Header from '@/components/Header';
+import Header from '@/pages/landing/LandingPage';
 import ProtectedRoute from '@/components/generals/ProtectedRoute';
-import LoginPage from '@/pages/LoginPage';
+import LoginPage from '@/pages/auth/LoginPage';
 import MenuPage from '@/pages/MenuPage';
-import OverviewMainPage from '@/pages/OverviewMainPage';
+import OverviewMainPage from '@/pages/overview/OverviewMainPage';
 import OverviewPage from '@/pages/OverviewPage';
 import AccountPage from '@/pages/AccountPage';
 import ConstructionPage from '@/pages/ConstructionPage';
