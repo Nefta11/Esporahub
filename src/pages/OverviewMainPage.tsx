@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserCheck, UserX, Settings } from 'lucide-react';
 import PageHeader from '@/components/generals/PageHeader';
 import PageFooter from '@/components/generals/PageFooter';
-import '../styles/overview-clean.css';
+import '../styles/overview-main.css';
 
 const OverviewMainPage: React.FC = () => {
   const navigate = useNavigate();
@@ -79,7 +79,7 @@ const OverviewMainPage: React.FC = () => {
   };
 
   return (
-    <div className={`overview-clean ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
+    <div className={`overview-main-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       <PageHeader
         title="Overview de cuentas"
         subtitle="Gestión centralizada de todas las cuentas"
@@ -93,38 +93,38 @@ const OverviewMainPage: React.FC = () => {
       />
 
       {/* Main Content */}
-      <main className={`clean-main ${isVisible ? 'visible' : ''}`}>
-        <div className="content-container">
+      <main className={`overview-main-content ${isVisible ? 'visible' : ''}`}>
+        <div className="overview-content-container">
 
           {/* Action Cards */}
-          <section className="actions-section">
-            <div className="section-header">
+          <section className="overview-actions-section">
+            <div className="overview-section-header">
               <h2>Acciones disponibles</h2>
               <p>Selecciona una opción para continuar</p>
             </div>
 
-            <div className="actions-grid">
+            <div className="overview-actions-grid">
               {overviewItems.map((item, index) => (
                 <div
                   key={item.id}
-                  className={`action-card ${item.status}`}
+                  className={`overview-action-card ${item.status}`}
                   style={{
                     animationDelay: `${index * 0.1}s`
                   }}
                   onClick={() => handleItemClick(item)}
                 >
-                  <div className="card-header card-header-overview">
-                    <div className="card-icon card-icon-overview" style={{ backgroundColor: item.color }}>
+                  <div className="overview-card-header">
+                    <div className="overview-card-icon" style={{ backgroundColor: item.color }}>
                       {item.icon}
                     </div>
                     {item.count > 0 && (
-                      <span className="card-badge notification-badge notification-badge-outer">{item.count}</span>
+                      <span className="overview-notification-badge">{item.count}</span>
                     )}
                   </div>
 
-                  <div className="card-content card-content-overview">
-                    <h3 className="card-title-overview">{item.label}</h3>
-                    <p className="card-desc-overview">{item.description}</p>
+                  <div className="overview-card-content">
+                    <h3 className="overview-card-title">{item.label}</h3>
+                    <p className="overview-card-description">{item.description}</p>
                   </div>
                 </div>
               ))}

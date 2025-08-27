@@ -11,6 +11,7 @@
 
 /* Dark theme header styles for all containers */
 .overview-clean.dark-theme .clean-header,
+.overview-main-page.dark-theme .clean-header,
 .account-page.dark-theme .clean-header,
 .expediente-page.dark-theme .clean-header,
 .checklist-captura-page.dark-theme .clean-header,
@@ -21,6 +22,7 @@
 
 /* Light theme header styles for all containers */
 .overview-clean.light-theme .clean-header,
+.overview-main-page.light-theme .clean-header,
 .account-page.light-theme .clean-header,
 .expediente-page.light-theme .clean-header,
 .checklist-captura-page.light-theme .clean-header,
@@ -93,6 +95,7 @@
 
 /* Dark theme back button styles for all containers */
 .overview-clean.dark-theme .back-button,
+.overview-main-page.dark-theme .back-button,
 .account-page.dark-theme .back-button {
     background: rgba(0, 122, 255, 0.1);
     color: #0A84FF;
@@ -100,6 +103,7 @@
 }
 
 .overview-clean.dark-theme .back-button:hover,
+.overview-main-page.dark-theme .back-button:hover,
 .account-page.dark-theme .back-button:hover {
     background: rgba(0, 122, 255, 0.2);
     transform: scale(1.05);
@@ -107,6 +111,7 @@
 
 /* Light theme back button styles for all containers */
 .overview-clean.light-theme .back-button,
+.overview-main-page.light-theme .back-button,
 .account-page.light-theme .back-button {
     background: rgba(0, 122, 255, 0.1);
     color: #007AFF;
@@ -114,6 +119,7 @@
 }
 
 .overview-clean.light-theme .back-button:hover,
+.overview-main-page.light-theme .back-button:hover,
 .account-page.light-theme .back-button:hover {
     background: rgba(0, 122, 255, 0.15);
     transform: scale(1.05);
@@ -153,6 +159,7 @@
 
 /* Dark theme subtitle */
 .overview-clean.dark-theme .header-title p,
+.overview-main-page.dark-theme .header-title p,
 .account-page.dark-theme .header-title p,
 .expediente-page.dark-theme .header-title p,
 .checklist-captura-page.dark-theme .header-title p,
@@ -162,6 +169,7 @@
 
 /* Light theme subtitle */
 .overview-clean.light-theme .header-title p,
+.overview-main-page.light-theme .header-title p,
 .account-page.light-theme .header-title p,
 .expediente-page.light-theme .header-title p,
 .checklist-captura-page.light-theme .header-title p,
@@ -194,11 +202,13 @@
 
 /* Dark theme theme toggle button styles for all containers */
 .overview-clean.dark-theme .theme-toggle-btn,
+.overview-main-page.dark-theme .theme-toggle-btn,
 .account-page.dark-theme .theme-toggle-btn {
     background: rgba(118, 118, 128, 0.12);
 }
 
 .overview-clean.dark-theme .theme-toggle-btn:hover,
+.overview-main-page.dark-theme .theme-toggle-btn:hover,
 .account-page.dark-theme .theme-toggle-btn:hover {
     background: rgba(118, 118, 128, 0.24);
     transform: scale(1.1);
@@ -206,11 +216,13 @@
 
 /* Light theme theme toggle button styles for all containers */
 .overview-clean.light-theme .theme-toggle-btn,
+.overview-main-page.light-theme .theme-toggle-btn,
 .account-page.light-theme .theme-toggle-btn {
     background: rgba(118, 118, 128, 0.12);
 }
 
 .overview-clean.light-theme .theme-toggle-btn:hover,
+.overview-main-page.light-theme .theme-toggle-btn:hover,
 .account-page.light-theme .theme-toggle-btn:hover {
     background: rgba(118, 118, 128, 0.24);
     transform: scale(1.1);
