@@ -9,7 +9,7 @@ import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
 import InputModal from '@/components/generals/InputModal';
 import { User } from '@/data/users';
 import { storage } from '@/utils/storage';
-import '@/styles/eho.css';
+import '@/styles/overview/eho.css';
 import '@/styles/input-modal.css';
 
 const EHOPage: React.FC = () => {

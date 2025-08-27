@@ -4,7 +4,7 @@ import PageHeader from '@/components/generals/PageHeader';
 import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
 import { useAuthStore } from '@/stores/authStore';
 import { hasPermission } from '@/data/users';
-import '@/styles/collaboration-agreement.css';
+import '@/styles/overview/collaboration-agreement.css';
 import { storage } from '@/utils/storage';
 
 interface FormData {

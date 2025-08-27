@@ -6,7 +6,7 @@ import { hasPermission } from '@/data/users';
 import PageHeader from '@/components/generals/PageHeader';
 import PageFooter from '@/components/generals/PageFooter';
 import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
-import '@/styles/client-dashboard.css';
+import '@/styles/overview/client-dashboard.css';
 
 const ClientDashboardPage: React.FC = () => {
   const navigate = useNavigate();

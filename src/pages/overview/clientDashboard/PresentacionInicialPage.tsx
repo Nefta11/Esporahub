@@ -6,7 +6,7 @@ import { hasPermission } from '@/data/users';
 import PageHeader from '@/components/generals/PageHeader';
 import LogoutDialog from '@/components/generals/LogoutDialog';
 import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
-import '@/styles/presentacion-inicial.css';
+import '@/styles/overview/presentacion-inicial.css';
 
 interface PdfFile {
   id: string;
