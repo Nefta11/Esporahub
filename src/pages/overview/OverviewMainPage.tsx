@@ -39,7 +39,7 @@ const OverviewMainPage: React.FC = () => {
       label: 'Configuración de cuentas',
       icon: <Settings size={24} />,
       color: '#007AFF',
-      path: '/overview',
+      path: '/configuracion-cuenta',
       description: 'Crear y configurar nuevas cuentas',
       count: 0,
       status: 'info'

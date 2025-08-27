@@ -5,7 +5,7 @@ import ProtectedRoute from '@/components/generals/ProtectedRoute';
 import LoginPage from '@/pages/auth/LoginPage';
 import MenuPage from '@/pages/MenuPage';
 import OverviewMainPage from '@/pages/overview/OverviewMainPage';
-import OverviewPage from '@/pages/OverviewPage';
+import AccountSettings from '@/pages/AccountSettings';
 import CollaborationAgreementPage from '@/pages/overview/clientDashboard/CollaborationAgreementPage';
 import ConstructionPage from '@/pages/ConstructionPage';
 import EHOPage from '@/pages/overview/clientDashboard/EHOPage';
@@ -55,9 +55,9 @@ const AnimatedRoutes = () => {
               <OverviewMainPage />
             </ProtectedRoute>
           } />
-          <Route path="/overview" element={
+          <Route path="/configuracion-cuenta" element={
             <ProtectedRoute requiredPermissions={['create_accounts', 'edit_accounts']}>
-              <OverviewPage />
+              <AccountSettings />
             </ProtectedRoute>
           } />
           <Route path="/seleccionar-cuenta" element={

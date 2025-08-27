@@ -73,7 +73,7 @@ const SelectAccountPage: React.FC = () => {
         title="Seleccionar cuenta"
         subtitle="Elige una cuenta para continuar"
         backButtonText="Configuración"
-        backButtonPath="/overview"
+        backButtonPath="/configuracion-cuenta"
         isDarkMode={isDarkMode}
         onThemeToggle={handleThemeToggle}
         showUserAvatar={true}

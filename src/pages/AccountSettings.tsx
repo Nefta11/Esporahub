@@ -10,7 +10,7 @@ import SelectAccountModal from '@/components/SelectAccountModal';
 import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
 import '../styles/overview-page.css';
 
-const OverviewPage: React.FC = () => {
+const AccountSettings: React.FC = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -165,4 +165,4 @@ const OverviewPage: React.FC = () => {
   );
 };
 
-export default OverviewPage;
+export default AccountSettings;
