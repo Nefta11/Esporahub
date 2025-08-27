@@ -91,7 +91,7 @@ const OverviewPage: React.FC = () => {
         title="Configuración de cuentas"
         subtitle="Crear y gestionar cuentas del sistema"
         backButtonText="Overview"
-        backButtonPath="/overview-main"
+        backButtonPath="/overview-menu"
         isDarkMode={isDarkMode}
         onThemeToggle={handleThemeToggle}
         showUserAvatar={true}

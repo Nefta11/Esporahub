@@ -336,7 +336,7 @@ const CollaborationAgreementPage: React.FC = () => {
         showLogo={true}
         breadcrumbs={[
           { label: 'Menú', onClick: () => navigate('/dashboard') },
-          { label: 'Overview', onClick: () => navigate('/overview-main') },
+          { label: 'Overview', onClick: () => navigate('/overview-menu') },
           { label: 'Configuración', onClick: () => navigate('/overview') },
           { label: cleanClientName, onClick: () => navigate('/client-dashboard', { state: { clientName } }) }
         ]}

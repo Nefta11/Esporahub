@@ -155,7 +155,7 @@ const PresentacionInicialPage: React.FC = () => {
         showLogo={true}
         breadcrumbs={[
           { label: 'Menú', onClick: () => navigate('/dashboard') },
-          { label: 'Overview', onClick: () => navigate('/overview-main') },
+          { label: 'Overview', onClick: () => navigate('/overview-menu') },
           { label: 'Configuración', onClick: () => navigate('/overview') },
           { label: 'Seleccionar', onClick: () => navigate('/select-account') },
           { label: clientName ? clientName.split(' - ')[0] : 'Cliente', onClick: () => navigate('/client-dashboard', { state: { clientName } }) },

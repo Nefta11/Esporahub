@@ -50,7 +50,7 @@ const AnimatedRoutes = () => {
               <MenuPage />
             </ProtectedRoute>
           } />
-          <Route path="/overview-main" element={
+          <Route path="/overview-menu" element={
             <ProtectedRoute>
               <OverviewMainPage />
             </ProtectedRoute>

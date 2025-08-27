@@ -29,7 +29,7 @@ const ChecklistHeader: React.FC<ChecklistHeaderProps> = ({
                     </button>
                     <span className="breadcrumb-separator">/</span>
                     <button
-                        onClick={() => navigate('/overview-main')}
+                        onClick={() => navigate('/overview-menu')}
                         className="breadcrumb-link"
                     >
                         Overview
