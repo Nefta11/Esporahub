@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { User } from 'lucide-react';
 import PageHeader from '@/components/generals/PageHeader';
 import PageFooter from '@/components/generals/PageFooter';
-import '../styles/overview-clean.css';
+import '../styles/inactive-accounts.css';
 
 const InactiveAccountsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -65,7 +65,7 @@ const InactiveAccountsPage: React.FC = () => {
   };
 
   return (
-    <div className={`overview-clean ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
+    <div className={`inactive-accounts-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       <PageHeader
         title="Cuentas inactivas"
         subtitle="Gestión de cuentas inactivas del sistema"
@@ -79,45 +79,33 @@ const InactiveAccountsPage: React.FC = () => {
       />
 
       {/* Main Content */}
-      <main className={`clean-main ${isVisible ? 'visible' : ''}`}>
-        <div className="content-container">
+      <main className={`inactive-accounts-main-content ${isVisible ? 'visible' : ''}`}>
+        <div className="inactive-accounts-content-container">
           {/* Accounts Grid */}
-          <section className="actions-section">
-            <div className="actions-grid" style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              gap: '2rem',
-              maxWidth: '1200px',
-              margin: '0 auto'
-            }}>
+          <section className="inactive-accounts-section">
+            <div className="inactive-accounts-grid">
               {inactiveAccounts.map((account, index) => (
                 <div
                   key={account.id}
-                  className="icloud-account-card"
+                  className="inactive-account-card"
                   style={{
-                    animationDelay: `${index * 0.1}s`,
-                    position: 'relative',
-                    background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 25%, #B91C1C 50%, #991B1B 75%, #7F1D1D 100%)',
-                    boxShadow: '0 8px 32px rgba(239, 68, 68, 0.3), 0 4px 16px rgba(239, 68, 68, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1)'
+                    animationDelay: `${index * 0.1}s`
                   }}
                   onClick={() => handleAccountSelect(account.name, account.position)}
                 >
-                  {/* User avatar circle */}
-                  <div className="user-avatar-circle">
-                    <div className="avatar-icon">
-                      <div className="avatar-head"></div>
-                      <div className="avatar-body"></div>
+                  {/* User Avatar */}
+                  <div className="inactive-account-avatar">
+                    <div className="inactive-account-avatar-icon">
+                      <User size={24} />
                     </div>
                   </div>
 
-                  {/* Account info */}
-                  <div className="account-info">
-                    <h3 className="account-name">{account.name}</h3>
-                  </div>
-
-                  {/* Position badge */}
-                  <div className="position-badge">
-                    {account.position}
+                  {/* Account Info */}
+                  <div className="inactive-account-info">
+                    <h3 className="inactive-account-name">{account.name}</h3>
+                    <div className="inactive-account-position">
+                      {account.position}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -128,30 +116,14 @@ const InactiveAccountsPage: React.FC = () => {
 
       {/* Mensaje si no hay cuentas inactivas */}
       {inactiveAccounts.filter(account => !accountStatuses[account.id]).length === 0 && (
-        <div className="empty-state" style={{
-          position: 'fixed',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          textAlign: 'center',
-          opacity: 0.8
-        }}>
-          <User size={64} style={{
-            marginBottom: '1rem',
-            color: isDarkMode ? 'rgba(239, 68, 68, 0.6)' : 'rgba(239, 68, 68, 0.6)'
-          }} />
-          <h3 style={{
-            fontSize: '1.5rem',
-            fontWeight: 600,
-            marginBottom: '0.5rem',
-            color: isDarkMode ? 'rgba(255, 255, 255, 0.9)' : '#1a202c'
-          }}>
+        <div className="inactive-accounts-empty-state">
+          <div className="inactive-accounts-empty-icon">
+            <User size={64} color={isDarkMode ? 'rgba(239, 68, 68, 0.6)' : 'rgba(239, 68, 68, 0.6)'} />
+          </div>
+          <h3 className="inactive-accounts-empty-title">
             No hay cuentas inactivas
           </h3>
-          <p style={{
-            fontSize: '1rem',
-            color: isDarkMode ? 'rgba(255, 255, 255, 0.7)' : '#4a5568'
-          }}>
+          <p className="inactive-accounts-empty-description">
             Todas las cuentas han sido activadas
           </p>
         </div>

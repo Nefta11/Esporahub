@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { User } from 'lucide-react';
 import PageHeader from '@/components/generals/PageHeader';
 import PageFooter from '@/components/generals/PageFooter';
-import '../styles/overview-clean.css';
+import '../styles/active-accounts.css';
 
 const ActiveAccountsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -64,7 +64,7 @@ const ActiveAccountsPage: React.FC = () => {
   };
 
   return (
-    <div className={`overview-clean ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
+    <div className={`active-accounts-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       <PageHeader
         title="Cuentas activas"
         subtitle="Gestión de cuentas activas del sistema"
@@ -78,45 +78,33 @@ const ActiveAccountsPage: React.FC = () => {
       />
 
       {/* Main Content */}
-      <main className={`clean-main ${isVisible ? 'visible' : ''}`}>
-        <div className="content-container">
+      <main className={`active-accounts-main-content ${isVisible ? 'visible' : ''}`}>
+        <div className="active-accounts-content-container">
           {/* Accounts Grid */}
-          <section className="actions-section">
-            <div className="actions-grid" style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              gap: '2rem',
-              maxWidth: '1200px',
-              margin: '0 auto'
-            }}>
+          <section className="active-accounts-section">
+            <div className="active-accounts-grid">
               {activeAccounts.map((account, index) => (
                 <div
                   key={account.id}
-                  className="icloud-account-card"
+                  className="active-account-card"
                   style={{
-                    animationDelay: `${index * 0.1}s`,
-                    position: 'relative',
-                    background: 'linear-gradient(135deg, #4ADE80 0%, #22C55E 25%, #16A34A 50%, #15803D 75%, #166534 100%)',
-                    boxShadow: '0 8px 32px rgba(34, 197, 94, 0.3), 0 4px 16px rgba(34, 197, 94, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1)'
+                    animationDelay: `${index * 0.1}s`
                   }}
                   onClick={() => handleAccountSelect(account.name, account.position)}
                 >
-                  {/* User avatar circle */}
-                  <div className="user-avatar-circle">
-                    <div className="avatar-icon">
-                      <div className="avatar-head"></div>
-                      <div className="avatar-body"></div>
+                  {/* User Avatar */}
+                  <div className="active-account-avatar">
+                    <div className="active-account-avatar-icon">
+                      <User size={24} />
                     </div>
                   </div>
 
-                  {/* Account info */}
-                  <div className="account-info">
-                    <h3 className="account-name">{account.name}</h3>
-                  </div>
-
-                  {/* Position badge */}
-                  <div className="position-badge">
-                    {account.position}
+                  {/* Account Info */}
+                  <div className="active-account-info">
+                    <h3 className="active-account-name">{account.name}</h3>
+                    <div className="active-account-position">
+                      {account.position}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -127,30 +115,14 @@ const ActiveAccountsPage: React.FC = () => {
 
       {/* Mensaje si no hay cuentas activas */}
       {activeAccounts.filter(account => accountStatuses[account.id]).length === 0 && (
-        <div className="empty-state" style={{
-          position: 'fixed',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          textAlign: 'center',
-          opacity: 0.8
-        }}>
-          <User size={64} style={{
-            marginBottom: '1rem',
-            color: isDarkMode ? 'rgba(0, 122, 255, 0.6)' : 'rgba(0, 122, 255, 0.6)'
-          }} />
-          <h3 style={{
-            fontSize: '1.5rem',
-            fontWeight: 600,
-            marginBottom: '0.5rem',
-            color: isDarkMode ? 'rgba(255, 255, 255, 0.9)' : '#1a202c'
-          }}>
+        <div className="active-accounts-empty-state">
+          <div className="active-accounts-empty-icon">
+            <User size={64} color={isDarkMode ? 'rgba(0, 122, 255, 0.6)' : 'rgba(0, 122, 255, 0.6)'} />
+          </div>
+          <h3 className="active-accounts-empty-title">
             No hay cuentas activas
           </h3>
-          <p style={{
-            fontSize: '1rem',
-            color: isDarkMode ? 'rgba(255, 255, 255, 0.7)' : '#4a5568'
-          }}>
+          <p className="active-accounts-empty-description">
             Todas las cuentas han sido desactivadas
           </p>
         </div>

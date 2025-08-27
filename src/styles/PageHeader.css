@@ -12,6 +12,8 @@
 /* Dark theme header styles for all containers */
 .overview-clean.dark-theme .clean-header,
 .overview-main-page.dark-theme .clean-header,
+.active-accounts-page.dark-theme .clean-header,
+.inactive-accounts-page.dark-theme .clean-header,
 .account-page.dark-theme .clean-header,
 .expediente-page.dark-theme .clean-header,
 .checklist-captura-page.dark-theme .clean-header,
@@ -23,6 +25,8 @@
 /* Light theme header styles for all containers */
 .overview-clean.light-theme .clean-header,
 .overview-main-page.light-theme .clean-header,
+.active-accounts-page.light-theme .clean-header,
+.inactive-accounts-page.light-theme .clean-header,
 .account-page.light-theme .clean-header,
 .expediente-page.light-theme .clean-header,
 .checklist-captura-page.light-theme .clean-header,
@@ -96,6 +100,8 @@
 /* Dark theme back button styles for all containers */
 .overview-clean.dark-theme .back-button,
 .overview-main-page.dark-theme .back-button,
+.active-accounts-page.dark-theme .back-button,
+.inactive-accounts-page.dark-theme .back-button,
 .account-page.dark-theme .back-button {
     background: rgba(0, 122, 255, 0.1);
     color: #0A84FF;
@@ -104,6 +110,8 @@
 
 .overview-clean.dark-theme .back-button:hover,
 .overview-main-page.dark-theme .back-button:hover,
+.active-accounts-page.dark-theme .back-button:hover,
+.inactive-accounts-page.dark-theme .back-button:hover,
 .account-page.dark-theme .back-button:hover {
     background: rgba(0, 122, 255, 0.2);
     transform: scale(1.05);
@@ -112,6 +120,8 @@
 /* Light theme back button styles for all containers */
 .overview-clean.light-theme .back-button,
 .overview-main-page.light-theme .back-button,
+.active-accounts-page.light-theme .back-button,
+.inactive-accounts-page.light-theme .back-button,
 .account-page.light-theme .back-button {
     background: rgba(0, 122, 255, 0.1);
     color: #007AFF;
@@ -120,6 +130,8 @@
 
 .overview-clean.light-theme .back-button:hover,
 .overview-main-page.light-theme .back-button:hover,
+.active-accounts-page.light-theme .back-button:hover,
+.inactive-accounts-page.light-theme .back-button:hover,
 .account-page.light-theme .back-button:hover {
     background: rgba(0, 122, 255, 0.15);
     transform: scale(1.05);
@@ -160,6 +172,8 @@
 /* Dark theme subtitle */
 .overview-clean.dark-theme .header-title p,
 .overview-main-page.dark-theme .header-title p,
+.active-accounts-page.dark-theme .header-title p,
+.inactive-accounts-page.dark-theme .header-title p,
 .account-page.dark-theme .header-title p,
 .expediente-page.dark-theme .header-title p,
 .checklist-captura-page.dark-theme .header-title p,
@@ -170,6 +184,8 @@
 /* Light theme subtitle */
 .overview-clean.light-theme .header-title p,
 .overview-main-page.light-theme .header-title p,
+.active-accounts-page.light-theme .header-title p,
+.inactive-accounts-page.light-theme .header-title p,
 .account-page.light-theme .header-title p,
 .expediente-page.light-theme .header-title p,
 .checklist-captura-page.light-theme .header-title p,
@@ -203,12 +219,16 @@
 /* Dark theme theme toggle button styles for all containers */
 .overview-clean.dark-theme .theme-toggle-btn,
 .overview-main-page.dark-theme .theme-toggle-btn,
+.active-accounts-page.dark-theme .theme-toggle-btn,
+.inactive-accounts-page.dark-theme .theme-toggle-btn,
 .account-page.dark-theme .theme-toggle-btn {
     background: rgba(118, 118, 128, 0.12);
 }
 
 .overview-clean.dark-theme .theme-toggle-btn:hover,
 .overview-main-page.dark-theme .theme-toggle-btn:hover,
+.active-accounts-page.dark-theme .theme-toggle-btn:hover,
+.inactive-accounts-page.dark-theme .theme-toggle-btn:hover,
 .account-page.dark-theme .theme-toggle-btn:hover {
     background: rgba(118, 118, 128, 0.24);
     transform: scale(1.1);
@@ -217,12 +237,16 @@
 /* Light theme theme toggle button styles for all containers */
 .overview-clean.light-theme .theme-toggle-btn,
 .overview-main-page.light-theme .theme-toggle-btn,
+.active-accounts-page.light-theme .theme-toggle-btn,
+.inactive-accounts-page.light-theme .theme-toggle-btn,
 .account-page.light-theme .theme-toggle-btn {
     background: rgba(118, 118, 128, 0.12);
 }
 
 .overview-clean.light-theme .theme-toggle-btn:hover,
 .overview-main-page.light-theme .theme-toggle-btn:hover,
+.active-accounts-page.light-theme .theme-toggle-btn:hover,
+.inactive-accounts-page.light-theme .theme-toggle-btn:hover,
 .account-page.light-theme .theme-toggle-btn:hover {
     background: rgba(118, 118, 128, 0.24);
     transform: scale(1.1);
@@ -301,6 +325,8 @@
 
 /* Dark theme breadcrumb container */
 .overview-clean.dark-theme .breadcrumb-container,
+.active-accounts-page.dark-theme .breadcrumb-container,
+.inactive-accounts-page.dark-theme .breadcrumb-container,
 .account-page.dark-theme .breadcrumb-container,
 .expediente-page.dark-theme .breadcrumb-container,
 .checklist-captura-page.dark-theme .breadcrumb-container,
@@ -311,6 +337,8 @@
 }
 
 .overview-clean.dark-theme .breadcrumb-container:hover,
+.active-accounts-page.dark-theme .breadcrumb-container:hover,
+.inactive-accounts-page.dark-theme .breadcrumb-container:hover,
 .account-page.dark-theme .breadcrumb-container:hover,
 .expediente-page.dark-theme .breadcrumb-container:hover,
 .checklist-captura-page.dark-theme .breadcrumb-container:hover,
@@ -322,6 +350,8 @@
 
 /* Light theme breadcrumb container */
 .overview-clean.light-theme .breadcrumb-container,
+.active-accounts-page.light-theme .breadcrumb-container,
+.inactive-accounts-page.light-theme .breadcrumb-container,
 .account-page.light-theme .breadcrumb-container,
 .expediente-page.light-theme .breadcrumb-container,
 .checklist-captura-page.light-theme .breadcrumb-container,
@@ -332,6 +362,8 @@
 }
 
 .overview-clean.light-theme .breadcrumb-container:hover,
+.active-accounts-page.light-theme .breadcrumb-container:hover,
+.inactive-accounts-page.light-theme .breadcrumb-container:hover,
 .account-page.light-theme .breadcrumb-container:hover,
 .expediente-page.light-theme .breadcrumb-container:hover,
 .checklist-captura-page.light-theme .breadcrumb-container:hover,
@@ -364,6 +396,8 @@
 
 /* Dark theme breadcrumb links */
 .overview-clean.dark-theme .breadcrumb-link,
+.active-accounts-page.dark-theme .breadcrumb-link,
+.inactive-accounts-page.dark-theme .breadcrumb-link,
 .account-page.dark-theme .breadcrumb-link,
 .expediente-page.dark-theme .breadcrumb-link,
 .checklist-captura-page.dark-theme .breadcrumb-link,
@@ -372,6 +406,8 @@
 }
 
 .overview-clean.dark-theme .breadcrumb-link:hover,
+.active-accounts-page.dark-theme .breadcrumb-link:hover,
+.inactive-accounts-page.dark-theme .breadcrumb-link:hover,
 .account-page.dark-theme .breadcrumb-link:hover,
 .expediente-page.dark-theme .breadcrumb-link:hover,
 .checklist-captura-page.dark-theme .breadcrumb-link:hover,
@@ -382,6 +418,8 @@
 }
 
 .overview-clean.dark-theme .breadcrumb-link:active,
+.active-accounts-page.dark-theme .breadcrumb-link:active,
+.inactive-accounts-page.dark-theme .breadcrumb-link:active,
 .account-page.dark-theme .breadcrumb-link:active,
 .expediente-page.dark-theme .breadcrumb-link:active,
 .checklist-captura-page.dark-theme .breadcrumb-link:active,
@@ -392,6 +430,8 @@
 
 /* Light theme breadcrumb links */
 .overview-clean.light-theme .breadcrumb-link,
+.active-accounts-page.light-theme .breadcrumb-link,
+.inactive-accounts-page.light-theme .breadcrumb-link,
 .account-page.light-theme .breadcrumb-link,
 .expediente-page.light-theme .breadcrumb-link,
 .checklist-captura-page.light-theme .breadcrumb-link,
@@ -400,6 +440,8 @@
 }
 
 .overview-clean.light-theme .breadcrumb-link:hover,
+.active-accounts-page.light-theme .breadcrumb-link:hover,
+.inactive-accounts-page.light-theme .breadcrumb-link:hover,
 .account-page.light-theme .breadcrumb-link:hover,
 .expediente-page.light-theme .breadcrumb-link:hover,
 .checklist-captura-page.light-theme .breadcrumb-link:hover,
@@ -410,6 +452,8 @@
 }
 
 .overview-clean.light-theme .breadcrumb-link:active,
+.active-accounts-page.light-theme .breadcrumb-link:active,
+.inactive-accounts-page.light-theme .breadcrumb-link:active,
 .account-page.light-theme .breadcrumb-link:active,
 .expediente-page.light-theme .breadcrumb-link:active,
 .checklist-captura-page.light-theme .breadcrumb-link:active,
@@ -430,6 +474,8 @@
 
 /* Dark theme separators */
 .overview-clean.dark-theme .breadcrumb-separator,
+.active-accounts-page.dark-theme .breadcrumb-separator,
+.inactive-accounts-page.dark-theme .breadcrumb-separator,
 .account-page.dark-theme .breadcrumb-separator,
 .expediente-page.dark-theme .breadcrumb-separator,
 .checklist-captura-page.dark-theme .breadcrumb-separator,
@@ -439,6 +485,8 @@
 
 /* Light theme separators */
 .overview-clean.light-theme .breadcrumb-separator,
+.active-accounts-page.light-theme .breadcrumb-separator,
+.inactive-accounts-page.light-theme .breadcrumb-separator,
 .account-page.light-theme .breadcrumb-separator,
 .expediente-page.light-theme .breadcrumb-separator,
 .checklist-captura-page.light-theme .breadcrumb-separator,
