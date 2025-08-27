@@ -6,7 +6,7 @@ import { hasPermission } from '@/data/users';
 import PageHeader from '@/components/generals/PageHeader';
 import PageFooter from '@/components/generals/PageFooter';
 import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
-import '../styles/overview-clean.css';
+import '../styles/client-dashboard.css';
 
 const ClientDashboardPage: React.FC = () => {
   const navigate = useNavigate();
@@ -117,7 +117,7 @@ const ClientDashboardPage: React.FC = () => {
   };
 
   return (
-    <div className={`overview-clean ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
+    <div className={`client-dashboard-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       <PageHeader
         title={clientName ? clientName.split(' - ')[0] : "Dashboard del Cliente"}
         subtitle={clientName ? clientName.split(' - ')[1] : "Gestión de servicios y documentos"}
@@ -131,36 +131,35 @@ const ClientDashboardPage: React.FC = () => {
       />
 
       {/* Main Content */}
-      <main className={`clean-main ${isVisible ? 'visible' : ''}`}>
-        <div className="content-container">
-          {/* Action Cards */}
-          <section className="actions-section">
-            <div className="section-header">
+      <main className={`client-dashboard-main-content ${isVisible ? 'visible' : ''}`}>
+        <div className="client-dashboard-content-container">
+          {/* Services Section */}
+          <section className="client-dashboard-services-section">
+            <div className="client-dashboard-section-header">
               <h2>Servicios disponibles</h2>
               <p>Selecciona un servicio para continuar</p>
             </div>
 
-            <div className="actions-grid">
+            <div className="client-dashboard-grid">
               {menuItems.map((item, index) => (
                 <div
                   key={item.id}
-                  className="action-card"
+                  className={`client-dashboard-card ${item.id}`}
                   style={{
                     animationDelay: `${index * 0.1}s`
                   }}
                   onClick={() => handleMenuItemClick(item)}
                 >
-                  <div className="card-header">
-                    <div
-                      className="card-icon"
-                      style={{ backgroundColor: item.color }}
-                    >
-                      {React.cloneElement(item.icon as React.ReactElement, { size: 40 })}
+                  {/* Service Icon */}
+                  <div className="client-dashboard-icon">
+                    <div className="client-dashboard-icon-content">
+                      {React.cloneElement(item.icon as React.ReactElement, { size: 32 })}
                     </div>
                   </div>
 
-                  <div className="card-content">
-                    <h3>{item.label}</h3>
+                  {/* Service Info */}
+                  <div className="client-dashboard-info">
+                    <h3 className="client-dashboard-title">{item.label}</h3>
                   </div>
                 </div>
               ))}
