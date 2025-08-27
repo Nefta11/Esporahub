@@ -70,12 +70,12 @@ const AnimatedRoutes = () => {
               <ClientDashboardPage />
             </ProtectedRoute>
           } />
-          <Route path="/active-accounts" element={
+          <Route path="/cuentas-activas" element={
             <ProtectedRoute>
               <ActiveAccountsPage />
             </ProtectedRoute>
           } />
-          <Route path="/inactive-accounts" element={
+          <Route path="/cuentas-inactivas" element={
             <ProtectedRoute>
               <InactiveAccountsPage />
             </ProtectedRoute>

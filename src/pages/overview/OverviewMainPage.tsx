@@ -19,7 +19,7 @@ const OverviewMainPage: React.FC = () => {
       label: 'Cuentas activas',
       icon: <UserCheck size={24} />,
       color: '#34C759',
-      path: '/active-accounts',
+      path: '/cuentas-activas',
       description: 'Gestionar cuentas activas del sistema',
       count: 4,
       status: 'success'
@@ -29,7 +29,7 @@ const OverviewMainPage: React.FC = () => {
       label: 'Cuentas inactivas',
       icon: <UserX size={24} />,
       color: '#FF3B30',
-      path: '/inactive-accounts',
+      path: '/cuentas-inactivas',
       description: 'Revisar y reactivar cuentas',
       count: 2,
       status: 'warning'
