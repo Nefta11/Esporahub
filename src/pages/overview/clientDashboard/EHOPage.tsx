@@ -9,10 +9,10 @@ import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
 import InputModal from '@/components/generals/InputModal';
 import { User } from '@/data/users';
 import { storage } from '@/utils/storage';
-import '@/styles/checklist-captura.css';
+import '@/styles/eho.css';
 import '@/styles/input-modal.css';
 
-const ChecklistCapturaPage: React.FC = () => {
+const EHOPage: React.FC = () => {
   const navigate = useNavigate();
 
   const {
@@ -142,4 +142,4 @@ const ChecklistCapturaPage: React.FC = () => {
   );
 };
 
-export default ChecklistCapturaPage;
+export default EHOPage;
