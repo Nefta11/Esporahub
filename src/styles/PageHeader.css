@@ -14,6 +14,7 @@
 .overview-main-page.dark-theme .clean-header,
 .overview-page.dark-theme .clean-header,
 .client-dashboard-page.dark-theme .clean-header,
+.select-account-page.dark-theme .clean-header,
 .active-accounts-page.dark-theme .clean-header,
 .inactive-accounts-page.dark-theme .clean-header,
 .account-page.dark-theme .clean-header,
@@ -29,6 +30,7 @@
 .overview-main-page.light-theme .clean-header,
 .overview-page.light-theme .clean-header,
 .client-dashboard-page.light-theme .clean-header,
+.select-account-page.light-theme .clean-header,
 .active-accounts-page.light-theme .clean-header,
 .inactive-accounts-page.light-theme .clean-header,
 .account-page.light-theme .clean-header,
@@ -106,6 +108,7 @@
 .overview-main-page.dark-theme .back-button,
 .overview-page.dark-theme .back-button,
 .client-dashboard-page.dark-theme .back-button,
+.select-account-page.dark-theme .back-button,
 .active-accounts-page.dark-theme .back-button,
 .inactive-accounts-page.dark-theme .back-button,
 .account-page.dark-theme .back-button {
@@ -118,6 +121,7 @@
 .overview-main-page.dark-theme .back-button:hover,
 .overview-page.dark-theme .back-button:hover,
 .client-dashboard-page.dark-theme .back-button:hover,
+.select-account-page.dark-theme .back-button:hover,
 .active-accounts-page.dark-theme .back-button:hover,
 .inactive-accounts-page.dark-theme .back-button:hover,
 .account-page.dark-theme .back-button:hover {
@@ -130,6 +134,7 @@
 .overview-main-page.light-theme .back-button,
 .overview-page.light-theme .back-button,
 .client-dashboard-page.light-theme .back-button,
+.select-account-page.light-theme .back-button,
 .active-accounts-page.light-theme .back-button,
 .inactive-accounts-page.light-theme .back-button,
 .account-page.light-theme .back-button {
@@ -142,6 +147,7 @@
 .overview-main-page.light-theme .back-button:hover,
 .overview-page.light-theme .back-button:hover,
 .client-dashboard-page.light-theme .back-button:hover,
+.select-account-page.light-theme .back-button:hover,
 .active-accounts-page.light-theme .back-button:hover,
 .inactive-accounts-page.light-theme .back-button:hover,
 .account-page.light-theme .back-button:hover {
@@ -186,6 +192,7 @@
 .overview-main-page.dark-theme .header-title p,
 .overview-page.dark-theme .header-title p,
 .client-dashboard-page.dark-theme .header-title p,
+.select-account-page.dark-theme .header-title p,
 .active-accounts-page.dark-theme .header-title p,
 .inactive-accounts-page.dark-theme .header-title p,
 .account-page.dark-theme .header-title p,
@@ -200,6 +207,7 @@
 .overview-main-page.light-theme .header-title p,
 .overview-page.light-theme .header-title p,
 .client-dashboard-page.light-theme .header-title p,
+.select-account-page.light-theme .header-title p,
 .active-accounts-page.light-theme .header-title p,
 .inactive-accounts-page.light-theme .header-title p,
 .account-page.light-theme .header-title p,
@@ -237,6 +245,7 @@
 .overview-main-page.dark-theme .theme-toggle-btn,
 .overview-page.dark-theme .theme-toggle-btn,
 .client-dashboard-page.dark-theme .theme-toggle-btn,
+.select-account-page.dark-theme .theme-toggle-btn,
 .active-accounts-page.dark-theme .theme-toggle-btn,
 .inactive-accounts-page.dark-theme .theme-toggle-btn,
 .account-page.dark-theme .theme-toggle-btn {
@@ -247,6 +256,7 @@
 .overview-main-page.dark-theme .theme-toggle-btn:hover,
 .overview-page.dark-theme .theme-toggle-btn:hover,
 .client-dashboard-page.dark-theme .theme-toggle-btn:hover,
+.select-account-page.dark-theme .theme-toggle-btn:hover,
 .active-accounts-page.dark-theme .theme-toggle-btn:hover,
 .inactive-accounts-page.dark-theme .theme-toggle-btn:hover,
 .account-page.dark-theme .theme-toggle-btn:hover {
@@ -259,6 +269,7 @@
 .overview-main-page.light-theme .theme-toggle-btn,
 .overview-page.light-theme .theme-toggle-btn,
 .client-dashboard-page.light-theme .theme-toggle-btn,
+.select-account-page.light-theme .theme-toggle-btn,
 .active-accounts-page.light-theme .theme-toggle-btn,
 .inactive-accounts-page.light-theme .theme-toggle-btn,
 .account-page.light-theme .theme-toggle-btn {
@@ -269,6 +280,7 @@
 .overview-main-page.light-theme .theme-toggle-btn:hover,
 .overview-page.light-theme .theme-toggle-btn:hover,
 .client-dashboard-page.light-theme .theme-toggle-btn:hover,
+.select-account-page.light-theme .theme-toggle-btn:hover,
 .active-accounts-page.light-theme .theme-toggle-btn:hover,
 .inactive-accounts-page.light-theme .theme-toggle-btn:hover,
 .account-page.light-theme .theme-toggle-btn:hover {
@@ -351,6 +363,7 @@
 .overview-clean.dark-theme .breadcrumb-container,
 .overview-page.dark-theme .breadcrumb-container,
 .client-dashboard-page.dark-theme .breadcrumb-container,
+.select-account-page.dark-theme .breadcrumb-container,
 .active-accounts-page.dark-theme .breadcrumb-container,
 .inactive-accounts-page.dark-theme .breadcrumb-container,
 .account-page.dark-theme .breadcrumb-container,
@@ -380,6 +393,7 @@
 .overview-clean.light-theme .breadcrumb-container,
 .overview-page.light-theme .breadcrumb-container,
 .client-dashboard-page.light-theme .breadcrumb-container,
+.select-account-page.light-theme .breadcrumb-container,
 .active-accounts-page.light-theme .breadcrumb-container,
 .inactive-accounts-page.light-theme .breadcrumb-container,
 .account-page.light-theme .breadcrumb-container,

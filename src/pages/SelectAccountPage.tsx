@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/generals/PageHeader';
 import PageFooter from '@/components/generals/PageFooter';
-import '../styles/overview-clean.css';
+import '../styles/select-account.css';
 
 const SelectAccountPage: React.FC = () => {
   const navigate = useNavigate();
@@ -68,7 +68,7 @@ const SelectAccountPage: React.FC = () => {
   };
 
   return (
-    <div className={`overview-clean ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
+    <div className={`select-account-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       <PageHeader
         title="Seleccionar cuenta"
         subtitle="Elige una cuenta para continuar"
@@ -82,60 +82,37 @@ const SelectAccountPage: React.FC = () => {
       />
 
       {/* Main Content */}
-      <main className={`clean-main ${isVisible ? 'visible' : ''}`}>
-        <div className="content-container">
+      <main className={`select-account-main-content ${isVisible ? 'visible' : ''}`}>
+        <div className="select-account-content-container">
           {/* Accounts Grid */}
-          <section className="actions-section">
-            <div className="actions-grid" style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(6, 1fr)',
-              gap: '2rem',
-              maxWidth: '1200px',
-              margin: '0 auto'
-            }}>
+          <section className="select-account-section">
+            <div className="select-account-grid">
               {accounts.map((account, index) => (
                 <div
                   key={account.id}
-                  className="icloud-account-card"
+                  className={`select-account-card ${accountStatuses[account.id] ? 'active' : 'inactive'}`}
                   style={{
-                    animationDelay: `${index * 0.1}s`,
-                    position: 'relative',
-                    background: accountStatuses[account.id]
-                      ? 'linear-gradient(135deg, #4ADE80 0%, #22C55E 25%, #16A34A 50%, #15803D 75%, #166534 100%)'
-                      : 'linear-gradient(135deg, #EF4444 0%, #DC2626 25%, #B91C1C 50%, #991B1B 75%, #7F1D1D 100%)',
-                    boxShadow: accountStatuses[account.id]
-                      ? '0 8px 32px rgba(34, 197, 94, 0.3), 0 4px 16px rgba(34, 197, 94, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1)'
-                      : '0 8px 32px rgba(239, 68, 68, 0.3), 0 4px 16px rgba(239, 68, 68, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1)'
+                    animationDelay: `${index * 0.1}s`
                   }}
                   onClick={() => handleAccountSelect(account.name, account.position)}
                 >
-                  {/* Status dot - green for active, red for inactive */}
-                  <div
-                    className="account-status-dot"
-                    style={{
-                      background: accountStatuses[account.id] ? '#34C759' : '#FF3B30',
-                      boxShadow: accountStatuses[account.id]
-                        ? '0 0 0 1px rgba(52, 199, 89, 0.3), 0 2px 8px rgba(52, 199, 89, 0.4)'
-                        : '0 0 0 1px rgba(255, 59, 48, 0.3), 0 2px 8px rgba(255, 59, 48, 0.4)'
-                    }}
-                  ></div>
+                  {/* Status dot */}
+                  <div className={`select-account-status-dot ${accountStatuses[account.id] ? 'active' : 'inactive'}`}></div>
 
-                  {/* User avatar circle */}
-                  <div className="user-avatar-circle">
-                    <div className="avatar-icon">
-                      <div className="avatar-head"></div>
-                      <div className="avatar-body"></div>
+                  {/* User Avatar */}
+                  <div className="select-account-avatar">
+                    <div className="select-account-avatar-icon">
+                      <div className="select-account-avatar-head"></div>
+                      <div className="select-account-avatar-body"></div>
                     </div>
                   </div>
 
-                  {/* Account info */}
-                  <div className="account-info">
-                    <h3 className="account-name">{account.name}</h3>
-                  </div>
-
-                  {/* Position badge */}
-                  <div className="position-badge">
-                    {account.position}
+                  {/* Account Info */}
+                  <div className="select-account-info">
+                    <h3 className="select-account-name">{account.name}</h3>
+                    <div className="select-account-position">
+                      {account.position}
+                    </div>
                   </div>
                 </div>
               ))}

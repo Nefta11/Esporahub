@@ -1,0 +1,529 @@
+/* Select Account Page Styles - Based on Inactive Accounts Design */
+.select-account-page {
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 0;
+  margin: 0;
+}
+
+/* Preserve header and footer styles */
+.select-account-page .clean-header,
+.select-account-page .page-footer {
+  position: relative;
+  z-index: 10;
+}
+
+/* Theme Backgrounds */
+.select-account-page.dark-theme {
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(88, 86, 214, 0.4) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(175, 82, 222, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 70%, rgba(255, 45, 146, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(255, 59, 48, 0.3) 0%, transparent 50%),
+    linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 50%, #1c1c1e 100%);
+  color: #ffffff;
+}
+
+.select-account-page.dark-theme::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.01) 2px,
+      rgba(255, 255, 255, 0.01) 4px
+    ),
+    radial-gradient(circle at 60% 40%, rgba(0, 122, 255, 0.1) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 1;
+  animation: subtleShift 20s ease-in-out infinite alternate;
+}
+
+.select-account-page.light-theme {
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(0, 122, 255, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 30%, rgba(0, 122, 255, 0.06) 0%, transparent 60%),
+    radial-gradient(circle at 30% 80%, rgba(0, 122, 255, 0.05) 0%, transparent 55%),
+    radial-gradient(circle at 70% 70%, rgba(0, 122, 255, 0.04) 0%, transparent 65%),
+    linear-gradient(135deg, #ffffff 0%, #f8f9fa 25%, #ffffff 50%, #f8f9fa 75%, #ffffff 100%);
+  color: #000000;
+}
+
+.select-account-page.light-theme::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 122, 255, 0.008) 2px,
+      rgba(0, 122, 255, 0.008) 4px
+    ),
+    radial-gradient(circle at 40% 60%, rgba(0, 122, 255, 0.06) 0%, transparent 70%),
+    radial-gradient(circle at 60% 40%, rgba(0, 122, 255, 0.04) 0%, transparent 75%);
+  pointer-events: none;
+  z-index: 1;
+  animation: subtleShift 20s ease-in-out infinite alternate;
+}
+
+/* Subtle animation for background */
+@keyframes subtleShift {
+  0% {
+    transform: translateX(0) translateY(0) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateX(2px) translateY(-1px) scale(1.001);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateX(-1px) translateY(1px) scale(1);
+    opacity: 0.8;
+  }
+}
+
+/* Main Content */
+.select-account-main-content {
+  flex: 1;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
+  padding: 2rem 0;
+  position: relative;
+  z-index: 2;
+}
+
+.select-account-main-content.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.select-account-content-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+/* Accounts Grid */
+.select-account-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1.5rem;
+  justify-content: center;
+  max-width: 1300px;
+  margin: 0 auto;
+  align-items: stretch;
+}
+
+/* Account Cards - Enhanced Apple Design */
+.select-account-card {
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-radius: 12px;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  animation: cardAppear 0.8s ease forwards;
+  min-height: 180px;
+  max-width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
+
+/* Active Account Cards - Green Theme */
+.select-account-card.active {
+  background: 
+    linear-gradient(135deg, rgba(34, 197, 94, 0.3) 0%, rgba(22, 163, 74, 0.25) 50%, rgba(21, 128, 61, 0.2) 100%),
+    rgba(255, 255, 255, 0.7);
+  border-color: rgba(34, 197, 94, 0.4);
+  box-shadow: 
+    0 4px 16px rgba(34, 197, 94, 0.25),
+    0 2px 8px rgba(34, 197, 94, 0.2),
+    0 8px 32px rgba(34, 197, 94, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Inactive Account Cards - Red Theme */
+.select-account-card.inactive {
+  background: 
+    linear-gradient(135deg, rgba(239, 68, 68, 0.3) 0%, rgba(220, 38, 38, 0.25) 50%, rgba(185, 28, 28, 0.2) 100%),
+    rgba(255, 255, 255, 0.7);
+  border-color: rgba(239, 68, 68, 0.4);
+  box-shadow: 
+    0 4px 16px rgba(239, 68, 68, 0.25),
+    0 2px 8px rgba(239, 68, 68, 0.2),
+    0 8px 32px rgba(239, 68, 68, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Dark Theme Card Styles */
+.select-account-page.dark-theme .select-account-card.active {
+  background: 
+    linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(22, 163, 74, 0.15) 50%, rgba(21, 128, 61, 0.12) 100%),
+    rgba(28, 28, 30, 0.7);
+  border-color: rgba(34, 197, 94, 0.5);
+  box-shadow: 
+    0 4px 16px rgba(34, 197, 94, 0.3),
+    0 2px 8px rgba(34, 197, 94, 0.25),
+    0 8px 32px rgba(34, 197, 94, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.select-account-page.dark-theme .select-account-card.inactive {
+  background: 
+    linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.15) 50%, rgba(185, 28, 28, 0.12) 100%),
+    rgba(28, 28, 30, 0.7);
+  border-color: rgba(239, 68, 68, 0.5);
+  box-shadow: 
+    0 4px 16px rgba(239, 68, 68, 0.3),
+    0 2px 8px rgba(239, 68, 68, 0.25),
+    0 8px 32px rgba(239, 68, 68, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Card Top Lines */
+.select-account-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.select-account-card.active::before {
+  background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.6), transparent);
+}
+
+.select-account-card.inactive::before {
+  background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.6), transparent);
+}
+
+.select-account-page.dark-theme .select-account-card.active::before {
+  background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.3), transparent);
+}
+
+.select-account-page.dark-theme .select-account-card.inactive::before {
+  background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.3), transparent);
+}
+
+/* Hover Effects */
+.select-account-card:hover {
+  transform: translateY(-2px);
+}
+
+.select-account-card.active:hover {
+  background: 
+    linear-gradient(135deg, rgba(34, 197, 94, 0.4) 0%, rgba(22, 163, 74, 0.35) 50%, rgba(21, 128, 61, 0.3) 100%),
+    rgba(255, 255, 255, 0.8);
+  border-color: rgba(34, 197, 94, 0.6);
+  box-shadow: 
+    0 6px 20px rgba(34, 197, 94, 0.35),
+    0 3px 10px rgba(34, 197, 94, 0.25),
+    0 8px 32px rgba(34, 197, 94, 0.2);
+}
+
+.select-account-card.inactive:hover {
+  background: 
+    linear-gradient(135deg, rgba(239, 68, 68, 0.4) 0%, rgba(220, 38, 38, 0.35) 50%, rgba(185, 28, 28, 0.3) 100%),
+    rgba(255, 255, 255, 0.8);
+  border-color: rgba(239, 68, 68, 0.6);
+  box-shadow: 
+    0 6px 20px rgba(239, 68, 68, 0.35),
+    0 3px 10px rgba(239, 68, 68, 0.25),
+    0 8px 32px rgba(239, 68, 68, 0.2);
+}
+
+.select-account-page.dark-theme .select-account-card.active:hover {
+  background: 
+    linear-gradient(135deg, rgba(34, 197, 94, 0.3) 0%, rgba(22, 163, 74, 0.25) 50%, rgba(21, 128, 61, 0.2) 100%),
+    rgba(28, 28, 30, 0.8);
+  border-color: rgba(34, 197, 94, 0.7);
+  box-shadow: 
+    0 6px 20px rgba(34, 197, 94, 0.4),
+    0 3px 10px rgba(34, 197, 94, 0.3),
+    0 8px 32px rgba(34, 197, 94, 0.25);
+}
+
+.select-account-page.dark-theme .select-account-card.inactive:hover {
+  background: 
+    linear-gradient(135deg, rgba(239, 68, 68, 0.3) 0%, rgba(220, 38, 38, 0.25) 50%, rgba(185, 28, 28, 0.2) 100%),
+    rgba(28, 28, 30, 0.8);
+  border-color: rgba(239, 68, 68, 0.7);
+  box-shadow: 
+    0 6px 20px rgba(239, 68, 68, 0.4),
+    0 3px 10px rgba(239, 68, 68, 0.3),
+    0 8px 32px rgba(239, 68, 68, 0.25);
+}
+
+.select-account-card:hover::before {
+  opacity: 1;
+}
+
+.select-account-card:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+/* Status Dot */
+.select-account-status-dot {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 10px;
+  height: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.select-account-status-dot.active {
+  background: #34C759;
+  box-shadow: 0 0 0 1px rgba(52, 199, 89, 0.3), 0 2px 8px rgba(52, 199, 89, 0.4);
+}
+
+.select-account-status-dot.inactive {
+  background: #FF3B30;
+  box-shadow: 0 0 0 1px rgba(255, 59, 48, 0.3), 0 2px 8px rgba(255, 59, 48, 0.4);
+}
+
+/* User Avatar */
+.select-account-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.25);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem auto 0.75rem;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 
+    0 3px 12px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.select-account-card:hover .select-account-avatar {
+  transform: scale(1.02);
+}
+
+/* Avatar Icon */
+.select-account-avatar-icon {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.select-account-avatar-head {
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  margin-bottom: 1px;
+}
+
+.select-account-avatar-body {
+  width: 12px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 10px 10px 0 0;
+}
+
+/* Account Info */
+.select-account-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.select-account-name {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  color: #1d1d1f;
+  letter-spacing: -0.2px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.select-account-page.dark-theme .select-account-name {
+  color: #f2f2f7;
+}
+
+.select-account-position {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  padding: 0.25rem 0.5rem;
+  font-size: 10px;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 
+    0 2px 6px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+.select-account-card:hover .select-account-position {
+  transform: scale(1.05);
+}
+
+/* Card Animation */
+@keyframes cardAppear {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .select-account-grid {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1.25rem;
+    max-width: 1100px;
+  }
+  
+  .select-account-card {
+    max-width: 180px;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 1000px) {
+  .select-account-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    max-width: 800px;
+  }
+  
+  .select-account-card {
+    max-width: 250px;
+    min-height: 200px;
+    padding: 1.5rem;
+  }
+  
+  .select-account-avatar {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .select-account-name {
+    font-size: 16px;
+  }
+  
+  .select-account-position {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .select-account-content-container {
+    padding: 0 1rem;
+    gap: 2rem;
+  }
+
+  .select-account-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    max-width: 500px;
+  }
+
+  .select-account-card {
+    padding: 1.5rem;
+    min-height: 220px;
+    max-width: none;
+  }
+
+  .select-account-avatar {
+    width: 56px;
+    height: 56px;
+  }
+
+  .select-account-name {
+    font-size: 18px;
+  }
+
+  .select-account-position {
+    font-size: 13px;
+    padding: 0.4rem 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .select-account-content-container {
+    gap: 1.5rem;
+  }
+
+  .select-account-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    max-width: 350px;
+  }
+
+  .select-account-card {
+    padding: 1.5rem;
+    min-height: 200px;
+  }
+
+  .select-account-avatar {
+    width: 50px;
+    height: 50px;
+  }
+
+  .select-account-name {
+    font-size: 16px;
+  }
+
+  .select-account-position {
+    font-size: 12px;
+    padding: 0.3rem 0.6rem;
+  }
+}
