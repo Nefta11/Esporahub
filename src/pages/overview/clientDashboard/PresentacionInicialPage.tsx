@@ -199,11 +199,9 @@ const PresentacionInicialPage: React.FC = () => {
                 </div>
                 <div className="pdf-viewer">
                   <iframe
-                    src={pdfFile.url}
-                    width="100%"
-                    height="100%"
-                    title="PDF Viewer"
+                    src={`${pdfFile.url}#toolbar=1&navpanes=0&scrollbar=1&page=1&view=FitH&zoom=150`}
                     className="pdf-iframe"
+                    title="PDF Viewer"
                   />
                 </div>
               </div>
