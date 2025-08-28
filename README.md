@@ -1,4 +1,4 @@
-# 🌱 Esporahub
+# <img src="https://raw.githubusercontent.com/Esporadix-team/imagenes_logos/main/esporaLogo.png" alt="Esporahub Logo" width="32" height="32"> Esporahub
 
 > **Plataforma integral de gestión de campañas políticas y comunicación estratégica**
 
