@@ -580,9 +580,182 @@
     0 4px 24px rgba(0, 0, 0, 0.04),
     0 1px 6px rgba(0, 0, 0, 0.02);
   overflow: hidden;
-  max-height: 60vh;
+  max-height: 70vh;
   min-height: 50vh;
   margin: 0;
+  position: relative;
+}
+
+/* Contenedor para el scroll horizontal arriba */
+.table-horizontal-scroll {
+  width: 100%;
+  height: 20px; /* Aumentado para mejor visibilidad */
+  overflow-x: scroll; /* Forzar scroll visible */
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  position: relative;
+  z-index: 16;
+  background: rgba(0, 122, 255, 0.08);
+  border: 1px solid rgba(0, 122, 255, 0.15);
+}
+
+/* Contenido invisible para crear el scroll */
+.table-scroll-content {
+  height: 1px;
+  min-width: 4000px; /* Valor inicial mientras se ajusta dinámicamente */
+  width: 4000px;
+  background: transparent;
+}
+
+/* Estilos para la barra de scroll horizontal superior */
+.table-horizontal-scroll::-webkit-scrollbar {
+  height: 16px; /* Más grande para mejor interacción */
+  -webkit-appearance: none;
+}
+
+.table-horizontal-scroll::-webkit-scrollbar-track {
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+/* Dark theme horizontal scroll track */
+.workhub-page.dark-theme .table-horizontal-scroll::-webkit-scrollbar-track {
+  background: linear-gradient(135deg, 
+    rgba(0, 0, 0, 0.3) 0%, 
+    rgba(26, 11, 46, 0.4) 50%, 
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  border: 1px solid rgba(147, 112, 219, 0.1);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Light theme horizontal scroll track */
+.workhub-page.light-theme .table-horizontal-scroll::-webkit-scrollbar-track {
+  background: linear-gradient(135deg, 
+    rgba(0, 0, 0, 0.05) 0%, 
+    rgba(0, 0, 0, 0.08) 50%, 
+    rgba(0, 0, 0, 0.05) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-horizontal-scroll::-webkit-scrollbar-thumb {
+  border-radius: 6px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+/* Dark theme horizontal scroll thumb */
+.workhub-page.dark-theme .table-horizontal-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, 
+    rgba(147, 112, 219, 0.8) 0%, 
+    rgba(186, 156, 255, 0.9) 50%, 
+    rgba(147, 112, 219, 0.8) 100%
+  );
+  border: 1px solid rgba(147, 112, 219, 0.3);
+  box-shadow: 
+    0 2px 8px rgba(147, 112, 219, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Light theme horizontal scroll thumb */
+.workhub-page.light-theme .table-horizontal-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, 
+    rgba(0, 122, 255, 0.6) 0%, 
+    rgba(0, 122, 255, 0.8) 50%, 
+    rgba(0, 122, 255, 0.6) 100%
+  );
+  border: 1px solid rgba(0, 122, 255, 0.3);
+  box-shadow: 
+    0 2px 8px rgba(0, 122, 255, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Dark theme horizontal scroll hover */
+.workhub-page.dark-theme .table-horizontal-scroll::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, 
+    rgba(147, 112, 219, 1) 0%, 
+    rgba(186, 156, 255, 1) 50%, 
+    rgba(147, 112, 219, 1) 100%
+  );
+  box-shadow: 
+    0 4px 16px rgba(147, 112, 219, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+  border-color: rgba(147, 112, 219, 0.5);
+}
+
+/* Light theme horizontal scroll hover */
+.workhub-page.light-theme .table-horizontal-scroll::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, 
+    rgba(0, 122, 255, 0.8) 0%, 
+    rgba(0, 122, 255, 1) 50%, 
+    rgba(0, 122, 255, 0.8) 100%
+  );
+  box-shadow: 
+    0 4px 16px rgba(0, 122, 255, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+  border-color: rgba(0, 122, 255, 0.5);
+}
+
+/* Scroll wrapper - solo scroll vertical */
+.workhub-table-scroll {
+  overflow-x: hidden; /* Sin scroll horizontal aquí */
+  overflow-y: auto;
+  max-height: 65vh;
+  position: relative;
+  scrollbar-width: thin;
+}
+
+/* Solo scroll vertical en el contenedor principal */
+.workhub-table-scroll::-webkit-scrollbar {
+  width: 12px;
+}
+
+.workhub-table-scroll::-webkit-scrollbar:horizontal {
+  display: none;
+}
+
+.workhub-table-scroll::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+}
+
+.workhub-table-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 122, 255, 0.3);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.workhub-table-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 122, 255, 0.5);
+  background-clip: content-box;
+}
+
+.workhub-table-scroll::-webkit-scrollbar-corner {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Dark theme scrollbar */
+.workhub-page.dark-theme .workhub-table-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.workhub-page.dark-theme .workhub-table-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 122, 255, 0.4);
+}
+
+.workhub-page.dark-theme .workhub-table-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 122, 255, 0.6);
+}
+
+.workhub-page.dark-theme .workhub-table-scroll::-webkit-scrollbar-corner {
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .workhub-page.dark-theme .workhub-table-container {
@@ -594,12 +767,13 @@
 }
 
 .workhub-table {
-  width: 100%;
+  width: auto; /* Permitir que se ajuste al contenido */
   border-collapse: separate;
   border-spacing: 0;
   font-size: 15px;
-  min-width: 2000px;
+  min-width: max-content; /* Ajustarse al contenido de las columnas */
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+  transition: transform 0.1s ease;
 }
 
 .workhub-table th {
@@ -613,6 +787,38 @@
   -webkit-backdrop-filter: blur(20px);
   z-index: 10;
   letter-spacing: -0.2px;
+}
+
+/* Enhanced header styling */
+.workhub-table-header {
+  padding: 18px 16px !important;
+  text-align: center !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  letter-spacing: -0.1px !important;
+  position: sticky !important;
+  top: 0 !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  z-index: 10 !important;
+  vertical-align: middle !important;
+  white-space: nowrap !important;
+  min-width: 140px !important;
+  max-width: 180px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.workhub-page.dark-theme .workhub-table-header {
+  color: rgba(255, 255, 255, 0.9) !important;
+  border-bottom: 1px solid rgba(84, 84, 88, 0.4) !important;
+  background: rgba(28, 28, 30, 0.95) !important;
+}
+
+.workhub-page.light-theme .workhub-table-header {
+  color: #1d1d1f !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
 }
 
 .workhub-page.dark-theme .workhub-table th {
@@ -699,6 +905,96 @@
 
 .workhub-page.dark-theme .workhub-table input::placeholder {
   color: rgba(235, 235, 245, 0.6);
+}
+
+/* Enhanced table cell styling */
+.workhub-table-cell {
+  padding: 14px !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  border-bottom: 1px solid !important;
+}
+
+.workhub-page.dark-theme .workhub-table-cell {
+  border-bottom-color: rgba(84, 84, 88, 0.2) !important;
+}
+
+.workhub-page.light-theme .workhub-table-cell {
+  border-bottom-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Enhanced input styling */
+.workhub-table-input {
+  width: 100% !important;
+  padding: 10px 14px !important;
+  border-radius: 10px !important;
+  border: 1px solid !important;
+  font-size: 14px !important;
+  outline: none !important;
+  transition: all 0.25s ease !important;
+  font-family: inherit !important;
+  background: transparent !important;
+  text-align: center !important;
+  min-width: 140px !important; /* Aumentado para mejor legibilidad */
+  max-width: 200px !important; /* Aumentado para contenido largo */
+  cursor: pointer !important;
+}
+
+.workhub-table-input:focus {
+  border-color: #007AFF !important;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1) !important;
+}
+
+.workhub-page.dark-theme .workhub-table-input {
+  border-color: rgba(84, 84, 88, 0.3) !important;
+  color: white !important;
+}
+
+.workhub-page.dark-theme .workhub-table-input:focus {
+  border-color: #0A84FF !important;
+  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.15) !important;
+}
+
+.workhub-page.light-theme .workhub-table-input {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  color: #1d1d1f !important;
+}
+
+.workhub-page.light-theme .workhub-table-input::placeholder {
+  color: rgba(60, 60, 67, 0.6) !important;
+}
+
+.workhub-page.dark-theme .workhub-table-input::placeholder {
+  color: rgba(235, 235, 245, 0.6) !important;
+}
+
+/* Action button styling */
+.workhub-action-btn {
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 8px !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.workhub-action-btn-primary {
+  color: #007AFF !important;
+}
+
+.workhub-action-btn-primary:hover {
+  background: rgba(0, 122, 255, 0.1) !important;
+}
+
+.workhub-action-btn-success {
+  color: #34C759 !important;
+}
+
+.workhub-action-btn-success:hover {
+  background: rgba(52, 199, 89, 0.1) !important;
 }
 
 

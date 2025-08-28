@@ -56,6 +56,72 @@ const WorkHubPage: React.FC = () => {
     document.body.classList.contains('dark-theme')
   );
 
+  // Referencias para sincronizar los scrolls
+  const topScrollRef = React.useRef<HTMLDivElement>(null);
+  const tableScrollRef = React.useRef<HTMLDivElement>(null);
+
+  // Función para sincronizar scrolls
+  const syncScrollFromTop = () => {
+    if (topScrollRef.current && tableScrollRef.current) {
+      const table = tableScrollRef.current.querySelector('table');
+      if (table) {
+        const scrollLeft = topScrollRef.current.scrollLeft;
+        const maxScroll = topScrollRef.current.scrollWidth - topScrollRef.current.clientWidth;
+
+        // Aplicar transformación suave
+        table.style.transform = `translateX(-${scrollLeft}px)`;
+
+        // Feedback visual mejorado
+        if (scrollLeft > 0) {
+          const scrollPercentage = scrollLeft / maxScroll;
+          table.style.boxShadow = `5px 0 15px rgba(0, 122, 255, ${0.1 + scrollPercentage * 0.2})`;
+        } else {
+          table.style.boxShadow = 'none';
+        }
+      }
+    }
+  };
+
+  // Función para ajustar el ancho del scroll al ancho real de la tabla
+  const adjustScrollWidth = React.useCallback(() => {
+    if (topScrollRef.current && tableScrollRef.current) {
+      const table = tableScrollRef.current.querySelector('table');
+      const scrollContent = topScrollRef.current.querySelector('.table-scroll-content');
+
+      if (table && scrollContent) {
+        const tableWidth = table.scrollWidth;
+        (scrollContent as HTMLElement).style.minWidth = `${tableWidth}px`;
+      }
+    }
+  }, []);
+
+  // Ajustar el ancho del scroll cuando se cargan los items del proyecto
+  React.useEffect(() => {
+    if (projectItems.length > 0) {
+      // Esperar un momento para que la tabla se renderice completamente
+      setTimeout(adjustScrollWidth, 100);
+      // Segundo intento por si acaso el primero no fue suficiente
+      setTimeout(adjustScrollWidth, 500);
+    }
+  }, [projectItems, adjustScrollWidth]);
+
+  // También ajustar después de que el tab esté activo
+  React.useEffect(() => {
+    if (activeTab === 'proyecto' && projectItems.length > 0) {
+      setTimeout(adjustScrollWidth, 200);
+    }
+  }, [activeTab, projectItems.length, adjustScrollWidth]);
+
+  // También ajustar cuando cambie el tamaño de la ventana
+  React.useEffect(() => {
+    const handleResize = () => {
+      adjustScrollWidth();
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [adjustScrollWidth]);
+
   const handleThemeToggle = () => {
     if (isDarkMode) {
       document.body.classList.remove('dark-theme');
@@ -457,310 +523,46 @@ const WorkHubPage: React.FC = () => {
               </div>
             ) : (
               <div className="workhub-table-container">
-                <div style={{ overflowX: 'auto' }}>
+                {/* Barra de scroll horizontal superior */}
+                <div
+                  ref={topScrollRef}
+                  className="table-horizontal-scroll"
+                  onScroll={syncScrollFromTop}
+                >
+                  <div className="table-scroll-content"></div>
+                </div>
+                <div
+                  className="workhub-table-scroll"
+                  ref={tableScrollRef}
+                >
                   <table className="workhub-table">
                     <thead>
                       <tr>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Actualizaciones</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Nivel de Progreso</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Fase del Proyecto</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Línea Estratégica</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Microcampaña</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Estado Actual</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Gerente de Proyecto</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Equipo de Trabajo</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Nombre del Colaborador</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Perfil Profesional</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Fechas de Entrega</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Semana Actual</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Tipo de Elemento</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Cantidad Total</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Cantidad en Proceso</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Cantidad Aprobada</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Fecha de Finalización</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Repositorio de Contenido</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Repositorio de Firmas</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Enlaces de Repositorio</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Desarrollo creativo</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Fecha testeo</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Estatus testeo</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Entrega al cliente</th>
-                        <th style={{
-                          padding: '16px 12px',
-                          textAlign: 'left',
-                          fontWeight: '600',
-                          fontSize: '13px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#1a202c',
-                          borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                          position: 'sticky',
-                          top: 0,
-                          background: isDarkMode ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                          backdropFilter: 'blur(20px)'
-                        }}>Nombre del archivo</th>
+                        <th className="workhub-table-header">Actualizaciones</th>
+                        <th className="workhub-table-header">Nivel de Progreso</th>
+                        <th className="workhub-table-header">Fase del Proyecto</th>
+                        <th className="workhub-table-header">Línea Estratégica</th>
+                        <th className="workhub-table-header">Microcampaña</th>
+                        <th className="workhub-table-header">Estado Actual</th>
+                        <th className="workhub-table-header">Gerente de Proyecto</th>
+                        <th className="workhub-table-header">Equipo de Trabajo</th>
+                        <th className="workhub-table-header">Nombre del Colaborador</th>
+                        <th className="workhub-table-header">Perfil Profesional</th>
+                        <th className="workhub-table-header">Fechas de Entrega</th>
+                        <th className="workhub-table-header">Semana Actual</th>
+                        <th className="workhub-table-header">Tipo de Elemento</th>
+                        <th className="workhub-table-header">Cantidad Total</th>
+                        <th className="workhub-table-header">Cantidad en Proceso</th>
+                        <th className="workhub-table-header">Cantidad Aprobada</th>
+                        <th className="workhub-table-header">Fecha de Finalización</th>
+                        <th className="workhub-table-header">Repositorio de Contenido</th>
+                        <th className="workhub-table-header">Repositorio de Firmas</th>
+                        <th className="workhub-table-header">Enlaces de Repositorio</th>
+                        <th className="workhub-table-header">Desarrollo creativo</th>
+                        <th className="workhub-table-header">Fecha testeo</th>
+                        <th className="workhub-table-header">Estatus testeo</th>
+                        <th className="workhub-table-header">Entrega al cliente</th>
+                        <th className="workhub-table-header">Nombre del archivo</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -770,146 +572,70 @@ const WorkHubPage: React.FC = () => {
                             borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
                             transition: 'all 0.2s ease'
                           }}>
-                            <td style={{ padding: '12px' }}>
-                              <button style={{
-                                background: 'none',
-                                border: 'none',
-                                cursor: 'pointer',
-                                padding: '8px',
-                                borderRadius: '8px',
-                                color: '#007AFF',
-                                transition: 'all 0.2s ease'
-                              }}>
+                            <td className="workhub-table-cell">
+                              <button className="workhub-action-btn workhub-action-btn-primary">
                                 <FileText size={16} />
                               </button>
                             </td>
-                            <td style={{ padding: '12px' }}>
-                              <button style={{
-                                background: 'none',
-                                border: 'none',
-                                cursor: 'pointer',
-                                padding: '8px',
-                                borderRadius: '8px',
-                                color: '#34C759',
-                                transition: 'all 0.2s ease'
-                              }}>
+                            <td className="workhub-table-cell">
+                              <button className="workhub-action-btn workhub-action-btn-success">
                                 <ArrowUp size={16} />
                               </button>
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="text"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'fase')}
                                 placeholder="Fase"
                                 readOnly
                                 onClick={() => openModal(item.id, 'Fase')}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="text"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'linea_estrategica')}
                                 placeholder="Línea estratégica"
                                 readOnly
                                 onClick={() => openModal(item.id, 'Línea estratégica')}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="text"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'microcampana')}
                                 placeholder="Microcampaña"
                                 readOnly
                                 onClick={() => openModal(item.id, 'Microcampaña')}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="text"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'estatus')}
                                 placeholder="Estatus"
                                 readOnly
                                 onClick={() => openModal(item.id, 'Estatus')}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="text"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'gerente')}
                                 placeholder="Gerente"
                                 readOnly
                                 onClick={() => openModal(item.id, 'Gerente')}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="text"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'colaboradores')}
                                 placeholder="Colaboradores"
                                 readOnly
