@@ -14,7 +14,7 @@ import ThemeToggle from '@/components/layout/ThemeToggle';
 import AccessDeniedModal from '@/components/modals/AccessDeniedModal';
 import EsporaIA from '@/components/generals/EsporaIA';
 import '@/styles/menu.css';
-import '@/styles/espora-ia.css';
+
 
 interface MenuItem {
   id: string;

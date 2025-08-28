@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, X, Bot, User, Minimize2, Maximize2 } from 'lucide-react';
+import '@/styles/components/generals/espora-ia.css';
+
 
 interface Message {
     id: string;
