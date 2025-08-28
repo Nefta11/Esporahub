@@ -5,7 +5,7 @@ import PageHeader from '@/components/layout/PageHeader';
 import PageFooter from '@/components/layout/PageFooter';
 import { storage } from '@/utils/storage';
 import InputModal from '@/components/modals/InputModal';
-import '@/styles/worhub/workhub.css';
+import '@/styles/workhub/workhub.css';
 
 interface TaskAssignment {
   itemId: string;
