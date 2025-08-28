@@ -7,12 +7,12 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import { hasPermission } from '@/data/users';
-import LogoutDialog from '@/components/generals/LogoutDialog';
+import LogoutDialog from '@/components/modals/LogoutDialog';
 import Logo from '@/components/layout/Logo';
 import UserAvatar from '@/components/layout/UserAvatar';
 import ThemeToggle from '@/components/layout/ThemeToggle';
 import AccessDeniedModal from '@/components/modals/AccessDeniedModal';
-import EsporaIA from '@/components/EsporaIA';
+import EsporaIA from '@/components/generals/EsporaIA';
 import '@/styles/menu.css';
 import '@/styles/espora-ia.css';
 

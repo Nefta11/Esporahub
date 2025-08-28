@@ -4,7 +4,7 @@ import { LogOut, Upload, FileText, Download, Trash2, } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import { hasPermission } from '@/data/users';
 import PageHeader from '@/components/layout/PageHeader';
-import LogoutDialog from '@/components/generals/LogoutDialog';
+import LogoutDialog from '@/components/modals/LogoutDialog';
 import AccessDeniedModal from '@/components/modals/AccessDeniedModal';
 import '@/styles/overview/presentacion-inicial.css';
 

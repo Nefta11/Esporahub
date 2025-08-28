@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, Calendar, Clock, AlertCircle, CheckCircle, FileText, ArrowUp, Briefcase, ArrowLeft } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
-import LogoutDialog from '@/components/generals/LogoutDialog';
+import LogoutDialog from '@/components/modals/LogoutDialog';
 import Logo from '@/components/layout/Logo';
 import UserAvatar from '@/components/layout/UserAvatar';
 import ThemeToggle from '@/components/layout/ThemeToggle';

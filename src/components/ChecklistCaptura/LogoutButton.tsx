@@ -1,6 +1,6 @@
 import React from 'react';
 import { LogOut } from 'lucide-react';
-import LogoutDialog from '@/components/generals/LogoutDialog';
+import LogoutDialog from '@/components/modals/LogoutDialog';
 
 interface TaskAssignment {
     itemId: string;

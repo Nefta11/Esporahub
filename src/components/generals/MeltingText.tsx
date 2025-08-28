@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import '../styles/melting-text.css';
+import '@/styles/melting-text.css';
 
 interface MeltingTextProps {
     text: string;
