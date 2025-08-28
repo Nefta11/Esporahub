@@ -1,5 +1,10 @@
-import React from 'react';
+
 import { FileText, ArrowUp, Briefcase } from 'lucide-react';
+
+interface StorageLike {
+  getItem: (key: string) => unknown;
+  setItem: (key: string, value: unknown) => void;
+}
 
 interface ProjectItem {
   id: string;
@@ -19,7 +24,7 @@ interface ProjectTableProps {
   topScrollRef: React.RefObject<HTMLDivElement>;
   tableScrollRef: React.RefObject<HTMLDivElement>;
   syncScrollFromTop: () => void;
-  storage: any;
+  storage: StorageLike;
 }
 
 const ProjectTable: React.FC<ProjectTableProps> = ({
