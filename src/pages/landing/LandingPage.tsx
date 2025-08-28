@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import LoginButton from '@/components/generals/LoginButton';
 import Logo from '@/components/layout/Logo';
 import MeltingText from '@/components/generals/MeltingText';
-import '@/styles/landing.css';
+import '@/styles/landing/landing.css';
 
 const Header: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);

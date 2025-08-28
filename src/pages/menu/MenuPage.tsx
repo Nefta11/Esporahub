@@ -13,7 +13,7 @@ import UserAvatar from '@/components/layout/UserAvatar';
 import ThemeToggle from '@/components/layout/ThemeToggle';
 import AccessDeniedModal from '@/components/modals/AccessDeniedModal';
 import EsporaIA from '@/components/generals/EsporaIA';
-import '@/styles/menu.css';
+import '@/styles/menu/menu.css';
 
 
 interface MenuItem {
