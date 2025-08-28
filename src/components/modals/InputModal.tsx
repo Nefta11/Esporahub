@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Check, Edit3 } from 'lucide-react';
+import '@/styles/components/modals/input-modal.css';
 
 interface InputModalProps {
   isOpen: boolean;
@@ -22,7 +23,7 @@ const InputModal: React.FC<InputModalProps> = ({
 }) => {
   const [value, setValue] = useState(initialValue);
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(null);
-  
+
   // Detectar el tema actual desde el body
   const isDarkMode = document.body.classList.contains('dark-theme');
 

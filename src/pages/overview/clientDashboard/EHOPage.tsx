@@ -10,7 +10,6 @@ import InputModal from '@/components/modals/InputModal';
 import { User } from '@/data/users';
 import { storage } from '@/utils/storage';
 import '@/styles/overview/eho.css';
-import '@/styles/input-modal.css';
 
 const EHOPage: React.FC = () => {
   const navigate = useNavigate();
