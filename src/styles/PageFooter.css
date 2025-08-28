@@ -18,7 +18,8 @@
 .account-page.dark-theme .clean-footer,
 .expediente-page.dark-theme .clean-footer,
 .checklist-captura-page.dark-theme .clean-footer,
-.presentacion-inicial-page.dark-theme .clean-footer {
+.presentacion-inicial-page.dark-theme .clean-footer,
+.workhub-page.dark-theme .clean-footer {
   background: rgba(28, 28, 30, 0.8);
   border-top-color: rgba(84, 84, 88, 0.65);
 }
@@ -34,7 +35,8 @@
 .account-page.light-theme .clean-footer,
 .expediente-page.light-theme .clean-footer,
 .checklist-captura-page.light-theme .clean-footer,
-.presentacion-inicial-page.light-theme .clean-footer {
+.presentacion-inicial-page.light-theme .clean-footer,
+.workhub-page.light-theme .clean-footer {
   background: rgba(255, 255, 255, 0.8);
   border-top-color: rgba(0, 0, 0, 0.1);
 }
@@ -49,7 +51,8 @@
 }
 
 .footer-text {
-  font-size: 13px;
+  font-size: 15px;
+  font-weight: bold;
   opacity: 0.6;
   transition: color 0.3s ease;
 }
@@ -65,7 +68,8 @@
 .account-page.dark-theme .footer-text,
 .expediente-page.dark-theme .footer-text,
 .checklist-captura-page.dark-theme .footer-text,
-.presentacion-inicial-page.dark-theme .footer-text {
+.presentacion-inicial-page.dark-theme .footer-text,
+.workhub-page.dark-theme .footer-text {
   color: rgba(255, 255, 255, 0.8);
 }
 
@@ -80,8 +84,9 @@
 .account-page.light-theme .footer-text,
 .expediente-page.light-theme .footer-text,
 .checklist-captura-page.light-theme .footer-text,
-.presentacion-inicial-page.light-theme .footer-text {
-  color: rgba(0, 0, 0, 0.8);
+.presentacion-inicial-page.light-theme .footer-text,
+.workhub-page.light-theme .footer-text {
+  color: #007AFF;
 }
 
 .logout-btn {
@@ -108,7 +113,8 @@
 .account-page.dark-theme .logout-btn,
 .expediente-page.dark-theme .logout-btn,
 .checklist-captura-page.dark-theme .logout-btn,
-.presentacion-inicial-page.dark-theme .logout-btn {
+.presentacion-inicial-page.dark-theme .logout-btn,
+.workhub-page.dark-theme .logout-btn {
   background: rgba(255, 59, 48, 0.1);
   color: #FF375F;
   border: 1px solid rgba(255, 59, 48, 0.2);
@@ -124,7 +130,8 @@
 .account-page.dark-theme .logout-btn:hover,
 .expediente-page.dark-theme .logout-btn:hover,
 .checklist-captura-page.dark-theme .logout-btn:hover,
-.presentacion-inicial-page.dark-theme .logout-btn:hover {
+.presentacion-inicial-page.dark-theme .logout-btn:hover,
+.workhub-page.dark-theme .logout-btn:hover {
   background: rgba(255, 59, 48, 0.2);
   transform: scale(1.05);
 }
@@ -140,7 +147,8 @@
 .account-page.light-theme .logout-btn,
 .expediente-page.light-theme .logout-btn,
 .checklist-captura-page.light-theme .logout-btn,
-.presentacion-inicial-page.light-theme .logout-btn {
+.presentacion-inicial-page.light-theme .logout-btn,
+.workhub-page.light-theme .logout-btn {
   background: rgba(255, 59, 48, 0.1);
   color: #FF3B30;
   border: 1px solid rgba(255, 59, 48, 0.2);
@@ -156,7 +164,8 @@
 .account-page.light-theme .logout-btn:hover,
 .expediente-page.light-theme .logout-btn:hover,
 .checklist-captura-page.light-theme .logout-btn:hover,
-.presentacion-inicial-page.light-theme .logout-btn:hover {
+.presentacion-inicial-page.light-theme .logout-btn:hover,
+.workhub-page.light-theme .logout-btn:hover {
   background: rgba(255, 59, 48, 0.15);
   transform: scale(1.05);
 }

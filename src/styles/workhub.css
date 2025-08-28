@@ -85,112 +85,6 @@
   }
 }
 
-/* Clean Header */
-.workhub-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 0.5px solid;
-  transition: all 0.3s ease;
-}
-
-.workhub-page.dark-theme .workhub-header {
-  background: rgba(28, 28, 30, 0.4);
-  border-bottom-color: rgba(84, 84, 88, 0.65);
-}
-
-.workhub-page.light-theme .workhub-header {
-  background: rgba(255, 255, 255, 0.3);
-  border-bottom-color: rgba(0, 0, 0, 0.1);
-}
-
-.workhub-header-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0.75rem 1.5rem;
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.workhub-header-left {
-  justify-self: start;
-}
-
-.workhub-back-button {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 20px;
-  font-size: 17px;
-  font-weight: 400;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-}
-
-.workhub-page.dark-theme .workhub-back-button {
-  background: rgba(0, 122, 255, 0.1);
-  color: #0A84FF;
-  border: 1px solid rgba(0, 122, 255, 0.2);
-}
-
-.workhub-page.dark-theme .workhub-back-button:hover {
-  background: rgba(0, 122, 255, 0.2);
-  transform: scale(1.05);
-}
-
-.workhub-page.light-theme .workhub-back-button {
-  background: rgba(0, 122, 255, 0.1);
-  color: #007AFF;
-  border: 1px solid rgba(0, 122, 255, 0.2);
-}
-
-.workhub-page.light-theme .workhub-back-button:hover {
-  background: rgba(0, 122, 255, 0.15);
-  transform: scale(1.05);
-}
-
-.workhub-header-center {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  justify-self: center;
-}
-
-.workhub-header-title {
-  text-align: center;
-}
-
-.workhub-header-title h1 {
-  font-size: 28px;
-  font-weight: 700;
-  margin: 0 0 0.25rem 0;
-  letter-spacing: -0.5px;
-  color: #007AFF;
-}
-
-.workhub-header-title p {
-  font-size: 15px;
-  margin: 0;
-  opacity: 0.6;
-}
-
-.workhub-header-right {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  position: absolute;
-  right: 2rem;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-}
 
 /* Main Content */
 .workhub-main {
@@ -198,7 +92,7 @@
   opacity: 0;
   transform: translateY(20px);
   transition: all 0.6s ease;
-  padding: 1rem 0;
+  padding: 2rem 0;
   display: flex;
   flex-direction: column;
 }
@@ -242,7 +136,7 @@
 }
 
 /* Tab Selector */
-.workhub-tab-selector {
+.tab-selector {
   padding: 12px 24px;
   border-radius: 22px;
   border: none;
@@ -253,32 +147,32 @@
   min-width: 120px;
 }
 
-.workhub-tab-selector.left {
+.tab-selector.left {
   border-radius: 22px 0 0 22px;
 }
 
-.workhub-tab-selector.right {
+.tab-selector.right {
   border-radius: 0 22px 22px 0;
 }
 
-.workhub-page.dark-theme .workhub-tab-selector {
+.workhub-page.dark-theme .tab-selector {
   background: rgba(118, 118, 128, 0.12);
   color: rgba(255, 255, 255, 0.8);
   border-right: 0.5px solid rgba(84, 84, 88, 0.65);
 }
 
-.workhub-page.dark-theme .workhub-tab-selector.active {
+.workhub-page.dark-theme .tab-selector.active {
   background: rgba(0, 122, 255, 0.8);
   color: white;
 }
 
-.workhub-page.light-theme .workhub-tab-selector {
+.workhub-page.light-theme .tab-selector {
   background: rgba(118, 118, 128, 0.12);
   color: rgba(60, 60, 67, 0.8);
   border-right: 0.5px solid rgba(60, 60, 67, 0.29);
 }
 
-.workhub-page.light-theme .workhub-tab-selector.active {
+.workhub-page.light-theme .tab-selector.active {
   background: rgba(0, 122, 255, 0.8);
   color: white;
 }
@@ -673,133 +567,6 @@
   margin: 0;
 }
 
-/* Legacy styles for compatibility */
-.workhub-action-card {
-  padding: 24px 10px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
-  opacity: 0;
-  animation: cardAppear 0.6s ease forwards;
-  border: 1px solid transparent;
-  position: relative;
-  overflow: hidden;
-  width: 250px;
-  min-height: 180px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  box-sizing: border-box;
-}
-
-.workhub-page.dark-theme .workhub-action-card {
-  background: rgba(28, 28, 30, 0.6);
-  border-color: rgba(84, 84, 88, 0.65);
-  box-shadow:
-    0 4px 16px rgba(0, 0, 0, 0.15),
-    0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.workhub-page.dark-theme .workhub-action-card:hover {
-  background: rgba(28, 28, 30, 0.8);
-  transform: none;
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.2),
-    0 4px 16px rgba(0, 0, 0, 0.1);
-}
-
-.workhub-page.light-theme .workhub-action-card {
-  background: rgba(255, 255, 255, 0.8);
-  border-color: rgba(0, 0, 0, 0.1);
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.08),
-    0 4px 12px rgba(0, 0, 0, 0.05),
-    0 2px 6px rgba(0, 0, 0, 0.03);
-}
-
-.workhub-page.light-theme .workhub-action-card:hover {
-  background: rgba(255, 255, 255, 0.95);
-  transform: none;
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.08),
-    0 4px 16px rgba(0, 0, 0, 0.04);
-}
-
-.workhub-action-card:active {
-  transform: none;
-}
-
-.workhub-card-header {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-  flex-direction: column;
-  text-align: center;
-}
-
-.workhub-card-icon {
-  width: 65px;
-  height: 65px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-  position: relative;
-  overflow: hidden;
-  margin: 0 auto;
-  flex-shrink: 0;
-}
-
-.workhub-card-icon::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 50%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
-  border-radius: 16px 16px 0 0;
-}
-
-.workhub-card-badge {
-  background: #FF3B30;
-  color: white;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 2px 7px;
-  border-radius: 999px;
-  min-width: 20px;
-  text-align: center;
-  box-shadow: 0 2px 8px rgba(255, 59, 48, 0.3);
-  display: inline-block;
-  z-index: 2;
-}
-
-.workhub-card-content h3 {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 0 0 0.5rem 0;
-  letter-spacing: -0.26px;
-  line-height: 1.2;
-}
-
-.workhub-card-content p {
-  font-size: 15px;
-  margin: 0 0 1rem 0;
-  opacity: 0.8;
-  line-height: 1.4;
-  flex: 1;
-}
-
-.workhub-card-footer {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: auto;
-}
 
 /* Project Table Styles - Enhanced Design */
 .workhub-table-container {
@@ -934,81 +701,8 @@
   color: rgba(235, 235, 245, 0.6);
 }
 
-/* Footer */
-.workhub-footer {
-  position: relative;
-  z-index: 50;
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-top: 0.5px solid;
-  padding: 1rem 0;
-}
-
-.workhub-page.dark-theme .workhub-footer {
-  background: rgba(28, 28, 30, 0.4);
-  border-top-color: rgba(84, 84, 88, 0.65);
-}
-
-.workhub-page.light-theme .workhub-footer {
-  background: rgba(255, 255, 255, 0.3);
-  border-top-color: rgba(0, 0, 0, 0.1);
-}
-
-.workhub-footer-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.workhub-footer-text {
-  font-size: 14px;
-  opacity: 0.6;
-}
-
-.workhub-logout-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.workhub-page.dark-theme .workhub-logout-btn {
-  background: rgba(255, 59, 48, 0.1);
-  color: #FF453A;
-  border: 1px solid rgba(255, 59, 48, 0.2);
-}
-
-.workhub-page.dark-theme .workhub-logout-btn:hover {
-  background: rgba(255, 59, 48, 0.2);
-  transform: scale(1.05);
-}
-
-.workhub-page.light-theme .workhub-logout-btn {
-  background: rgba(255, 59, 48, 0.1);
-  color: #FF3B30;
-  border: 1px solid rgba(255, 59, 48, 0.2);
-}
-
-.workhub-page.light-theme .workhub-logout-btn:hover {
-  background: rgba(255, 59, 48, 0.15);
-  transform: scale(1.05);
-}
 
 /* Animations */
-@keyframes cardAppear {
-  to {
-    opacity: 1;
-  }
-}
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -1025,10 +719,6 @@
   .workhub-content-container {
     padding: 0 1rem;
     gap: 2rem;
-  }
-
-  .workhub-action-card {
-    padding: 1.5rem;
   }
 }
 
@@ -1049,17 +739,5 @@
 
   .workhub-content-container {
     gap: 1.5rem;
-  }
-
-  .workhub-action-card {
-    padding: 1rem;
-  }
-
-  .workhub-card-content h3 {
-    font-size: 19px;
-  }
-
-  .workhub-card-content p {
-    font-size: 15px;
   }
 }

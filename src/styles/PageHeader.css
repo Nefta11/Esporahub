@@ -20,7 +20,8 @@
 .account-page.dark-theme .clean-header,
 .expediente-page.dark-theme .clean-header,
 .checklist-captura-page.dark-theme .clean-header,
-.presentacion-inicial-page.dark-theme .clean-header {
+.presentacion-inicial-page.dark-theme .clean-header,
+.workhub-page.dark-theme .clean-header {
     background: rgba(28, 28, 30, 0.4);
     border-bottom-color: rgba(84, 84, 88, 0.65);
 }
@@ -36,7 +37,8 @@
 .account-page.light-theme .clean-header,
 .expediente-page.light-theme .clean-header,
 .checklist-captura-page.light-theme .clean-header,
-.presentacion-inicial-page.light-theme .clean-header {
+.presentacion-inicial-page.light-theme .clean-header,
+.workhub-page.light-theme .clean-header {
     background: rgba(255, 255, 255, 0.3);
     border-bottom-color: rgba(0, 0, 0, 0.1);
 }
