@@ -6,7 +6,7 @@ import ChecklistTableContainer from '@/components/ChecklistCaptura/ChecklistTabl
 import LogoutButton from '@/components/ChecklistCaptura/LogoutButton';
 import DeleteConfirmationModal from '@/components/generals/DeleteConfirmationModal';
 import AccessDeniedModal from '@/components/modals/AccessDeniedModal';
-import InputModal from '@/components/generals/InputModal';
+import InputModal from '@/components/modals/InputModal';
 import { User } from '@/data/users';
 import { storage } from '@/utils/storage';
 import '@/styles/overview/eho.css';
