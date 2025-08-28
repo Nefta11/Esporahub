@@ -4,7 +4,7 @@ import { useChecklistLogic } from '@/components/ChecklistCaptura/useChecklistLog
 import PageHeader from '@/components/layout/PageHeader';
 import ChecklistTableContainer from '@/components/ChecklistCaptura/ChecklistTableContainer';
 import LogoutButton from '@/components/ChecklistCaptura/LogoutButton';
-import DeleteConfirmationModal from '@/components/generals/DeleteConfirmationModal';
+import DeleteConfirmationModal from '@/components/modals/DeleteConfirmationModal';
 import AccessDeniedModal from '@/components/modals/AccessDeniedModal';
 import InputModal from '@/components/modals/InputModal';
 import { User } from '@/data/users';
