@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Calendar, Clock, AlertCircle, CheckCircle, FileText, ArrowUp, Briefcase } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import PageHeader from '@/components/layout/PageHeader';
 import PageFooter from '@/components/layout/PageFooter';
 import { storage } from '@/utils/storage';
 import InputModal from '@/components/modals/InputModal';
+import TabNavigation from '@/components/workhub/TabNavigation';
+import TimeCategories from '@/components/workhub/TimeCategories';
+import TasksSection from '@/components/workhub/TasksSection';
+import ProjectTable from '@/components/workhub/ProjectTable';
 import '@/styles/workhub/workhub.css';
 
 interface TaskAssignment {
@@ -92,19 +95,19 @@ const WorkHubPage: React.FC = () => {
         // Obtener el ancho real necesario para el scroll
         // El scrollWidth es el ancho total del contenido que se puede hacer scroll
         const actualScrollWidth = table.scrollWidth;
-        
+
         // También obtener el ancho del contenedor visible
         const containerWidth = tableScrollRef.current!.clientWidth;
-        
+
         // El ancho del scroll debe ser igual al scrollWidth de la tabla + margen de seguridad
         const scrollWidth = actualScrollWidth + 0; // 50px extra para asegurar que llegue al final
-        
+
         console.log('Ajustando scroll:', {
           tableScrollWidth: actualScrollWidth,
           containerWidth: containerWidth,
           settingScrollTo: scrollWidth
         });
-        
+
         (scrollContent as HTMLElement).style.minWidth = `${scrollWidth}px`;
         (scrollContent as HTMLElement).style.width = `${scrollWidth}px`;
       }
@@ -288,62 +291,7 @@ const WorkHubPage: React.FC = () => {
 
   const filteredTasks = getFilteredTasks();
 
-  // Función para obtener el conteo de tareas por categoría
-  const getTaskCountForCategory = (categoryId: string) => {
-    if (!taskAssignments.length) return 0;
 
-    // Si la categoría es "all", mostrar el total de tareas
-    if (categoryId === 'all') return taskAssignments.length;
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    const nextWeekStart = new Date(today);
-    nextWeekStart.setDate(today.getDate() + 7 - today.getDay());
-
-    const nextWeekEnd = new Date(nextWeekStart);
-    nextWeekEnd.setDate(nextWeekStart.getDate() + 6);
-
-    return taskAssignments.filter(task => {
-      if (!task.dueDate) return categoryId === 'no-date';
-
-      const dueDate = new Date(task.dueDate);
-      dueDate.setHours(0, 0, 0, 0);
-
-      switch (categoryId) {
-        case 'past':
-          return dueDate < today;
-        case 'today':
-          return dueDate.getTime() === today.getTime();
-        case 'this-week': {
-          const thisWeekEnd = new Date(today);
-          thisWeekEnd.setDate(today.getDate() + (6 - today.getDay()));
-          return dueDate > today && dueDate <= thisWeekEnd;
-        }
-        case 'next-week':
-          return dueDate >= nextWeekStart && dueDate <= nextWeekEnd;
-        case 'later':
-          return dueDate > nextWeekEnd;
-        case 'no-date':
-          return !task.dueDate;
-        default:
-          return true;
-      }
-    }).length;
-  };
-
-  const timeCategories = [
-    { id: 'all', label: 'Todas', icon: <Calendar size={16} /> },
-    { id: 'past', label: 'Días anteriores', icon: <Clock size={16} /> },
-    { id: 'today', label: 'Hoy', icon: <Calendar size={16} /> },
-    { id: 'this-week', label: 'Esta semana', icon: <Calendar size={16} /> },
-    { id: 'next-week', label: 'Siguiente semana', icon: <Calendar size={16} /> },
-    { id: 'later', label: 'Después', icon: <Calendar size={16} /> },
-    { id: 'no-date', label: 'Sin fecha', icon: <Calendar size={16} /> }
-  ];
 
   const handleCategoryClick = (categoryId: string) => {
     setSelectedCategory(categoryId);
@@ -407,465 +355,35 @@ const WorkHubPage: React.FC = () => {
               <p>Gestiona tus tareas y proyectos</p>
             </div>
 
-            {/* Tab Selector */}
-            <div style={{
-              display: 'flex',
-              justifyContent: 'center',
-              marginBottom: '2rem',
-              gap: '0'
-            }}>
-              <button
-                className={`tab-selector ${activeTab === 'tareas' ? 'active' : ''}`}
-                onClick={() => setActiveTab('tareas')}
-                style={{
-                  padding: '12px 24px',
-                  borderRadius: activeTab === 'tareas' ? '22px 0 0 22px' : '22px 0 0 22px',
-                  border: 'none',
-                  fontSize: '17px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  minWidth: '120px',
-                  ...(isDarkMode ? {
-                    background: activeTab === 'tareas' ? 'rgba(0, 122, 255, 0.8)' : 'rgba(118, 118, 128, 0.12)',
-                    color: activeTab === 'tareas' ? 'white' : 'rgba(255, 255, 255, 0.8)',
-                    borderRight: '0.5px solid rgba(84, 84, 88, 0.65)'
-                  } : {
-                    background: activeTab === 'tareas' ? 'rgba(0, 122, 255, 0.8)' : 'rgba(118, 118, 128, 0.12)',
-                    color: activeTab === 'tareas' ? 'white' : 'rgba(60, 60, 67, 0.8)',
-                    borderRight: '0.5px solid rgba(60, 60, 67, 0.29)'
-                  })
-                }}
-              >
-                TAREAS
-              </button>
-              <button
-                className={`tab-selector ${activeTab === 'proyecto' ? 'active' : ''}`}
-                onClick={() => setActiveTab('proyecto')}
-                style={{
-                  padding: '12px 24px',
-                  borderRadius: activeTab === 'proyecto' ? '0 22px 22px 0' : '0 22px 22px 0',
-                  border: 'none',
-                  fontSize: '17px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  minWidth: '120px',
-                  ...(isDarkMode ? {
-                    background: activeTab === 'proyecto' ? 'rgba(0, 122, 255, 0.8)' : 'rgba(118, 118, 128, 0.12)',
-                    color: activeTab === 'proyecto' ? 'white' : 'rgba(255, 255, 255, 0.8)'
-                  } : {
-                    background: activeTab === 'proyecto' ? 'rgba(0, 122, 255, 0.8)' : 'rgba(118, 118, 128, 0.12)',
-                    color: activeTab === 'proyecto' ? 'white' : 'rgba(60, 60, 67, 0.8)'
-                  })
-                }}
-              >
-                PROYECTO
-              </button>
-            </div>
+            <TabNavigation
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+              isDarkMode={isDarkMode}
+            />
 
-            {/* Time Categories - Solo mostrar cuando el tab activo es 'tareas' */}
             {activeTab === 'tareas' && (
-              <div className="workhub-categories-grid">
-                {timeCategories.map(category => (
-                  <div
-                    key={category.id}
-                    className={`workhub-category-card ${selectedCategory === category.id ? 'active' : ''}`}
-                    onClick={() => handleCategoryClick(category.id)}
-                  >
-                    <div className="workhub-category-icon">
-                      {category.icon}
-                    </div>
-                    <h3 className="workhub-category-title">{category.label}</h3>
-                    <p className="workhub-category-count">{getTaskCountForCategory(category.id)} tareas</p>
-                  </div>
-                ))}
-              </div>
+              <TimeCategories
+                selectedCategory={selectedCategory}
+                onCategoryClick={handleCategoryClick}
+                taskAssignments={taskAssignments}
+              />
             )}
 
-            {/* Content Area */}
             {activeTab === 'tareas' ? (
-              <div className="workhub-tasks-container">
-                {filteredTasks && filteredTasks.length > 0 ? (
-                  filteredTasks.map((task) => (
-                    <div
-                      key={task.itemId}
-                      className={`workhub-task-item ${task.completed ? 'completed' : ''}`}
-                    >
-                      <div className={`workhub-task-icon ${task.completed ? 'status-completed' : 'status-pending'}`}>
-                        {task.completed ? <CheckCircle size={20} /> : <Clock size={20} />}
-                      </div>
-
-                      <div className="workhub-task-content">
-                        <h3 className="workhub-task-title">
-                          {task.concept || "Tarea sin nombre"}
-                        </h3>
-                        <p className="workhub-task-section">
-                          {task.section}
-                        </p>
-                        <div className="workhub-task-meta">
-                          <div className="workhub-task-date">
-                            <Calendar size={14} />
-                            {task.dueDate ? new Date(task.dueDate).toLocaleDateString('es-ES', {
-                              weekday: 'short',
-                              month: 'short',
-                              day: 'numeric'
-                            }) : 'Sin fecha'}
-                          </div>
-                          <div className="workhub-task-id">
-                            {task.itemId || task.code}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className={`workhub-task-status ${task.completed ? 'completed' : 'pending'}`}>
-                        {task.completed ? 'Completada' : 'Pendiente'}
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="workhub-empty-state">
-                    <div className="workhub-empty-icon">
-                      <AlertCircle size={32} />
-                    </div>
-                    <h3 className="workhub-empty-title">
-                      No tienes tareas asignadas
-                    </h3>
-                    <p className="workhub-empty-description">
-                      No se encontraron tareas en esta categoría
-                    </p>
-                  </div>
-                )}
-              </div>
+              <TasksSection filteredTasks={filteredTasks} />
             ) : (
-              <div className="workhub-table-container">
-                {/* Barra de scroll horizontal superior */}
-                <div
-                  ref={topScrollRef}
-                  className="table-horizontal-scroll"
-                  onScroll={syncScrollFromTop}
-                >
-                  <div className="table-scroll-content"></div>
-                </div>
-                <div
-                  className="workhub-table-scroll"
-                  ref={tableScrollRef}
-                >
-                  <table className="workhub-table">
-                    <thead>
-                      <tr>
-                        <th className="workhub-table-header">Actualizaciones</th>
-                        <th className="workhub-table-header">Nivel de Progreso</th>
-                        <th className="workhub-table-header">Fase del Proyecto</th>
-                        <th className="workhub-table-header">Línea Estratégica</th>
-                        <th className="workhub-table-header">Microcampaña</th>
-                        <th className="workhub-table-header">Estado Actual</th>
-                        <th className="workhub-table-header">Gerente de Proyecto</th>
-                        <th className="workhub-table-header">Equipo de Trabajo</th>
-                        <th className="workhub-table-header">Nombre del Colaborador</th>
-                        <th className="workhub-table-header">Perfil Profesional</th>
-                        <th className="workhub-table-header">Fechas de Entrega</th>
-                        <th className="workhub-table-header">Semana Actual</th>
-                        <th className="workhub-table-header">Tipo de Elemento</th>
-                        <th className="workhub-table-header">Cantidad Total</th>
-                        <th className="workhub-table-header">Cantidad en Proceso</th>
-                        <th className="workhub-table-header">Cantidad Aprobada</th>
-                        <th className="workhub-table-header">Fecha de Finalización</th>
-                        <th className="workhub-table-header">Repositorio de Contenido</th>
-                        <th className="workhub-table-header">Repositorio de Firmas</th>
-                        <th className="workhub-table-header">Enlaces de Repositorio</th>
-                        <th className="workhub-table-header">Desarrollo creativo</th>
-                        <th className="workhub-table-header">Fecha testeo</th>
-                        <th className="workhub-table-header">Estatus testeo</th>
-                        <th className="workhub-table-header">Entrega al cliente</th>
-                        <th className="workhub-table-header">Nombre del archivo</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {projectItems.length > 0 ? (
-                        projectItems.map((item) => (
-                          <tr key={item.id} style={{
-                            borderBottom: isDarkMode ? '1px solid rgba(84, 84, 88, 0.65)' : '1px solid rgba(0, 0, 0, 0.1)',
-                            transition: 'all 0.2s ease'
-                          }}>
-                            <td className="workhub-table-cell">
-                              <button className="workhub-action-btn workhub-action-btn-primary">
-                                <FileText size={16} />
-                              </button>
-                            </td>
-                            <td className="workhub-table-cell">
-                              <button className="workhub-action-btn workhub-action-btn-success">
-                                <ArrowUp size={16} />
-                              </button>
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="text"
-                                value={getFieldValue(item.id, 'fase')}
-                                placeholder="Fase"
-                                readOnly
-                                onClick={() => openModal(item.id, 'Fase')}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="text"
-                                value={getFieldValue(item.id, 'linea_estrategica')}
-                                placeholder="Línea estratégica"
-                                readOnly
-                                onClick={() => openModal(item.id, 'Línea estratégica')}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="text"
-                                value={getFieldValue(item.id, 'microcampana')}
-                                placeholder="Microcampaña"
-                                readOnly
-                                onClick={() => openModal(item.id, 'Microcampaña')}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="text"
-                                value={getFieldValue(item.id, 'estatus')}
-                                placeholder="Estatus"
-                                readOnly
-                                onClick={() => openModal(item.id, 'Estatus')}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="text"
-                                value={getFieldValue(item.id, 'gerente')}
-                                placeholder="Gerente"
-                                readOnly
-                                onClick={() => openModal(item.id, 'Gerente')}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="text"
-                                value={getFieldValue(item.id, 'colaboradores')}
-                                placeholder="Colaboradores"
-                                readOnly
-                                onClick={() => openModal(item.id, 'Colaboradores')}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="text"
-                                value={getFieldValue(item.id, 'nombre_colaborador')}
-                                placeholder="Nombre del colaborador"
-                                readOnly
-                                onClick={() => openModal(item.id, 'Nombre del colaborador')}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="text"
-                                value={getFieldValue(item.id, 'perfil_colaborador')}
-                                placeholder="Perfil de colaborador"
-                                readOnly
-                                onClick={() => openModal(item.id, 'Perfil de colaborador')}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="text"
-                                value={getFieldValue(item.id, 'solicitud_entrega')}
-                                placeholder="Solicitud y entrega"
-                                readOnly
-                                onClick={() => openModal(item.id, 'Solicitud y entrega')}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="text"
-                                value={getFieldValue(item.id, 'semana_curso')}
-                                placeholder="Semana en curso"
-                                readOnly
-                                onClick={() => openModal(item.id, 'Semana en curso')}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="text"
-                                value={getFieldValue(item.id, 'tipo_item')}
-                                placeholder="Tipo de item"
-                                readOnly
-                                onClick={() => openModal(item.id, 'Tipo de item')}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="text"
-                                value={getFieldValue(item.id, 'cantidad_v')}
-                                placeholder="Cantidad V..."
-                                readOnly
-                                onClick={() => openModal(item.id, 'Cantidad V...', 'number')}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="text"
-                                value={getFieldValue(item.id, 'cantidad_pr')}
-                                placeholder="Cantidad Pr..."
-                                readOnly
-                                onClick={() => openModal(item.id, 'Cantidad Pr...', 'number')}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="text"
-                                value={getFieldValue(item.id, 'cantidad_a')}
-                                placeholder="Cantidad A..."
-                                readOnly
-                                onClick={() => openModal(item.id, 'Cantidad A...', 'number')}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="date"
-                                value={getFieldValue(item.id, 'fecha_finalizacion')}
-                                onChange={(e) => {
-                                  const updatedValues = {
-                                    ...fieldValues,
-                                    [`${item.id}-fecha_finalizacion`]: e.target.value
-                                  };
-                                  setFieldValues(updatedValues);
-                                  storage.setItem('fieldValues', updatedValues);
-                                }}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="text"
-                                value={getFieldValue(item.id, 'repositorio_co')}
-                                placeholder="Repositorio de co..."
-                                readOnly
-                                onClick={() => openModal(item.id, 'Repositorio de co...')}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="text"
-                                value={getFieldValue(item.id, 'repositorio_firma')}
-                                placeholder="Repositorio firma..."
-                                readOnly
-                                onClick={() => openModal(item.id, 'Repositorio firma...')}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="text"
-                                value={getFieldValue(item.id, 'enlace_repositorio')}
-                                placeholder="Enlace de repositorio"
-                                readOnly
-                                onClick={() => openModal(item.id, 'Enlace de repositorio')}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="text"
-                                value={getFieldValue(item.id, 'desarrollo_creativo')}
-                                placeholder="Desarrollo creativo"
-                                readOnly
-                                onClick={() => openModal(item.id, 'Desarrollo creativo')}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="date"
-                                value={getFieldValue(item.id, 'fecha_testeo')}
-                                onChange={(e) => {
-                                  const updatedValues = {
-                                    ...fieldValues,
-                                    [`${item.id}-fecha_testeo`]: e.target.value
-                                  };
-                                  setFieldValues(updatedValues);
-                                  storage.setItem('fieldValues', updatedValues);
-                                }}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="text"
-                                value={getFieldValue(item.id, 'estatus_testeo')}
-                                placeholder="Estatus testeo"
-                                readOnly
-                                onClick={() => openModal(item.id, 'Estatus testeo')}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="text"
-                                value={getFieldValue(item.id, 'entrega_cliente')}
-                                placeholder="Entrega al cliente"
-                                readOnly
-                                onClick={() => openModal(item.id, 'Entrega al cliente')}
-                              />
-                            </td>
-                            <td className="workhub-table-cell">
-                              <input
-                                className="workhub-table-input"
-                                type="text"
-                                value={getFieldValue(item.id, 'nombre_archivo')}
-                                placeholder="Nombre del archivo"
-                                readOnly
-                                onClick={() => openModal(item.id, 'Nombre del archivo')}
-                              />
-                            </td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td colSpan={25} style={{
-                            textAlign: 'center',
-                            padding: '4rem 2rem',
-                            opacity: 0.6
-                          }}>
-                            <div style={{
-                              display: 'flex',
-                              flexDirection: 'column',
-                              alignItems: 'center',
-                              gap: '1rem'
-                            }}>
-                              <Briefcase size={64} style={{
-                                color: isDarkMode ? 'rgba(0, 122, 255, 0.6)' : 'rgba(0, 122, 255, 0.6)'
-                              }} />
-                              <div className="empty-project-content">
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+              <ProjectTable
+                projectItems={projectItems}
+                fieldValues={fieldValues}
+                setFieldValues={setFieldValues}
+                openModal={openModal}
+                getFieldValue={getFieldValue}
+                isDarkMode={isDarkMode}
+                topScrollRef={topScrollRef}
+                tableScrollRef={tableScrollRef}
+                syncScrollFromTop={syncScrollFromTop}
+                storage={storage}
+              />
             )}
           </section>
         </div>
