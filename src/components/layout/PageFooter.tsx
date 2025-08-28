@@ -1,7 +1,7 @@
 import React from 'react';
 import { LogOut } from 'lucide-react';
 import LogoutDialog from '../modals/LogoutDialog';
-import '@/styles/PageFooter.css';
+import '@/styles/components/layout/PageFooter.css';
 
 interface PageFooterProps {
     showLogoutDialog: boolean;

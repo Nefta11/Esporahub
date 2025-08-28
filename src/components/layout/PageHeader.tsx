@@ -4,7 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 import Logo from '../layout/Logo';
 import UserAvatar from './UserAvatar';
 import ThemeToggle from './ThemeToggle';
-import '@/styles/PageHeader.css';
+import '@/styles/components/layout/PageHeader.css';
 
 interface Breadcrumb {
     label: string;
