@@ -6,7 +6,6 @@ import { hasPermission } from '@/data/users';
 import PageHeader from '@/components/layout/PageHeader';
 import PageFooter from '@/components/layout/PageFooter';
 import CreateAccountModal from '@/components/CreateAccountModal';
-import SelectAccountModal from '@/components/SelectAccountModal';
 import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
 import '@/styles/overview/overview-page.css';
 
@@ -14,7 +13,6 @@ const AccountSettings: React.FC = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const [showAccessDeniedModal, setShowAccessDeniedModal] = useState(false);
   const [deniedFeature, setDeniedFeature] = useState('');
@@ -149,11 +147,6 @@ const AccountSettings: React.FC = () => {
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
         onCreateAccount={() => { }}
-      />
-
-      <SelectAccountModal
-        isOpen={isSelectModalOpen}
-        onClose={() => setIsSelectModalOpen(false)}
       />
 
       <AccessDeniedModal
