@@ -89,8 +89,24 @@ const WorkHubPage: React.FC = () => {
       const scrollContent = topScrollRef.current.querySelector('.table-scroll-content');
 
       if (table && scrollContent) {
-        const tableWidth = table.scrollWidth;
-        (scrollContent as HTMLElement).style.minWidth = `${tableWidth}px`;
+        // Obtener el ancho real necesario para el scroll
+        // El scrollWidth es el ancho total del contenido que se puede hacer scroll
+        const actualScrollWidth = table.scrollWidth;
+        
+        // También obtener el ancho del contenedor visible
+        const containerWidth = tableScrollRef.current!.clientWidth;
+        
+        // El ancho del scroll debe ser igual al scrollWidth de la tabla + margen de seguridad
+        const scrollWidth = actualScrollWidth + 50; // 50px extra para asegurar que llegue al final
+        
+        console.log('Ajustando scroll:', {
+          tableScrollWidth: actualScrollWidth,
+          containerWidth: containerWidth,
+          settingScrollTo: scrollWidth
+        });
+        
+        (scrollContent as HTMLElement).style.minWidth = `${scrollWidth}px`;
+        (scrollContent as HTMLElement).style.width = `${scrollWidth}px`;
       }
     }
   }, []);
@@ -98,10 +114,10 @@ const WorkHubPage: React.FC = () => {
   // Ajustar el ancho del scroll cuando se cargan los items del proyecto
   React.useEffect(() => {
     if (projectItems.length > 0) {
-      // Esperar un momento para que la tabla se renderice completamente
-      setTimeout(adjustScrollWidth, 100);
-      // Segundo intento por si acaso el primero no fue suficiente
-      setTimeout(adjustScrollWidth, 500);
+      // Múltiples intentos para asegurar el ajuste correcto
+      setTimeout(adjustScrollWidth, 200);
+      setTimeout(adjustScrollWidth, 800);
+      setTimeout(adjustScrollWidth, 1500);
     }
   }, [projectItems, adjustScrollWidth]);
 
@@ -642,180 +658,90 @@ const WorkHubPage: React.FC = () => {
                                 onClick={() => openModal(item.id, 'Colaboradores')}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="text"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'nombre_colaborador')}
                                 placeholder="Nombre del colaborador"
                                 readOnly
                                 onClick={() => openModal(item.id, 'Nombre del colaborador')}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="text"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'perfil_colaborador')}
                                 placeholder="Perfil de colaborador"
                                 readOnly
                                 onClick={() => openModal(item.id, 'Perfil de colaborador')}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="text"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'solicitud_entrega')}
                                 placeholder="Solicitud y entrega"
                                 readOnly
                                 onClick={() => openModal(item.id, 'Solicitud y entrega')}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="text"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'semana_curso')}
                                 placeholder="Semana en curso"
                                 readOnly
                                 onClick={() => openModal(item.id, 'Semana en curso')}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="text"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'tipo_item')}
                                 placeholder="Tipo de item"
                                 readOnly
                                 onClick={() => openModal(item.id, 'Tipo de item')}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="text"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'cantidad_v')}
                                 placeholder="Cantidad V..."
                                 readOnly
                                 onClick={() => openModal(item.id, 'Cantidad V...', 'number')}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="text"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'cantidad_pr')}
                                 placeholder="Cantidad Pr..."
                                 readOnly
                                 onClick={() => openModal(item.id, 'Cantidad Pr...', 'number')}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="text"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'cantidad_a')}
                                 placeholder="Cantidad A..."
                                 readOnly
                                 onClick={() => openModal(item.id, 'Cantidad A...', 'number')}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="date"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'fecha_finalizacion')}
                                 onChange={(e) => {
                                   const updatedValues = {
@@ -827,100 +753,50 @@ const WorkHubPage: React.FC = () => {
                                 }}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="text"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'repositorio_co')}
                                 placeholder="Repositorio de co..."
                                 readOnly
                                 onClick={() => openModal(item.id, 'Repositorio de co...')}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="text"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'repositorio_firma')}
                                 placeholder="Repositorio firma..."
                                 readOnly
                                 onClick={() => openModal(item.id, 'Repositorio firma...')}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="text"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'enlace_repositorio')}
                                 placeholder="Enlace de repositorio"
                                 readOnly
                                 onClick={() => openModal(item.id, 'Enlace de repositorio')}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="text"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'desarrollo_creativo')}
                                 placeholder="Desarrollo creativo"
                                 readOnly
                                 onClick={() => openModal(item.id, 'Desarrollo creativo')}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="date"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'fecha_testeo')}
                                 onChange={(e) => {
                                   const updatedValues = {
@@ -932,60 +808,30 @@ const WorkHubPage: React.FC = () => {
                                 }}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="text"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'estatus_testeo')}
                                 placeholder="Estatus testeo"
                                 readOnly
                                 onClick={() => openModal(item.id, 'Estatus testeo')}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="text"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'entrega_cliente')}
                                 placeholder="Entrega al cliente"
                                 readOnly
                                 onClick={() => openModal(item.id, 'Entrega al cliente')}
                               />
                             </td>
-                            <td style={{ padding: '12px' }}>
+                            <td className="workhub-table-cell">
                               <input
+                                className="workhub-table-input"
                                 type="text"
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '8px',
-                                  border: isDarkMode ? '1px solid rgba(118, 118, 128, 0.24)' : '1px solid rgba(0, 0, 0, 0.1)',
-                                  background: isDarkMode ? 'rgba(118, 118, 128, 0.12)' : 'rgba(255, 255, 255, 0.8)',
-                                  color: isDarkMode ? 'white' : '#1a202c',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  transition: 'all 0.2s ease'
-                                }}
                                 value={getFieldValue(item.id, 'nombre_archivo')}
                                 placeholder="Nombre del archivo"
                                 readOnly
