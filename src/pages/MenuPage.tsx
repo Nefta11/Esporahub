@@ -11,7 +11,7 @@ import LogoutDialog from '@/components/generals/LogoutDialog';
 import Logo from '@/components/layout/Logo';
 import UserAvatar from '@/components/layout/UserAvatar';
 import ThemeToggle from '@/components/layout/ThemeToggle';
-import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
+import AccessDeniedModal from '@/components/modals/AccessDeniedModal';
 import EsporaIA from '@/components/EsporaIA';
 import '@/styles/menu.css';
 import '@/styles/espora-ia.css';

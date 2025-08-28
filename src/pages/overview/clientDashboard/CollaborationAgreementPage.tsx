@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PageHeader from '@/components/layout/PageHeader';
-import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
+import AccessDeniedModal from '@/components/modals/AccessDeniedModal';
 import { useAuthStore } from '@/stores/authStore';
 import { hasPermission } from '@/data/users';
 import '@/styles/overview/collaboration-agreement.css';

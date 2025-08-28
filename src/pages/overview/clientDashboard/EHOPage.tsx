@@ -5,7 +5,7 @@ import PageHeader from '@/components/layout/PageHeader';
 import ChecklistTableContainer from '@/components/ChecklistCaptura/ChecklistTableContainer';
 import LogoutButton from '@/components/ChecklistCaptura/LogoutButton';
 import DeleteConfirmationModal from '@/components/generals/DeleteConfirmationModal';
-import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
+import AccessDeniedModal from '@/components/modals/AccessDeniedModal';
 import InputModal from '@/components/generals/InputModal';
 import { User } from '@/data/users';
 import { storage } from '@/utils/storage';

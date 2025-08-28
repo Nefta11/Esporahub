@@ -5,8 +5,8 @@ import { useAuthStore } from '@/stores/authStore';
 import { hasPermission } from '@/data/users';
 import PageHeader from '@/components/layout/PageHeader';
 import PageFooter from '@/components/layout/PageFooter';
-import CreateAccountModal from '@/components/CreateAccountModal';
-import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
+import CreateAccountModal from '@/components/modals/CreateAccountModal';
+import AccessDeniedModal from '@/components/modals/AccessDeniedModal';
 import '@/styles/overview/overview-page.css';
 
 const AccountSettings: React.FC = () => {

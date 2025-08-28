@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '@/stores/authStore';
 import { hasPermission } from '@/data/users';
-import AccessDeniedModal from './AccessDeniedModal';
+import AccessDeniedModal from '../modals/AccessDeniedModal';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Calendar, Twitter, Facebook, Instagram, UserPlus } from 'lucide-react';
-import '../styles/modal.css';
+import '@/styles/modal.css';
 
 interface CreateAccountModalProps {
   isOpen: boolean;

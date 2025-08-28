@@ -5,7 +5,7 @@ import PageHeader from '@/components/layout/PageHeader';
 import { useAuthStore } from '@/stores/authStore';
 import { hasPermission } from '@/data/users';
 import PageFooter from '@/components/layout/PageFooter';
-import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
+import AccessDeniedModal from '@/components/modals/AccessDeniedModal';
 import '@/styles/overview/expediente-electronico.css';
 
 interface FormData {

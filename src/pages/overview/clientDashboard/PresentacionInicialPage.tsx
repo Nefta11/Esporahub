@@ -5,7 +5,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { hasPermission } from '@/data/users';
 import PageHeader from '@/components/layout/PageHeader';
 import LogoutDialog from '@/components/generals/LogoutDialog';
-import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
+import AccessDeniedModal from '@/components/modals/AccessDeniedModal';
 import '@/styles/overview/presentacion-inicial.css';
 
 interface PdfFile {
