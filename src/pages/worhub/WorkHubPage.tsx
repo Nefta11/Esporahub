@@ -4,8 +4,8 @@ import { LogOut, Calendar, Clock, AlertCircle, CheckCircle, FileText, ArrowUp, B
 import { useAuthStore } from '@/stores/authStore';
 import LogoutDialog from '@/components/generals/LogoutDialog';
 import Logo from '@/components/layout/Logo';
-import UserAvatar from '@/components/generals/UserAvatar';
-import ThemeToggle from '@/components/generals/ThemeToggle';
+import UserAvatar from '@/components/layout/UserAvatar';
+import ThemeToggle from '@/components/layout/ThemeToggle';
 import { storage } from '@/utils/storage';
 import InputModal from '@/components/generals/InputModal';
 import '@/styles/workhub.css';

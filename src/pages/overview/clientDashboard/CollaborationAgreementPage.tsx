@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import PageHeader from '@/components/generals/PageHeader';
+import PageHeader from '@/components/layout/PageHeader';
 import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
 import { useAuthStore } from '@/stores/authStore';
 import { hasPermission } from '@/data/users';

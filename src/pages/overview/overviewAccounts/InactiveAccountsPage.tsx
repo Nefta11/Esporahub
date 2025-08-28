@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User } from 'lucide-react';
-import PageHeader from '@/components/generals/PageHeader';
+import PageHeader from '@/components/layout/PageHeader';
 import PageFooter from '@/components/layout/PageFooter';
 import '@/styles/overview/inactive-accounts.css';
 

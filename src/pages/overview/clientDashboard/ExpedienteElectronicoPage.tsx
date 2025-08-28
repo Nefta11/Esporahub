@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Check, FileText, User, TrendingUp, ShoppingCart, Award } from 'lucide-react';
-import PageHeader from '@/components/generals/PageHeader';
+import PageHeader from '@/components/layout/PageHeader';
 import { useAuthStore } from '@/stores/authStore';
 import { hasPermission } from '@/data/users';
 import PageFooter from '@/components/layout/PageFooter';

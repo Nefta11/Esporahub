@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useChecklistLogic } from '@/components/ChecklistCaptura/useChecklistLogic';
-import PageHeader from '@/components/generals/PageHeader';
+import PageHeader from '@/components/layout/PageHeader';
 import ChecklistTableContainer from '@/components/ChecklistCaptura/ChecklistTableContainer';
 import LogoutButton from '@/components/ChecklistCaptura/LogoutButton';
 import DeleteConfirmationModal from '@/components/generals/DeleteConfirmationModal';

@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { LogOut, Upload, FileText, Download, Trash2, } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import { hasPermission } from '@/data/users';
-import PageHeader from '@/components/generals/PageHeader';
+import PageHeader from '@/components/layout/PageHeader';
 import LogoutDialog from '@/components/generals/LogoutDialog';
 import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
 import '@/styles/overview/presentacion-inicial.css';
