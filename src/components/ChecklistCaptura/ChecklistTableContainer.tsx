@@ -35,6 +35,46 @@ const ChecklistTableContainer: React.FC<ChecklistTableContainerProps> = (props) 
     const horizontalScrollRef = useRef<HTMLDivElement>(null);
     const tableMainContainerRef = useRef<HTMLDivElement>(null);
 
+    // Función para ajustar el ancho del scroll al ancho real de la tabla
+    const adjustScrollWidth = React.useCallback(() => {
+        if (horizontalScrollRef.current && tableMainContainerRef.current) {
+            const table = tableMainContainerRef.current.querySelector('table');
+            const scrollContent = horizontalScrollRef.current.querySelector('.table-scroll-content');
+            
+            if (table && scrollContent) {
+                // Obtener el ancho real necesario para el scroll
+                const actualScrollWidth = table.scrollWidth;
+                
+                // El ancho del scroll debe ser igual al scrollWidth de la tabla
+                const scrollWidth = actualScrollWidth + 50; // 50px extra para asegurar que llegue al final
+                
+                console.log('EHO - Ajustando scroll:', {
+                    tableScrollWidth: actualScrollWidth,
+                    settingScrollTo: scrollWidth
+                });
+                
+                (scrollContent as HTMLElement).style.minWidth = `${scrollWidth}px`;
+                (scrollContent as HTMLElement).style.width = `${scrollWidth}px`;
+            }
+        }
+    }, []);
+
+    // Effect to adjust scroll width when component mounts or content changes
+    useEffect(() => {
+        adjustScrollWidth();
+        
+        // Add ResizeObserver to watch for table size changes
+        const observer = new ResizeObserver(() => {
+            adjustScrollWidth();
+        });
+
+        if (tableMainContainerRef.current) {
+            observer.observe(tableMainContainerRef.current);
+        }
+
+        return () => observer.disconnect();
+    }, [adjustScrollWidth, props.groupedItems]);
+
     // Mouse wheel horizontal scroll handler
     useEffect(() => {
         const handleWheelScroll = (e: WheelEvent) => {
