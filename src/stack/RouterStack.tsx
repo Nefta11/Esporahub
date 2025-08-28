@@ -3,7 +3,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import LandingPage from '@/pages/landing/LandingPage';
 import ProtectedRoute from '@/components/generals/ProtectedRoute';
 import LoginPage from '@/pages/auth/LoginPage';
-import MenuPage from '@/pages/MenuPage';
+import MenuPage from '@/pages/menu/MenuPage';
 import OverviewMainPage from '@/pages/overview/OverviewMainPage';
 import AccountSettings from '@/pages/overview/overviewAccounts/AccountSettings';
 import CollaborationAgreementPage from '@/pages/overview/clientDashboard/CollaborationAgreementPage';
