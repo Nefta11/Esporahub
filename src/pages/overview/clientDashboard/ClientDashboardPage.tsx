@@ -4,7 +4,7 @@ import { FileText, Handshake, Settings, Presentation } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import { hasPermission } from '@/data/users';
 import PageHeader from '@/components/generals/PageHeader';
-import PageFooter from '@/components/generals/PageFooter';
+import PageFooter from '@/components/layout/PageFooter';
 import AccessDeniedModal from '@/components/generals/AccessDeniedModal';
 import '@/styles/overview/client-dashboard.css';
 

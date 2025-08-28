@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import Logo from './Logo';
+import Logo from '../layout/Logo';
 import UserAvatar from './UserAvatar';
 import ThemeToggle from './ThemeToggle';
 import '@/styles/PageHeader.css';

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { LogOut, Calendar, Clock, AlertCircle, CheckCircle, FileText, ArrowUp, Briefcase, ArrowLeft } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import LogoutDialog from '@/components/generals/LogoutDialog';
-import Logo from '@/components/generals/Logo';
+import Logo from '@/components/layout/Logo';
 import UserAvatar from '@/components/generals/UserAvatar';
 import ThemeToggle from '@/components/generals/ThemeToggle';
 import { storage } from '@/utils/storage';

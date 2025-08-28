@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import Logo from '@/components/generals/Logo';
+import Logo from '@/components/layout/Logo';
 import ThemeToggle from '@/components/generals/ThemeToggle';
 
 const TracklinePage: React.FC = () => {

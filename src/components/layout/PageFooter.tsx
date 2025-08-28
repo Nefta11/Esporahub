@@ -1,6 +1,6 @@
 import React from 'react';
 import { LogOut } from 'lucide-react';
-import LogoutDialog from './LogoutDialog';
+import LogoutDialog from '../generals/LogoutDialog';
 import '@/styles/PageFooter.css';
 
 interface PageFooterProps {

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserCheck, UserX, Settings } from 'lucide-react';
-import PageHeader from '@/components/generals/PageHeader';
-import PageFooter from '@/components/generals/PageFooter';
+import PageHeader from '@/components/layout/PageHeader';
+import PageFooter from '@/components/layout/PageFooter';
 import '@/styles/overview/overview-main.css';
 
 const OverviewMainPage: React.FC = () => {

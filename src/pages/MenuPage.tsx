@@ -8,7 +8,7 @@ import {
 import { useAuthStore } from '@/stores/authStore';
 import { hasPermission } from '@/data/users';
 import LogoutDialog from '@/components/generals/LogoutDialog';
-import Logo from '@/components/generals/Logo';
+import Logo from '@/components/layout/Logo';
 import UserAvatar from '@/components/generals/UserAvatar';
 import ThemeToggle from '@/components/generals/ThemeToggle';
 import AccessDeniedModal from '@/components/generals/AccessDeniedModal';

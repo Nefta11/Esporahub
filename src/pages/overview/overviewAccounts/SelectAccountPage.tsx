@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/generals/PageHeader';
-import PageFooter from '@/components/generals/PageFooter';
+import PageFooter from '@/components/layout/PageFooter';
 import '@/styles/overview/select-account.css';
 
 const SelectAccountPage: React.FC = () => {
