@@ -757,6 +757,7 @@
   padding: 1rem;
   border-radius: 8px;
   transition: all 0.3s ease;
+  position: relative;
 }
 
 /* Dark theme file card */
@@ -828,6 +829,53 @@
 
 .presentacion-inicial-page.light-theme .file-card-meta {
   color: #718096;
+}
+
+/* File card delete button */
+.file-card-delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  padding: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.file-card-delete-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.file-card-delete-btn:active {
+  transform: scale(0.95);
+}
+
+/* Dark theme file card delete button */
+.presentacion-inicial-page.dark-theme .file-card-delete-btn {
+  color: #f87171;
+}
+
+.presentacion-inicial-page.dark-theme .file-card-delete-btn:hover {
+  background: rgba(248, 113, 113, 0.15);
+  color: #fca5a5;
+}
+
+/* Light theme file card delete button */
+.presentacion-inicial-page.light-theme .file-card-delete-btn {
+  color: #ef4444;
+}
+
+.presentacion-inicial-page.light-theme .file-card-delete-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
 }
 
 /* Logo color overrides for presentacion inicial page */

@@ -199,7 +199,7 @@ const PresentacionInicialPage: React.FC = () => {
                 </div>
                 <div className="pdf-viewer">
                   <iframe
-                    src={`${pdfFile.url}#toolbar=1&navpanes=0&scrollbar=1&page=1&view=FitH&zoom=150`}
+                    src={`${pdfFile.url}#toolbar=1&navpanes=0&scrollbar=1&page=1&view=FitH&zoom=100`}
                     className="pdf-iframe"
                     title="PDF Viewer"
                   />
@@ -253,6 +253,13 @@ const PresentacionInicialPage: React.FC = () => {
                       {formatFileSize(pdfFile.size)}
                     </div>
                   </div>
+                  <button
+                    className="file-card-delete-btn"
+                    onClick={handleDeletePdf}
+                    title="Eliminar archivo"
+                  >
+                    <Trash2 size={16} />
+                  </button>
                 </div>
               </div>
             )}
