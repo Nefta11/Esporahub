@@ -169,7 +169,7 @@ const LoginPage: React.FC = () => {
                   className="submit-button"
                   disabled={isLoading || !password}
                 >
-                  {isLoading ? 'Iniciando sesión...' : 'Continuar'}
+                  {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
                 </button>
               </form>
             )}

@@ -164,7 +164,7 @@
 
 .login-app-name {
   font-size: 55px !important;
-  font-weight: 800 !important;
+  font-weight: 750 !important;
   margin: 0 !important;
   color: #1d1d1f !important;
   letter-spacing: -1.5px;
@@ -427,8 +427,13 @@
   box-shadow: 0 12px 30px rgba(0, 122, 255, 0.4);
 }
 
-.dark-theme .submit-button:hover:not(:disabled) {
+.login-page.dark-theme .submit-button {
+  background: linear-gradient(135deg, #007aff 0%, #5ac8fa 100%) !important;
+}
+
+.login-page.dark-theme .submit-button:hover:not(:disabled) {
   box-shadow: 0 12px 30px rgba(90, 200, 250, 0.3);
+  background: linear-gradient(135deg, #007aff 0%, #5ac8fa 100%) !important;
 }
 
 .submit-button:active:not(:disabled) {
