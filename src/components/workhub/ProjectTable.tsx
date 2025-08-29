@@ -1,5 +1,5 @@
 
-import { FileText, ArrowUp, Briefcase } from 'lucide-react';
+import { FileText, ArrowUp } from 'lucide-react';
 
 interface StorageLike {
   getItem: (key: string) => unknown;
@@ -47,7 +47,6 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
   tableScrollRef,
   syncScrollFromTop,
   storage,
-  selectedAccount
 }) => {
   return (
     <div className="workhub-table-container">
@@ -351,45 +350,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
                   </td>
                 </tr>
               ))
-            ) : (
-              !selectedAccount ? (
-                <tr>
-                  <td colSpan={25} style={{
-                    textAlign: 'center',
-                    padding: '4rem 2rem',
-                    opacity: 0.6
-                  }}>
-                    <div style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: '1rem'
-                    }}>
-                      <Briefcase size={64} style={{
-                        color: isDarkMode ? 'rgba(0, 122, 255, 0.6)' : 'rgba(0, 122, 255, 0.6)'
-                      }} />
-                      <div className="empty-project-content">
-                        <h3 style={{
-                          margin: '0 0 0.5rem 0',
-                          fontSize: '18px',
-                          fontWeight: '600',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)'
-                        }}>
-                          Selecciona una cuenta
-                        </h3>
-                        <p style={{
-                          margin: 0,
-                          fontSize: '14px',
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)'
-                        }}>
-                          Elige una cuenta del selector para ver sus proyectos del EHO
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              ) : null
-            )}
+            ) : null}
           </tbody>
         </table>
       </div>
