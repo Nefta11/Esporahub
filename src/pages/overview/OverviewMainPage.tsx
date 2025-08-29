@@ -36,7 +36,7 @@ const OverviewMainPage: React.FC = () => {
     },
     {
       id: 'account-config',
-      label: 'Configuración de cuentas',
+      label: 'Configura cuentas',
       icon: <Settings size={24} />,
       color: '#007AFF',
       path: '/configuracion-cuenta',
