@@ -167,22 +167,26 @@ const AccountSelector: React.FC<AccountSelectorProps> = ({
               key={account.id}
               onClick={(e) => {
                 e.stopPropagation();
-                handleAccountClick(account);
+                if (account.isActive) {
+                  handleAccountClick(account);
+                }
               }}
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '12px',
                 padding: '14px 18px',
-                cursor: 'pointer',
+                cursor: account.isActive ? 'pointer' : 'not-allowed',
                 borderBottom: index < accounts.length - 1 
                   ? (isDarkMode ? '0.5px solid rgba(84, 84, 88, 0.15)' : '0.5px solid rgba(0, 0, 0, 0.04)')
                   : 'none',
-                opacity: account.isActive ? 1 : 0.5,
+                opacity: account.isActive ? 1 : 0.3,
                 transition: 'all 0.2s ease'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = isDarkMode ? 'rgba(0, 122, 255, 0.15)' : 'rgba(0, 122, 255, 0.08)';
+                if (account.isActive) {
+                  e.currentTarget.style.background = isDarkMode ? 'rgba(0, 122, 255, 0.15)' : 'rgba(0, 122, 255, 0.08)';
+                }
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'transparent';

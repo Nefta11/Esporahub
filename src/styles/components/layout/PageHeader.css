@@ -113,7 +113,11 @@
 .select-account-page.dark-theme .back-button,
 .active-accounts-page.dark-theme .back-button,
 .inactive-accounts-page.dark-theme .back-button,
-.account-page.dark-theme .back-button {
+.account-page.dark-theme .back-button,
+.expediente-page.dark-theme .back-button,
+.checklist-captura-page.dark-theme .back-button,
+.presentacion-inicial-page.dark-theme .back-button,
+.workhub-page.dark-theme .back-button {
     background: rgba(0, 122, 255, 0.1);
     color: #0A84FF;
     border: 1px solid rgba(0, 122, 255, 0.2);
@@ -126,7 +130,11 @@
 .select-account-page.dark-theme .back-button:hover,
 .active-accounts-page.dark-theme .back-button:hover,
 .inactive-accounts-page.dark-theme .back-button:hover,
-.account-page.dark-theme .back-button:hover {
+.account-page.dark-theme .back-button:hover,
+.expediente-page.dark-theme .back-button:hover,
+.checklist-captura-page.dark-theme .back-button:hover,
+.presentacion-inicial-page.dark-theme .back-button:hover,
+.workhub-page.dark-theme .back-button:hover {
     background: rgba(0, 122, 255, 0.2);
     transform: scale(1.05);
 }
@@ -139,7 +147,11 @@
 .select-account-page.light-theme .back-button,
 .active-accounts-page.light-theme .back-button,
 .inactive-accounts-page.light-theme .back-button,
-.account-page.light-theme .back-button {
+.account-page.light-theme .back-button,
+.expediente-page.light-theme .back-button,
+.checklist-captura-page.light-theme .back-button,
+.presentacion-inicial-page.light-theme .back-button,
+.workhub-page.light-theme .back-button {
     background: rgba(0, 122, 255, 0.1);
     color: #007AFF;
     border: 1px solid rgba(0, 122, 255, 0.2);
@@ -152,7 +164,11 @@
 .select-account-page.light-theme .back-button:hover,
 .active-accounts-page.light-theme .back-button:hover,
 .inactive-accounts-page.light-theme .back-button:hover,
-.account-page.light-theme .back-button:hover {
+.account-page.light-theme .back-button:hover,
+.expediente-page.light-theme .back-button:hover,
+.checklist-captura-page.light-theme .back-button:hover,
+.presentacion-inicial-page.light-theme .back-button:hover,
+.workhub-page.light-theme .back-button:hover {
     background: rgba(0, 122, 255, 0.15);
     transform: scale(1.05);
 }

@@ -352,44 +352,43 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
                 </tr>
               ))
             ) : (
-              <tr>
-                <td colSpan={25} style={{
-                  textAlign: 'center',
-                  padding: '4rem 2rem',
-                  opacity: 0.6
-                }}>
-                  <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: '1rem'
+              !selectedAccount ? (
+                <tr>
+                  <td colSpan={25} style={{
+                    textAlign: 'center',
+                    padding: '4rem 2rem',
+                    opacity: 0.6
                   }}>
-                    <Briefcase size={64} style={{
-                      color: isDarkMode ? 'rgba(0, 122, 255, 0.6)' : 'rgba(0, 122, 255, 0.6)'
-                    }} />
-                    <div className="empty-project-content">
-                      <h3 style={{
-                        margin: '0 0 0.5rem 0',
-                        fontSize: '18px',
-                        fontWeight: '600',
-                        color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)'
-                      }}>
-                        {!selectedAccount ? 'Selecciona una cuenta' : 'No hay proyectos disponibles'}
-                      </h3>
-                      <p style={{
-                        margin: 0,
-                        fontSize: '14px',
-                        color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)'
-                      }}>
-                        {!selectedAccount
-                          ? 'Elige una cuenta del selector para ver sus proyectos del EHO'
-                          : 'Esta cuenta no tiene elementos seleccionados en el EHO'
-                        }
-                      </p>
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '1rem'
+                    }}>
+                      <Briefcase size={64} style={{
+                        color: isDarkMode ? 'rgba(0, 122, 255, 0.6)' : 'rgba(0, 122, 255, 0.6)'
+                      }} />
+                      <div className="empty-project-content">
+                        <h3 style={{
+                          margin: '0 0 0.5rem 0',
+                          fontSize: '18px',
+                          fontWeight: '600',
+                          color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)'
+                        }}>
+                          Selecciona una cuenta
+                        </h3>
+                        <p style={{
+                          margin: 0,
+                          fontSize: '14px',
+                          color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)'
+                        }}>
+                          Elige una cuenta del selector para ver sus proyectos del EHO
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </td>
-              </tr>
+                  </td>
+                </tr>
+              ) : null
             )}
           </tbody>
         </table>
