@@ -95,14 +95,14 @@ const LoginPage: React.FC = () => {
                   alt="Espora"
                   className="simple-logo"
                 />
-                <h2 className="app-name">Esporahub</h2>
+                <h2 className="login-app-name">Esporahub</h2>
               </div>
             </div>
 
             {/* Título */}
             <div className="title-section">
-              <h1 className="main-title">Inicia sesión</h1>
-              <p className="subtitle">
+              <h1 className="login-main-title">Inicia sesión</h1>
+              <p className="login-subtitle">
                 {step === 'email' ? 'Inicia sesión con tu cuenta de' : 'Ingresa tu contraseña para'}{' '}
                 <span className="brand-name">Espora</span>
               </p>
@@ -118,7 +118,7 @@ const LoginPage: React.FC = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Correo o número telefónico"
                     required
-                    className="main-input"
+                    className="login-main-input"
                     autoComplete="email"
                   />
                   <div className="input-arrow">
@@ -152,7 +152,7 @@ const LoginPage: React.FC = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Contraseña"
                     required
-                    className="main-input"
+                    className="login-main-input"
                     autoComplete="current-password"
                   />
                   <button
