@@ -361,7 +361,6 @@ const ExpedienteElectronicoPage: React.FC = () => {
   };
 
   const handleSubmit = () => {
-    console.log('Formulario enviado:', formData);
     // Aquí se conectaría con el backend
   };
 

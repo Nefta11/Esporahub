@@ -76,7 +76,7 @@ export const useChecklistLogic = () => {
         fieldType: 'text' as 'text' | 'number' | 'select',
         initialValue: '',
         selectOptions: [] as { value: string; label: string }[],
-        onSave: (value: string) => { console.log('Default save function', value); }
+        onSave: (value: string) => { }
     });
 
     const [dueDates, setDueDates] = useState<{ [key: string]: string }>(() => {
@@ -382,7 +382,6 @@ export const useChecklistLogic = () => {
         });
         setFieldValues(updatedFieldValues);
 
-        console.log(`Item ${itemToDelete} eliminado completamente de la cuenta ${currentAccountId}`);
         setItemToDelete(null);
     };
 

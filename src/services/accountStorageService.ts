@@ -24,7 +24,6 @@ export class AccountStorageService {
     try {
       const accountKey = this.getAccountKey(baseKey, accountId);
       storage.setItem(accountKey, data);
-      console.log(`Saved data for account ${accountId} with key ${baseKey}:`, data);
     } catch (error) {
       console.error(`Error setting account data for key ${baseKey}, account ${accountId}:`, error);
     }

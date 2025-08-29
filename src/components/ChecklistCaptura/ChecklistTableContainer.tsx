@@ -48,10 +48,6 @@ const ChecklistTableContainer: React.FC<ChecklistTableContainerProps> = (props) 
                 // El ancho del scroll debe ser igual al scrollWidth de la tabla
                 const scrollWidth = actualScrollWidth + 50; // 50px extra para asegurar que llegue al final
                 
-                console.log('EHO - Ajustando scroll:', {
-                    tableScrollWidth: actualScrollWidth,
-                    settingScrollTo: scrollWidth
-                });
                 
                 (scrollContent as HTMLElement).style.minWidth = `${scrollWidth}px`;
                 (scrollContent as HTMLElement).style.width = `${scrollWidth}px`;

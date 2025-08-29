@@ -113,11 +113,6 @@ const WorkHubPage: React.FC = () => {
         // El ancho del scroll debe ser igual al scrollWidth de la tabla + margen de seguridad
         const scrollWidth = actualScrollWidth + 0; // 50px extra para asegurar que llegue al final
 
-        console.log('Ajustando scroll:', {
-          tableScrollWidth: actualScrollWidth,
-          containerWidth: containerWidth,
-          settingScrollTo: scrollWidth
-        });
 
         (scrollContent as HTMLElement).style.minWidth = `${scrollWidth}px`;
         (scrollContent as HTMLElement).style.width = `${scrollWidth}px`;
@@ -196,8 +191,6 @@ const WorkHubPage: React.FC = () => {
         accountId
       );
 
-      console.log(`Loading project items for account ${accountId}:`, { selectedItems, formData });
-
       if (formData) {
         const items: ProjectItem[] = [];
 
@@ -215,10 +208,8 @@ const WorkHubPage: React.FC = () => {
           });
         });
 
-        console.log(`Found ${items.length} project items for account ${accountId}:`, items);
         setProjectItems(items);
       } else {
-        console.log(`No form data found for account ${accountId}`);
         setProjectItems([]);
       }
     } catch (error) {
