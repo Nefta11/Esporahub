@@ -107,9 +107,6 @@ const WorkHubPage: React.FC = () => {
         // El scrollWidth es el ancho total del contenido que se puede hacer scroll
         const actualScrollWidth = table.scrollWidth;
 
-        // También obtener el ancho del contenedor visible
-        const containerWidth = tableScrollRef.current!.clientWidth;
-
         // El ancho del scroll debe ser igual al scrollWidth de la tabla + margen de seguridad
         const scrollWidth = actualScrollWidth + 0; // 50px extra para asegurar que llegue al final
 
