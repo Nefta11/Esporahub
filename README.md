@@ -99,17 +99,12 @@ src/
    npm install
    ```
 
-3. **Configura las variables de entorno**
-   ```bash
-   cp .env.example .env.local
-   ```
-
-4. **Inicia el servidor de desarrollo**
+3. **Inicia el servidor de desarrollo**
    ```bash
    npm run dev
    ```
 
-5. **Abre tu navegador**
+4. **Abre tu navegador**
    ```
    http://localhost:5173
    ```
