@@ -112,7 +112,7 @@
 .login-card {
   background: #fff;
   border-radius: 20px;
-  box-shadow: 
+  box-shadow:
     0 8px 32px rgba(0, 122, 255, 0.2),
     0 4px 16px rgba(0, 122, 255, 0.15),
     0 2px 8px rgba(0, 122, 255, 0.1);
@@ -125,21 +125,21 @@
 .dark-theme .login-card {
   background: rgba(28, 28, 30, 0.9);
   border: 0.5px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 
+  box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.3),
     0 4px 16px rgba(0, 0, 0, 0.2),
     0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .login-card:hover {
-  box-shadow: 
+  box-shadow:
     0 12px 40px rgba(0, 122, 255, 0.25),
     0 8px 24px rgba(0, 122, 255, 0.2),
     0 4px 12px rgba(0, 122, 255, 0.15);
 }
 
 .dark-theme .login-card:hover {
-  box-shadow: 
+  box-shadow:
     0 12px 40px rgba(0, 0, 0, 0.4),
     0 8px 24px rgba(0, 0, 0, 0.3),
     0 4px 12px rgba(0, 0, 0, 0.2);
@@ -151,7 +151,7 @@
 
 /* Logo Section */
 .logo-section {
-  margin-bottom: 32px;
+  margin-bottom: 30px;
   text-align: center;
 }
 
@@ -197,12 +197,12 @@
 }
 
 .main-title {
-  font-size: 44px;
+  font-size: 32px;
   font-weight: 700;
   color: #1d1d1f;
-  margin: 0 0 8px 0;
+  margin: 0 0 20px 0;
   line-height: 1.1;
-  letter-spacing: -0.8px;
+  letter-spacing: -0.6px;
   transition: color 0.3s ease;
 }
 
@@ -211,7 +211,7 @@
 }
 
 .subtitle {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 400;
   color: #6e6e73;
   margin: 0;
@@ -255,7 +255,7 @@
 }
 
 .user-email {
-  font-size: 17px;
+  font-size: 16px;
   color: #1d1d1f;
   font-weight: 500;
   transition: color 0.3s ease;
@@ -269,7 +269,7 @@
   background: none;
   border: none;
   color: #007aff;
-  font-size: 17px;
+  font-size: 14px;
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 6px;
@@ -290,7 +290,7 @@
   width: 100%;
   padding: 16px 20px;
   padding-right: 50px;
-  font-size: 19px;
+  font-size: 16px;
   font-weight: 400;
   color: #1d1d1f;
   background: #fff;
@@ -349,7 +349,7 @@
   transform: translateY(-50%) translateX(2px);
 }
 
-.main-input:focus + .input-arrow {
+.main-input:focus+.input-arrow {
   color: #007aff;
   opacity: 1;
   transform: translateY(-50%) translateX(4px) scale(1.1);
@@ -360,9 +360,11 @@
   0% {
     transform: translateY(-50%) translateX(4px) scale(1.1);
   }
+
   50% {
     transform: translateY(-50%) translateX(6px) scale(1.2);
   }
+
   100% {
     transform: translateY(-50%) translateX(4px) scale(1.1);
   }
@@ -392,7 +394,7 @@
 .submit-button {
   width: 100%;
   padding: 16px 24px;
-  font-size: 19px;
+  font-size: 16px;
   font-weight: 600;
   color: #fff;
   background: linear-gradient(135deg, #007aff 0%, #5ac8fa 100%);
@@ -446,7 +448,7 @@
   color: #c53030;
   padding: 12px 16px;
   border-radius: 8px;
-  font-size: 15px;
+  font-size: 14px;
   margin-bottom: 16px;
   text-align: center;
   transition: all 0.3s ease;
@@ -474,7 +476,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: #8e8e93;
   text-align: center;
@@ -520,6 +522,7 @@
     transform: translateY(-10px);
     max-height: 0;
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -586,68 +589,76 @@
 }
 
 /* Role color indicators */
-.demo-role.admin { color: #007aff; }
-.demo-role.operator { color: #34c759; }
-.demo-role.user { color: #ff9500; }
+.demo-role.admin {
+  color: #007aff;
+}
+
+.demo-role.operator {
+  color: #34c759;
+}
+
+.demo-role.user {
+  color: #ff9500;
+}
 
 /* Responsive */
 @media (max-width: 768px) {
   .login-page {
     padding: 16px;
   }
-  
+
   .login-card {
     padding: 40px 32px;
     border-radius: 16px;
   }
-  
+
   .login-title {
     font-size: 28px;
   }
-  
+
   .main-input {
     font-size: 17px;
     padding: 14px 18px;
     padding-right: 52px;
   }
-  
+
   .continue-button {
     width: 36px;
     height: 36px;
     right: 6px;
   }
-  
+
   .submit-button {
     font-size: 17px;
     padding: 14px 20px;
   }
-  
+
   .back-button {
     top: 20px;
     left: 20px;
     font-size: 16px;
   }
-  
+
   .apple-logo {
     width: 100px;
     height: 100px;
     margin-bottom: 32px;
   }
-  
+
   .logo-dots {
     width: 100px;
     height: 100px;
   }
-  
+
   .dot {
     transform: rotate(var(--angle)) translateX(42px) translateY(-2.5px);
   }
-  
+
   .center-logo {
     width: 40px;
     height: 40px;
   }
-  
+
   .simple-logo {
     width: 40px;
     height: 40px;
@@ -661,37 +672,37 @@
     border-radius: 12px;
     margin: 0 8px;
   }
-  
+
   .login-title {
     font-size: 24px;
     margin-bottom: 32px;
   }
-  
+
   .main-input {
     font-size: 16px;
     padding: 12px 16px;
     padding-right: 48px;
   }
-  
+
   .continue-button {
     width: 32px;
     height: 32px;
     right: 6px;
   }
-  
+
   .submit-button {
     font-size: 16px;
     padding: 12px 18px;
   }
-  
+
   .demo-item {
     padding: 10px 14px;
   }
-  
+
   .demo-role {
     font-size: 14px;
   }
-  
+
   .demo-email {
     font-size: 12px;
   }
