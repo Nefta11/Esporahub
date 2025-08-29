@@ -5,30 +5,41 @@
   border: none;
   cursor: pointer;
   font-size: 20px;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: none;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  border: 0.5px solid rgba(0, 0, 0, 0.04);
+  color: #007aff;
 }
 
 /* Dark theme styles */
 .dark-theme .theme-toggle-btn {
-  background: rgba(118, 118, 128, 0.12);
+  background: rgba(28, 28, 30, 0.8);
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  color: #5ac8fa;
 }
 
 .dark-theme .theme-toggle-btn:hover {
-  background: rgba(118, 118, 128, 0.24);
+  background: rgba(28, 28, 30, 0.95);
+  color: #40c8e0;
+  box-shadow: 0 4px 12px rgba(90, 200, 250, 0.4);
   transform: scale(1.1);
 }
 
 /* Light theme styles */
 .light-theme .theme-toggle-btn {
-  background: rgba(118, 118, 128, 0.12);
+  background: rgba(255, 255, 255, 0.8);
+  border: 0.5px solid rgba(0, 0, 0, 0.04);
+  color: #007aff;
 }
 
 .light-theme .theme-toggle-btn:hover {
-  background: rgba(118, 118, 128, 0.24);
+  background: rgba(255, 255, 255, 0.95);
+  color: #0056cc;
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
   transform: scale(1.1);
 }
 
@@ -50,9 +61,9 @@
 }
 
 .theme-toggle-btn:hover {
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
 .theme-toggle-btn:active {
-  transform: scale(0.95);
+  transform: scale(1.05);
 }
