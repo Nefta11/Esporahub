@@ -14,6 +14,14 @@ interface ProjectItem {
   completed?: boolean;
 }
 
+interface Account {
+  id: number;
+  name: string;
+  position: string;
+  color: string;
+  isActive: boolean;
+}
+
 interface ProjectTableProps {
   projectItems: ProjectItem[];
   fieldValues: { [key: string]: string };
@@ -25,6 +33,7 @@ interface ProjectTableProps {
   tableScrollRef: React.RefObject<HTMLDivElement>;
   syncScrollFromTop: () => void;
   storage: StorageLike;
+  selectedAccount: Account | null;
 }
 
 const ProjectTable: React.FC<ProjectTableProps> = ({
@@ -37,7 +46,8 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
   topScrollRef,
   tableScrollRef,
   syncScrollFromTop,
-  storage
+  storage,
+  selectedAccount
 }) => {
   return (
     <div className="workhub-table-container">
@@ -358,6 +368,24 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
                       color: isDarkMode ? 'rgba(0, 122, 255, 0.6)' : 'rgba(0, 122, 255, 0.6)'
                     }} />
                     <div className="empty-project-content">
+                      <h3 style={{
+                        margin: '0 0 0.5rem 0',
+                        fontSize: '18px',
+                        fontWeight: '600',
+                        color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)'
+                      }}>
+                        {!selectedAccount ? 'Selecciona una cuenta' : 'No hay proyectos disponibles'}
+                      </h3>
+                      <p style={{
+                        margin: 0,
+                        fontSize: '14px',
+                        color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)'
+                      }}>
+                        {!selectedAccount
+                          ? 'Elige una cuenta del selector para ver sus proyectos del EHO'
+                          : 'Esta cuenta no tiene elementos seleccionados en el EHO'
+                        }
+                      </p>
                     </div>
                   </div>
                 </td>

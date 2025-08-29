@@ -8,6 +8,7 @@ import TabNavigation from '@/components/workhub/TabNavigation';
 import TimeCategories from '@/components/workhub/TimeCategories';
 import TasksSection from '@/components/workhub/TasksSection';
 import ProjectTable from '@/components/workhub/ProjectTable';
+import AccountSelector from '@/components/workhub/AccountSelector';
 import '@/styles/workhub/workhub.css';
 
 interface TaskAssignment {
@@ -34,6 +35,14 @@ interface FormDataItem {
   concept: string;
 }
 
+interface Account {
+  id: number;
+  name: string;
+  position: string;
+  color: string;
+  isActive: boolean;
+}
+
 const WorkHubPage: React.FC = () => {
   const { user } = useAuthStore();
   const [isVisible, setIsVisible] = useState(false);
@@ -58,6 +67,7 @@ const WorkHubPage: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState(() =>
     document.body.classList.contains('dark-theme')
   );
+  const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
 
   // Referencias para sincronizar los scrolls
   const topScrollRef = React.useRef<HTMLDivElement>(null);
@@ -166,12 +176,16 @@ const WorkHubPage: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Función para cargar los ítems del proyecto desde localStorage
-  const loadProjectItems = React.useCallback(() => {
+  // Función para cargar los ítems del proyecto desde localStorage filtrados por cuenta
+  const loadProjectItems = React.useCallback((accountId?: number) => {
     try {
-      // Cargar los ítems seleccionados y los datos del formulario
-      const selectedItems = storage.getItem<{ [key: string]: boolean }>('selectedItems') || {};
-      const formData = storage.getItem<{ [key: string]: FormDataItem[] }>('formData');
+      const accountKey = accountId ? `account-${accountId}` : 'global';
+
+      // Cargar los ítems seleccionados y los datos del formulario específicos de la cuenta
+      const selectedItems = storage.getItem<{ [key: string]: boolean }>(`selectedItems-${accountKey}`) ||
+        storage.getItem<{ [key: string]: boolean }>('selectedItems') || {};
+      const formData = storage.getItem<{ [key: string]: FormDataItem[] }>(`formData-${accountKey}`) ||
+        storage.getItem<{ [key: string]: FormDataItem[] }>('formData');
 
       if (formData) {
         const items: ProjectItem[] = [];
@@ -191,6 +205,8 @@ const WorkHubPage: React.FC = () => {
         });
 
         setProjectItems(items);
+      } else {
+        setProjectItems([]);
       }
     } catch (error) {
       console.error('Error loading project items:', error);
@@ -218,14 +234,21 @@ const WorkHubPage: React.FC = () => {
 
     // Cargar tareas inicialmente
     loadTasks();
-    loadProjectItems();
+    loadProjectItems(selectedAccount?.id);
 
     // Configurar un intervalo para verificar periódicamente si hay nuevas tareas
     const intervalId = setInterval(loadTasks, 3000);
 
     // Limpiar el intervalo cuando el componente se desmonte
     return () => clearInterval(intervalId);
-  }, [user, loadProjectItems]);
+  }, [user, loadProjectItems, selectedAccount?.id]);
+
+  // Recargar los items del proyecto cuando cambie la cuenta seleccionada
+  useEffect(() => {
+    if (selectedAccount) {
+      loadProjectItems(selectedAccount.id);
+    }
+  }, [selectedAccount, loadProjectItems]);
 
   // Función para obtener el nombre de la sección
   const getSectionName = (sectionId: string): string => {
@@ -331,6 +354,11 @@ const WorkHubPage: React.FC = () => {
     return fieldValues[fieldKey] || '';
   };
 
+  // Función para manejar la selección de cuenta
+  const handleAccountSelect = (account: Account) => {
+    setSelectedAccount(account);
+  };
+
   return (
     <div className={`workhub-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       <PageHeader
@@ -351,8 +379,21 @@ const WorkHubPage: React.FC = () => {
           {/* Tab Navigation - Apple Style */}
           <section className="workhub-actions-section">
             <div className="workhub-section-header">
-              <h2>Mi WorkHub</h2>
-              <p>Gestiona tus tareas y proyectos</p>
+              <div className="workhub-header-top">
+                <div className="workhub-header-title">
+                  <h2>Mi WorkHub</h2>
+                  <p>Gestiona tus tareas y proyectos</p>
+                </div>
+                {activeTab === 'proyecto' && (
+                  <div className="workhub-header-selector">
+                    <AccountSelector
+                      selectedAccount={selectedAccount}
+                      onAccountSelect={handleAccountSelect}
+                      isDarkMode={isDarkMode}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
 
             <TabNavigation
@@ -372,18 +413,21 @@ const WorkHubPage: React.FC = () => {
             {activeTab === 'tareas' ? (
               <TasksSection filteredTasks={filteredTasks} />
             ) : (
-              <ProjectTable
-                projectItems={projectItems}
-                fieldValues={fieldValues}
-                setFieldValues={setFieldValues}
-                openModal={openModal}
-                getFieldValue={getFieldValue}
-                isDarkMode={isDarkMode}
-                topScrollRef={topScrollRef}
-                tableScrollRef={tableScrollRef}
-                syncScrollFromTop={syncScrollFromTop}
-                storage={storage}
-              />
+              <div className="proyecto-section">
+                <ProjectTable
+                  projectItems={projectItems}
+                  fieldValues={fieldValues}
+                  setFieldValues={setFieldValues}
+                  openModal={openModal}
+                  getFieldValue={getFieldValue}
+                  isDarkMode={isDarkMode}
+                  topScrollRef={topScrollRef}
+                  tableScrollRef={tableScrollRef}
+                  syncScrollFromTop={syncScrollFromTop}
+                  storage={storage}
+                  selectedAccount={selectedAccount}
+                />
+              </div>
             )}
           </section>
         </div>
