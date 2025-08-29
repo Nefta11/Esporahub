@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
+import ThemeToggle from '@/components/layout/ThemeToggle';
+import { appStorage } from '@/utils/storage';
 import '@/styles/login-page.css';
 
 const LoginPage: React.FC = () => {
@@ -12,14 +14,29 @@ const LoginPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [step, setStep] = useState<'email' | 'password'>('email');
   const [showDemoAccounts, setShowDemoAccounts] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuthStore();
 
-  // Force light mode for login page
+  // Initialize theme from storage
   React.useEffect(() => {
-    document.body.classList.remove('dark-theme');
-    document.body.classList.add('light-theme');
+    const savedTheme = appStorage.getTheme();
+    const isDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    
+    setIsDarkMode(isDark);
+    document.body.classList.remove('dark-theme', 'light-theme');
+    document.body.classList.add(isDark ? 'dark-theme' : 'light-theme');
   }, []);
+
+  const toggleTheme = () => {
+    const newIsDarkMode = !isDarkMode;
+    setIsDarkMode(newIsDarkMode);
+    
+    document.body.classList.remove('dark-theme', 'light-theme');
+    document.body.classList.add(newIsDarkMode ? 'dark-theme' : 'light-theme');
+    
+    appStorage.setTheme(newIsDarkMode ? 'dark' : 'light');
+  };
 
   const handleEmailSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,11 +74,15 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="login-page">
+    <div className={`login-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       <Link to="/" className="back-button">
         <ArrowLeft size={16} />
         <span>Inicio</span>
       </Link>
+
+      <div className="theme-toggle-container">
+        <ThemeToggle isDarkMode={isDarkMode} onToggle={toggleTheme} />
+      </div>
 
       <div className="login-container">
         <div className="login-card">
