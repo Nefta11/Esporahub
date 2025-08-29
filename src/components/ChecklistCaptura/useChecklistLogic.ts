@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom';
 import { getAllUsers, hasPermission, User } from '@/data/users';
 import { useAuthStore } from '@/stores/authStore';
 import { storage } from '@/utils/storage';
+import { AccountStorageService } from '@/services/accountStorageService';
+import { getAccountIdFromClientName } from '@/utils/accountMapping';
 
 interface ChecklistItem {
     id: string;
@@ -27,6 +29,7 @@ interface LocationState {
     clientName?: string;
     selectedItems?: { [key: string]: boolean };
     allData?: FormDataSection;
+    accountId?: number;
 }
 
 interface TaskAssignment {
@@ -45,6 +48,7 @@ export const useChecklistLogic = () => {
 
     const [isVisible, setIsVisible] = useState(false);
     const [clientName, setClientName] = useState('');
+    const [currentAccountId, setCurrentAccountId] = useState<number | null>(null);
     const [checklistItems, setChecklistItems] = useState<ChecklistItem[]>([]);
     const [users, setUsers] = useState<Omit<User, 'password'>[]>([]);
     const [itemToDelete, setItemToDelete] = useState<string | null>(null);
@@ -137,39 +141,69 @@ export const useChecklistLogic = () => {
         setUsers(availableUsers);
     }, []);
 
-    // Cargar datos iniciales desde location state o localStorage
+    // Cargar datos iniciales desde location state o localStorage específico por cuenta
     useEffect(() => {
         const state = location.state as LocationState;
+        
         if (state && state.clientName) {
             setClientName(state.clientName);
-        }
+            
+            // Obtener accountId del clientName
+            const accountId = state.accountId || getAccountIdFromClientName(state.clientName);
+            setCurrentAccountId(accountId);
 
-        if (!state || !state.selectedItems || !state.allData) {
-            const savedItems = storage.getItem<{ [key: string]: boolean }>('selectedItems');
-            const savedFormData = storage.getItem<FormDataSection>('formData');
+            if (!state.selectedItems || !state.allData) {
+                // Cargar desde almacenamiento específico por cuenta
+                if (accountId) {
+                    const savedItems = AccountStorageService.getAccountData<{ [key: string]: boolean }>(
+                        AccountStorageService.KEYS.SELECTED_ITEMS,
+                        accountId
+                    );
+                    const savedFormData = AccountStorageService.getAccountData<FormDataSection>(
+                        AccountStorageService.KEYS.FORM_DATA,
+                        accountId
+                    );
 
-            if (savedItems && savedFormData) {
-                generateChecklistItems(savedItems, savedFormData);
+                    if (savedItems && savedFormData) {
+                        generateChecklistItems(savedItems, savedFormData);
+                    }
+                }
+            } else {
+                generateChecklistItems(state.selectedItems, state.allData);
             }
-        } else {
-            generateChecklistItems(state.selectedItems, state.allData);
         }
     }, [location, generateChecklistItems]);
 
-    // Inicializar visibilidad y cargar estado de completado
+    // Inicializar visibilidad y cargar estado de completado específico por cuenta
     useEffect(() => {
         setIsVisible(true);
 
-        const savedCompletedItems = storage.getItem<{ [key: string]: boolean }>('completedItems');
-        if (savedCompletedItems) {
-            setChecklistItems(prevItems =>
-                prevItems.map(item => ({
-                    ...item,
-                    completed: savedCompletedItems[item.id] || false
-                }))
+        if (currentAccountId) {
+            const savedCompletedItems = AccountStorageService.getAccountData<{ [key: string]: boolean }>(
+                AccountStorageService.KEYS.COMPLETED_ITEMS,
+                currentAccountId
             );
+            
+            if (savedCompletedItems) {
+                setChecklistItems(prevItems =>
+                    prevItems.map(item => ({
+                        ...item,
+                        completed: savedCompletedItems[item.id] || false
+                    }))
+                );
+            }
+
+            // Cargar fieldValues específicos por cuenta
+            const savedFieldValues = AccountStorageService.getAccountData<{ [key: string]: string }>(
+                AccountStorageService.KEYS.FIELD_VALUES,
+                currentAccountId
+            );
+            
+            if (savedFieldValues) {
+                setFieldValues(savedFieldValues);
+            }
         }
-    }, []);
+    }, [currentAccountId]);
 
     // Guardar asignaciones cuando cambien
     useEffect(() => {
@@ -221,7 +255,14 @@ export const useChecklistLogic = () => {
             return acc;
         }, {} as { [key: string]: boolean });
 
-        storage.setItem('completedItems', completedItemsMap);
+        // Guardar en almacenamiento específico por cuenta
+        if (currentAccountId) {
+            AccountStorageService.setAccountData(
+                AccountStorageService.KEYS.COMPLETED_ITEMS,
+                currentAccountId,
+                completedItemsMap
+            );
+        }
 
         const assignedUserId = getFieldValue(itemId, 'assignedUser');
         if (assignedUserId) {
@@ -266,28 +307,82 @@ export const useChecklistLogic = () => {
     };
 
     const confirmDelete = () => {
-        if (!itemToDelete) return;
+        if (!itemToDelete || !currentAccountId) return;
 
+        // Eliminar de la lista de items del checklist
         setChecklistItems(prev => prev.filter(item => item.id !== itemToDelete));
 
+        // Eliminar de las asignaciones de tareas
         const updatedAssignments = taskAssignments.filter(assignment => assignment.itemId !== itemToDelete);
         setTaskAssignments(updatedAssignments);
-        storage.setItem('taskAssignments', updatedAssignments);
 
-        const completedItems = storage.getItem<{ [key: string]: boolean }>('completedItems') || {};
-        delete completedItems[itemToDelete];
-        storage.setItem('completedItems', completedItems);
+        // Eliminar del almacenamiento específico por cuenta - selectedItems
+        const currentSelectedItems = AccountStorageService.getAccountData<{ [key: string]: boolean }>(
+            AccountStorageService.KEYS.SELECTED_ITEMS,
+            currentAccountId
+        ) || {};
+        delete currentSelectedItems[itemToDelete];
+        AccountStorageService.setAccountData(
+            AccountStorageService.KEYS.SELECTED_ITEMS,
+            currentAccountId,
+            currentSelectedItems
+        );
 
+        // Eliminar del almacenamiento específico por cuenta - completedItems
+        const currentCompletedItems = AccountStorageService.getAccountData<{ [key: string]: boolean }>(
+            AccountStorageService.KEYS.COMPLETED_ITEMS,
+            currentAccountId
+        ) || {};
+        delete currentCompletedItems[itemToDelete];
+        AccountStorageService.setAccountData(
+            AccountStorageService.KEYS.COMPLETED_ITEMS,
+            currentAccountId,
+            currentCompletedItems
+        );
+
+        // Eliminar del almacenamiento específico por cuenta - fieldValues
+        const currentFieldValues = AccountStorageService.getAccountData<{ [key: string]: string }>(
+            AccountStorageService.KEYS.FIELD_VALUES,
+            currentAccountId
+        ) || {};
+        Object.keys(currentFieldValues).forEach(key => {
+            if (key.startsWith(`${itemToDelete}-`)) {
+                delete currentFieldValues[key];
+            }
+        });
+        AccountStorageService.setAccountData(
+            AccountStorageService.KEYS.FIELD_VALUES,
+            currentAccountId,
+            currentFieldValues
+        );
+
+        // También actualizar el formData para eliminar el item completamente
+        const currentFormData = AccountStorageService.getAccountData<FormDataSection>(
+            AccountStorageService.KEYS.FORM_DATA,
+            currentAccountId
+        );
+        
+        if (currentFormData) {
+            Object.keys(currentFormData).forEach(sectionId => {
+                currentFormData[sectionId] = currentFormData[sectionId].filter(item => item.id !== itemToDelete);
+            });
+            AccountStorageService.setAccountData(
+                AccountStorageService.KEYS.FORM_DATA,
+                currentAccountId,
+                currentFormData
+            );
+        }
+
+        // Actualizar fieldValues local
         const updatedFieldValues = { ...fieldValues };
         Object.keys(updatedFieldValues).forEach(key => {
             if (key.startsWith(`${itemToDelete}-`)) {
                 delete updatedFieldValues[key];
             }
         });
-
         setFieldValues(updatedFieldValues);
-        storage.setItem('fieldValues', updatedFieldValues);
 
+        console.log(`Item ${itemToDelete} eliminado completamente de la cuenta ${currentAccountId}`);
         setItemToDelete(null);
     };
 
@@ -313,7 +408,15 @@ export const useChecklistLogic = () => {
                         [fieldKey]: value
                     };
                     setFieldValues(updatedValues);
-                    storage.setItem('fieldValues', updatedValues);
+                    
+                    // Guardar en almacenamiento específico por cuenta
+                    if (currentAccountId) {
+                        AccountStorageService.setAccountData(
+                            AccountStorageService.KEYS.FIELD_VALUES,
+                            currentAccountId,
+                            updatedValues
+                        );
+                    }
                 }
             });
         } else {
@@ -378,7 +481,14 @@ export const useChecklistLogic = () => {
                 }
             }
 
-            storage.setItem('fieldValues', updatedValues);
+            // Guardar en almacenamiento específico por cuenta
+            if (currentAccountId) {
+                AccountStorageService.setAccountData(
+                    AccountStorageService.KEYS.FIELD_VALUES,
+                    currentAccountId,
+                    updatedValues
+                );
+            }
         } else {
             setShowAccessDeniedModal(true);
         }

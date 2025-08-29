@@ -6,6 +6,8 @@ import { useAuthStore } from '@/stores/authStore';
 import { hasPermission } from '@/data/users';
 import '@/styles/overview/collaboration-agreement.css';
 import { storage } from '@/utils/storage';
+import { AccountStorageService } from '@/services/accountStorageService';
+import { getAccountIdFromClientName } from '@/utils/accountMapping';
 
 interface FormData {
   id: string;
@@ -25,9 +27,19 @@ const CollaborationAgreementPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
   const { user } = useAuthStore();
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>(() => {
-    // Intentar cargar los items seleccionados desde localStorage
-    const savedItems = storage.getItem<{ [key: string]: boolean }>('selectedItems');
-    return savedItems || {};
+    // Intentar cargar los items seleccionados desde localStorage específico por cuenta
+    const state = location.state as { clientName?: string };
+    if (state && state.clientName) {
+      const accountId = getAccountIdFromClientName(state.clientName);
+      if (accountId) {
+        const savedItems = AccountStorageService.getAccountData<{ [key: string]: boolean }>(
+          AccountStorageService.KEYS.SELECTED_ITEMS,
+          accountId
+        );
+        return savedItems || {};
+      }
+    }
+    return {};
   });
   const [completedTabs, setCompletedTabs] = useState<Set<number>>(new Set([0])); // Tab 0 (estrategia) starts unlocked
 
@@ -231,7 +243,12 @@ const CollaborationAgreementPage: React.FC = () => {
         [itemId]: false
       };
       setCheckedItems(updatedItems);
-      storage.setItem('selectedItems', updatedItems);
+      
+      // Guardar en almacenamiento específico por cuenta
+      const accountId = getAccountIdFromClientName(clientName);
+      if (accountId) {
+        AccountStorageService.setAccountData(AccountStorageService.KEYS.SELECTED_ITEMS, accountId, updatedItems);
+      }
     }
     // Si el campo es quantity y se cambia a > 0, marcar el checkbox
     else if (field === 'quantity' && numValue > 0) {
@@ -240,7 +257,12 @@ const CollaborationAgreementPage: React.FC = () => {
         [itemId]: true
       };
       setCheckedItems(updatedItems);
-      storage.setItem('selectedItems', updatedItems);
+      
+      // Guardar en almacenamiento específico por cuenta
+      const accountId = getAccountIdFromClientName(clientName);
+      if (accountId) {
+        AccountStorageService.setAccountData(AccountStorageService.KEYS.SELECTED_ITEMS, accountId, updatedItems);
+      }
     }
   };
 
@@ -253,8 +275,11 @@ const CollaborationAgreementPage: React.FC = () => {
 
     setCheckedItems(updatedItems);
 
-    // Guardar en localStorage
-    storage.setItem('selectedItems', updatedItems);
+    // Guardar en almacenamiento específico por cuenta
+    const accountId = getAccountIdFromClientName(clientName);
+    if (accountId) {
+      AccountStorageService.setAccountData(AccountStorageService.KEYS.SELECTED_ITEMS, accountId, updatedItems);
+    }
 
     // Update quantity based on checkbox state
     const newQuantity = isChecked ? 1 : 0;
@@ -298,20 +323,29 @@ const CollaborationAgreementPage: React.FC = () => {
         setCompletedTabs(newCompletedTabs);
         setActiveTab(activeTab + 1); // Move to next tab
 
-        // Guardar el estado actual de los datos del formulario
-        storage.setItem('formData', formData);
+        // Guardar el estado actual de los datos del formulario específico por cuenta
+        const accountId = getAccountIdFromClientName(clientName);
+        if (accountId) {
+          AccountStorageService.setAccountData(AccountStorageService.KEYS.FORM_DATA, accountId, formData);
+          AccountStorageService.setAccountData(AccountStorageService.KEYS.SELECTED_ITEMS, accountId, checkedItems);
+        }
       } else {
         // Last tab completed, go to checklist
         setCompletedTabs(newCompletedTabs);
 
-        // Guardar el estado actual de los datos del formulario
-        storage.setItem('formData', formData);
+        // Guardar el estado actual de los datos del formulario específico por cuenta
+        const accountId = getAccountIdFromClientName(clientName);
+        if (accountId) {
+          AccountStorageService.setAccountData(AccountStorageService.KEYS.FORM_DATA, accountId, formData);
+          AccountStorageService.setAccountData(AccountStorageService.KEYS.SELECTED_ITEMS, accountId, checkedItems);
+        }
 
         navigate('/eho', {
           state: {
             clientName,
             selectedItems: checkedItems,
-            allData: formData
+            allData: formData,
+            accountId
           }
         });
       }

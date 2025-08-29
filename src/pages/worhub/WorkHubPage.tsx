@@ -3,6 +3,7 @@ import { useAuthStore } from '@/stores/authStore';
 import PageHeader from '@/components/layout/PageHeader';
 import PageFooter from '@/components/layout/PageFooter';
 import { storage } from '@/utils/storage';
+import { AccountStorageService } from '@/services/accountStorageService';
 import InputModal from '@/components/modals/InputModal';
 import TabNavigation from '@/components/workhub/TabNavigation';
 import TimeCategories from '@/components/workhub/TimeCategories';
@@ -179,13 +180,23 @@ const WorkHubPage: React.FC = () => {
   // Función para cargar los ítems del proyecto desde localStorage filtrados por cuenta
   const loadProjectItems = React.useCallback((accountId?: number) => {
     try {
-      const accountKey = accountId ? `account-${accountId}` : 'global';
+      if (!accountId) {
+        setProjectItems([]);
+        return;
+      }
 
-      // Cargar los ítems seleccionados y los datos del formulario específicos de la cuenta
-      const selectedItems = storage.getItem<{ [key: string]: boolean }>(`selectedItems-${accountKey}`) ||
-        storage.getItem<{ [key: string]: boolean }>('selectedItems') || {};
-      const formData = storage.getItem<{ [key: string]: FormDataItem[] }>(`formData-${accountKey}`) ||
-        storage.getItem<{ [key: string]: FormDataItem[] }>('formData');
+      // Usar el servicio de almacenamiento por cuenta
+      const selectedItems = AccountStorageService.getAccountData<{ [key: string]: boolean }>(
+        AccountStorageService.KEYS.SELECTED_ITEMS,
+        accountId
+      ) || {};
+      
+      const formData = AccountStorageService.getAccountData<{ [key: string]: FormDataItem[] }>(
+        AccountStorageService.KEYS.FORM_DATA,
+        accountId
+      );
+
+      console.log(`Loading project items for account ${accountId}:`, { selectedItems, formData });
 
       if (formData) {
         const items: ProjectItem[] = [];
@@ -204,12 +215,15 @@ const WorkHubPage: React.FC = () => {
           });
         });
 
+        console.log(`Found ${items.length} project items for account ${accountId}:`, items);
         setProjectItems(items);
       } else {
+        console.log(`No form data found for account ${accountId}`);
         setProjectItems([]);
       }
     } catch (error) {
       console.error('Error loading project items:', error);
+      setProjectItems([]);
     }
   }, []);
 
