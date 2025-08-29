@@ -89,19 +89,24 @@ const LoginPage: React.FC = () => {
           <div className="login-content">
             {/* Logo colorido estilo Apple */}
             <div className="logo-section">
-              <img
-                src="https://raw.githubusercontent.com/Esporadix-team/imagenes_logos/main/esporaLogo.png"
-                alt="Espora"
-                className="simple-logo"
-              />
+              <div className="logo-with-text">
+                <img
+                  src="https://raw.githubusercontent.com/Esporadix-team/imagenes_logos/main/esporaLogo.png"
+                  alt="Espora"
+                  className="simple-logo"
+                />
+                <h2 className="app-name">Esporahub</h2>
+              </div>
             </div>
 
             {/* Título */}
-            <h1 className="login-title">
-              {step === 'email' ? 'Inicia sesión con tu cuenta de' : 'Ingresa tu contraseña para'}
-              <br />
-              <span className="brand-name">Espora</span>
-            </h1>
+            <div className="title-section">
+              <h1 className="main-title">Inicia sesión</h1>
+              <p className="subtitle">
+                {step === 'email' ? 'Inicia sesión con tu cuenta de' : 'Ingresa tu contraseña para'}{' '}
+                <span className="brand-name">Espora</span>
+              </p>
+            </div>
 
             {/* Formulario */}
             {step === 'email' ? (
