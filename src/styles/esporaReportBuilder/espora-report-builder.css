@@ -171,6 +171,7 @@
   position: relative;
   width: 100%;
   max-width: 400px;
+  flex-shrink: 0;
 }
 
 .content-selector {
@@ -234,9 +235,11 @@
 /* Build Button */
 .build-button-container {
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
   flex-shrink: 0;
   margin-top: 1rem;
+  width: 100%;
+  max-width: 400px;
 }
 
 .build-report-button {
@@ -327,6 +330,7 @@
 
   .build-button-container {
     justify-content: center;
+    max-width: none;
   }
 
   .content-selector {
@@ -373,6 +377,7 @@
 
   .build-button-container {
     justify-content: center;
+    max-width: none;
   }
 
   .content-selector {
