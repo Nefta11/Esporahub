@@ -83,64 +83,62 @@ const EsporaReportBuilderPage: React.FC = () => {
                                 <label htmlFor="content-selector" className="selector-label">
                                     Seleccionar contenido
                                 </label>
-                                <div className="selector-and-button-container">
-                                    <div className="custom-select-container">
-                                        <select
-                                            id="content-selector"
-                                            value={selectedOption}
-                                            onChange={(e) => handleOptionChange(e.target.value)}
-                                            className="content-selector"
-                                        >
-                                            <option value="" disabled>
-                                                Selecciona una opción...
+                                <div className="custom-select-container">
+                                    <select
+                                        id="content-selector"
+                                        value={selectedOption}
+                                        onChange={(e) => handleOptionChange(e.target.value)}
+                                        className="content-selector"
+                                    >
+                                        <option value="" disabled>
+                                            Selecciona una opción...
+                                        </option>
+                                        {options.map((option) => (
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
                                             </option>
-                                            {options.map((option) => (
-                                                <option key={option.value} value={option.value}>
-                                                    {option.label}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <div className="select-arrow">
-                                            <svg
-                                                width="12"
-                                                height="12"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            >
-                                                <polyline points="6,9 12,15 18,9"></polyline>
-                                            </svg>
-                                        </div>
-                                    </div>
-
-                                    <div className="build-button-container">
-                                        <button
-                                            onClick={handleBuildReport}
-                                            disabled={!selectedOption}
-                                            className={`build-report-button ${selectedOption ? 'enabled' : 'disabled'}`}
+                                        ))}
+                                    </select>
+                                    <div className="select-arrow">
+                                        <svg
+                                            width="12"
+                                            height="12"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
                                         >
-                                            <svg
-                                                width="20"
-                                                height="20"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                className="button-icon"
-                                            >
-                                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                                                <path d="M7 7h10" />
-                                                <path d="M7 12h10" />
-                                                <path d="M7 17h6" />
-                                            </svg>
-                                            Construir Reporte
-                                        </button>
+                                            <polyline points="6,9 12,15 18,9"></polyline>
+                                        </svg>
                                     </div>
+                                </div>
+
+                                <div className="build-button-container">
+                                    <button
+                                        onClick={handleBuildReport}
+                                        disabled={!selectedOption}
+                                        className={`build-report-button ${selectedOption ? 'enabled' : 'disabled'}`}
+                                    >
+                                        <svg
+                                            width="14"
+                                            height="14"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            className="button-icon"
+                                        >
+                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                            <path d="M7 7h10" />
+                                            <path d="M7 12h10" />
+                                            <path d="M7 17h6" />
+                                        </svg>
+                                        Construir Reporte
+                                    </button>
                                 </div>
                             </div>
                         </div>

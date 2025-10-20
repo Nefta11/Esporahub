@@ -229,6 +229,7 @@
 .expediente-page.dark-theme .header-title p,
 .checklist-captura-page.dark-theme .header-title p,
 .presentacion-inicial-page.dark-theme .header-title p,
+.workhub-page.dark-theme .header-title p,
 .construction-page.dark-theme .header-title p,
 .espora-report-builder-page.dark-theme .header-title p {
     color: rgba(255, 255, 255, 0.6);
@@ -246,6 +247,7 @@
 .expediente-page.light-theme .header-title p,
 .checklist-captura-page.light-theme .header-title p,
 .presentacion-inicial-page.light-theme .header-title p,
+.workhub-page.light-theme .header-title p,
 .construction-page.light-theme .header-title p,
 .espora-report-builder-page.light-theme .header-title p {
     color: #1a202c !important;
@@ -411,7 +413,10 @@
 .account-page.dark-theme .breadcrumb-container,
 .expediente-page.dark-theme .breadcrumb-container,
 .checklist-captura-page.dark-theme .breadcrumb-container,
-.presentacion-inicial-page.dark-theme .breadcrumb-container {
+.presentacion-inicial-page.dark-theme .breadcrumb-container,
+.workhub-page.dark-theme .breadcrumb-container,
+.construction-page.dark-theme .breadcrumb-container,
+.espora-report-builder-page.dark-theme .breadcrumb-container {
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -425,7 +430,10 @@
 .account-page.dark-theme .breadcrumb-container:hover,
 .expediente-page.dark-theme .breadcrumb-container:hover,
 .checklist-captura-page.dark-theme .breadcrumb-container:hover,
-.presentacion-inicial-page.dark-theme .breadcrumb-container:hover {
+.presentacion-inicial-page.dark-theme .breadcrumb-container:hover,
+.workhub-page.dark-theme .breadcrumb-container:hover,
+.construction-page.dark-theme .breadcrumb-container:hover,
+.espora-report-builder-page.dark-theme .breadcrumb-container:hover {
     background: rgba(255, 255, 255, 0.15);
     border-color: rgba(255, 255, 255, 0.25);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -441,7 +449,10 @@
 .account-page.light-theme .breadcrumb-container,
 .expediente-page.light-theme .breadcrumb-container,
 .checklist-captura-page.light-theme .breadcrumb-container,
-.presentacion-inicial-page.light-theme .breadcrumb-container {
+.presentacion-inicial-page.light-theme .breadcrumb-container,
+.workhub-page.light-theme .breadcrumb-container,
+.construction-page.light-theme .breadcrumb-container,
+.espora-report-builder-page.light-theme .breadcrumb-container {
     background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(0, 0, 0, 0.1);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -455,7 +466,10 @@
 .account-page.light-theme .breadcrumb-container:hover,
 .expediente-page.light-theme .breadcrumb-container:hover,
 .checklist-captura-page.light-theme .breadcrumb-container:hover,
-.presentacion-inicial-page.light-theme .breadcrumb-container:hover {
+.presentacion-inicial-page.light-theme .breadcrumb-container:hover,
+.workhub-page.light-theme .breadcrumb-container:hover,
+.construction-page.light-theme .breadcrumb-container:hover,
+.espora-report-builder-page.light-theme .breadcrumb-container:hover {
     background: rgba(255, 255, 255, 1);
     border-color: rgba(0, 0, 0, 0.15);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -491,7 +505,10 @@
 .account-page.dark-theme .breadcrumb-link,
 .expediente-page.dark-theme .breadcrumb-link,
 .checklist-captura-page.dark-theme .breadcrumb-link,
-.presentacion-inicial-page.dark-theme .breadcrumb-link {
+.presentacion-inicial-page.dark-theme .breadcrumb-link,
+.workhub-page.dark-theme .breadcrumb-link,
+.construction-page.dark-theme .breadcrumb-link,
+.espora-report-builder-page.dark-theme .breadcrumb-link {
     color: #0A84FF;
 }
 
@@ -502,7 +519,10 @@
 .account-page.dark-theme .breadcrumb-link:hover,
 .expediente-page.dark-theme .breadcrumb-link:hover,
 .checklist-captura-page.dark-theme .breadcrumb-link:hover,
-.presentacion-inicial-page.dark-theme .breadcrumb-link:hover {
+.presentacion-inicial-page.dark-theme .breadcrumb-link:hover,
+.workhub-page.dark-theme .breadcrumb-link:hover,
+.construction-page.dark-theme .breadcrumb-link:hover,
+.espora-report-builder-page.dark-theme .breadcrumb-link:hover {
     color: #409CFF;
     background: rgba(10, 132, 255, 0.1);
     transform: scale(1.02);
@@ -515,7 +535,10 @@
 .account-page.dark-theme .breadcrumb-link:active,
 .expediente-page.dark-theme .breadcrumb-link:active,
 .checklist-captura-page.dark-theme .breadcrumb-link:active,
-.presentacion-inicial-page.dark-theme .breadcrumb-link:active {
+.presentacion-inicial-page.dark-theme .breadcrumb-link:active,
+.workhub-page.dark-theme .breadcrumb-link:active,
+.construction-page.dark-theme .breadcrumb-link:active,
+.espora-report-builder-page.dark-theme .breadcrumb-link:active {
     transform: scale(0.98);
     background: rgba(10, 132, 255, 0.15);
 }
@@ -528,7 +551,10 @@
 .account-page.light-theme .breadcrumb-link,
 .expediente-page.light-theme .breadcrumb-link,
 .checklist-captura-page.light-theme .breadcrumb-link,
-.presentacion-inicial-page.light-theme .breadcrumb-link {
+.presentacion-inicial-page.light-theme .breadcrumb-link,
+.workhub-page.light-theme .breadcrumb-link,
+.construction-page.light-theme .breadcrumb-link,
+.espora-report-builder-page.light-theme .breadcrumb-link {
     color: #007AFF;
 }
 
@@ -539,7 +565,10 @@
 .account-page.light-theme .breadcrumb-link:hover,
 .expediente-page.light-theme .breadcrumb-link:hover,
 .checklist-captura-page.light-theme .breadcrumb-link:hover,
-.presentacion-inicial-page.light-theme .breadcrumb-link:hover {
+.presentacion-inicial-page.light-theme .breadcrumb-link:hover,
+.workhub-page.light-theme .breadcrumb-link:hover,
+.construction-page.light-theme .breadcrumb-link:hover,
+.espora-report-builder-page.light-theme .breadcrumb-link:hover {
     color: #0051D5;
     background: rgba(0, 122, 255, 0.1);
     transform: scale(1.02);
@@ -552,7 +581,10 @@
 .account-page.light-theme .breadcrumb-link:active,
 .expediente-page.light-theme .breadcrumb-link:active,
 .checklist-captura-page.light-theme .breadcrumb-link:active,
-.presentacion-inicial-page.light-theme .breadcrumb-link:active {
+.presentacion-inicial-page.light-theme .breadcrumb-link:active,
+.workhub-page.light-theme .breadcrumb-link:active,
+.construction-page.light-theme .breadcrumb-link:active,
+.espora-report-builder-page.light-theme .breadcrumb-link:active {
     transform: scale(0.98);
     background: rgba(0, 122, 255, 0.15);
 }
@@ -576,7 +608,10 @@
 .account-page.dark-theme .breadcrumb-separator,
 .expediente-page.dark-theme .breadcrumb-separator,
 .checklist-captura-page.dark-theme .breadcrumb-separator,
-.presentacion-inicial-page.dark-theme .breadcrumb-separator {
+.presentacion-inicial-page.dark-theme .breadcrumb-separator,
+.workhub-page.dark-theme .breadcrumb-separator,
+.construction-page.dark-theme .breadcrumb-separator,
+.espora-report-builder-page.dark-theme .breadcrumb-separator {
     color: rgba(255, 255, 255, 0.6);
 }
 
@@ -589,6 +624,9 @@
 .account-page.light-theme .breadcrumb-separator,
 .expediente-page.light-theme .breadcrumb-separator,
 .checklist-captura-page.light-theme .breadcrumb-separator,
-.presentacion-inicial-page.light-theme .breadcrumb-separator {
+.presentacion-inicial-page.light-theme .breadcrumb-separator,
+.workhub-page.light-theme .breadcrumb-separator,
+.construction-page.light-theme .breadcrumb-separator,
+.espora-report-builder-page.light-theme .breadcrumb-separator {
     color: #718096;
 }

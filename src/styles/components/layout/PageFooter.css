@@ -74,7 +74,8 @@
 .checklist-captura-page.dark-theme .footer-text,
 .presentacion-inicial-page.dark-theme .footer-text,
 .workhub-page.dark-theme .footer-text,
-.construction-page.dark-theme .footer-text {
+.construction-page.dark-theme .footer-text,
+.espora-report-builder-page.dark-theme .footer-text {
   color: rgba(255, 255, 255, 0.8);
 }
 
@@ -91,7 +92,8 @@
 .checklist-captura-page.light-theme .footer-text,
 .presentacion-inicial-page.light-theme .footer-text,
 .workhub-page.light-theme .footer-text,
-.construction-page.light-theme .footer-text {
+.construction-page.light-theme .footer-text,
+.espora-report-builder-page.light-theme .footer-text {
   color: #007AFF;
 }
 
@@ -121,7 +123,8 @@
 .checklist-captura-page.dark-theme .logout-btn,
 .presentacion-inicial-page.dark-theme .logout-btn,
 .workhub-page.dark-theme .logout-btn,
-.construction-page.dark-theme .logout-btn {
+.construction-page.dark-theme .logout-btn,
+.espora-report-builder-page.dark-theme .logout-btn {
   background: rgba(255, 59, 48, 0.1);
   color: #FF375F;
   border: 1px solid rgba(255, 59, 48, 0.2);
@@ -139,7 +142,8 @@
 .checklist-captura-page.dark-theme .logout-btn:hover,
 .presentacion-inicial-page.dark-theme .logout-btn:hover,
 .workhub-page.dark-theme .logout-btn:hover,
-.construction-page.dark-theme .logout-btn:hover {
+.construction-page.dark-theme .logout-btn:hover,
+.espora-report-builder-page.dark-theme .logout-btn:hover {
   background: rgba(255, 59, 48, 0.2);
   transform: scale(1.05);
 }
@@ -157,7 +161,8 @@
 .checklist-captura-page.light-theme .logout-btn,
 .presentacion-inicial-page.light-theme .logout-btn,
 .workhub-page.light-theme .logout-btn,
-.construction-page.light-theme .logout-btn {
+.construction-page.light-theme .logout-btn,
+.espora-report-builder-page.light-theme .logout-btn {
   background: rgba(255, 59, 48, 0.1);
   color: #FF3B30;
   border: 1px solid rgba(255, 59, 48, 0.2);
@@ -175,7 +180,8 @@
 .checklist-captura-page.light-theme .logout-btn:hover,
 .presentacion-inicial-page.light-theme .logout-btn:hover,
 .workhub-page.light-theme .logout-btn:hover,
-.construction-page.light-theme .logout-btn:hover {
+.construction-page.light-theme .logout-btn:hover,
+.espora-report-builder-page.light-theme .logout-btn:hover {
   background: rgba(255, 59, 48, 0.15);
   transform: scale(1.05);
 }
