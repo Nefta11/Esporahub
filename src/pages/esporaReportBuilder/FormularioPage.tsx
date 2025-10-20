@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import jsPDF from 'jspdf';
+import { X, AlertTriangle } from 'lucide-react';
 import PageHeader from '@/components/layout/PageHeader';
 import PageFooter from '@/components/layout/PageFooter';
 import QuestionBuilder from '@/components/formulario/QuestionBuilder';
@@ -17,7 +18,9 @@ interface Question {
 
 const FormularioPage: React.FC = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+    const [showExitModal, setShowExitModal] = useState(false);
     const [questions, setQuestions] = useState<Question[]>([]);
     const [savedQuestions, setSavedQuestions] = useState<Question[]>([]);
     const [isExporting, setIsExporting] = useState(false);
@@ -233,6 +236,16 @@ const FormularioPage: React.FC = () => {
         }, 800);
     };
 
+    const handleExitClick = () => {
+        // Siempre mostrar el modal de confirmación
+        setShowExitModal(true);
+    };
+
+    const handleConfirmExit = () => {
+        setShowExitModal(false);
+        navigate('/espora-report-builder');
+    };
+
     return (
         <div className={`formulario-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
             <PageHeader
@@ -245,6 +258,30 @@ const FormularioPage: React.FC = () => {
                 userAvatarSize="md"
                 showUserName={true}
             />
+
+            {/* Exit Button */}
+            <div className="exit-button-container">
+                <button
+                    className="exit-form-button"
+                    onClick={handleExitClick}
+                >
+                    <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    Salir
+                </button>
+            </div>
 
             <main className="formulario-main">
                 <div className="formulario-container">
@@ -411,6 +448,94 @@ const FormularioPage: React.FC = () => {
                 message="Exportando PDF..."
                 submessage={`Generando formulario con ${savedQuestions.length} pregunta${savedQuestions.length !== 1 ? 's' : ''}`}
             />
+
+            {/* Exit Confirmation Modal */}
+            {showExitModal && (
+                <div
+                    className={`fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm ${
+                        isDarkMode ? 'bg-black/50' : 'bg-black/30'
+                    }`}
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) {
+                            setShowExitModal(false);
+                        }
+                    }}
+                >
+                    <div
+                        className={`w-full max-w-md p-6 rounded-xl shadow-2xl animate-in fade-in duration-200 ${
+                            isDarkMode
+                                ? 'bg-zinc-900/90 border border-white/10'
+                                : 'bg-white/95 border border-blue-200/30 shadow-blue-100/20'
+                        }`}
+                        style={{
+                            transform: 'translateY(0)',
+                            animation: 'modalSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                        }}
+                    >
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-3">
+                                <div className={`p-2 rounded-full ${
+                                    isDarkMode ? 'bg-yellow-500/20' : 'bg-yellow-100'
+                                }`}>
+                                    <AlertTriangle size={20} className={isDarkMode ? 'text-yellow-400' : 'text-yellow-600'} />
+                                </div>
+                                <h2 className={`text-xl font-semibold ${
+                                    isDarkMode ? 'text-white' : 'text-gray-900'
+                                }`}>
+                                    ¿Salir del formulario?
+                                </h2>
+                            </div>
+                            <button
+                                onClick={() => setShowExitModal(false)}
+                                className={`transition-colors ${
+                                    isDarkMode
+                                        ? 'text-white/60 hover:text-white'
+                                        : 'text-gray-500 hover:text-gray-700'
+                                }`}
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        <div className={`mb-6 ${
+                            isDarkMode ? 'text-white/80' : 'text-gray-600'
+                        }`}>
+                            <p className="mb-3">¿Estás seguro de que deseas salir?</p>
+                            <p className="text-sm font-medium py-2 px-3 rounded-md"
+                                style={{
+                                    backgroundColor: isDarkMode ? 'rgba(255, 193, 7, 0.1)' : 'rgba(255, 193, 7, 0.1)',
+                                    borderLeft: `3px solid ${isDarkMode ? '#ffc107' : '#ff9800'}`
+                                }}
+                            >
+                                Se perderá el progreso que llevas
+                            </p>
+                        </div>
+
+                        <div className="flex justify-end gap-3">
+                            <button
+                                onClick={() => setShowExitModal(false)}
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                                    isDarkMode
+                                        ? 'text-white/70 hover:text-white hover:bg-white/10'
+                                        : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
+                                }`}
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={handleConfirmExit}
+                                className={`px-4 py-2 rounded-lg text-sm font-medium text-white transition-all ${
+                                    isDarkMode
+                                        ? 'bg-red-500/80 hover:bg-red-500'
+                                        : 'bg-red-500 hover:bg-red-600 shadow-lg hover:shadow-red-200/50'
+                                }`}
+                            >
+                                Aceptar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
