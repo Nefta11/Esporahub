@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import PageHeader from '@/components/layout/PageHeader';
 import PageFooter from '@/components/layout/PageFooter';
 import CustomSelect from '@/components/esporaReportBuilder/CustomSelect';
-import LoadingOverlay from '@/components/esporaReportBuilder/LoadingOverlay';
-import { reportBuilderOptions } from '@/data/reportBuilderOptions';
 import '@/styles/esporaReportBuilder/espora-report-builder.css';
 
-const EsporaReportBuilderPage: React.FC = () => {
-    const navigate = useNavigate();
+const ReportConfigurationPage: React.FC = () => {
+    const location = useLocation();
     const [isVisible, setIsVisible] = useState(false);
     const [showLogoutDialog, setShowLogoutDialog] = useState(false);
-    const [selectedOption, setSelectedOption] = useState<string>('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [selectedConfiguration, setSelectedConfiguration] = useState<string>('');
     const [isDarkMode, setIsDarkMode] = useState(() =>
         document.body.classList.contains('dark-theme')
     );
+
+    // Obtener el contenido seleccionado de la página anterior
+    const selectedContent = location.state?.selectedContent || 'Contenido seleccionado';
 
     const handleThemeToggle = () => {
         if (isDarkMode) {
@@ -46,39 +46,35 @@ const EsporaReportBuilderPage: React.FC = () => {
         setIsVisible(true);
     }, []);
 
-    const handleOptionChange = (value: string) => {
-        setSelectedOption(value);
+    // Opciones de configuración según la imagen
+    const configurationOptions = [
+        { value: 'verde', label: 'VERDE (PORTADAS)' },
+        { value: 'amarillo', label: 'AMARILLO (TEXTOS GENERALES)' },
+        { value: 'azul', label: 'AZUL (ESTUDIOS, BENCHMARKS, IDENTIFICACIONES, TABLEROS, PROGRAMACIONES)' },
+        { value: 'naranja', label: 'NARANJA (SIGUIENTES PASOS)' }
+    ];
+
+    const handleConfigurationChange = (value: string) => {
+        setSelectedConfiguration(value);
     };
 
-    const handleBuildReport = async () => {
-        if (!selectedOption) return;
-        
-        setIsLoading(true);
-        
-        // Simular tiempo de carga
-        setTimeout(() => {
-            // Encontrar el label de la opción seleccionada
-            const selectedOptionData = reportBuilderOptions.find(option => option.value === selectedOption);
-            const selectedContentLabel = selectedOptionData?.label || 'Contenido seleccionado';
-            
-            // Navegar a la nueva página con el contenido seleccionado
-            navigate('/report-configuration', {
-                state: {
-                    selectedContent: selectedContentLabel
-                }
-            });
-            
-            setIsLoading(false);
-        }, 2000); // 2 segundos de animación de carga
+    const handleGenerateReport = () => {
+        // Aquí implementarás la lógica para generar el reporte final
+        console.log('Generando reporte con:', {
+            content: selectedContent,
+            configuration: selectedConfiguration
+        });
+        // Por ahora, regresar a la página anterior
+        // navigate('/espora-report-builder');
     };
 
     return (
         <div className={`espora-report-builder-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
             <PageHeader
-                title="Espora Report Builder"
-                subtitle="Constructor de reportes inteligente"
-                backButtonText="Menú"
-                backButtonPath="/dashboard"
+                title="Configuración de Reporte"
+                subtitle="Configura los parámetros de tu reporte"
+                backButtonText="Volver"
+                backButtonPath="/espora-report-builder"
                 isDarkMode={isDarkMode}
                 onThemeToggle={handleThemeToggle}
                 showUserAvatar={true}
@@ -91,30 +87,30 @@ const EsporaReportBuilderPage: React.FC = () => {
                 <div className="report-builder-content-container">
                     <section className="report-builder-section">
                         <div className="report-builder-section-header">
-                            <h2>Espora Report Builder</h2>
+                            <h2>Configuración de Reporte</h2>
                         </div>
 
                         <div className="report-builder-controls">
                             <div className="content-selector-container">
-                                <label htmlFor="content-selector" className="selector-label">
-                                    Seleccionar contenido
+                                <label className="selector-label">
+                                    {selectedContent}
                                 </label>
                                 <div className="custom-select-container">
                                     <CustomSelect
-                                        id="content-selector"
-                                        value={selectedOption}
-                                        onChange={handleOptionChange}
-                                        options={reportBuilderOptions}
-                                        placeholder="Selecciona una opción..."
+                                        id="configuration-selector"
+                                        value={selectedConfiguration}
+                                        onChange={handleConfigurationChange}
+                                        options={configurationOptions}
+                                        placeholder="Selecciona una configuración..."
                                         className="content-selector-custom"
                                     />
                                 </div>
 
                                 <div className="build-button-container">
                                     <button
-                                        onClick={handleBuildReport}
-                                        disabled={!selectedOption}
-                                        className={`build-report-button ${selectedOption ? 'enabled' : 'disabled'}`}
+                                        onClick={handleGenerateReport}
+                                        disabled={!selectedConfiguration}
+                                        className={`build-report-button ${selectedConfiguration ? 'enabled' : 'disabled'}`}
                                     >
                                         <svg
                                             width="14"
@@ -127,12 +123,13 @@ const EsporaReportBuilderPage: React.FC = () => {
                                             strokeLinejoin="round"
                                             className="button-icon"
                                         >
-                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                                            <path d="M7 7h10" />
-                                            <path d="M7 12h10" />
-                                            <path d="M7 17h6" />
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                            <polyline points="14,2 14,8 20,8" />
+                                            <line x1="16" y1="13" x2="8" y2="13" />
+                                            <line x1="16" y1="17" x2="8" y2="17" />
+                                            <polyline points="10,9 9,9 8,9" />
                                         </svg>
-                                        Construir Reporte
+                                        Generar Reporte
                                     </button>
                                 </div>
                             </div>
@@ -146,14 +143,8 @@ const EsporaReportBuilderPage: React.FC = () => {
                 onLogoutClick={() => setShowLogoutDialog(true)}
                 onLogoutDialogClose={() => setShowLogoutDialog(false)}
             />
-
-            <LoadingOverlay
-                isVisible={isLoading}
-                message="Construyendo reporte..."
-                submessage="Preparando la configuración"
-            />
         </div>
     );
 };
 
-export default EsporaReportBuilderPage;
+export default ReportConfigurationPage;

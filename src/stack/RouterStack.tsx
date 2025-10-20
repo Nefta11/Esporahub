@@ -17,6 +17,7 @@ import ExpedienteElectronicoPage from '@/pages/overview/clientDashboard/Expedien
 import PresentacionInicialPage from '@/pages/overview/clientDashboard/PresentacionInicialPage';
 import WorkHubPage from '@/pages/worhub/WorkHubPage';
 import EsporaReportBuilderPage from '@/pages/esporaReportBuilder/EsporaReportBuilderPage';
+import ReportConfigurationPage from '@/pages/esporaReportBuilder/ReportConfigurationPage';
 
 const RouterStack = () => {
     const location = useLocation();
@@ -110,6 +111,11 @@ const RouterStack = () => {
                     <Route path="/espora-report-builder" element={
                         <ProtectedRoute>
                             <EsporaReportBuilderPage />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/report-configuration" element={
+                        <ProtectedRoute>
+                            <ReportConfigurationPage />
                         </ProtectedRoute>
                     } />
                 </Routes>
