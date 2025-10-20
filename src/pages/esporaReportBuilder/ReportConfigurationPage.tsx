@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/layout/PageHeader';
 import PageFooter from '@/components/layout/PageFooter';
 import CustomSelect from '@/components/esporaReportBuilder/CustomSelect';
@@ -7,6 +7,7 @@ import '@/styles/esporaReportBuilder/espora-report-builder.css';
 
 const ReportConfigurationPage: React.FC = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const [isVisible, setIsVisible] = useState(false);
     const [showLogoutDialog, setShowLogoutDialog] = useState(false);
     const [selectedConfiguration, setSelectedConfiguration] = useState<string>('');
@@ -56,6 +57,16 @@ const ReportConfigurationPage: React.FC = () => {
 
     const handleConfigurationChange = (value: string) => {
         setSelectedConfiguration(value);
+        
+        // Si se selecciona la opción azul (ESTUDIOS, ANÁLISIS, etc.), navegar al formulario
+        if (value === 'azul') {
+            navigate('/formulario', {
+                state: {
+                    selectedContent,
+                    selectedConfiguration: configurationOptions.find(opt => opt.value === value)?.label
+                }
+            });
+        }
     };
 
     return (
