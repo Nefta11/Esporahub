@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PageHeader from '@/components/layout/PageHeader';
 import PageFooter from '@/components/layout/PageFooter';
+import { reportBuilderOptions } from '@/data/reportBuilderOptions';
 import '@/styles/esporaReportBuilder/espora-report-builder.css';
 
 const EsporaReportBuilderPage: React.FC = () => {
@@ -39,12 +40,6 @@ const EsporaReportBuilderPage: React.FC = () => {
     useEffect(() => {
         setIsVisible(true);
     }, []);
-
-    const options = [
-        { value: 'opcion1', label: 'Opción 1' },
-        { value: 'opcion2', label: 'Opción 2' },
-        { value: 'opcion3', label: 'Opción 3' }
-    ];
 
     const handleOptionChange = (value: string) => {
         setSelectedOption(value);
@@ -93,7 +88,7 @@ const EsporaReportBuilderPage: React.FC = () => {
                                         <option value="" disabled>
                                             Selecciona una opción...
                                         </option>
-                                        {options.map((option) => (
+                                        {reportBuilderOptions.map((option) => (
                                             <option key={option.value} value={option.value}>
                                                 {option.label}
                                             </option>
