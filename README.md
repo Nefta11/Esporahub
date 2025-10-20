@@ -2,7 +2,7 @@
 
 > **Plataforma integral de gestión de campañas políticas y comunicación estratégica**
 
-Esporahub es una aplicación web moderna desarrollada con React, TypeScript y Vite que permite la gestión completa de campañas políticas, desde la creación de cuentas hasta el seguimiento de tareas y la comunicación estratégica. Diseñada por el equipo de Esporadix para optimizar la eficiencia y efectividad de las campañas políticas modernas. .
+Esporahub es una aplicación web moderna desarrollada con React, TypeScript y Vite que permite la gestión completa de campañas políticas, desde la creación de cuentas hasta el seguimiento de tareas y la comunicación estratégica. Diseñada por el equipo de Esporadix para optimizar la eficiencia y efectividad de las campañas políticas modernas. Estoy de vuelta aqui.
 
 ## 🌟 Características destacadas
 
