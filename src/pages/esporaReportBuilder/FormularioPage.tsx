@@ -4,6 +4,7 @@ import jsPDF from 'jspdf';
 import PageHeader from '@/components/layout/PageHeader';
 import PageFooter from '@/components/layout/PageFooter';
 import QuestionBuilder from '@/components/formulario/QuestionBuilder';
+import LoadingOverlay from '@/components/esporaReportBuilder/LoadingOverlay';
 import '@/styles/formulario/formulario.css';
 
 interface Question {
@@ -19,6 +20,7 @@ const FormularioPage: React.FC = () => {
     const [showLogoutDialog, setShowLogoutDialog] = useState(false);
     const [questions, setQuestions] = useState<Question[]>([]);
     const [savedQuestions, setSavedQuestions] = useState<Question[]>([]);
+    const [isExporting, setIsExporting] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(() =>
         document.body.classList.contains('dark-theme')
     );
@@ -209,18 +211,26 @@ const FormularioPage: React.FC = () => {
         doc.save(fileName);
     };
 
-    const handleSaveForm = () => {
-        console.log('Guardando formulario:', {
-            content: selectedContent,
-            configuration: selectedConfiguration,
-            questions: savedQuestions
-        });
+    const handleSaveForm = async () => {
+        // Mostrar el loading overlay
+        setIsExporting(true);
 
-        // Generar y descargar el PDF
-        generatePDF();
+        // Simular un pequeño delay para que el usuario vea el loading
+        setTimeout(() => {
+            console.log('Guardando formulario:', {
+                content: selectedContent,
+                configuration: selectedConfiguration,
+                questions: savedQuestions
+            });
 
-        // Mostrar mensaje de éxito
-        alert(`¡Formulario guardado exitosamente!\n\n${savedQuestions.length} preguntas exportadas a PDF.`);
+            // Generar y descargar el PDF
+            generatePDF();
+
+            // Ocultar el loading overlay después de la exportación
+            setTimeout(() => {
+                setIsExporting(false);
+            }, 500);
+        }, 800);
     };
 
     return (
@@ -394,6 +404,12 @@ const FormularioPage: React.FC = () => {
                 showLogoutDialog={showLogoutDialog}
                 onLogoutClick={() => setShowLogoutDialog(true)}
                 onLogoutDialogClose={() => setShowLogoutDialog(false)}
+            />
+
+            <LoadingOverlay
+                isVisible={isExporting}
+                message="Exportando PDF..."
+                submessage={`Generando formulario con ${savedQuestions.length} pregunta${savedQuestions.length !== 1 ? 's' : ''}`}
             />
         </div>
     );
