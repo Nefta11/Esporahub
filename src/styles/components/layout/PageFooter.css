@@ -21,7 +21,8 @@
 .presentacion-inicial-page.dark-theme .clean-footer,
 .workhub-page.dark-theme .clean-footer,
 .construction-page.dark-theme .clean-footer,
-.espora-report-builder-page.dark-theme .clean-footer {
+.espora-report-builder-page.dark-theme .clean-footer,
+.formulario-page.dark-theme .clean-footer {
   background: rgba(28, 28, 30, 0.8);
   border-top-color: rgba(84, 84, 88, 0.65);
 }
@@ -40,7 +41,8 @@
 .presentacion-inicial-page.light-theme .clean-footer,
 .workhub-page.light-theme .clean-footer,
 .construction-page.light-theme .clean-footer,
-.espora-report-builder-page.light-theme .clean-footer {
+.espora-report-builder-page.light-theme .clean-footer,
+.formulario-page.light-theme .clean-footer {
   background: rgba(255, 255, 255, 0.8);
   border-top-color: rgba(0, 0, 0, 0.1);
 }
@@ -75,7 +77,8 @@
 .presentacion-inicial-page.dark-theme .footer-text,
 .workhub-page.dark-theme .footer-text,
 .construction-page.dark-theme .footer-text,
-.espora-report-builder-page.dark-theme .footer-text {
+.espora-report-builder-page.dark-theme .footer-text,
+.formulario-page.dark-theme .footer-text {
   color: rgba(255, 255, 255, 0.8);
 }
 
@@ -93,7 +96,8 @@
 .presentacion-inicial-page.light-theme .footer-text,
 .workhub-page.light-theme .footer-text,
 .construction-page.light-theme .footer-text,
-.espora-report-builder-page.light-theme .footer-text {
+.espora-report-builder-page.light-theme .footer-text,
+.formulario-page.light-theme .footer-text {
   color: #007AFF;
 }
 
@@ -124,7 +128,8 @@
 .presentacion-inicial-page.dark-theme .logout-btn,
 .workhub-page.dark-theme .logout-btn,
 .construction-page.dark-theme .logout-btn,
-.espora-report-builder-page.dark-theme .logout-btn {
+.espora-report-builder-page.dark-theme .logout-btn,
+.formulario-page.dark-theme .logout-btn {
   background: rgba(255, 59, 48, 0.1);
   color: #FF375F;
   border: 1px solid rgba(255, 59, 48, 0.2);
@@ -143,7 +148,8 @@
 .presentacion-inicial-page.dark-theme .logout-btn:hover,
 .workhub-page.dark-theme .logout-btn:hover,
 .construction-page.dark-theme .logout-btn:hover,
-.espora-report-builder-page.dark-theme .logout-btn:hover {
+.espora-report-builder-page.dark-theme .logout-btn:hover,
+.formulario-page.dark-theme .logout-btn:hover {
   background: rgba(255, 59, 48, 0.2);
   transform: scale(1.05);
 }
@@ -162,7 +168,8 @@
 .presentacion-inicial-page.light-theme .logout-btn,
 .workhub-page.light-theme .logout-btn,
 .construction-page.light-theme .logout-btn,
-.espora-report-builder-page.light-theme .logout-btn {
+.espora-report-builder-page.light-theme .logout-btn,
+.formulario-page.light-theme .logout-btn {
   background: rgba(255, 59, 48, 0.1);
   color: #FF3B30;
   border: 1px solid rgba(255, 59, 48, 0.2);
@@ -181,7 +188,8 @@
 .presentacion-inicial-page.light-theme .logout-btn:hover,
 .workhub-page.light-theme .logout-btn:hover,
 .construction-page.light-theme .logout-btn:hover,
-.espora-report-builder-page.light-theme .logout-btn:hover {
+.espora-report-builder-page.light-theme .logout-btn:hover,
+.formulario-page.light-theme .logout-btn:hover {
   background: rgba(255, 59, 48, 0.15);
   transform: scale(1.05);
 }

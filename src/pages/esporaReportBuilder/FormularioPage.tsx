@@ -66,7 +66,7 @@ const FormularioPage: React.FC = () => {
     };
 
     return (
-        <div className="formulario-page">
+        <div className={`formulario-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
             <PageHeader
                 title="Formulario"
                 backButtonPath="/seleccionar-tipo-contenido"
