@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PageHeader from '@/components/layout/PageHeader';
 import PageFooter from '@/components/layout/PageFooter';
+import CustomSelect from '@/components/esporaReportBuilder/CustomSelect';
 import { reportBuilderOptions } from '@/data/reportBuilderOptions';
 import '@/styles/esporaReportBuilder/espora-report-builder.css';
 
@@ -79,35 +80,14 @@ const EsporaReportBuilderPage: React.FC = () => {
                                     Seleccionar contenido
                                 </label>
                                 <div className="custom-select-container">
-                                    <select
+                                    <CustomSelect
                                         id="content-selector"
                                         value={selectedOption}
-                                        onChange={(e) => handleOptionChange(e.target.value)}
-                                        className="content-selector"
-                                    >
-                                        <option value="" disabled>
-                                            Selecciona una opción...
-                                        </option>
-                                        {reportBuilderOptions.map((option) => (
-                                            <option key={option.value} value={option.value}>
-                                                {option.label}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <div className="select-arrow">
-                                        <svg
-                                            width="12"
-                                            height="12"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
-                                            <polyline points="6,9 12,15 18,9"></polyline>
-                                        </svg>
-                                    </div>
+                                        onChange={handleOptionChange}
+                                        options={reportBuilderOptions}
+                                        placeholder="Selecciona una opción..."
+                                        className="content-selector-custom"
+                                    />
                                 </div>
 
                                 <div className="build-button-container">

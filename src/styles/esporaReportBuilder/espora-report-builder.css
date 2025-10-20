@@ -147,7 +147,199 @@
   margin: 0;
 }
 
-/* Content Selector */
+/* Custom Select Styles */
+.custom-select {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem 1rem 1rem 1.5rem;
+  font-size: 16px;
+  font-family: inherit;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #1d1d1f;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  outline: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  min-height: 54px;
+}
+
+.espora-report-builder-page.dark-theme .custom-select-trigger {
+  background: rgba(28, 28, 30, 0.8);
+  color: #f2f2f7;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.custom-select-trigger:hover,
+.custom-select-trigger:focus {
+  border-color: #007AFF;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.custom-select-value {
+  flex: 1;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.custom-select-arrow {
+  transition: transform 0.3s ease;
+  color: #86868b;
+  margin-left: 0.5rem;
+  flex-shrink: 0;
+}
+
+.custom-select-arrow.open {
+  transform: rotate(180deg);
+}
+
+.espora-report-builder-page.dark-theme .custom-select-arrow {
+  color: #98989d;
+}
+
+.custom-select-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 1000;
+  max-height: 300px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.espora-report-builder-page.dark-theme .custom-select-dropdown {
+  background: rgba(28, 28, 30, 0.95);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.custom-select-search {
+  padding: 0.75rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.espora-report-builder-page.dark-theme .custom-select-search {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.custom-select-search-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  color: #1d1d1f;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.espora-report-builder-page.dark-theme .custom-select-search-input {
+  background: rgba(44, 44, 46, 0.8);
+  color: #f2f2f7;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.custom-select-search-input:focus {
+  border-color: #007AFF;
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.1);
+}
+
+.custom-select-options {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 200px;
+}
+
+.custom-select-option {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  font-size: 15px;
+}
+
+.espora-report-builder-page.dark-theme .custom-select-option {
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+.custom-select-option:hover {
+  background: rgba(0, 122, 255, 0.08);
+}
+
+.custom-select-option.selected {
+  background: rgba(0, 122, 255, 0.15);
+  color: #007AFF;
+  font-weight: 600;
+}
+
+.espora-report-builder-page.dark-theme .custom-select-option.selected {
+  background: rgba(0, 122, 255, 0.2);
+  color: #40c8e0;
+}
+
+.custom-select-option:last-child {
+  border-bottom: none;
+}
+
+.custom-select-no-options {
+  padding: 1rem;
+  text-align: center;
+  color: #86868b;
+  font-style: italic;
+}
+
+.espora-report-builder-page.dark-theme .custom-select-no-options {
+  color: #98989d;
+}
+
+/* Scroll styles for options */
+.custom-select-options::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-select-options::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+
+.custom-select-options::-webkit-scrollbar-thumb {
+  background: rgba(0, 122, 255, 0.3);
+  border-radius: 3px;
+}
+
+.custom-select-options::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 122, 255, 0.5);
+}
+
+.espora-report-builder-page.dark-theme .custom-select-options::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.espora-report-builder-page.dark-theme .custom-select-options::-webkit-scrollbar-thumb {
+  background: rgba(0, 122, 255, 0.4);
+}
+
+/* Old select styles - keep for fallback */
 .content-selector-container {
   width: 100%;
   display: flex;
@@ -189,6 +381,10 @@
   outline: none;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  
+  /* Limitar altura del dropdown */
+  overflow-y: auto;
+  max-height: 200px;
 }
 
 .espora-report-builder-page.dark-theme .content-selector {
