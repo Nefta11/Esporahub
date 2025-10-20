@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-spring/web": "^9.7.3",
     "axios": "^1.6.2",
+    "jspdf": "^3.0.3",
     "lucide-react": "^0.344.0",
     "pdfjs-dist": "^5.4.54",
     "react": "^18.3.1",

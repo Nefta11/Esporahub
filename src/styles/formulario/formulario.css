@@ -104,10 +104,19 @@
 }
 
 .formulario-container {
-    background: var(--background-secondary);
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+}
+
+/* Dark theme container */
+.formulario-page.dark-theme .formulario-container {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+/* Light theme container */
+.formulario-page.light-theme .formulario-container {
+    background: rgba(255, 255, 255, 0.98);
 }
 
 .formulario-content {
@@ -125,14 +134,23 @@
 .form-title {
     font-size: 28px;
     font-weight: 700;
-    color: var(--text-primary);
     margin: 0 0 8px 0;
 }
 
 .form-subtitle {
     font-size: 16px;
-    color: var(--text-secondary);
     margin: 0;
+}
+
+/* Form title and subtitle colors - always dark on white background */
+.formulario-page.dark-theme .form-title,
+.formulario-page.light-theme .form-title {
+    color: #1a202c;
+}
+
+.formulario-page.dark-theme .form-subtitle,
+.formulario-page.light-theme .form-subtitle {
+    color: #4a5568;
 }
 
 /* Questions Section */
@@ -150,8 +168,13 @@
 .questions-header h2 {
     font-size: 24px;
     font-weight: 600;
-    color: var(--text-primary);
     margin: 0;
+}
+
+/* Questions header text - always dark on white background */
+.formulario-page.dark-theme .questions-header h2,
+.formulario-page.light-theme .questions-header h2 {
+    color: #1a202c;
 }
 
 .add-question-button {
@@ -159,7 +182,6 @@
     align-items: center;
     gap: 8px;
     padding: 12px 20px;
-    background: var(--accent-color);
     color: white;
     border: none;
     border-radius: 8px;
@@ -169,10 +191,26 @@
     transition: all 0.2s ease;
 }
 
-.add-question-button:hover {
-    background: var(--accent-hover);
+/* Dark theme add question button */
+.formulario-page.dark-theme .add-question-button {
+    background: #0A84FF;
+}
+
+.formulario-page.dark-theme .add-question-button:hover {
+    background: #409CFF;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(10, 132, 255, 0.4);
+}
+
+/* Light theme add question button */
+.formulario-page.light-theme .add-question-button {
+    background: #007AFF;
+}
+
+.formulario-page.light-theme .add-question-button:hover {
+    background: #0051D5;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.4);
 }
 
 .add-question-button svg {
@@ -183,12 +221,17 @@
 .empty-state {
     text-align: center;
     padding: 60px 20px;
-    color: var(--text-secondary);
 }
 
 .empty-state p {
     font-size: 16px;
     margin: 0;
+}
+
+/* Empty state text - always dark on white background */
+.formulario-page.dark-theme .empty-state,
+.formulario-page.light-theme .empty-state {
+    color: #718096;
 }
 
 /* Questions List */
@@ -200,8 +243,7 @@
 
 /* Question Builder */
 .question-builder {
-    background: var(--background-primary);
-    border: 1px solid var(--border-color);
+    border: 1px solid #e2e8f0;
     border-radius: 12px;
     overflow: hidden;
     transition: all 0.2s ease;
@@ -211,12 +253,23 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* Question builder background - light on white */
+.formulario-page.dark-theme .question-builder,
+.formulario-page.light-theme .question-builder {
+    background: #f7fafc;
+}
+
 .question-header {
     display: flex;
     align-items: center;
     padding: 16px 20px;
-    background: var(--background-tertiary);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid #e2e8f0;
+}
+
+/* Question header background */
+.formulario-page.dark-theme .question-header,
+.formulario-page.light-theme .question-header {
+    background: #edf2f7;
 }
 
 .question-title-section {
@@ -227,7 +280,6 @@
 }
 
 .question-number {
-    background: var(--accent-color);
     color: white;
     font-size: 12px;
     font-weight: 600;
@@ -237,11 +289,19 @@
     text-align: center;
 }
 
+/* Question number - blue background */
+.formulario-page.dark-theme .question-number {
+    background: #0A84FF;
+}
+
+.formulario-page.light-theme .question-number {
+    background: #007AFF;
+}
+
 .expand-button {
     background: none;
     border: none;
     cursor: pointer;
-    color: var(--text-secondary);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -251,9 +311,16 @@
     transition: all 0.2s ease;
 }
 
-.expand-button:hover {
-    background: var(--background-hover);
-    color: var(--text-primary);
+/* Expand button colors */
+.formulario-page.dark-theme .expand-button,
+.formulario-page.light-theme .expand-button {
+    color: #718096;
+}
+
+.formulario-page.dark-theme .expand-button:hover,
+.formulario-page.light-theme .expand-button:hover {
+    background: #e2e8f0;
+    color: #1a202c;
 }
 
 .expand-button svg {
@@ -267,22 +334,34 @@
 .question-title-input {
     flex: 1;
     padding: 8px 12px;
-    border: 1px solid var(--border-color);
+    border: 1px solid #cbd5e0;
     border-radius: 6px;
     font-size: 16px;
-    color: var(--text-primary);
-    background: var(--background-secondary);
     transition: all 0.2s ease;
 }
 
-.question-title-input:focus {
-    outline: none;
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+/* Question title input colors */
+.formulario-page.dark-theme .question-title-input,
+.formulario-page.light-theme .question-title-input {
+    color: #1a202c;
+    background: white;
 }
 
-.question-title-input::placeholder {
-    color: var(--text-tertiary);
+.formulario-page.dark-theme .question-title-input:focus {
+    outline: none;
+    border-color: #0A84FF;
+    box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.1);
+}
+
+.formulario-page.light-theme .question-title-input:focus {
+    outline: none;
+    border-color: #007AFF;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.formulario-page.dark-theme .question-title-input::placeholder,
+.formulario-page.light-theme .question-title-input::placeholder {
+    color: #a0aec0;
 }
 
 .delete-question-button {
@@ -330,7 +409,12 @@
 .config-item label {
     font-size: 14px;
     font-weight: 500;
-    color: var(--text-primary);
+}
+
+/* Config item label colors */
+.formulario-page.dark-theme .config-item label,
+.formulario-page.light-theme .config-item label {
+    color: #2d3748;
 }
 
 .question-type-select {
@@ -344,7 +428,12 @@
     gap: 8px;
     cursor: pointer;
     font-size: 14px;
-    color: var(--text-primary);
+}
+
+/* Required checkbox colors */
+.formulario-page.dark-theme .required-checkbox,
+.formulario-page.light-theme .required-checkbox {
+    color: #2d3748;
 }
 
 .required-checkbox input[type="checkbox"] {
@@ -356,9 +445,14 @@
 .options-section {
     margin-bottom: 24px;
     padding: 20px;
-    background: var(--background-tertiary);
     border-radius: 8px;
-    border: 1px solid var(--border-color);
+    border: 1px solid #e2e8f0;
+}
+
+/* Options section background */
+.formulario-page.dark-theme .options-section,
+.formulario-page.light-theme .options-section {
+    background: #f7fafc;
 }
 
 .options-header {
@@ -371,8 +465,13 @@
 .options-header h4 {
     font-size: 16px;
     font-weight: 600;
-    color: var(--text-primary);
     margin: 0;
+}
+
+/* Options header colors */
+.formulario-page.dark-theme .options-header h4,
+.formulario-page.light-theme .options-header h4 {
+    color: #2d3748;
 }
 
 .add-option-button {
@@ -381,8 +480,6 @@
     gap: 6px;
     padding: 6px 12px;
     background: transparent;
-    color: var(--accent-color);
-    border: 1px solid var(--accent-color);
     border-radius: 6px;
     font-size: 12px;
     font-weight: 500;
@@ -390,8 +487,25 @@
     transition: all 0.2s ease;
 }
 
-.add-option-button:hover {
-    background: var(--accent-color);
+/* Add option button - dark theme */
+.formulario-page.dark-theme .add-option-button {
+    color: #0A84FF;
+    border: 1px solid #0A84FF;
+}
+
+.formulario-page.dark-theme .add-option-button:hover {
+    background: #0A84FF;
+    color: white;
+}
+
+/* Add option button - light theme */
+.formulario-page.light-theme .add-option-button {
+    color: #007AFF;
+    border: 1px solid #007AFF;
+}
+
+.formulario-page.light-theme .add-option-button:hover {
+    background: #007AFF;
     color: white;
 }
 
@@ -410,18 +524,29 @@
 .option-input {
     flex: 1;
     padding: 8px 12px;
-    border: 1px solid var(--border-color);
+    border: 1px solid #cbd5e0;
     border-radius: 6px;
     font-size: 14px;
-    color: var(--text-primary);
-    background: var(--background-secondary);
     transition: all 0.2s ease;
 }
 
-.option-input:focus {
+/* Option input colors */
+.formulario-page.dark-theme .option-input,
+.formulario-page.light-theme .option-input {
+    color: #1a202c;
+    background: white;
+}
+
+.formulario-page.dark-theme .option-input:focus {
     outline: none;
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    border-color: #0A84FF;
+    box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.1);
+}
+
+.formulario-page.light-theme .option-input:focus {
+    outline: none;
+    border-color: #007AFF;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
 }
 
 .delete-option-button {
@@ -446,30 +571,50 @@
 /* Question Preview */
 .question-preview-section {
     padding: 20px;
-    background: var(--background-primary);
     border-radius: 8px;
-    border: 1px solid var(--border-color);
+    border: 1px solid #e2e8f0;
+}
+
+/* Question preview section background */
+.formulario-page.dark-theme .question-preview-section,
+.formulario-page.light-theme .question-preview-section {
+    background: white;
 }
 
 .question-preview-section h4 {
     font-size: 16px;
     font-weight: 600;
-    color: var(--text-primary);
     margin: 0 0 16px 0;
+}
+
+/* Question preview section heading colors */
+.formulario-page.dark-theme .question-preview-section h4,
+.formulario-page.light-theme .question-preview-section h4 {
+    color: #2d3748;
 }
 
 .preview-container {
     padding: 16px;
-    border: 2px dashed var(--border-color);
+    border: 2px dashed #cbd5e0;
     border-radius: 8px;
-    background: var(--background-secondary);
+}
+
+/* Preview container background */
+.formulario-page.dark-theme .preview-container,
+.formulario-page.light-theme .preview-container {
+    background: #f7fafc;
 }
 
 .preview-question-title {
     font-size: 16px;
     font-weight: 500;
-    color: var(--text-primary);
     margin-bottom: 12px;
+}
+
+/* Preview question title colors */
+.formulario-page.dark-theme .preview-question-title,
+.formulario-page.light-theme .preview-question-title {
+    color: #1a202c;
 }
 
 .required-indicator {
@@ -488,7 +633,12 @@
     align-items: center;
     gap: 8px;
     font-size: 14px;
-    color: var(--text-primary);
+}
+
+/* Preview option colors */
+.formulario-page.dark-theme .preview-option,
+.formulario-page.light-theme .preview-option {
+    color: #2d3748;
 }
 
 .preview-option input {
@@ -497,25 +647,220 @@
 
 .preview-select {
     padding: 8px 12px;
-    border: 1px solid var(--border-color);
+    border: 1px solid #cbd5e0;
     border-radius: 6px;
     font-size: 14px;
-    color: var(--text-primary);
-    background: var(--background-secondary);
     cursor: not-allowed;
     min-width: 200px;
 }
 
+/* Preview select colors */
+.formulario-page.dark-theme .preview-select,
+.formulario-page.light-theme .preview-select {
+    color: #2d3748;
+    background: white;
+}
+
 .preview-text {
     padding: 8px 12px;
-    border: 1px solid var(--border-color);
+    border: 1px solid #cbd5e0;
     border-radius: 6px;
     font-size: 14px;
-    color: var(--text-secondary);
-    background: var(--background-secondary);
     cursor: not-allowed;
     width: 100%;
     max-width: 400px;
+}
+
+/* Preview text colors */
+.formulario-page.dark-theme .preview-text,
+.formulario-page.light-theme .preview-text {
+    color: #718096;
+    background: white;
+}
+
+/* Save Question Button Container */
+.save-question-container {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.save-question-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.save-question-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Dark theme save question button */
+.formulario-page.dark-theme .save-question-button {
+    background: #0A84FF;
+}
+
+.formulario-page.dark-theme .save-question-button:hover:not(:disabled) {
+    background: #409CFF;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(10, 132, 255, 0.4);
+}
+
+/* Light theme save question button */
+.formulario-page.light-theme .save-question-button {
+    background: #007AFF;
+}
+
+.formulario-page.light-theme .save-question-button:hover:not(:disabled) {
+    background: #0051D5;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.4);
+}
+
+/* Saved Questions Section */
+.saved-questions-section {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 2px solid #e2e8f0;
+}
+
+.saved-questions-header {
+    margin-bottom: 24px;
+}
+
+.saved-questions-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Saved questions header text */
+.formulario-page.dark-theme .saved-questions-header h2,
+.formulario-page.light-theme .saved-questions-header h2 {
+    color: #1a202c;
+}
+
+.saved-questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.saved-question-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.formulario-page.dark-theme .saved-question-item,
+.formulario-page.light-theme .saved-question-item {
+    background: #f7fafc;
+}
+
+.saved-question-item:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.saved-question-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+}
+
+.saved-question-number {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+    min-width: 40px;
+    text-align: center;
+}
+
+.formulario-page.dark-theme .saved-question-number {
+    background: #0A84FF;
+}
+
+.formulario-page.light-theme .saved-question-number {
+    background: #007AFF;
+}
+
+.saved-question-details {
+    flex: 1;
+}
+
+.saved-question-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.formulario-page.dark-theme .saved-question-title,
+.formulario-page.light-theme .saved-question-title {
+    color: #1a202c;
+}
+
+.saved-question-meta {
+    font-size: 14px;
+}
+
+.formulario-page.dark-theme .saved-question-meta,
+.formulario-page.light-theme .saved-question-meta {
+    color: #718096;
+}
+
+.saved-question-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.edit-saved-question-button,
+.delete-saved-question-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.formulario-page.dark-theme .edit-saved-question-button,
+.formulario-page.light-theme .edit-saved-question-button {
+    color: #0A84FF;
+}
+
+.formulario-page.dark-theme .edit-saved-question-button:hover,
+.formulario-page.light-theme .edit-saved-question-button:hover {
+    background: rgba(10, 132, 255, 0.1);
+}
+
+.formulario-page.dark-theme .delete-saved-question-button,
+.formulario-page.light-theme .delete-saved-question-button {
+    color: #718096;
+}
+
+.formulario-page.dark-theme .delete-saved-question-button:hover,
+.formulario-page.light-theme .delete-saved-question-button:hover {
+    background: #fee;
+    color: #dc3545;
 }
 
 /* Form Actions */
@@ -524,7 +869,7 @@
     justify-content: center;
     margin-top: 32px;
     padding-top: 24px;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid #e2e8f0;
 }
 
 .save-form-button {
@@ -532,7 +877,6 @@
     align-items: center;
     gap: 10px;
     padding: 14px 28px;
-    background: var(--accent-color);
     color: white;
     border: none;
     border-radius: 8px;
@@ -542,10 +886,26 @@
     transition: all 0.2s ease;
 }
 
-.save-form-button:hover {
-    background: var(--accent-hover);
+/* Dark theme save form button */
+.formulario-page.dark-theme .save-form-button {
+    background: #0A84FF;
+}
+
+.formulario-page.dark-theme .save-form-button:hover {
+    background: #409CFF;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 6px 20px rgba(10, 132, 255, 0.4);
+}
+
+/* Light theme save form button */
+.formulario-page.light-theme .save-form-button {
+    background: #007AFF;
+}
+
+.formulario-page.light-theme .save-form-button:hover {
+    background: #0051D5;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 122, 255, 0.4);
 }
 
 /* Responsive Design */

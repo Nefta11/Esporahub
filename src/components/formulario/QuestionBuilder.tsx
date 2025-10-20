@@ -14,13 +14,15 @@ interface QuestionBuilderProps {
     questionNumber: number;
     onUpdate: (updatedQuestion: Partial<Question>) => void;
     onDelete: () => void;
+    onSave: () => void;
 }
 
 const QuestionBuilder: React.FC<QuestionBuilderProps> = ({
     question,
     questionNumber,
     onUpdate,
-    onDelete
+    onDelete,
+    onSave
 }) => {
     const [isExpanded, setIsExpanded] = useState(true);
 
@@ -252,6 +254,27 @@ const QuestionBuilder: React.FC<QuestionBuilderProps> = ({
                                 {question.required && <span className="required-indicator">*</span>}
                             </div>
                             {renderQuestionPreview()}
+                        </div>
+                        <div className="save-question-container">
+                            <button
+                                className="save-question-button"
+                                onClick={onSave}
+                                disabled={!question.title.trim()}
+                            >
+                                <svg
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                >
+                                    <polyline points="20,6 9,17 4,12" />
+                                </svg>
+                                Guardar Pregunta
+                            </button>
                         </div>
                     </div>
                 </div>
