@@ -75,7 +75,7 @@ const EsporaReportBuilderPage: React.FC = () => {
                 <div className="report-builder-content-container">
                     <section className="report-builder-section">
                         <div className="report-builder-section-header">
-                            <h2>Constructor de Reportes</h2>
+                            <h2>Espora Report Builder</h2>
                         </div>
 
                         <div className="report-builder-controls">
