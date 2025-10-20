@@ -113,7 +113,7 @@ const RouterStack = () => {
                             <EsporaReportBuilderPage />
                         </ProtectedRoute>
                     } />
-                    <Route path="/report-configuration" element={
+                    <Route path="/seleccionar-tipo-contenido" element={
                         <ProtectedRoute>
                             <ReportConfigurationPage />
                         </ProtectedRoute>

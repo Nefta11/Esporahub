@@ -62,7 +62,7 @@ const EsporaReportBuilderPage: React.FC = () => {
             const selectedContentLabel = selectedOptionData?.label || 'Contenido seleccionado';
             
             // Navegar a la nueva página con el contenido seleccionado
-            navigate('/report-configuration', {
+            navigate('/seleccionar-tipo-contenido', {
                 state: {
                     selectedContent: selectedContentLabel
                 }
