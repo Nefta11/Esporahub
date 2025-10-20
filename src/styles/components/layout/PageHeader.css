@@ -22,7 +22,8 @@
 .checklist-captura-page.dark-theme .clean-header,
 .presentacion-inicial-page.dark-theme .clean-header,
 .workhub-page.dark-theme .clean-header,
-.construction-page.dark-theme .clean-header {
+.construction-page.dark-theme .clean-header,
+.espora-report-builder-page.dark-theme .clean-header {
     background: rgba(28, 28, 30, 0.4);
     border-bottom-color: rgba(84, 84, 88, 0.65);
 }
@@ -40,7 +41,8 @@
 .checklist-captura-page.light-theme .clean-header,
 .presentacion-inicial-page.light-theme .clean-header,
 .workhub-page.light-theme .clean-header,
-.construction-page.light-theme .clean-header {
+.construction-page.light-theme .clean-header,
+.espora-report-builder-page.light-theme .clean-header {
     background: rgba(255, 255, 255, 0.3);
     border-bottom-color: rgba(0, 0, 0, 0.1);
 }
@@ -120,7 +122,8 @@
 .checklist-captura-page.dark-theme .back-button,
 .presentacion-inicial-page.dark-theme .back-button,
 .workhub-page.dark-theme .back-button,
-.construction-page.dark-theme .back-button {
+.construction-page.dark-theme .back-button,
+.espora-report-builder-page.dark-theme .back-button {
     background: rgba(0, 122, 255, 0.1);
     color: #0A84FF;
     border: 1px solid rgba(0, 122, 255, 0.2);
@@ -138,7 +141,8 @@
 .checklist-captura-page.dark-theme .back-button:hover,
 .presentacion-inicial-page.dark-theme .back-button:hover,
 .workhub-page.dark-theme .back-button:hover,
-.construction-page.dark-theme .back-button:hover {
+.construction-page.dark-theme .back-button:hover,
+.espora-report-builder-page.dark-theme .back-button:hover {
     background: rgba(0, 122, 255, 0.2);
     transform: scale(1.05);
 }
@@ -156,7 +160,8 @@
 .checklist-captura-page.light-theme .back-button,
 .presentacion-inicial-page.light-theme .back-button,
 .workhub-page.light-theme .back-button,
-.construction-page.light-theme .back-button {
+.construction-page.light-theme .back-button,
+.espora-report-builder-page.light-theme .back-button {
     background: rgba(0, 122, 255, 0.1);
     color: #007AFF;
     border: 1px solid rgba(0, 122, 255, 0.2);
@@ -174,7 +179,8 @@
 .checklist-captura-page.light-theme .back-button:hover,
 .presentacion-inicial-page.light-theme .back-button:hover,
 .workhub-page.light-theme .back-button:hover,
-.construction-page.light-theme .back-button:hover {
+.construction-page.light-theme .back-button:hover,
+.espora-report-builder-page.light-theme .back-button:hover {
     background: rgba(0, 122, 255, 0.15);
     transform: scale(1.05);
 }
@@ -223,7 +229,8 @@
 .expediente-page.dark-theme .header-title p,
 .checklist-captura-page.dark-theme .header-title p,
 .presentacion-inicial-page.dark-theme .header-title p,
-.construction-page.dark-theme .header-title p {
+.construction-page.dark-theme .header-title p,
+.espora-report-builder-page.dark-theme .header-title p {
     color: rgba(255, 255, 255, 0.6);
 }
 
@@ -239,7 +246,8 @@
 .expediente-page.light-theme .header-title p,
 .checklist-captura-page.light-theme .header-title p,
 .presentacion-inicial-page.light-theme .header-title p,
-.construction-page.light-theme .header-title p {
+.construction-page.light-theme .header-title p,
+.espora-report-builder-page.light-theme .header-title p {
     color: #1a202c !important;
     opacity: 1 !important;
 }
@@ -275,7 +283,8 @@
 .active-accounts-page.dark-theme .theme-toggle-btn,
 .inactive-accounts-page.dark-theme .theme-toggle-btn,
 .account-page.dark-theme .theme-toggle-btn,
-.construction-page.dark-theme .theme-toggle-btn {
+.construction-page.dark-theme .theme-toggle-btn,
+.espora-report-builder-page.dark-theme .theme-toggle-btn {
     background: rgba(118, 118, 128, 0.12);
 }
 
@@ -287,7 +296,8 @@
 .active-accounts-page.dark-theme .theme-toggle-btn:hover,
 .inactive-accounts-page.dark-theme .theme-toggle-btn:hover,
 .account-page.dark-theme .theme-toggle-btn:hover,
-.construction-page.dark-theme .theme-toggle-btn:hover {
+.construction-page.dark-theme .theme-toggle-btn:hover,
+.espora-report-builder-page.dark-theme .theme-toggle-btn:hover {
     background: rgba(118, 118, 128, 0.24);
     transform: scale(1.1);
 }
@@ -301,7 +311,8 @@
 .active-accounts-page.light-theme .theme-toggle-btn,
 .inactive-accounts-page.light-theme .theme-toggle-btn,
 .account-page.light-theme .theme-toggle-btn,
-.construction-page.light-theme .theme-toggle-btn {
+.construction-page.light-theme .theme-toggle-btn,
+.espora-report-builder-page.light-theme .theme-toggle-btn {
     background: rgba(118, 118, 128, 0.12);
 }
 
@@ -313,7 +324,8 @@
 .active-accounts-page.light-theme .theme-toggle-btn:hover,
 .inactive-accounts-page.light-theme .theme-toggle-btn:hover,
 .account-page.light-theme .theme-toggle-btn:hover,
-.construction-page.light-theme .theme-toggle-btn:hover {
+.construction-page.light-theme .theme-toggle-btn:hover,
+.espora-report-builder-page.light-theme .theme-toggle-btn:hover {
     background: rgba(118, 118, 128, 0.24);
     transform: scale(1.1);
 }

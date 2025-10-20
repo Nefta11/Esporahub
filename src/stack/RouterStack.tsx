@@ -16,6 +16,7 @@ import InactiveAccountsPage from '@/pages/overview/overviewAccounts/InactiveAcco
 import ExpedienteElectronicoPage from '@/pages/overview/clientDashboard/ExpedienteElectronicoPage';
 import PresentacionInicialPage from '@/pages/overview/clientDashboard/PresentacionInicialPage';
 import WorkHubPage from '@/pages/worhub/WorkHubPage';
+import EsporaReportBuilderPage from '@/pages/esporaReportBuilder/EsporaReportBuilderPage';
 
 const RouterStack = () => {
     const location = useLocation();
@@ -104,6 +105,11 @@ const RouterStack = () => {
                     <Route path="/workhub" element={
                         <ProtectedRoute>
                             <WorkHubPage />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/espora-report-builder" element={
+                        <ProtectedRoute>
+                            <EsporaReportBuilderPage />
                         </ProtectedRoute>
                     } />
                 </Routes>

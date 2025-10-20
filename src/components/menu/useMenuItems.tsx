@@ -90,6 +90,23 @@ export const useMenuItems = (): MenuItem[] => {
       status: 'active'
     },
     {
+      id: 'report-builder',
+      label: 'Espora Report Builder',
+      icon: (
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+          <path d="M7 7h10" />
+          <path d="M7 12h10" />
+          <path d="M7 17h6" />
+        </svg>
+      ),
+      color: '#007AFF',
+      path: '/espora-report-builder',
+      category: 'operativas',
+      description: 'Constructor de reportes',
+      status: 'active'
+    },
+    {
       id: 'agenda',
       label: 'Agenda Espora',
       icon: (
