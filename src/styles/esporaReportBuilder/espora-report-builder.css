@@ -158,11 +158,11 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 1rem 1rem 1rem 1.5rem;
-  font-size: 16px;
+  padding: 0.5rem 0.75rem 0.5rem 0.85rem;
+  font-size: 14px;
   font-family: inherit;
   border: 2px solid transparent;
-  border-radius: 12px;
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.9);
   color: #1d1d1f;
   transition: all 0.3s ease;
@@ -170,7 +170,7 @@
   outline: none;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  min-height: 54px;
+  min-height: 36px;
 }
 
 .espora-report-builder-page.dark-theme .custom-select-trigger {
@@ -483,7 +483,7 @@
 .custom-select-container {
   position: relative;
   width: 100%;
-  max-width: 400px;
+  max-width: 300px;
   flex-shrink: 0;
 }
 
@@ -556,7 +556,7 @@
   flex-shrink: 0;
   margin-top: 1rem;
   width: 100%;
-  max-width: 400px;
+  max-width: 300px;
 }
 
 .build-report-button {

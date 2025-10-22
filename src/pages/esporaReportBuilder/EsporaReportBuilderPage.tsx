@@ -90,14 +90,10 @@ const EsporaReportBuilderPage: React.FC = () => {
             <main className={`report-builder-main ${isVisible ? 'visible' : ''}`}>
                 <div className="report-builder-content-container">
                     <section className="report-builder-section">
-                        <div className="report-builder-section-header">
-                            <h2>Espora Report Builder</h2>
-                        </div>
-
                         <div className="report-builder-controls">
                             <div className="content-selector-container">
                                 <label htmlFor="content-selector" className="selector-label">
-                                    Seleccionar contenido
+                                    Selecciona el contenido a configurar
                                 </label>
                                 <div className="custom-select-container">
                                     <CustomSelect
