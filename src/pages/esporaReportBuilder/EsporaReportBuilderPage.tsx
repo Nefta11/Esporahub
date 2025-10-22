@@ -86,6 +86,18 @@ const EsporaReportBuilderPage: React.FC = () => {
                 showUserName={true}
             />
 
+            {/* Submenu */}
+            <nav className="report-builder-submenu">
+                <div className="submenu-container">
+                    <button className="submenu-item active">
+                        Setup
+                    </button>
+                    <button className="submenu-item">
+                        Estrategia digital
+                    </button>
+                </div>
+            </nav>
+
             {/* Main Content */}
             <main className={`report-builder-main ${isVisible ? 'visible' : ''}`}>
                 <div className="report-builder-content-container">
