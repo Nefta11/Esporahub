@@ -87,10 +87,6 @@ const ReportConfigurationPage: React.FC = () => {
             <main className={`report-builder-main ${isVisible ? 'visible' : ''}`}>
                 <div className="report-builder-content-container">
                     <section className="report-builder-section">
-                        <div className="report-builder-section-header">
-                            <h2>Espora Report Builder</h2>
-                        </div>
-
                         <div className="report-builder-controls">
                             <div className="content-selector-container">
                                 <label className="selector-label">
@@ -102,7 +98,7 @@ const ReportConfigurationPage: React.FC = () => {
                                         value={selectedConfiguration}
                                         onChange={handleConfigurationChange}
                                         options={configurationOptions}
-                                        placeholder="Seleccionar tipó de contenido"
+                                        placeholder="¿Qué tipo de contenido es?"
                                         className="content-selector-custom"
                                     />
                                 </div>

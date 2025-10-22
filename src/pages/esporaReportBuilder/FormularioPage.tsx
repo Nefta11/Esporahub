@@ -24,6 +24,9 @@ const FormularioPage: React.FC = () => {
     const [questions, setQuestions] = useState<Question[]>([]);
     const [savedQuestions, setSavedQuestions] = useState<Question[]>([]);
     const [isExporting, setIsExporting] = useState(false);
+    const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+    const [imageUrls, setImageUrls] = useState<{file: File, url: string}[]>([]);
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
     const [isDarkMode, setIsDarkMode] = useState(() =>
         document.body.classList.contains('dark-theme')
     );
@@ -86,8 +89,10 @@ const FormularioPage: React.FC = () => {
         }
     };
 
-    const generatePDF = () => {
-        const doc = new jsPDF();
+    const generatePDF = async () => {
+        const doc = new jsPDF({
+            orientation: 'landscape'
+        });
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
         const margin = 20;
@@ -101,6 +106,16 @@ const FormularioPage: React.FC = () => {
                 return true;
             }
             return false;
+        };
+
+        // Función para cargar imagen como base64
+        const loadImageAsBase64 = (file: File): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result as string);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
         };
 
         // Título del formulario
@@ -195,6 +210,67 @@ const FormularioPage: React.FC = () => {
             }
         });
 
+        // Sección de imágenes
+        if (imageUrls.length > 0) {
+            checkPageBreak(30);
+
+            // Línea separadora
+            doc.setDrawColor(200, 200, 200);
+            doc.line(margin, yPosition, pageWidth - margin, yPosition);
+            yPosition += 15;
+
+            // Título de sección de imágenes
+            doc.setFontSize(18);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(0, 0, 0);
+            doc.text('Imágenes', margin, yPosition);
+            yPosition += 15;
+
+            // Agregar imágenes
+            for (let i = 0; i < imageUrls.length; i++) {
+                const imageData = imageUrls[i];
+                try {
+                    const base64Image = await loadImageAsBase64(imageData.file);
+
+                    // Calcular dimensiones de la imagen
+                    const maxWidth = pageWidth - 2 * margin;
+                    const maxHeight = 80;
+
+                    // Crear imagen temporal para obtener dimensiones originales
+                    const img = new Image();
+                    img.src = base64Image;
+
+                    await new Promise((resolve) => {
+                        img.onload = () => {
+                            const imgWidth = img.width;
+                            const imgHeight = img.height;
+                            const ratio = Math.min(maxWidth / imgWidth, maxHeight / imgHeight);
+                            const finalWidth = imgWidth * ratio;
+                            const finalHeight = imgHeight * ratio;
+
+                            // Verificar si hay espacio para la imagen
+                            checkPageBreak(finalHeight + 20);
+
+                            // Agregar imagen al PDF
+                            doc.addImage(base64Image, 'JPEG', margin, yPosition, finalWidth, finalHeight);
+                            yPosition += finalHeight + 5;
+
+                            // Agregar nombre del archivo
+                            doc.setFontSize(9);
+                            doc.setFont('helvetica', 'italic');
+                            doc.setTextColor(100, 100, 100);
+                            doc.text(imageData.file.name, margin, yPosition);
+                            yPosition += 10;
+
+                            resolve(true);
+                        };
+                    });
+                } catch (error) {
+                    console.error('Error al cargar imagen:', error);
+                }
+            }
+        }
+
         // Pie de página
         const totalPages = doc.internal.pages.length - 1;
         for (let i = 1; i <= totalPages; i++) {
@@ -246,10 +322,54 @@ const FormularioPage: React.FC = () => {
         navigate('/espora-report-builder');
     };
 
+    const handleAddFileClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files;
+        if (files && files.length > 0) {
+            const newFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+
+            // Crear URLs para las imágenes
+            const newImageUrls = newFiles.map(file => ({
+                file,
+                url: URL.createObjectURL(file)
+            }));
+
+            setUploadedFiles([...uploadedFiles, ...newFiles]);
+            setImageUrls([...imageUrls, ...newImageUrls]);
+        }
+
+        // Reset input para permitir seleccionar el mismo archivo nuevamente
+        event.target.value = '';
+    };
+
+    const handleRemoveImage = (index: number) => {
+        const newImageUrls = [...imageUrls];
+        const newUploadedFiles = [...uploadedFiles];
+
+        // Liberar la URL del objeto
+        URL.revokeObjectURL(newImageUrls[index].url);
+
+        newImageUrls.splice(index, 1);
+        newUploadedFiles.splice(index, 1);
+
+        setImageUrls(newImageUrls);
+        setUploadedFiles(newUploadedFiles);
+    };
+
+    // Cleanup URLs cuando el componente se desmonte
+    React.useEffect(() => {
+        return () => {
+            imageUrls.forEach(img => URL.revokeObjectURL(img.url));
+        };
+    }, []);
+
     return (
         <div className={`formulario-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
             <PageHeader
-                title="Formulario"
+                title="Configuración de pantalla"
                 subtitle={selectedContent ? `Contenido: ${selectedContent}` : undefined}
                 backButtonPath="/seleccionar-tipo-contenido"
                 isDarkMode={isDarkMode}
@@ -287,7 +407,7 @@ const FormularioPage: React.FC = () => {
                 <div className="formulario-container">
                     <section className="formulario-content">
                         <div className="form-header">
-                            <h1 className="form-title">Crear Formulario</h1>
+                            <h1 className="form-title">Configuración de pantalla</h1>
                             {selectedConfiguration && (
                                 <p className="form-subtitle">
                                     Tipo: {selectedConfiguration}
@@ -298,25 +418,57 @@ const FormularioPage: React.FC = () => {
                         <div className="questions-section">
                             <div className="questions-header">
                                 <h2>Preguntas</h2>
-                                <button 
-                                    className="add-question-button"
-                                    onClick={addQuestion}
-                                >
-                                    <svg
-                                        width="16"
-                                        height="16"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
+                                <div className="buttons-container">
+                                    <button
+                                        className="add-question-button"
+                                        onClick={addQuestion}
                                     >
-                                        <line x1="12" y1="5" x2="12" y2="19" />
-                                        <line x1="5" y1="12" x2="19" y2="12" />
-                                    </svg>
-                                    Agregar Pregunta
-                                </button>
+                                        <svg
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <line x1="12" y1="5" x2="12" y2="19" />
+                                            <line x1="5" y1="12" x2="19" y2="12" />
+                                        </svg>
+                                        Agregar Pregunta
+                                    </button>
+
+                                    {/* Add Image Button */}
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        multiple
+                                        onChange={handleFileChange}
+                                        style={{ display: 'none' }}
+                                        accept="image/*"
+                                    />
+                                    <button
+                                        className="add-file-button"
+                                        onClick={handleAddFileClick}
+                                    >
+                                        <svg
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                            <circle cx="8.5" cy="8.5" r="1.5" />
+                                            <polyline points="21 15 16 10 5 21" />
+                                        </svg>
+                                        Agregar imagen
+                                    </button>
+                                </div>
                             </div>
 
                             <div className="questions-list">
@@ -338,6 +490,46 @@ const FormularioPage: React.FC = () => {
                                 )}
                             </div>
                         </div>
+
+                        {/* Images Gallery Section */}
+                        {imageUrls.length > 0 && (
+                            <div className="images-gallery-section">
+                                <div className="images-gallery-header">
+                                    <h2>Imágenes agregadas ({imageUrls.length})</h2>
+                                </div>
+                                <div className="images-gallery-grid">
+                                    {imageUrls.map((imageData, index) => (
+                                        <div key={index} className="image-gallery-item">
+                                            <img
+                                                src={imageData.url}
+                                                alt={`Imagen ${index + 1}`}
+                                                className="gallery-image"
+                                            />
+                                            <button
+                                                className="remove-image-button"
+                                                onClick={() => handleRemoveImage(index)}
+                                                title="Eliminar imagen"
+                                            >
+                                                <svg
+                                                    width="16"
+                                                    height="16"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                >
+                                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                                    <line x1="6" y1="6" x2="18" y2="18" />
+                                                </svg>
+                                            </button>
+                                            <div className="image-name">{imageData.file.name}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
                         {/* Saved Questions Section */}
                         {savedQuestions.length > 0 && (

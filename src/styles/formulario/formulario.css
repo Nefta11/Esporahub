@@ -173,7 +173,7 @@
 
 /* Form Header */
 .form-header {
-    text-align: center;
+    text-align: left;
     margin-bottom: 40px;
     padding-bottom: 24px;
     border-bottom: 1px solid var(--border-color);
@@ -210,8 +210,14 @@
 .questions-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 24px;
+}
+
+.buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .questions-header h2 {
@@ -263,6 +269,47 @@
 }
 
 .add-question-button svg {
+    flex-shrink: 0;
+}
+
+/* Add File Button */
+.add-file-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Dark theme add file button */
+.formulario-page.dark-theme .add-file-button {
+    background: #34C759;
+}
+
+.formulario-page.dark-theme .add-file-button:hover {
+    background: #30D158;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(52, 199, 89, 0.4);
+}
+
+/* Light theme add file button */
+.formulario-page.light-theme .add-file-button {
+    background: #34C759;
+}
+
+.formulario-page.light-theme .add-file-button:hover {
+    background: #28A745;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(52, 199, 89, 0.4);
+}
+
+.add-file-button svg {
     flex-shrink: 0;
 }
 
@@ -910,6 +957,129 @@
 .formulario-page.light-theme .delete-saved-question-button:hover {
     background: #fee;
     color: #dc3545;
+}
+
+/* Images Gallery Section */
+.images-gallery-section {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 2px solid #e2e8f0;
+}
+
+.images-gallery-header {
+    margin-bottom: 24px;
+}
+
+.images-gallery-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.formulario-page.dark-theme .images-gallery-header h2,
+.formulario-page.light-theme .images-gallery-header h2 {
+    color: #1a202c;
+}
+
+.images-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.image-gallery-item {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 2px solid #e2e8f0;
+}
+
+.formulario-page.dark-theme .image-gallery-item,
+.formulario-page.light-theme .image-gallery-item {
+    background: #f7fafc;
+}
+
+.image-gallery-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    border-color: #007AFF;
+}
+
+.gallery-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.remove-image-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.2s ease;
+    z-index: 2;
+}
+
+.formulario-page.dark-theme .remove-image-button,
+.formulario-page.light-theme .remove-image-button {
+    background: rgba(255, 59, 48, 0.9);
+    color: white;
+}
+
+.image-gallery-item:hover .remove-image-button {
+    opacity: 1;
+}
+
+.remove-image-button:hover {
+    background: rgba(255, 59, 48, 1);
+    transform: scale(1.1);
+}
+
+.image-name {
+    padding: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+    word-break: break-word;
+    background: rgba(255, 255, 255, 0.9);
+    border-top: 1px solid #e2e8f0;
+}
+
+.formulario-page.dark-theme .image-name,
+.formulario-page.light-theme .image-name {
+    color: #4a5568;
+}
+
+/* Responsive grid */
+@media (max-width: 768px) {
+    .images-gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 16px;
+    }
+
+    .gallery-image {
+        height: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .images-gallery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .gallery-image {
+        height: 200px;
+    }
 }
 
 /* Form Actions */
