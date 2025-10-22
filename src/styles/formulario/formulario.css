@@ -173,7 +173,7 @@
 
 /* Form Header */
 .form-header {
-    text-align: center;
+    text-align: left;
     margin-bottom: 40px;
     padding-bottom: 24px;
     border-bottom: 1px solid var(--border-color);
@@ -210,8 +210,14 @@
 .questions-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 24px;
+}
+
+.buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .questions-header h2 {
@@ -263,6 +269,47 @@
 }
 
 .add-question-button svg {
+    flex-shrink: 0;
+}
+
+/* Add File Button */
+.add-file-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Dark theme add file button */
+.formulario-page.dark-theme .add-file-button {
+    background: #34C759;
+}
+
+.formulario-page.dark-theme .add-file-button:hover {
+    background: #30D158;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(52, 199, 89, 0.4);
+}
+
+/* Light theme add file button */
+.formulario-page.light-theme .add-file-button {
+    background: #34C759;
+}
+
+.formulario-page.light-theme .add-file-button:hover {
+    background: #28A745;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(52, 199, 89, 0.4);
+}
+
+.add-file-button svg {
     flex-shrink: 0;
 }
 

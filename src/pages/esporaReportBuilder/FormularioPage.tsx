@@ -24,6 +24,8 @@ const FormularioPage: React.FC = () => {
     const [questions, setQuestions] = useState<Question[]>([]);
     const [savedQuestions, setSavedQuestions] = useState<Question[]>([]);
     const [isExporting, setIsExporting] = useState(false);
+    const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
     const [isDarkMode, setIsDarkMode] = useState(() =>
         document.body.classList.contains('dark-theme')
     );
@@ -87,7 +89,9 @@ const FormularioPage: React.FC = () => {
     };
 
     const generatePDF = () => {
-        const doc = new jsPDF();
+        const doc = new jsPDF({
+            orientation: 'landscape'
+        });
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
         const margin = 20;
@@ -246,10 +250,23 @@ const FormularioPage: React.FC = () => {
         navigate('/espora-report-builder');
     };
 
+    const handleAddFileClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files;
+        if (files && files.length > 0) {
+            const newFiles = Array.from(files);
+            setUploadedFiles([...uploadedFiles, ...newFiles]);
+            console.log('Archivos cargados:', newFiles);
+        }
+    };
+
     return (
         <div className={`formulario-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
             <PageHeader
-                title="Formulario"
+                title="Configuración de pantalla"
                 subtitle={selectedContent ? `Contenido: ${selectedContent}` : undefined}
                 backButtonPath="/seleccionar-tipo-contenido"
                 isDarkMode={isDarkMode}
@@ -287,7 +304,7 @@ const FormularioPage: React.FC = () => {
                 <div className="formulario-container">
                     <section className="formulario-content">
                         <div className="form-header">
-                            <h1 className="form-title">Crear Formulario</h1>
+                            <h1 className="form-title">Configuración de pantalla</h1>
                             {selectedConfiguration && (
                                 <p className="form-subtitle">
                                     Tipo: {selectedConfiguration}
@@ -298,25 +315,55 @@ const FormularioPage: React.FC = () => {
                         <div className="questions-section">
                             <div className="questions-header">
                                 <h2>Preguntas</h2>
-                                <button 
-                                    className="add-question-button"
-                                    onClick={addQuestion}
-                                >
-                                    <svg
-                                        width="16"
-                                        height="16"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
+                                <div className="buttons-container">
+                                    <button
+                                        className="add-question-button"
+                                        onClick={addQuestion}
                                     >
-                                        <line x1="12" y1="5" x2="12" y2="19" />
-                                        <line x1="5" y1="12" x2="19" y2="12" />
-                                    </svg>
-                                    Agregar Pregunta
-                                </button>
+                                        <svg
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <line x1="12" y1="5" x2="12" y2="19" />
+                                            <line x1="5" y1="12" x2="19" y2="12" />
+                                        </svg>
+                                        Agregar Pregunta
+                                    </button>
+
+                                    {/* Add File Button */}
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        multiple
+                                        onChange={handleFileChange}
+                                        style={{ display: 'none' }}
+                                        accept="*/*"
+                                    />
+                                    <button
+                                        className="add-file-button"
+                                        onClick={handleAddFileClick}
+                                    >
+                                        <svg
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+                                        </svg>
+                                        Agregar archivo
+                                    </button>
+                                </div>
                             </div>
 
                             <div className="questions-list">
