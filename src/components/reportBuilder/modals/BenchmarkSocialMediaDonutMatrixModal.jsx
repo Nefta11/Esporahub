@@ -165,7 +165,12 @@ function migrateCharacters(characters) {
     });
 }
 
-const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
+const BenchmarkSocialMediaDonutMatrixModal = ({
+    isOpen,
+    onClose,
+    canvas,
+    title = "RRSS Propias: Benchmark de mensaje por contenido posteado"
+}) => {
     const [characters, setCharacters] = useState(() => migrateCharacters(initialCharacters));
     const [newCharName, setNewCharName] = useState("");
     const [newCharAvatar, setNewCharAvatar] = useState("");
@@ -463,7 +468,7 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal-content modal-large" onClick={e => e.stopPropagation()} style={{ maxWidth: '1400px', maxHeight: '95vh', overflowY: 'auto' }}>
                 <div className="modal-header">
-                    <h3 className="modal-title">RRSS Propias: Benchmark de mensaje por contenido posteado</h3>
+                    <h3 className="modal-title">{title}</h3>
                     <button className="modal-close" onClick={onClose}><X size={20} /></button>
                 </div>
                 <div className="modal-body">

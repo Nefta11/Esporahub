@@ -323,6 +323,15 @@ const FilminaEditor = () => {
         isOpen={activeModal === 'benchmarkSocialMediaDonutMatrix'}
         onClose={() => setActiveModal(null)}
         canvas={canvas}
+        title={
+          filmina?.title === "RRSS Propias: Benchmark's de mensaje por contenido posteado" ||
+          filmina?.title === "RRSSS Propias. Benchmark de mensaje por contenido posteado"
+            ? "RRSS Propias: Benchmark de mensaje por contenido posteado"
+            : filmina?.title === "RRSS Externas: Benchmark's de mensaje por contenido diferido" ||
+              filmina?.title === "RRSS Externas: Benchmark's de mensaje por contenido difundido"
+            ? "RRSS Externas: Benchmark de mensaje por contenido difundido"
+            : "RRSS Propias: Benchmark de mensaje por contenido posteado"
+        }
       />
       <BenchmarkSocialMediaModal
         isOpen={activeModal === 'benchmarkSocialMedia'}

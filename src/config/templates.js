@@ -60,7 +60,7 @@ export const templates = [
       { id: 2, title: 'RRSS Propias: Benchmark Cuantitativo', order: 2, background: 'membretesimple.jpeg' },
       { id: 3, title: 'RRSS Externas: Benchmark Cuantitativo', order: 3, background: 'membretesimple.jpeg' },
       { id: 4, title: 'RRSS Propias: Benchmark\'s de mensaje por contenido posteado', order: 4, background: 'membretesimple.jpeg' },
-      { id: 5, title: 'RRSS Externas: Benchmark\'s de mensaje por contenido diferido', order: 5, background: 'membretesimple.jpeg' },
+      { id: 5, title: 'RRSS Externas: Benchmark\'s de mensaje por contenido difundido', order: 5, background: 'membretesimple.jpeg' },
       { id: 6, title: 'Análisis de Engagement - Facebook', order: 6, background: 'membretesimple.jpeg' },
       { id: 7, title: 'Análisis de Engagement - Instagram', order: 7, background: 'membretesimple.jpeg' },
       { id: 8, title: 'Análisis de Engagement - Twitter/X', order: 8, background: 'membretesimple.jpeg' },

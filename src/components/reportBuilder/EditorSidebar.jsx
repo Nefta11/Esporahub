@@ -99,13 +99,15 @@ const EditorSidebar = ({
             <span>Apilado</span>
           </button>
 
-          {/* Mostrar botón de Benchmark RRSSS Mensaje por Contenido solo en la filmina específica */}
+          {/* Mostrar botón de Benchmark RRSSS Mensaje por Contenido en filminas 4 y 5 de Benchmark RRSS */}
           {currentFilmina &&
             (currentFilmina.title === "RRSS Propias: Benchmark's de mensaje por contenido posteado" ||
-             currentFilmina.title === 'RRSSS Propias. Benchmark de mensaje por contenido posteado') && (
-              <button className="tool-card" onClick={onOpenBenchmarkSocialMediaDonutMatrixModal} title="RRSS Propias: Benchmark's de mensaje por contenido posteado">
+             currentFilmina.title === 'RRSSS Propias. Benchmark de mensaje por contenido posteado' ||
+             currentFilmina.title === "RRSS Externas: Benchmark's de mensaje por contenido diferido" ||
+             currentFilmina.title === "RRSS Externas: Benchmark's de mensaje por contenido difundido") && (
+              <button className="tool-card" onClick={onOpenBenchmarkSocialMediaDonutMatrixModal} title="Benchmark de mensaje por contenido">
                 <Share2 size={24} />
-                <span>RRSSS Mensaje</span>
+                <span>Benchmark Mensaje</span>
               </button>
           )}
           {/* Mostrar botón de Demografía solo en la filmina específica */}
