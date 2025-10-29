@@ -13,6 +13,10 @@ import PropertiesPanel from './PropertiesPanel';
 import TableEditorModal from './modals/TableEditorModal';
 import DonutChartModal from './modals/DonutChartModal';
 import UsoMediosModal from './modals/UsoMediosModal';
+import StackedBarChartModal from './modals/StackedBarChartModal';
+import DemographicsTableModal from './modals/DemographicsTableModal';
+import SocialMediaUsageModal from './modals/SocialMediaUsageModal';
+import InfluencersTableModal from './modals/InfluencersTableModal';
 import ShapePickerModal from './modals/ShapePickerModal';
 import '@/styles/reportBuilder/FilminaEditor.css';
 import '@/styles/reportBuilder/EditorComponents.css';
@@ -296,9 +300,14 @@ const FilminaEditor = () => {
           onOpenTableModal={() => setActiveModal('table')}
           onOpenDonutModal={() => setActiveModal('donut')}
           onOpenUsoMediosModal={() => setActiveModal('usoMedios')}
+          onOpenStackedBarModal={() => setActiveModal('stackedBar')}
+          onOpenDemographicsModal={() => setActiveModal('demographics')}
+          onOpenSocialMediaUsageModal={() => setActiveModal('socialMediaUsage')}
+          onOpenInfluencersModal={() => setActiveModal('influencers')}
           layers={layers}
           selectedLayer={selectedObject}
           onSelectLayer={handleSelectLayer}
+          currentFilmina={filmina}
         />
 
         {/* Canvas central */}
@@ -334,6 +343,30 @@ const FilminaEditor = () => {
 
       <UsoMediosModal
         isOpen={activeModal === 'usoMedios'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
+
+      <StackedBarChartModal
+        isOpen={activeModal === 'stackedBar'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
+
+      <DemographicsTableModal
+        isOpen={activeModal === 'demographics'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
+
+      <SocialMediaUsageModal
+        isOpen={activeModal === 'socialMediaUsage'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
+
+      <InfluencersTableModal
+        isOpen={activeModal === 'influencers'}
         onClose={() => setActiveModal(null)}
         canvas={canvas}
       />
