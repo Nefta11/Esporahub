@@ -1,5 +1,5 @@
 import React from 'react';
-import { Type, Square, Image, Minus, Table, PieChart, BarChart3, Layers } from 'lucide-react';
+import { Type, Square, Image, Minus, Table, PieChart, BarChart3, BarChartHorizontal, Users, Share2, Award, Layers } from 'lucide-react';
 
 const EditorSidebar = ({
   onAddText,
@@ -9,9 +9,14 @@ const EditorSidebar = ({
   onOpenTableModal,
   onOpenDonutModal,
   onOpenUsoMediosModal,
+  onOpenStackedBarModal,
+  onOpenDemographicsModal,
+  onOpenSocialMediaUsageModal,
+  onOpenInfluencersModal,
   layers,
   selectedLayer,
-  onSelectLayer
+  onSelectLayer,
+  currentFilmina
 }) => {
 
   const getLayerIcon = (type) => {
@@ -85,6 +90,35 @@ const EditorSidebar = ({
             <BarChart3 size={24} />
             <span>Medios</span>
           </button>
+
+          <button className="tool-card" onClick={onOpenStackedBarModal} title="Gráfico Apilado">
+            <BarChartHorizontal size={24} />
+            <span>Apilado</span>
+          </button>
+
+          {/* Mostrar botón de Demografía solo en la filmina específica */}
+          {currentFilmina && currentFilmina.title === 'Demografía General y Digital' && (
+            <button className="tool-card" onClick={onOpenDemographicsModal} title="Demografía General y Digital">
+              <Users size={24} />
+              <span>Demografía</span>
+            </button>
+          )}
+
+          {/* Mostrar botón de Uso RRSS solo en la filmina específica */}
+          {currentFilmina && currentFilmina.title === 'Estudio de Uso de Medios' && (
+            <button className="tool-card" onClick={onOpenSocialMediaUsageModal} title="Estudio de Uso de Medios">
+              <Share2 size={24} />
+              <span>Uso RRSS</span>
+            </button>
+          )}
+
+          {/* Mostrar botón de Influencers solo en la filmina específica */}
+          {currentFilmina && currentFilmina.title === 'Estudio de Influenciadores' && (
+            <button className="tool-card" onClick={onOpenInfluencersModal} title="Estudio de Influenciadores">
+              <Award size={24} />
+              <span>Influencers</span>
+            </button>
+          )}
         </div>
       </section>
 
