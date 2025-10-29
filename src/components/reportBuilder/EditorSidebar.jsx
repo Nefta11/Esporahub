@@ -22,6 +22,11 @@ const EditorSidebar = ({
   currentFilmina
 }) => {
 
+  // Detectar si ya existe un gráfico específico en el canvas
+  const hasChartInCanvas = (chartName) => {
+    return layers.some(layer => layer.name === chartName);
+  };
+
   const getLayerIcon = (type) => {
     switch(type) {
       case 'i-text':
@@ -112,17 +117,17 @@ const EditorSidebar = ({
           )}
           {/* Mostrar botón de Demografía solo en la filmina específica */}
           {currentFilmina && currentFilmina.title === 'Demografía General y Digital' && (
-            <button className="tool-card" onClick={onOpenDemographicsModal} title="Demografía General y Digital">
+            <button className="tool-card" onClick={onOpenDemographicsModal} title={hasChartInCanvas('demographics-table') ? 'Editar Demografía' : 'Agregar Demografía'}>
               <Users size={24} />
-              <span>Demografía</span>
+              <span>{hasChartInCanvas('demographics-table') ? 'Editar' : 'Demografía'}</span>
             </button>
           )}
 
           {/* Mostrar botón de Uso RRSS solo en la filmina específica */}
           {currentFilmina && currentFilmina.title === 'Estudio de Uso de Medios' && (
-            <button className="tool-card" onClick={onOpenSocialMediaUsageModal} title="Estudio de Uso de Medios">
+            <button className="tool-card" onClick={onOpenSocialMediaUsageModal} title={hasChartInCanvas('social-media-usage-table') ? 'Editar Uso RRSS' : 'Agregar Uso RRSS'}>
               <Share2 size={24} />
-              <span>Uso RRSS</span>
+              <span>{hasChartInCanvas('social-media-usage-table') ? 'Editar' : 'Uso RRSS'}</span>
             </button>
           )}
 

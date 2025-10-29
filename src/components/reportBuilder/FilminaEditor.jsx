@@ -6,6 +6,10 @@ import { Image as FabricImage } from 'fabric';
 import { getTemplateById, getFilminaById } from '@/config/templates';
 import { useCanvas } from './hooks/useCanvas';
 import { useFabricObject } from './hooks/useFabricObject';
+import {
+  autoInsertDemographicsTable,
+  autoInsertSocialMediaUsageTable
+} from './utils/autoInsertHelpers';
 import PageHeader from '@/components/layout/PageHeader';
 import PageFooter from '@/components/layout/PageFooter';
 import EditorSidebar from './EditorSidebar';
@@ -135,6 +139,11 @@ const FilminaEditor = () => {
       });
     }, 100);
 
+    // Auto-insertar gráfico según la filmina (después de cargar título)
+    setTimeout(() => {
+      autoInsertDefaultChart();
+    }, 500);
+
     // Event listeners
     canvas.on('selection:created', handleSelection);
     canvas.on('selection:updated', handleSelection);
@@ -188,6 +197,40 @@ const FilminaEditor = () => {
       }
     }
   }, [fabricObject]);
+
+  // Auto-insertar gráfico por defecto según la filmina
+  const autoInsertDefaultChart = useCallback(() => {
+    const canvas = getCanvas();
+    if (!canvas || !filmina) return;
+
+    // Verificar si ya hay objetos insertados (excepto background y título)
+    const objects = canvas.getObjects();
+    const hasCustomObjects = objects.some(obj =>
+      obj.type !== 'image' && obj.text !== filmina.title
+    );
+
+    // Si ya hay objetos personalizados, no insertar automáticamente
+    if (hasCustomObjects) return;
+
+    // Insertar según el título de la filmina
+    const filminaTitle = filmina.title;
+
+    // Auto-insertar según el título de la filmina
+    if (filminaTitle === 'Demografía General y Digital') {
+      autoInsertDemographicsTable(canvas);
+    } else if (filminaTitle === 'Estudio de Uso de Medios') {
+      autoInsertSocialMediaUsageTable(canvas);
+    } else if (filminaTitle === 'Estudio de Influenciadores') {
+      // TODO: Auto-insertar tabla influencers
+      console.log('Auto-inserting Influencers table');
+    } else if (filminaTitle === "RRSS Propias: Benchmark's de mensaje por contenido posteado") {
+      // TODO: Auto-insertar matriz benchmark
+      console.log('Auto-inserting Benchmark Matrix - Propias');
+    } else if (filminaTitle === "RRSS Externas: Benchmark's de mensaje por contenido difundido") {
+      // TODO: Auto-insertar matriz benchmark
+      console.log('Auto-inserting Benchmark Matrix - Externas');
+    }
+  }, [filmina, getCanvas]);
 
   // Exportar a PDF
   const handleExportPDF = async () => {
