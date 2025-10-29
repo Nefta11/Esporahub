@@ -258,24 +258,27 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
         // Crear un canvas temporal con dimensiones correctas
         const scale = 2.5; // Mayor escala para mejor calidad
         const tempCanvas = document.createElement('canvas');
-        const padding = 30;
+    const padding = 30;
+    const extraBottomPadding = 40; // Más espacio para evitar corte
         const legendHeight = 38;
         const headerHeight = 70;
         const rowHeight = 110;
         const colWidth = 110;
         const nameColWidth = 140;
 
-        const totalWidth = (nameColWidth + (SOCIAL_NETWORKS.length * colWidth) + (padding * 2)) * scale;
-        const totalHeight = (legendHeight + headerHeight + (characters.length * rowHeight) + (padding * 2)) * scale;
+    // El ancho debe considerar todas las redes de la leyenda (incluyendo efemérides y share news)
+    const legendColCount = SOCIAL_NETWORKS_FOR_LEGEND ? SOCIAL_NETWORKS_FOR_LEGEND.length : SOCIAL_NETWORKS.length;
+    const totalWidth = (nameColWidth + (legendColCount * colWidth) + (padding * 2)) * scale;
+    const totalHeight = (legendHeight + headerHeight + (characters.length * rowHeight) + padding + extraBottomPadding) * scale;
 
         tempCanvas.width = totalWidth;
-        tempCanvas.height = totalHeight;
+    tempCanvas.height = totalHeight;
         const ctx = tempCanvas.getContext('2d');
         ctx.scale(scale, scale);
 
         // Fondo blanco
         ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, totalWidth / scale, totalHeight / scale);
+    ctx.fillRect(0, 0, totalWidth / scale, totalHeight / scale);
 
         let currentY = padding;
 
