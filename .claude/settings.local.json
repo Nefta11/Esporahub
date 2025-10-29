@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install jspdf)"
+      "Bash(npm install jspdf)",
+      "Bash(dir:*)"
     ],
     "deny": [],
     "ask": []

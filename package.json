@@ -12,6 +12,8 @@
   "dependencies": {
     "@react-spring/web": "^9.7.3",
     "axios": "^1.6.2",
+    "fabric": "^6.7.1",
+    "html2pdf.js": "^0.12.1",
     "jspdf": "^3.0.3",
     "lucide-react": "^0.344.0",
     "pdfjs-dist": "^5.4.54",
