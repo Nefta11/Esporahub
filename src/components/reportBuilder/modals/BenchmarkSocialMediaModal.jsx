@@ -122,20 +122,24 @@ const BenchmarkSocialMediaModal = ({ isOpen, onClose, canvas }) => {
         let currentY = 0;
         let currentX = 0;
 
-        // --- 3. Dibujar Encabezado Superior (Iconos) ---
+        // --- 3. Dibujar Encabezado Superior (Iconos y nombres, bien alineados y sin encimar) ---
         currentX = ROW_NUM_W + PERSONAJE_W;
+        const iconHeaderY = 10;
+        const textHeaderY = 34;
         SOCIAL_NETWORKS.forEach((network) => {
             const icon = loadedSocialIcons[network.key];
-            const centerX = currentX + DATA_COL_W / 2;
+            const colSpan = DATA_COL_W;
+            const iconWidth = 28;
+            const iconHeight = 28;
+            // Centrar ícono
             if (icon) {
-                const iconWidth = 20;
-                const iconHeight = 20;
-                ctx.drawImage(icon, centerX - 30, TOP_HEADER_H / 2 - iconHeight / 2, iconWidth, iconHeight);
+                ctx.drawImage(icon, currentX + colSpan / 2 - iconWidth / 2, iconHeaderY, iconWidth, iconHeight);
             }
+            // Centrar texto debajo del ícono
             ctx.fillStyle = '#222';
             ctx.font = fontBold;
-            ctx.textAlign = 'left';
-            ctx.fillText(network.label, currentX + DATA_COL_W / 2 - 5, TOP_HEADER_H / 2);
+            ctx.textAlign = 'center';
+            ctx.fillText(network.label, currentX + colSpan / 2, textHeaderY);
             currentX += DATA_COL_W;
         });
         currentY += TOP_HEADER_H;
@@ -148,7 +152,7 @@ const BenchmarkSocialMediaModal = ({ isOpen, onClose, canvas }) => {
 
         ctx.textAlign = 'center';
         ctx.fillText('Personaje', ROW_NUM_W + PERSONAJE_W / 2, currentY + SUB_HEADER_H / 2);
-        
+
         currentX = ROW_NUM_W + PERSONAJE_W;
         SOCIAL_NETWORKS.forEach(() => {
             ctx.fillText('Seguidores', currentX + DATA_SUB_W / 2, currentY + SUB_HEADER_H / 2);
@@ -280,7 +284,7 @@ const BenchmarkSocialMediaModal = ({ isOpen, onClose, canvas }) => {
         const ROW_NUM_W = 40;
         const PERSONAJE_W = 180;
         const DATA_COL_W = 140; // 70 * 2
-        
+
         const totalWidth = ROW_NUM_W + PERSONAJE_W + (SOCIAL_NETWORKS.length * DATA_COL_W);
         const totalHeight = TOP_HEADER_H + SUB_HEADER_H + (characters.length * ROW_H);
 
@@ -297,26 +301,23 @@ const BenchmarkSocialMediaModal = ({ isOpen, onClose, canvas }) => {
         const dataURL = tempCanvas.toDataURL('image/png');
         const imgElement = new window.Image();
         imgElement.onload = () => {
-            // Definimos FabricImage aquí, tomándola del objeto global 'fabric'
-            // Esto soluciona el error de importación del módulo.
             const FabricImage = window.fabric ? window.fabric.Image : null;
-
             if (!FabricImage) {
-                console.error("Fabric.js (window.fabric.Image) no se encontró. Asegúrate de que la librería esté cargada.");
-                onClose(); // Cerramos para evitar más errores
+                alert("No se encontró Fabric.js. Asegúrate de que la librería esté cargada.");
+                onClose();
                 return;
             }
-
+            // Igual que SocialMediaUsageModal: escala amigable y solo activar
             const fabricImg = new FabricImage(imgElement, {
                 left: 50,
                 top: 50,
-                scaleX: 1, // Usar escala 1:1, la tabla ya está en alta resolución
-                scaleY: 1
+                scaleX: 0.6,
+                scaleY: 0.6
             });
             canvas.add(fabricImg);
             canvas.setActiveObject(fabricImg);
             canvas.renderAll();
-            onClose();
+            setTimeout(onClose, 0);
         };
         imgElement.src = dataURL;
     };
