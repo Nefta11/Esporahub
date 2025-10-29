@@ -100,19 +100,19 @@ const BenchmarkSocialMediaModal = ({ isOpen, onClose, canvas }) => {
     // Función de Dibujo Principal
     const drawTable = (ctx, canvasWidth, canvasHeight, isPreview) => {
         // --- 1. Configuración de Layout ---
-        const fontSize = isPreview ? 10 : 12;
-        const fontBold = `bold ${fontSize + 2}px Arial`;
+        const fontSize = isPreview ? 9 : 11;
+        const fontBold = `bold ${fontSize + 1}px Arial`;
         const fontRegular = `${fontSize}px Arial`;
         ctx.textBaseline = 'middle';
 
-        const TOP_HEADER_H = 40;
-        const SUB_HEADER_H = 30;
-        const ROW_H = 60;
-        const ROW_NUM_W = 40;
-        const PERSONAJE_W = 180;
-        const DATA_SUB_W = 70;
+        const TOP_HEADER_H = isPreview ? 55 : 70;
+        const SUB_HEADER_H = isPreview ? 30 : 40;
+        const ROW_H = isPreview ? 50 : 65;
+        const ROW_NUM_W = isPreview ? 35 : 50;
+        const PERSONAJE_W = isPreview ? 160 : 200;
+        const DATA_SUB_W = isPreview ? 75 : 95;
         const DATA_COL_W = DATA_SUB_W * 2;
-        const AVATAR_SIZE = 40;
+        const AVATAR_SIZE = isPreview ? 35 : 45;
 
         // --- 2. Limpiar Canvas ---
         ctx.fillStyle = '#ffffff';
@@ -121,19 +121,21 @@ const BenchmarkSocialMediaModal = ({ isOpen, onClose, canvas }) => {
         let currentY = 0;
         let currentX = 0;
 
-        // --- 3. Dibujar Encabezado Superior (Iconos y nombres, bien alineados y sin encimar) ---
+        // --- 3. Dibujar Encabezado Superior (Iconos y nombres) ---
         currentX = ROW_NUM_W + PERSONAJE_W;
-        const iconHeaderY = 10;
-        const textHeaderY = 34;
+        const iconSize = isPreview ? 22 : 28;
+        const iconHeaderY = isPreview ? 8 : 12;
+        const textHeaderY = iconHeaderY + iconSize + (isPreview ? 8 : 12);
+        
         SOCIAL_NETWORKS.forEach((network) => {
             const icon = loadedSocialIcons[network.key];
             const colSpan = DATA_COL_W;
-            const iconWidth = 28;
-            const iconHeight = 28;
-            // Centrar ícono
+            
+            // Centrar ícono en el centro de las dos subcolumnas
             if (icon) {
-                ctx.drawImage(icon, currentX + colSpan / 2 - iconWidth / 2, iconHeaderY, iconWidth, iconHeight);
+                ctx.drawImage(icon, currentX + colSpan / 2 - iconSize / 2, iconHeaderY, iconSize, iconSize);
             }
+            
             // Centrar texto debajo del ícono
             ctx.fillStyle = '#222';
             ctx.font = fontBold;
@@ -143,21 +145,57 @@ const BenchmarkSocialMediaModal = ({ isOpen, onClose, canvas }) => {
         });
         currentY += TOP_HEADER_H;
 
-        // --- 4. Dibujar Sub-Encabezado (Seguidores, Publicaciones) ---
-        ctx.fillStyle = '#f0f0f0'; // Fondo gris claro para sub-encabezado
+        // --- 4. Dibujar Sub-Encabezado (Seguidores, No Publicaciones) ---
+        ctx.fillStyle = '#f0f0f0';
         ctx.fillRect(0, currentY, canvasWidth, SUB_HEADER_H);
+        
+        // Línea superior del sub-encabezado
+        ctx.strokeStyle = '#d0d0d0';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, currentY);
+        ctx.lineTo(canvasWidth, currentY);
+        ctx.stroke();
+        
         ctx.fillStyle = '#555';
-        ctx.font = fontBold;
-
+        ctx.font = isPreview ? `bold ${fontSize}px Arial` : `bold ${fontSize + 1}px Arial`; // Fuente más pequeña para el sub-encabezado
         ctx.textAlign = 'center';
+        
+        // Texto "Personaje" en la columna de personajes
         ctx.fillText('Personaje', ROW_NUM_W + PERSONAJE_W / 2, currentY + SUB_HEADER_H / 2);
 
+        // Dibujar "Seguidores" y "No Publicaciones" alternados para cada red social
         currentX = ROW_NUM_W + PERSONAJE_W;
-        SOCIAL_NETWORKS.forEach(() => {
+        SOCIAL_NETWORKS.forEach((network, index) => {
+            // Línea vertical al inicio de cada red social
+            ctx.beginPath();
+            ctx.moveTo(currentX, currentY);
+            ctx.lineTo(currentX, currentY + SUB_HEADER_H);
+            ctx.stroke();
+            
+            // Texto "Seguidores" en la primera subcolumna
             ctx.fillText('Seguidores', currentX + DATA_SUB_W / 2, currentY + SUB_HEADER_H / 2);
+            
+            // Texto "No Publicaciones" en la segunda subcolumna
             ctx.fillText('No Publicaciones', currentX + DATA_SUB_W + DATA_SUB_W / 2, currentY + SUB_HEADER_H / 2);
+            
+            // Línea vertical en medio de las dos columnas (entre Seguidores y No Publicaciones)
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.beginPath();
+            ctx.moveTo(currentX + DATA_SUB_W, currentY);
+            ctx.lineTo(currentX + DATA_SUB_W, currentY + SUB_HEADER_H);
+            ctx.stroke();
+            ctx.strokeStyle = '#d0d0d0';
+            
             currentX += DATA_COL_W;
         });
+        
+        // Línea inferior del sub-encabezado
+        ctx.beginPath();
+        ctx.moveTo(0, currentY + SUB_HEADER_H);
+        ctx.lineTo(canvasWidth, currentY + SUB_HEADER_H);
+        ctx.stroke();
+        
         currentY += SUB_HEADER_H;
 
         // --- 5. Dibujar Filas de Personajes ---
@@ -171,7 +209,7 @@ const BenchmarkSocialMediaModal = ({ isOpen, onClose, canvas }) => {
             // 5a. Número de Fila
             ctx.fillStyle = '#333';
             ctx.beginPath();
-            ctx.arc(ROW_NUM_W / 2, rowCenterY, 12, 0, 2 * Math.PI);
+            ctx.arc(ROW_NUM_W / 2, rowCenterY, isPreview ? 10 : 13, 0, 2 * Math.PI);
             ctx.fill();
             ctx.fillStyle = '#ffffff';
             ctx.font = fontBold;
@@ -179,8 +217,10 @@ const BenchmarkSocialMediaModal = ({ isOpen, onClose, canvas }) => {
             ctx.fillText(index + 1, ROW_NUM_W / 2, rowCenterY);
 
             // 5b. Personaje (Avatar y Nombre)
-            const avatarX = ROW_NUM_W + 15;
+            const avatarX = ROW_NUM_W + 12;
             const avatarY = rowCenterY - AVATAR_SIZE / 2;
+            
+            // Dibujar avatar circular
             ctx.save();
             ctx.beginPath();
             ctx.arc(avatarX + AVATAR_SIZE / 2, avatarY + AVATAR_SIZE / 2, AVATAR_SIZE / 2, 0, 2 * Math.PI);
@@ -194,23 +234,46 @@ const BenchmarkSocialMediaModal = ({ isOpen, onClose, canvas }) => {
             }
             ctx.restore();
             
+            // Nombre del personaje
             ctx.fillStyle = '#333';
             ctx.font = fontBold;
             ctx.textAlign = 'left';
-            ctx.fillText(char.name, avatarX + AVATAR_SIZE + 10, rowCenterY);
+            const nameX = avatarX + AVATAR_SIZE + 10;
+            ctx.fillText(char.name, nameX, rowCenterY);
 
             // 5c. Datos de Redes Sociales
             currentX = ROW_NUM_W + PERSONAJE_W;
             ctx.font = fontRegular;
             ctx.textAlign = 'center';
+            
             SOCIAL_NETWORKS.forEach((network) => {
                 const data = char[network.key];
+                
+                // Seguidores
                 ctx.fillStyle = '#333';
                 ctx.fillText(data?.followers || '-', currentX + DATA_SUB_W / 2, rowCenterY);
+                
+                // Publicaciones
                 ctx.fillStyle = '#777';
                 ctx.fillText(data?.posts || '-', currentX + DATA_SUB_W + DATA_SUB_W / 2, rowCenterY);
+                
+                // Línea vertical entre redes sociales
+                ctx.strokeStyle = '#e0e0e0';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(currentX, currentY);
+                ctx.lineTo(currentX, currentY + ROW_H);
+                ctx.stroke();
+                
                 currentX += DATA_COL_W;
             });
+
+            // Línea horizontal inferior de la fila
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.beginPath();
+            ctx.moveTo(0, currentY + ROW_H);
+            ctx.lineTo(canvasWidth, currentY + ROW_H);
+            ctx.stroke();
 
             currentY += ROW_H;
         });
@@ -221,13 +284,14 @@ const BenchmarkSocialMediaModal = ({ isOpen, onClose, canvas }) => {
         if (isOpen && canvasRef.current) {
             const canvas = canvasRef.current;
             
-            // Definir dimensiones
-            const TOP_HEADER_H = 40;
+            // Definir dimensiones para preview
+            const TOP_HEADER_H = 55;
             const SUB_HEADER_H = 30;
-            const ROW_H = 60;
-            const ROW_NUM_W = 40;
-            const PERSONAJE_W = 180;
-            const DATA_COL_W = 140; // 70 * 2
+            const ROW_H = 50;
+            const ROW_NUM_W = 35;
+            const PERSONAJE_W = 160;
+            const DATA_SUB_W = 75;
+            const DATA_COL_W = DATA_SUB_W * 2;
             
             const totalWidth = ROW_NUM_W + PERSONAJE_W + (SOCIAL_NETWORKS.length * DATA_COL_W);
             const totalHeight = TOP_HEADER_H + SUB_HEADER_H + (characters.length * ROW_H);
@@ -239,7 +303,7 @@ const BenchmarkSocialMediaModal = ({ isOpen, onClose, canvas }) => {
             const ctx = canvas.getContext('2d');
             drawTable(ctx, totalWidth, totalHeight, true);
         }
-    }, [characters, isOpen, loadedSocialIcons, loadedAvatars]); // Depender de las imágenes cargadas
+    }, [characters, isOpen, loadedSocialIcons, loadedAvatars]);
 
     // Añadir personaje
     const addCharacter = () => {
@@ -276,13 +340,14 @@ const BenchmarkSocialMediaModal = ({ isOpen, onClose, canvas }) => {
     const insertTableToCanvas = async () => {
         if (!canvas) return;
 
-        // Definir dimensiones
-        const TOP_HEADER_H = 40;
-        const SUB_HEADER_H = 30;
-        const ROW_H = 60;
-        const ROW_NUM_W = 40;
-        const PERSONAJE_W = 180;
-        const DATA_COL_W = 140; // 70 * 2
+        // Definir dimensiones para canvas final
+        const TOP_HEADER_H = 70;
+        const SUB_HEADER_H = 40;
+        const ROW_H = 65;
+        const ROW_NUM_W = 50;
+        const PERSONAJE_W = 200;
+        const DATA_SUB_W = 95;
+        const DATA_COL_W = DATA_SUB_W * 2;
 
         const totalWidth = ROW_NUM_W + PERSONAJE_W + (SOCIAL_NETWORKS.length * DATA_COL_W);
         const totalHeight = TOP_HEADER_H + SUB_HEADER_H + (characters.length * ROW_H);
@@ -303,8 +368,8 @@ const BenchmarkSocialMediaModal = ({ isOpen, onClose, canvas }) => {
             const fabricImg = new FabricImage(imgElement, {
                 left: 50,
                 top: 50,
-                scaleX: 0.6,
-                scaleY: 0.6
+                scaleX: 0.8,
+                scaleY: 0.8
             });
             canvas.add(fabricImg);
             canvas.setActiveObject(fabricImg);
@@ -319,7 +384,6 @@ const BenchmarkSocialMediaModal = ({ isOpen, onClose, canvas }) => {
     };
 
     if (!isOpen) return null;
-
     return (
         <div className="modal-overlay" onClick={handleClose}>
             <div className="modal-content modal-large" onClick={e => e.stopPropagation()} style={{ maxWidth: '1100px', maxHeight: '90vh', overflowY: 'auto' }}>
@@ -330,59 +394,51 @@ const BenchmarkSocialMediaModal = ({ isOpen, onClose, canvas }) => {
                     </button>
                 </div>
                 <div className="modal-body">
-                    <div className="segments-section">
-                        <div className="section-header">
-                            <h4>Personajes</h4>
-                            <button className="btn-primary btn-sm" onClick={addCharacter}>
-                                <Plus size={16} /> Agregar Personaje
-                            </button>
-                        </div>
-                        {characters.length === 0 && (
-                            <div style={{ color: '#888', fontSize: 14, margin: 20 }}>No hay personajes. Agrega uno para comenzar.</div>
-                        )}
-                        
-                        {/* Formulario de Personajes */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                            {characters.map((char, idx) => (
-                                <div key={idx} style={{ padding: 15, border: '1px solid #ddd', borderRadius: 8, background: '#fcfcfc' }}>
-                                    {/* Fila 1: Nombre, Avatar, Borrar */}
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 40px', gap: 10, alignItems: 'center', marginBottom: '10px' }}>
-                                        <input type="text" placeholder="Nombre" value={char.name} onChange={e => updateCharacter(idx, 'name', e.target.value)} className="input-field" />
-                                        <input type="text" placeholder="Avatar URL" value={char.avatarUrl} onChange={e => updateCharacter(idx, 'avatarUrl', e.target.value)} className="input-field" />
-                                        <button className="btn-danger btn-icon" onClick={() => removeCharacter(idx)} disabled={characters.length <= 1}><Trash2 size={16} /></button>
-                                    </div>
-                                    
-                                    {/* Fila 2: Datos de Redes Sociales */}
-                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 10 }}>
-                                        {SOCIAL_NETWORKS.map(network => (
-                                            <div key={network.key} style={{ background: '#f0f0f0', padding: 8, borderRadius: 4 }}>
-                                                <label style={{ fontSize: '11px', fontWeight: 'bold', color: '#555', display: 'block', marginBottom: 4 }}>{network.label}</label>
-                                                <div style={{ display: 'flex', gap: 5 }}>
-                                                    <input 
-                                                        type="text" 
-                                                        placeholder="Seguidores" 
-                                                        value={char[network.key]?.followers || ''} 
-                                                        onChange={e => updateCharacter(idx, network.key, e.target.value, 'followers')} 
-                                                        className="input-field"
-                                                        style={{ fontSize: '12px', padding: '4px 6px' }}
-                                                    />
-                                                    <input 
-                                                        type="text" 
-                                                        placeholder="Posts" 
-                                                        value={char[network.key]?.posts || ''} 
-                                                        onChange={e => updateCharacter(idx, network.key, e.target.value, 'posts')} 
-                                                        className="input-field"
-                                                        style={{ fontSize: '12px', padding: '4px 6px' }}
-                                                    />
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
+                    <button className="btn-primary" style={{ marginBottom: 16 }} onClick={addCharacter}>
+                        <Plus size={16} /> Agregar Personaje
+                    </button>
+                    {characters.length === 0 && (
+                        <div style={{ color: '#888', fontSize: 14, margin: 20 }}>No hay personajes. Agrega uno para comenzar.</div>
+                    )}
+                    {/* Formulario de Personajes */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                        {characters.map((char, idx) => (
+                            <div key={idx} style={{ padding: 15, border: '1px solid #ddd', borderRadius: 8, background: '#fcfcfc' }}>
+                                {/* Fila 1: Nombre, Avatar, Borrar */}
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 40px', gap: 10, alignItems: 'center', marginBottom: '10px' }}>
+                                    <input type="text" placeholder="Nombre" value={char.name} onChange={e => updateCharacter(idx, 'name', e.target.value)} className="input-field" />
+                                    <input type="text" placeholder="Avatar URL" value={char.avatarUrl} onChange={e => updateCharacter(idx, 'avatarUrl', e.target.value)} className="input-field" />
+                                    <button className="btn-danger btn-icon" onClick={() => removeCharacter(idx)} disabled={characters.length <= 1}><Trash2 size={16} /></button>
                                 </div>
-                            ))}
-                        </div>
+                                {/* Fila 2: Datos de Redes Sociales */}
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 10 }}>
+                                    {SOCIAL_NETWORKS.map(network => (
+                                        <div key={network.key} style={{ background: '#f0f0f0', padding: 8, borderRadius: 4 }}>
+                                            <label style={{ fontSize: '11px', fontWeight: 'bold', color: '#555', display: 'block', marginBottom: 4 }}>{network.label}</label>
+                                            <div style={{ display: 'flex', gap: 5 }}>
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="Seguidores" 
+                                                    value={char[network.key]?.followers || ''} 
+                                                    onChange={e => updateCharacter(idx, network.key, e.target.value, 'followers')} 
+                                                    className="input-field"
+                                                    style={{ fontSize: '12px', padding: '4px 6px' }}
+                                                />
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="Posts" 
+                                                    value={char[network.key]?.posts || ''} 
+                                                    onChange={e => updateCharacter(idx, network.key, e.target.value, 'posts')} 
+                                                    className="input-field"
+                                                    style={{ fontSize: '12px', padding: '4px 6px' }}
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                    
                     {/* Vista Previa */}
                     <div className="chart-preview" style={{ marginTop: '20px' }}>
                         <h4>Vista Previa</h4>
@@ -411,4 +467,3 @@ const BenchmarkSocialMediaModal = ({ isOpen, onClose, canvas }) => {
 };
 
 export default BenchmarkSocialMediaModal;
-
