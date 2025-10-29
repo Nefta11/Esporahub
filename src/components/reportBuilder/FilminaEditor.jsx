@@ -269,7 +269,7 @@ const FilminaEditor = () => {
   return (
   <div className={`filmina-editor-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       <PageHeader
-        title={`${template.name} - ${filmina.title}`}
+        title={filmina.title}
         subtitle="Editor de filminas"
         backButtonText="Plantillas"
         backButtonPath="/espora-report-builder"
