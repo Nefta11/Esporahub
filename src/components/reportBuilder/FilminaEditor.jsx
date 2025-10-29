@@ -2,56 +2,110 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Download } from 'lucide-react';
 import html2pdf from 'html2pdf.js';
-import { getTemplateById } from '@/config/templates';
+import { Image as FabricImage } from 'fabric';
+import { getTemplateById, getFilminaById } from '@/config/templates';
 import { useCanvas } from './hooks/useCanvas';
 import { useFabricObject } from './hooks/useFabricObject';
 import EditorSidebar from './EditorSidebar';
 import PropertiesPanel from './PropertiesPanel';
-import LayersPanel from './LayersPanel';
-import SimpleModal from './modals/SimpleModal';
+import TableEditorModal from './modals/TableEditorModal';
+import DonutChartModal from './modals/DonutChartModal';
+import UsoMediosModal from './modals/UsoMediosModal';
 import '@/styles/reportBuilder/FilminaEditor.css';
 import '@/styles/reportBuilder/EditorComponents.css';
 
 const FilminaEditor = () => {
   const navigate = useNavigate();
-  const { templateId } = useParams();
+  const { templateId, filminaId } = useParams();
   const [template, setTemplate] = useState(null);
+  const [filmina, setFilmina] = useState(null);
   const [isExporting, setIsExporting] = useState(false);
   const [selectedObject, setSelectedObject] = useState(null);
   const [layers, setLayers] = useState([]);
-  const [showTableModal, setShowTableModal] = useState(false);
-  const [showTabalModal, setShowTabalModal] = useState(false);
-  const [showDonutModal, setShowDonutModal] = useState(false);
-  const [showUsoMediosModal, setShowUsoMediosModal] = useState(false);
+  const [activeModal, setActiveModal] = useState(null);
 
   const { canvasRef, initCanvas, getCanvas, disposeCanvas } = useCanvas();
   const canvas = getCanvas();
   const fabricObject = useFabricObject(canvas);
 
-  // Cargar plantilla
+  // Cargar plantilla y filmina
   useEffect(() => {
     const loadedTemplate = getTemplateById(templateId);
     if (loadedTemplate) {
       setTemplate(loadedTemplate);
     }
-  }, [templateId]);
+
+    const loadedFilmina = getFilminaById(templateId, filminaId);
+    if (loadedFilmina) {
+      setFilmina(loadedFilmina);
+    }
+  }, [templateId, filminaId]);
 
   // Inicializar canvas
   useEffect(() => {
-    if (!canvasRef.current || !template) return;
+    if (!canvasRef.current || !template || !filmina) return;
 
-    const canvas = initCanvas(canvasRef.current);
+    initCanvas(canvasRef.current);
+    const canvas = getCanvas();
 
-    // Cargar contenido inicial
-    const config = template.canvasConfig;
-    fabricObject.addText(config.text, {
-      left: config.left,
-      top: config.top,
-      fontSize: config.fontSize,
-      fontWeight: config.fontWeight,
-      fill: config.fill,
-      fontFamily: config.fontFamily
-    });
+    // Cargar imagen de fondo
+    if (filmina.background && canvas) {
+      const backgroundImagePath = `/img/${filmina.background}`;
+
+      const imgElement = document.createElement('img');
+      imgElement.crossOrigin = 'anonymous';
+
+      imgElement.onload = () => {
+        try {
+          const fabricImg = new FabricImage(imgElement, {
+            left: 0,
+            top: 0,
+            selectable: false,
+            evented: false,
+            hasControls: false,
+            hasBorders: false,
+            lockMovementX: true,
+            lockMovementY: true,
+            lockScalingX: true,
+            lockScalingY: true,
+            lockRotation: true,
+            hoverCursor: 'default'
+          });
+
+          // Escalar imagen para que cubra todo el canvas (960x540)
+          const scaleX = 960 / fabricImg.width;
+          const scaleY = 540 / fabricImg.height;
+
+          fabricImg.scaleX = scaleX;
+          fabricImg.scaleY = scaleY;
+
+          canvas.add(fabricImg);
+          canvas.sendToBack(fabricImg);
+          canvas.renderAll();
+        } catch (error) {
+          console.error('Error loading background image:', error);
+        }
+      };
+
+      imgElement.onerror = (error) => {
+        console.error('Error loading background image:', error);
+      };
+
+      imgElement.src = backgroundImagePath;
+    }
+
+    // Cargar contenido inicial después de un pequeño delay para asegurar que el fondo se cargue primero
+    setTimeout(() => {
+      const config = template.canvasConfig;
+      fabricObject.addText(filmina.title, {
+        left: config.left,
+        top: config.top,
+        fontSize: config.fontSize,
+        fontWeight: config.fontWeight,
+        fill: config.fill,
+        fontFamily: config.fontFamily
+      });
+    }, 100);
 
     // Event listeners
     canvas.on('selection:created', handleSelection);
@@ -68,7 +122,7 @@ const FilminaEditor = () => {
       document.removeEventListener('keydown', handleKeyDown);
       disposeCanvas();
     };
-  }, [template]);
+  }, [template, filmina]);
 
   // Actualizar capas
   const updateLayers = useCallback(() => {
@@ -171,10 +225,10 @@ const FilminaEditor = () => {
     }
   };
 
-  if (!template) {
+  if (!template || !filmina) {
     return (
       <div className="editor-error">
-        <h2>Plantilla no encontrada</h2>
+        <h2>Plantilla o filmina no encontrada</h2>
         <button className="back-button-error" onClick={handleBack}>
           Volver al selector
         </button>
@@ -192,7 +246,7 @@ const FilminaEditor = () => {
             <span>Volver</span>
           </button>
           <div className="header-divider" />
-          <h1 className="editor-title">{template.name}</h1>
+          <h1 className="editor-title">{template.name} - {filmina.title}</h1>
         </div>
 
         <div className="header-right">
@@ -215,11 +269,12 @@ const FilminaEditor = () => {
           onAddShape={(type) => fabricObject.addShape(type)}
           onAddImage={() => fabricObject.addImage()}
           onAddLine={() => fabricObject.addLine()}
-          onOpenTableModal={() => setShowTableModal(true)}
-          onOpenTabalModal={() => setShowTabalModal(true)}
-          onOpenDonutModal={() => setShowDonutModal(true)}
-          onOpenUsoMediosModal={() => setShowUsoMediosModal(true)}
-          onSetBackground={(type) => fabricObject.setBackground(type)}
+          onOpenTableModal={() => setActiveModal('table')}
+          onOpenDonutModal={() => setActiveModal('donut')}
+          onOpenUsoMediosModal={() => setActiveModal('usoMedios')}
+          layers={layers}
+          selectedLayer={selectedObject}
+          onSelectLayer={handleSelectLayer}
         />
 
         {/* Canvas central */}
@@ -227,13 +282,6 @@ const FilminaEditor = () => {
           <div className="canvas-wrapper">
             <canvas ref={canvasRef} />
           </div>
-
-          {/* Panel de Capas */}
-          <LayersPanel
-            layers={layers}
-            selectedLayer={selectedObject}
-            onSelectLayer={handleSelectLayer}
-          />
         </main>
 
         {/* Panel derecho - Propiedades */}
@@ -247,50 +295,24 @@ const FilminaEditor = () => {
         />
       </div>
 
-      {/* Modales */}
-      <SimpleModal
-        isOpen={showTableModal}
-        onClose={() => setShowTableModal(false)}
-        title="Editor de Tablas"
-      >
-        <p>Funcionalidad de tabla próximamente...</p>
-        <button className="modal-button" onClick={() => setShowTableModal(false)}>
-          Cerrar
-        </button>
-      </SimpleModal>
+      {/* Modales Avanzados */}
+      <TableEditorModal
+        isOpen={activeModal === 'table'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
 
-      <SimpleModal
-        isOpen={showTabalModal}
-        onClose={() => setShowTabalModal(false)}
-        title="Editor Tabal"
-      >
-        <p>Funcionalidad de tabal próximamente...</p>
-        <button className="modal-button" onClick={() => setShowTabalModal(false)}>
-          Cerrar
-        </button>
-      </SimpleModal>
+      <DonutChartModal
+        isOpen={activeModal === 'donut'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
 
-      <SimpleModal
-        isOpen={showDonutModal}
-        onClose={() => setShowDonutModal(false)}
-        title="Gráfico Donut"
-      >
-        <p>Funcionalidad de gráfico donut próximamente...</p>
-        <button className="modal-button" onClick={() => setShowDonutModal(false)}>
-          Cerrar
-        </button>
-      </SimpleModal>
-
-      <SimpleModal
-        isOpen={showUsoMediosModal}
-        onClose={() => setShowUsoMediosModal(false)}
-        title="Uso de Medios"
-      >
-        <p>Funcionalidad de uso de medios próximamente...</p>
-        <button className="modal-button" onClick={() => setShowUsoMediosModal(false)}>
-          Cerrar
-        </button>
-      </SimpleModal>
+      <UsoMediosModal
+        isOpen={activeModal === 'usoMedios'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
     </div>
   );
 };

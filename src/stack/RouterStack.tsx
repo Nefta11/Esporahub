@@ -116,7 +116,7 @@ const RouterStack = () => {
                             <TemplateSelector />
                         </ProtectedRoute>
                     } />
-                    <Route path="/report-builder/editor/:templateId" element={
+                    <Route path="/report-builder/editor/:templateId/:filminaId" element={
                         <ProtectedRoute>
                             <FilminaEditor />
                         </ProtectedRoute>
