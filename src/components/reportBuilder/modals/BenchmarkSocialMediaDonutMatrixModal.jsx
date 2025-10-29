@@ -14,6 +14,7 @@ const DONUT_CATEGORIES = [
     { key: 'share_news', label: 'Share news', color: '#1B3B2B' },
 ];
 
+// Solo las redes sociales principales para las columnas de gráficos
 const SOCIAL_NETWORKS = [
     { key: 'facebook', label: 'Facebook', icon: 'https://cdn.simpleicons.org/facebook/1877F2' },
     { key: 'x', label: 'X', icon: 'https://cdn.simpleicons.org/x/000000' },
@@ -22,38 +23,45 @@ const SOCIAL_NETWORKS = [
     { key: 'youtube', label: 'YouTube', icon: 'https://cdn.simpleicons.org/youtube/FF0000' },
 ];
 
+// Para la leyenda y los íconos de arriba, incluir todas
+const SOCIAL_NETWORKS_FOR_LEGEND = [
+    ...SOCIAL_NETWORKS,
+    { key: 'efemerides', label: 'Efemérides', icon: 'https://cdn-icons-png.flaticon.com/512/1828/1828884.png' },
+    { key: 'share_news', label: 'Share news', icon: 'https://cdn-icons-png.flaticon.com/512/1828/1828961.png' },
+];
+
 const initialCharacters = [
     {
         name: 'Manuel Guerra',
         avatarUrl: 'https://placehold.co/100x100/EBF4FF/333333?text=MG',
         donutData: {
-            facebook: [31, 15, 20, 18, 12, 6, 0, 0],
-            x: [50, 0, 0, 0, 50, 0, 0, 0],
-            instagram: [31, 28, 17, 16, 5, 4, 0, 0],
-            tiktok: [71, 20, 2, 7, 0, 0, 0, 0],
-            youtube: [0, 0, 0, 0, 0, 0, 0, 0],
+            facebook: [31, 15, 20, 18, 12, 6, 5, 7],
+            x: [50, 0, 0, 0, 50, 0, 8, 5],
+            instagram: [31, 28, 17, 16, 5, 4, 6, 8],
+            tiktok: [71, 20, 2, 7, 0, 0, 9, 6],
+            youtube: [0, 0, 0, 0, 0, 0, 10, 10],
         },
     },
     {
         name: 'Manuel Guerra Flores',
         avatarUrl: 'https://placehold.co/100x100/FFEBEB/333333?text=MF',
         donutData: {
-            facebook: [17, 19, 22, 22, 4, 17, 0, 0],
-            x: [7, 22, 37, 19, 7, 7, 0, 0],
-            instagram: [17, 17, 12, 24, 16, 14, 0, 0],
-            tiktok: [50, 43, 0, 7, 0, 0, 0, 0],
-            youtube: [100, 0, 0, 0, 0, 0, 0, 0],
+            facebook: [17, 19, 22, 22, 4, 17, 7, 6],
+            x: [7, 22, 37, 19, 7, 7, 5, 7],
+            instagram: [17, 17, 12, 24, 16, 14, 8, 6],
+            tiktok: [50, 43, 0, 7, 0, 0, 7, 7],
+            youtube: [100, 0, 0, 0, 0, 0, 5, 5],
         },
     },
     {
         name: 'Waldo Fernández',
         avatarUrl: 'https://placehold.co/100x100/EBFFF5/333333?text=WF',
         donutData: {
-            facebook: [40, 8, 22, 3, 7, 10, 6, 5],
-            x: [58, 0, 12, 0, 23, 0, 8, 0],
-            instagram: [9, 16, 27, 17, 12, 2, 4, 13],
-            tiktok: [0, 50, 6, 0, 19, 0, 13, 13],
-            youtube: [0, 0, 13, 0, 50, 0, 19, 13],
+            facebook: [40, 8, 22, 3, 7, 10, 9, 8],
+            x: [58, 0, 12, 0, 23, 0, 7, 7],
+            instagram: [9, 16, 27, 17, 12, 2, 8, 9],
+            tiktok: [0, 50, 6, 0, 19, 0, 10, 10],
+            youtube: [0, 0, 13, 0, 50, 0, 12, 12],
         },
     },
 ];
@@ -138,14 +146,33 @@ const DonutChartCell = ({ data, colors, labels, size = 80 }) => {
     return <canvas ref={canvasRef} width={size} height={size} style={{ width: size, height: size }} />;
 };
 
+// Migrar personajes para asegurar que todos tengan donutData para todas las redes
+function migrateCharacters(characters) {
+    return characters.map(char => {
+        const newDonutData = { ...char.donutData };
+        SOCIAL_NETWORKS.forEach(net => {
+            if (!newDonutData[net.key] || !Array.isArray(newDonutData[net.key])) {
+                newDonutData[net.key] = Array(DONUT_CATEGORIES.length).fill(0);
+            } else if (newDonutData[net.key].length < DONUT_CATEGORIES.length) {
+                // Si la red existe pero tiene menos categorías, rellenar
+                newDonutData[net.key] = [
+                    ...newDonutData[net.key],
+                    ...Array(DONUT_CATEGORIES.length - newDonutData[net.key].length).fill(0)
+                ];
+            }
+        });
+        return { ...char, donutData: newDonutData };
+    });
+}
+
 const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
-    const [characters, setCharacters] = useState(initialCharacters);
+    const [characters, setCharacters] = useState(() => migrateCharacters(initialCharacters));
     const [newCharName, setNewCharName] = useState("");
     const [newCharAvatar, setNewCharAvatar] = useState("");
     const [socialIconImages, setSocialIconImages] = useState({});
     const previewRef = useRef(null);
 
-    // Cargar íconos de redes sociales como imágenes
+    // Cargar íconos de redes sociales como imágenes y migrar personajes si cambian las redes
     useEffect(() => {
         const loadImages = async () => {
             const imagePromises = SOCIAL_NETWORKS.map(network => {
@@ -170,6 +197,8 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
         };
 
         if (isOpen) {
+            // Migrar personajes para asegurar que todos tengan todas las redes
+            setCharacters(prev => migrateCharacters(prev));
             loadImages();
         }
     }, [isOpen]);
@@ -229,12 +258,12 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
         // Crear un canvas temporal con dimensiones correctas
         const scale = 2.5; // Mayor escala para mejor calidad
         const tempCanvas = document.createElement('canvas');
-        const padding = 15;
-        const legendHeight = 35;
-        const headerHeight = 50;
-        const rowHeight = 95;
-        const colWidth = 95;
-        const nameColWidth = 110;
+        const padding = 30;
+        const legendHeight = 38;
+        const headerHeight = 70;
+        const rowHeight = 110;
+        const colWidth = 110;
+        const nameColWidth = 140;
 
         const totalWidth = (nameColWidth + (SOCIAL_NETWORKS.length * colWidth) + (padding * 2)) * scale;
         const totalHeight = (legendHeight + headerHeight + (characters.length * rowHeight) + (padding * 2)) * scale;
@@ -268,7 +297,7 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
         currentY += legendHeight;
 
         // Dibujar íconos de redes sociales
-        const iconSize = 34;
+        const iconSize = 40;
         await Promise.all(SOCIAL_NETWORKS.map(async (net, idx) => {
             const x = nameColWidth + (idx * colWidth) + (colWidth - iconSize) / 2 + padding;
             const y = currentY + (headerHeight - iconSize) / 2;
@@ -581,10 +610,10 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
                             ))}
                         </div>
 
-                        {/* Header con íconos de redes sociales */}
+                        {/* Header con íconos de redes sociales y leyenda extendida */}
                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: 24 }}>
                             <div style={{ width: 100 }}></div>
-                            {SOCIAL_NETWORKS.map(net => (
+                            {SOCIAL_NETWORKS_FOR_LEGEND.map(net => (
                                 <div key={net.key} style={{
                                     width: 90,
                                     textAlign: 'center',
