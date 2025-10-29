@@ -19,6 +19,8 @@ import WorkHubPage from '@/pages/worhub/WorkHubPage';
 import EsporaReportBuilderPage from '@/pages/esporaReportBuilder/EsporaReportBuilderPage';
 import ReportConfigurationPage from '@/pages/esporaReportBuilder/ReportConfigurationPage';
 import FormularioPage from '@/pages/esporaReportBuilder/FormularioPage';
+import TemplateSelector from '@/components/reportBuilder/TemplateSelector';
+import FilminaEditor from '@/components/reportBuilder/FilminaEditor';
 
 const RouterStack = () => {
     const location = useLocation();
@@ -111,7 +113,12 @@ const RouterStack = () => {
                     } />
                     <Route path="/espora-report-builder" element={
                         <ProtectedRoute>
-                            <EsporaReportBuilderPage />
+                            <TemplateSelector />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/report-builder/editor/:templateId/:filminaId" element={
+                        <ProtectedRoute>
+                            <FilminaEditor />
                         </ProtectedRoute>
                     } />
                     <Route path="/seleccionar-tipo-contenido" element={
