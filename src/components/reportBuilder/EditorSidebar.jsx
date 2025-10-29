@@ -13,6 +13,7 @@ const EditorSidebar = ({
   onOpenDemographicsModal,
   onOpenSocialMediaUsageModal,
   onOpenBenchmarkSocialMediaModal,
+  onOpenBenchmarkSocialMediaDonutMatrixModal,
   onOpenBenchmarkSocialMediaExternasModal,
   onOpenInfluencersModal,
   layers,
@@ -98,6 +99,15 @@ const EditorSidebar = ({
             <span>Apilado</span>
           </button>
 
+          {/* Mostrar botón de Benchmark RRSSS Mensaje por Contenido solo en la filmina específica */}
+          {currentFilmina &&
+            (currentFilmina.title === "RRSS Propias: Benchmark's de mensaje por contenido posteado" ||
+             currentFilmina.title === 'RRSSS Propias. Benchmark de mensaje por contenido posteado') && (
+              <button className="tool-card" onClick={onOpenBenchmarkSocialMediaDonutMatrixModal} title="RRSS Propias: Benchmark's de mensaje por contenido posteado">
+                <Share2 size={24} />
+                <span>RRSSS Mensaje</span>
+              </button>
+          )}
           {/* Mostrar botón de Demografía solo en la filmina específica */}
           {currentFilmina && currentFilmina.title === 'Demografía General y Digital' && (
             <button className="tool-card" onClick={onOpenDemographicsModal} title="Demografía General y Digital">

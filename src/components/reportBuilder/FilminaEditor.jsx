@@ -19,6 +19,7 @@ import SocialMediaUsageModal from './modals/SocialMediaUsageModal';
 import InfluencersTableModal from './modals/InfluencersTableModal';
 import BenchmarkSocialMediaModal from './modals/BenchmarkSocialMediaModal';
 import BenchmarkSocialMediaExternasModal from './modals/BenchmarkSocialMediaExternasModal';
+import BenchmarkSocialMediaDonutMatrixModal from './modals/BenchmarkSocialMediaDonutMatrixModal';
 import ShapePickerModal from './modals/ShapePickerModal';
 import '@/styles/reportBuilder/FilminaEditor.css';
 import '@/styles/reportBuilder/EditorComponents.css';
@@ -266,7 +267,7 @@ const FilminaEditor = () => {
   }
 
   return (
-    <div className={`filmina-editor-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
+  <div className={`filmina-editor-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       <PageHeader
         title={`${template.name} - ${filmina.title}`}
         subtitle="Editor de filminas"
@@ -294,6 +295,7 @@ const FilminaEditor = () => {
       {/* Main Content - 3 columnas */}
       <div className="editor-content">
         {/* Sidebar izquierdo - Herramientas */}
+
         <EditorSidebar
           onAddText={() => fabricObject.addText()}
           onAddShape={() => setActiveModal('shape')}
@@ -307,6 +309,7 @@ const FilminaEditor = () => {
           onOpenSocialMediaUsageModal={() => setActiveModal('socialMediaUsage')}
           onOpenBenchmarkSocialMediaModal={() => setActiveModal('benchmarkSocialMedia')}
           onOpenBenchmarkSocialMediaExternasModal={() => setActiveModal('benchmarkSocialMediaExternas')}
+          onOpenBenchmarkSocialMediaDonutMatrixModal={() => setActiveModal('benchmarkSocialMediaDonutMatrix')}
           onOpenInfluencersModal={() => setActiveModal('influencers')}
           layers={layers}
           selectedLayer={selectedObject}
@@ -314,6 +317,13 @@ const FilminaEditor = () => {
           currentFilmina={filmina}
         />
 
+
+      {/* Modales Avanzados */}
+      <BenchmarkSocialMediaDonutMatrixModal
+        isOpen={activeModal === 'benchmarkSocialMediaDonutMatrix'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
       <BenchmarkSocialMediaModal
         isOpen={activeModal === 'benchmarkSocialMedia'}
         onClose={() => setActiveModal(null)}
