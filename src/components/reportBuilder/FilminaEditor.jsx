@@ -1,16 +1,19 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Download } from 'lucide-react';
-import html2pdf from 'html2pdf.js';
+import { Download } from 'lucide-react';
+import { jsPDF } from 'jspdf';
 import { Image as FabricImage } from 'fabric';
 import { getTemplateById, getFilminaById } from '@/config/templates';
 import { useCanvas } from './hooks/useCanvas';
 import { useFabricObject } from './hooks/useFabricObject';
+import PageHeader from '@/components/layout/PageHeader';
+import PageFooter from '@/components/layout/PageFooter';
 import EditorSidebar from './EditorSidebar';
 import PropertiesPanel from './PropertiesPanel';
 import TableEditorModal from './modals/TableEditorModal';
 import DonutChartModal from './modals/DonutChartModal';
 import UsoMediosModal from './modals/UsoMediosModal';
+import ShapePickerModal from './modals/ShapePickerModal';
 import '@/styles/reportBuilder/FilminaEditor.css';
 import '@/styles/reportBuilder/EditorComponents.css';
 
@@ -23,10 +26,28 @@ const FilminaEditor = () => {
   const [selectedObject, setSelectedObject] = useState(null);
   const [layers, setLayers] = useState([]);
   const [activeModal, setActiveModal] = useState(null);
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() =>
+    document.body.classList.contains('dark-theme')
+  );
 
   const { canvasRef, initCanvas, getCanvas, disposeCanvas } = useCanvas();
   const canvas = getCanvas();
   const fabricObject = useFabricObject(canvas);
+
+  // Listen for theme changes
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.body.classList.contains('dark-theme'));
+    });
+
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   // Cargar plantilla y filmina
   useEffect(() => {
@@ -173,38 +194,30 @@ const FilminaEditor = () => {
       canvas.discardActiveObject();
       canvas.renderAll();
 
-      // Obtener imagen del canvas
+      // Obtener imagen del canvas en alta calidad
       const dataURL = canvas.toDataURL({
         format: 'png',
         quality: 1,
         multiplier: 2
       });
 
-      // Crear contenedor temporal
-      const tempDiv = document.createElement('div');
-      tempDiv.style.cssText = 'position:absolute;left:-9999px;width:960px;height:540px';
-      document.body.appendChild(tempDiv);
+      // Dimensiones del canvas: 960x540 px
+      // Convertir a mm para PDF (usando escala 1px = 0.264583mm)
+      const widthMM = 254; // 960px * 0.264583 ≈ 254mm (10 inches)
+      const heightMM = 143; // 540px * 0.264583 ≈ 143mm (5.6 inches)
 
-      const img = document.createElement('img');
-      img.src = dataURL;
-      img.style.width = '100%';
-      img.style.height = '100%';
-      tempDiv.appendChild(img);
+      // Crear PDF con jsPDF
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: [widthMM, heightMM]
+      });
 
-      // Configuración de html2pdf
-      const opt = {
-        margin: 0,
-        filename: `espora-filmina-${Date.now()}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: [254, 143], orientation: 'landscape' }
-      };
+      // Agregar la imagen al PDF (ocupa toda la página)
+      pdf.addImage(dataURL, 'PNG', 0, 0, widthMM, heightMM);
 
-      // Generar PDF
-      await html2pdf().set(opt).from(tempDiv).save();
-
-      // Limpiar
-      document.body.removeChild(tempDiv);
+      // Guardar el PDF
+      pdf.save(`espora-filmina-${Date.now()}.pdf`);
     } catch (error) {
       console.error('Error al exportar PDF:', error);
       alert('Error al exportar el PDF. Por favor intenta nuevamente.');
@@ -215,6 +228,16 @@ const FilminaEditor = () => {
 
   const handleBack = () => {
     navigate('/espora-report-builder');
+  };
+
+  const handleThemeToggle = () => {
+    if (isDarkMode) {
+      document.body.classList.remove('dark-theme');
+      document.body.classList.add('light-theme');
+    } else {
+      document.body.classList.remove('light-theme');
+      document.body.classList.add('dark-theme');
+    }
   };
 
   const handleSelectLayer = (layer) => {
@@ -237,36 +260,37 @@ const FilminaEditor = () => {
   }
 
   return (
-    <div className="filmina-editor-page">
-      {/* Header */}
-      <header className="editor-header">
-        <div className="header-left">
-          <button className="back-button" onClick={handleBack}>
-            <ArrowLeft size={20} />
-            <span>Volver</span>
-          </button>
-          <div className="header-divider" />
-          <h1 className="editor-title">{template.name} - {filmina.title}</h1>
-        </div>
+    <div className={`filmina-editor-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
+      <PageHeader
+        title={`${template.name} - ${filmina.title}`}
+        subtitle="Editor de filminas"
+        backButtonText="Plantillas"
+        backButtonPath="/espora-report-builder"
+        isDarkMode={isDarkMode}
+        onThemeToggle={handleThemeToggle}
+        showUserAvatar={true}
+        userAvatarSize="md"
+        showUserName={true}
+      />
 
-        <div className="header-right">
-          <button
-            className="export-button"
-            onClick={handleExportPDF}
-            disabled={isExporting}
-          >
-            <Download size={20} />
-            <span>{isExporting ? 'Exportando...' : 'Exportar PDF'}</span>
-          </button>
-        </div>
-      </header>
+      {/* Export Button Bar */}
+      <div className="editor-toolbar">
+        <button
+          className="export-button"
+          onClick={handleExportPDF}
+          disabled={isExporting}
+        >
+          <Download size={20} />
+          <span>{isExporting ? 'Exportando...' : 'Exportar PDF'}</span>
+        </button>
+      </div>
 
       {/* Main Content - 3 columnas */}
       <div className="editor-content">
         {/* Sidebar izquierdo - Herramientas */}
         <EditorSidebar
           onAddText={() => fabricObject.addText()}
-          onAddShape={(type) => fabricObject.addShape(type)}
+          onAddShape={() => setActiveModal('shape')}
           onAddImage={() => fabricObject.addImage()}
           onAddLine={() => fabricObject.addLine()}
           onOpenTableModal={() => setActiveModal('table')}
@@ -312,6 +336,18 @@ const FilminaEditor = () => {
         isOpen={activeModal === 'usoMedios'}
         onClose={() => setActiveModal(null)}
         canvas={canvas}
+      />
+
+      <ShapePickerModal
+        isOpen={activeModal === 'shape'}
+        onClose={() => setActiveModal(null)}
+        onSelectShape={(type, options) => fabricObject.addShape(type, options)}
+      />
+
+      <PageFooter
+        showLogoutDialog={showLogoutDialog}
+        onLogoutClick={() => setShowLogoutDialog(true)}
+        onLogoutDialogClose={() => setShowLogoutDialog(false)}
       />
     </div>
   );

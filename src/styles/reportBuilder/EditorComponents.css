@@ -187,6 +187,11 @@
   outline: none;
 }
 
+.dark-theme .property-select option {
+  background: #2c2c2e;
+  color: #ffffff;
+}
+
 .light-theme .property-input,
 .light-theme .property-select,
 .light-theme .property-textarea {
@@ -201,6 +206,11 @@
   background: rgba(0, 0, 0, 0.05);
   border-color: rgba(0, 122, 255, 0.5);
   outline: none;
+}
+
+.light-theme .property-select option {
+  background: #ffffff;
+  color: #000000;
 }
 
 .property-color-row,
@@ -1186,6 +1196,116 @@
 }
 
 /* ============================================
+   SHAPE PICKER MODAL
+   ============================================ */
+
+.shape-color-section {
+  margin-bottom: 24px;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid;
+}
+
+.dark-theme .shape-color-section {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.light-theme .shape-color-section {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.shape-color-section label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
+
+.shape-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.shape-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px 12px;
+  border-radius: 12px;
+  border: 1px solid;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: transparent;
+}
+
+.dark-theme .shape-card {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.dark-theme .shape-card:hover {
+  background: rgba(0, 122, 255, 0.15);
+  border-color: rgba(0, 122, 255, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 122, 255, 0.2);
+}
+
+.light-theme .shape-card {
+  border-color: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.light-theme .shape-card:hover {
+  background: rgba(0, 122, 255, 0.08);
+  border-color: rgba(0, 122, 255, 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 122, 255, 0.15);
+}
+
+.shape-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  transition: transform 0.3s ease;
+}
+
+.shape-card:hover .shape-icon {
+  transform: scale(1.1);
+}
+
+.shape-name {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+}
+
+.dark-theme .shape-name {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.light-theme .shape-name {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.shape-description {
+  font-size: 11px;
+  margin: 0;
+  text-align: center;
+  opacity: 0.6;
+  line-height: 1.3;
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 
@@ -1226,5 +1346,19 @@
 
   .segment-item {
     flex-wrap: wrap;
+  }
+
+  .shape-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .shape-card {
+    padding: 16px 10px;
+  }
+
+  .shape-icon {
+    width: 48px;
+    height: 48px;
   }
 }

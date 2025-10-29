@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { IText, Rect, Circle, Line, Gradient, Image as FabricImage } from 'fabric';
+import { IText, Rect, Circle, Line, Gradient, Image as FabricImage, Polygon } from 'fabric';
 
 export const useFabricObject = (canvas) => {
 
@@ -25,24 +25,96 @@ export const useFabricObject = (canvas) => {
     if (!canvas) return;
 
     let shape;
+    const defaultFill = options.fill || '#1967D2';
 
-    if (type === 'rect') {
-      shape = new Rect({
-        left: 100,
-        top: 100,
-        width: 100,
-        height: 100,
-        fill: '#1967D2',
-        ...options
-      });
-    } else if (type === 'circle') {
-      shape = new Circle({
-        left: 100,
-        top: 100,
-        radius: 50,
-        fill: '#1967D2',
-        ...options
-      });
+    switch (type) {
+      case 'rect':
+        shape = new Rect({
+          left: 100,
+          top: 100,
+          width: 100,
+          height: 100,
+          fill: defaultFill,
+          ...options
+        });
+        break;
+
+      case 'circle':
+        shape = new Circle({
+          left: 100,
+          top: 100,
+          radius: 50,
+          fill: defaultFill,
+          ...options
+        });
+        break;
+
+      case 'triangle':
+        // Triángulo equilátero usando Polygon
+        shape = new Polygon(
+          [
+            { x: 50, y: 0 },    // Punta superior
+            { x: 0, y: 86.6 },  // Esquina inferior izquierda
+            { x: 100, y: 86.6 } // Esquina inferior derecha
+          ],
+          {
+            left: 100,
+            top: 100,
+            fill: defaultFill,
+            ...options
+          }
+        );
+        break;
+
+      case 'polygon':
+        // Hexágono regular
+        const hexRadius = 50;
+        const hexPoints = [];
+        for (let i = 0; i < 6; i++) {
+          const angle = (Math.PI / 3) * i;
+          hexPoints.push({
+            x: hexRadius + hexRadius * Math.cos(angle),
+            y: hexRadius + hexRadius * Math.sin(angle)
+          });
+        }
+        shape = new Polygon(hexPoints, {
+          left: 100,
+          top: 100,
+          fill: defaultFill,
+          ...options
+        });
+        break;
+
+      case 'star':
+        // Estrella de 5 puntas
+        const starPoints = [];
+        const outerRadius = 50;
+        const innerRadius = 20;
+        for (let i = 0; i < 10; i++) {
+          const radius = i % 2 === 0 ? outerRadius : innerRadius;
+          const angle = (Math.PI / 5) * i - Math.PI / 2;
+          starPoints.push({
+            x: 50 + radius * Math.cos(angle),
+            y: 50 + radius * Math.sin(angle)
+          });
+        }
+        shape = new Polygon(starPoints, {
+          left: 100,
+          top: 100,
+          fill: defaultFill,
+          ...options
+        });
+        break;
+
+      default:
+        shape = new Rect({
+          left: 100,
+          top: 100,
+          width: 100,
+          height: 100,
+          fill: defaultFill,
+          ...options
+        });
     }
 
     if (shape) {
@@ -82,13 +154,17 @@ export const useFabricObject = (canvas) => {
 
       const reader = new FileReader();
       reader.onload = (event) => {
-        FabricImage.fromURL(event.target.result, (img) => {
-          img.scaleToWidth(200);
-          img.set({ left: 100, top: 100 });
-          canvas.add(img);
-          canvas.setActiveObject(img);
+        // Crear elemento IMG directamente
+        const imgElement = new Image();
+        imgElement.onload = () => {
+          const fabricImg = new FabricImage(imgElement);
+          fabricImg.scaleToWidth(200);
+          fabricImg.set({ left: 100, top: 100 });
+          canvas.add(fabricImg);
+          canvas.setActiveObject(fabricImg);
           canvas.renderAll();
-        });
+        };
+        imgElement.src = event.target.result;
       };
       reader.readAsDataURL(file);
     };

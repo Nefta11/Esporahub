@@ -16,8 +16,6 @@ const DonutChartModal = ({ isOpen, onClose, canvas }) => {
   const previewCanvasRef = useRef(null);
   const chartInstanceRef = useRef(null);
 
-  if (!isOpen) return null;
-
   useEffect(() => {
     if (isOpen && previewCanvasRef.current) {
       updatePreview();
@@ -139,20 +137,23 @@ const DonutChartModal = ({ isOpen, onClose, canvas }) => {
     setTimeout(() => {
       const dataURL = tempCanvas.toDataURL('image/png');
 
-      FabricImage.fromURL(dataURL, (img) => {
-        img.set({
+      // Crear elemento IMG directamente
+      const imgElement = new Image();
+      imgElement.onload = () => {
+        const fabricImg = new FabricImage(imgElement, {
           left: 100,
           top: 100,
           scaleX: 0.7,
           scaleY: 0.7
         });
-        canvas.add(img);
-        canvas.setActiveObject(img);
+        canvas.add(fabricImg);
+        canvas.setActiveObject(fabricImg);
         canvas.renderAll();
-      });
 
-      finalChart.destroy();
-      handleClose();
+        finalChart.destroy();
+        handleClose();
+      };
+      imgElement.src = dataURL;
     }, 500);
   };
 
@@ -169,6 +170,8 @@ const DonutChartModal = ({ isOpen, onClose, canvas }) => {
     ]);
     onClose();
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="modal-overlay" onClick={handleClose}>

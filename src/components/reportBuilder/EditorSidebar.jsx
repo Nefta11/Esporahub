@@ -50,9 +50,9 @@ const EditorSidebar = ({
             <span>Texto</span>
           </button>
 
-          <button className="tool-card" onClick={() => onAddShape('rect')} title="Agregar Forma">
+          <button className="tool-card" onClick={onAddShape} title="Agregar Forma">
             <Square size={24} />
-            <span>Forma</span>
+            <span>Formas</span>
           </button>
 
           <button className="tool-card" onClick={onAddImage} title="Agregar Imagen">
