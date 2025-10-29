@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Plus, Trash2 } from 'lucide-react';
-// La siguiente línea se elimina porque "fabric" no se puede resolver como un módulo
-// import { Image as FabricImage } from 'fabric';
+import { Image as FabricImage } from 'fabric';
 
 // Constantes de redes sociales
 const SOCIAL_NETWORKS = [
@@ -301,13 +300,6 @@ const BenchmarkSocialMediaModal = ({ isOpen, onClose, canvas }) => {
         const dataURL = tempCanvas.toDataURL('image/png');
         const imgElement = new window.Image();
         imgElement.onload = () => {
-            const FabricImage = window.fabric ? window.fabric.Image : null;
-            if (!FabricImage) {
-                alert("No se encontró Fabric.js. Asegúrate de que la librería esté cargada.");
-                onClose();
-                return;
-            }
-            // Igual que SocialMediaUsageModal: escala amigable y solo activar
             const fabricImg = new FabricImage(imgElement, {
                 left: 50,
                 top: 50,
