@@ -13,9 +13,12 @@ const PropertiesPanel = ({
 
   useEffect(() => {
     if (selectedObject) {
+      const isLine = selectedObject.type === 'line';
       setProperties({
         text: selectedObject.text || '',
         fill: selectedObject.fill || '#000000',
+        stroke: selectedObject.stroke || '#000000',
+        strokeWidth: selectedObject.strokeWidth || 2,
         opacity: selectedObject.opacity || 1,
         left: Math.round(selectedObject.left) || 0,
         top: Math.round(selectedObject.top) || 0,
@@ -46,6 +49,7 @@ const PropertiesPanel = ({
   }
 
   const isText = selectedObject.type === 'i-text' || selectedObject.type === 'text';
+  const isLine = selectedObject.type === 'line';
 
   return (
     <aside className="editor-sidebar-right">
@@ -67,22 +71,37 @@ const PropertiesPanel = ({
 
         {/* Color */}
         <div className="property-group">
-          <label className="property-label">Color</label>
+          <label className="property-label">{isLine ? 'Color de línea' : 'Color'}</label>
           <div className="property-color-row">
             <input
               type="color"
               className="property-input-color"
-              value={properties.fill}
-              onChange={(e) => handleChange('fill', e.target.value)}
+              value={isLine ? properties.stroke : properties.fill}
+              onChange={(e) => handleChange(isLine ? 'stroke' : 'fill', e.target.value)}
             />
             <input
               type="text"
               className="property-input-text"
-              value={properties.fill}
-              onChange={(e) => handleChange('fill', e.target.value)}
+              value={isLine ? properties.stroke : properties.fill}
+              onChange={(e) => handleChange(isLine ? 'stroke' : 'fill', e.target.value)}
             />
           </div>
         </div>
+
+        {/* Grosor de línea (solo para líneas) */}
+        {isLine && (
+          <div className="property-group">
+            <label className="property-label">Grosor de línea</label>
+            <input
+              type="number"
+              className="property-input"
+              value={properties.strokeWidth}
+              onChange={(e) => handleChange('strokeWidth', parseFloat(e.target.value))}
+              min="1"
+              max="50"
+            />
+          </div>
+        )}
 
         {/* Opacidad */}
         <div className="property-group">
