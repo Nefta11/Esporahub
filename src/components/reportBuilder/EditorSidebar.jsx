@@ -13,6 +13,7 @@ const EditorSidebar = ({
   onOpenDemographicsModal,
   onOpenSocialMediaUsageModal,
   onOpenBenchmarkSocialMediaModal,
+  onOpenBenchmarkSocialMediaExternasModal,
   onOpenInfluencersModal,
   layers,
   selectedLayer,
@@ -113,11 +114,20 @@ const EditorSidebar = ({
             </button>
           )}
 
-          {/* Mostrar botón de Benchmark RRSSS solo en la filmina específica */}
+
+          {/* Mostrar botón de Benchmark RRSSS Propias solo en la filmina específica */}
           {currentFilmina && currentFilmina.title === 'RRSS Propias: Benchmark Cuantitativo' && (
             <button className="tool-card" onClick={onOpenBenchmarkSocialMediaModal} title="RRSS Propias: Benchmark Cuantitativo">
               <Share2 size={24} />
               <span>RRSSS Benchmark</span>
+            </button>
+          )}
+
+          {/* Mostrar botón de Benchmark RRSSS Externas solo en la filmina específica */}
+          {currentFilmina && currentFilmina.title === 'RRSS Externas: Benchmark Cuantitativo' && (
+            <button className="tool-card" onClick={onOpenBenchmarkSocialMediaExternasModal} title="RRSS Externas: Benchmark Cuantitativo">
+              <Share2 size={24} />
+              <span>RRSSS Externas</span>
             </button>
           )}
 

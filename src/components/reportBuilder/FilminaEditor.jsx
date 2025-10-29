@@ -18,6 +18,7 @@ import DemographicsTableModal from './modals/DemographicsTableModal';
 import SocialMediaUsageModal from './modals/SocialMediaUsageModal';
 import InfluencersTableModal from './modals/InfluencersTableModal';
 import BenchmarkSocialMediaModal from './modals/BenchmarkSocialMediaModal';
+import BenchmarkSocialMediaExternasModal from './modals/BenchmarkSocialMediaExternasModal';
 import ShapePickerModal from './modals/ShapePickerModal';
 import '@/styles/reportBuilder/FilminaEditor.css';
 import '@/styles/reportBuilder/EditorComponents.css';
@@ -305,14 +306,21 @@ const FilminaEditor = () => {
           onOpenDemographicsModal={() => setActiveModal('demographics')}
           onOpenSocialMediaUsageModal={() => setActiveModal('socialMediaUsage')}
           onOpenBenchmarkSocialMediaModal={() => setActiveModal('benchmarkSocialMedia')}
+          onOpenBenchmarkSocialMediaExternasModal={() => setActiveModal('benchmarkSocialMediaExternas')}
           onOpenInfluencersModal={() => setActiveModal('influencers')}
           layers={layers}
           selectedLayer={selectedObject}
           onSelectLayer={handleSelectLayer}
           currentFilmina={filmina}
         />
+
       <BenchmarkSocialMediaModal
         isOpen={activeModal === 'benchmarkSocialMedia'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
+      <BenchmarkSocialMediaExternasModal
+        isOpen={activeModal === 'benchmarkSocialMediaExternas'}
         onClose={() => setActiveModal(null)}
         canvas={canvas}
       />
