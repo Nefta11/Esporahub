@@ -58,7 +58,7 @@ const initialCharacters = [
     },
 ];
 
-const DonutChartCell = ({ data, colors, labels, size = 140 }) => {
+const DonutChartCell = ({ data, colors, labels, size = 80 }) => {
     const canvasRef = useRef(null);
 
     useEffect(() => {
@@ -71,14 +71,14 @@ const DonutChartCell = ({ data, colors, labels, size = 140 }) => {
 
         const centerX = size / 2;
         const centerY = size / 2;
-        const radius = size * 0.28;
-        const innerRadius = radius * 0.55;
+        const radius = size * 0.32;
+        const innerRadius = radius * 0.58;
 
         // Calcular total y filtrar valores no-cero
         const total = data.reduce((sum, val) => sum + val, 0);
         if (total === 0) {
             // Dibujar círculo gris si no hay datos
-            ctx.fillStyle = '#d0d0d0';
+            ctx.fillStyle = '#b0b0b0';
             ctx.beginPath();
             ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
             ctx.fill();
@@ -86,17 +86,19 @@ const DonutChartCell = ({ data, colors, labels, size = 140 }) => {
             ctx.beginPath();
             ctx.arc(centerX, centerY, innerRadius, 0, 2 * Math.PI);
             ctx.fill();
-            ctx.fillStyle = '#888';
-            ctx.font = '11px Arial';
+            ctx.fillStyle = '#6b7280';
+            ctx.font = 'bold 7px Arial';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('Sin', centerX, centerY - 6);
-            ctx.fillText('contenido', centerX, centerY + 6);
+            ctx.fillText('Sin', centerX, centerY - 4);
+            ctx.fillText('Publicaciones', centerX, centerY + 4);
             return;
         }
 
         let currentAngle = -Math.PI / 2; // Empezar arriba
+        const labelPositions = [];
 
+        // Primera pasada: dibujar segmentos y calcular posiciones
         data.forEach((value, index) => {
             if (value <= 0) return;
 
@@ -113,18 +115,22 @@ const DonutChartCell = ({ data, colors, labels, size = 140 }) => {
 
             // Calcular posición del porcentaje
             const middleAngle = currentAngle + sliceAngle / 2;
-            const labelRadius = radius + 22;
+            const labelRadius = radius + 13;
             const labelX = centerX + Math.cos(middleAngle) * labelRadius;
             const labelY = centerY + Math.sin(middleAngle) * labelRadius;
 
-            // Dibujar porcentaje
-            ctx.fillStyle = '#333';
-            ctx.font = 'bold 12px Arial';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(`${value}%`, labelX, labelY);
+            labelPositions.push({ value, x: labelX, y: labelY });
 
             currentAngle = endAngle;
+        });
+
+        // Segunda pasada: dibujar porcentajes
+        labelPositions.forEach(({ value, x, y }) => {
+            ctx.fillStyle = '#1f2937';
+            ctx.font = 'bold 9px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`${value}%`, x, y);
         });
 
     }, [data, colors, labels, size]);
@@ -136,56 +142,37 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
     const [characters, setCharacters] = useState(initialCharacters);
     const [newCharName, setNewCharName] = useState("");
     const [newCharAvatar, setNewCharAvatar] = useState("");
-    const [loadedSocialIcons, setLoadedSocialIcons] = useState({});
-    const [loadedAvatars, setLoadedAvatars] = useState({});
+    const [socialIconImages, setSocialIconImages] = useState({});
     const previewRef = useRef(null);
 
-    // Cargar íconos de redes sociales
+    // Cargar íconos de redes sociales como imágenes
     useEffect(() => {
-        const loadIcons = async () => {
-            const iconPromises = SOCIAL_NETWORKS.map(network =>
-                new Promise(resolve => {
+        const loadImages = async () => {
+            const imagePromises = SOCIAL_NETWORKS.map(network => {
+                return new Promise((resolve) => {
                     const img = new window.Image();
                     img.crossOrigin = 'anonymous';
                     img.onload = () => resolve({ key: network.key, img });
-                    img.onerror = () => resolve({ key: network.key, img: null });
+                    img.onerror = () => {
+                        console.error(`Failed to load ${network.label} icon`);
+                        resolve({ key: network.key, img: null });
+                    };
                     img.src = network.icon;
-                })
-            );
-            const results = await Promise.all(iconPromises);
-            const iconsMap = results.reduce((acc, { key, img }) => {
-                if (img) acc[key] = img;
-                return acc;
-            }, {});
-            setLoadedSocialIcons(iconsMap);
+                });
+            });
+            
+            const results = await Promise.all(imagePromises);
+            const imagesMap = {};
+            results.forEach(({ key, img }) => {
+                if (img) imagesMap[key] = img;
+            });
+            setSocialIconImages(imagesMap);
         };
-        loadIcons();
-    }, []);
-
-    // Cargar avatares
-    useEffect(() => {
-        const loadAvatars = async () => {
-            const avatarPromises = characters
-                .map(char => char.avatarUrl)
-                .filter(Boolean)
-                .map(url =>
-                    new Promise(resolve => {
-                        const img = new window.Image();
-                        img.crossOrigin = 'anonymous';
-                        img.onload = () => resolve({ url, img });
-                        img.onerror = () => resolve({ url, img: null });
-                        img.src = url;
-                    })
-                );
-            const results = await Promise.all(avatarPromises);
-            const avatarsMap = results.reduce((acc, { url, img }) => {
-                if (img) acc[url] = img;
-                return acc;
-            }, {});
-            setLoadedAvatars(prev => ({ ...prev, ...avatarsMap }));
-        };
-        if (characters.length > 0) loadAvatars();
-    }, [characters]);
+        
+        if (isOpen) {
+            loadImages();
+        }
+    }, [isOpen]);
 
     // Actualizar valor de segmento
     const updateDonutValue = (charIdx, netKey, catIdx, value) => {
@@ -239,17 +226,45 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
     const insertMatrixToCanvas = async () => {
         if (!canvas) return;
         const node = previewRef.current;
+        
+        // Precargar todos los íconos de redes sociales como data URLs
+        const images = node.querySelectorAll('img');
+        const loadPromises = Array.from(images).map(img => {
+            return new Promise((resolve) => {
+                if (img.complete) {
+                    resolve();
+                } else {
+                    img.onload = () => resolve();
+                    img.onerror = () => resolve();
+                }
+            });
+        });
+        
+        await Promise.all(loadPromises);
+        
+        // Esperar un poco más para asegurar que todo esté renderizado
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
         // Renderizar la vista previa a imagen usando html2canvas
         const html2canvas = (await import('html2canvas')).default;
-        const imgCanvas = await html2canvas(node, { backgroundColor: '#ffffff', scale: 1.5 });
+        const imgCanvas = await html2canvas(node, { 
+            backgroundColor: '#ffffff', 
+            scale: 2.5,
+            useCORS: true,
+            allowTaint: true,
+            logging: false,
+            imageTimeout: 0,
+            removeContainer: true
+        });
+        
         const dataURL = imgCanvas.toDataURL('image/png');
         const imgElement = new window.Image();
         imgElement.onload = () => {
             const fabricImg = new FabricImage(imgElement, {
                 left: 50,
                 top: 50,
-                scaleX: 0.4,
-                scaleY: 0.4
+                scaleX: 0.3,
+                scaleY: 0.3
             });
             canvas.add(fabricImg);
             canvas.setActiveObject(fabricImg);
@@ -260,6 +275,7 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
     };
 
     if (!isOpen) return null;
+    
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal-content modal-large" onClick={e => e.stopPropagation()} style={{ maxWidth: '1400px', maxHeight: '95vh', overflowY: 'auto' }}>
@@ -289,116 +305,72 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
                         </button>
                     </div>
 
-                    {/* Matriz de donas CON leyenda incluida */}
-                    <div ref={previewRef} style={{ background: '#fff', padding: 12, display: 'inline-block' }}>
-                        {/* Leyenda de categorías */}
-                        <div style={{ display: 'flex', gap: 14, marginBottom: 12, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center' }}>
-                            {DONUT_CATEGORIES.map(cat => (
-                                <div key={cat.key} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                    <span style={{ width: 14, height: 14, borderRadius: 3, background: cat.color, display: 'inline-block' }}></span>
-                                    <span style={{ fontSize: 11, fontWeight: 500 }}>{cat.label}</span>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Header con íconos de redes sociales */}
-                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 12, paddingBottom: 8 }}>
-                            <div style={{ width: 180 }}></div>
-                            {SOCIAL_NETWORKS.map(net => (
-                                <div key={net.key} style={{ width: 130, textAlign: 'center' }}>
-                                    <img src={net.icon} alt={net.label} style={{ width: 40, height: 40 }} crossOrigin="anonymous" />
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Filas de personajes */}
+                    {/* Vista de edición con controles */}
+                    <div style={{ marginBottom: 20 }}>
                         {characters.map((char, charIdx) => (
-                            <div key={charIdx} style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
-                                {/* Columna de personaje */}
-                                <div style={{ width: 180, display: 'flex', alignItems: 'center', gap: 10, paddingRight: 15 }}>
-                                    <div style={{ position: 'relative', flexShrink: 0 }}>
-                                        <img
-                                            src={char.avatarUrl}
-                                            alt={char.name}
-                                            crossOrigin="anonymous"
-                                            style={{
-                                                width: 60,
-                                                height: 60,
-                                                borderRadius: '50%',
-                                                objectFit: 'cover',
-                                                border: '4px solid #b13b2e',
-                                                background: '#fff'
-                                            }}
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => removeCharacter(charIdx)}
-                                            style={{
-                                                position: 'absolute',
-                                                bottom: -2,
-                                                right: -2,
-                                                background: '#b13b2e',
-                                                border: 'none',
-                                                color: '#fff',
-                                                cursor: 'pointer',
-                                                width: 22,
-                                                height: 22,
-                                                borderRadius: '50%',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center'
-                                            }}
-                                            title="Eliminar personaje"
-                                        >
-                                            <Trash2 size={12} />
-                                        </button>
-                                    </div>
-                                    <div style={{ flex: 1, minWidth: 0 }}>
-                                        <input
-                                            type="text"
-                                            value={char.name}
-                                            onChange={e => updateCharName(charIdx, e.target.value)}
-                                            style={{
-                                                fontWeight: 700,
-                                                fontSize: 14,
-                                                border: '1px solid #e0e0e0',
-                                                borderRadius: 4,
-                                                padding: '4px 6px',
-                                                width: '100%',
-                                                marginBottom: 3,
-                                                background: '#fff'
-                                            }}
-                                        />
-                                        <input
-                                            type="text"
-                                            value={char.avatarUrl}
-                                            onChange={e => updateCharAvatar(charIdx, e.target.value)}
-                                            style={{
-                                                fontSize: 9,
-                                                border: '1px solid #e0e0e0',
-                                                borderRadius: 3,
-                                                padding: '2px 4px',
-                                                width: '100%',
-                                                color: '#666'
-                                            }}
-                                            placeholder="URL"
-                                        />
-                                    </div>
+                            <div key={charIdx} style={{ 
+                                background: '#f9fafb', 
+                                padding: 12, 
+                                borderRadius: 8, 
+                                marginBottom: 12,
+                                border: '1px solid #e5e7eb'
+                            }}>
+                                <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 12 }}>
+                                    <input
+                                        type="text"
+                                        value={char.name}
+                                        onChange={e => updateCharName(charIdx, e.target.value)}
+                                        style={{
+                                            fontWeight: 600,
+                                            fontSize: 14,
+                                            border: '1px solid #d1d5db',
+                                            borderRadius: 4,
+                                            padding: '6px 10px',
+                                            flex: 1,
+                                            background: '#fff'
+                                        }}
+                                        placeholder="Nombre"
+                                    />
+                                    <input
+                                        type="text"
+                                        value={char.avatarUrl}
+                                        onChange={e => updateCharAvatar(charIdx, e.target.value)}
+                                        style={{
+                                            fontSize: 12,
+                                            border: '1px solid #d1d5db',
+                                            borderRadius: 4,
+                                            padding: '6px 10px',
+                                            flex: 2,
+                                            color: '#6b7280'
+                                        }}
+                                        placeholder="URL del avatar"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => removeCharacter(charIdx)}
+                                        style={{
+                                            background: '#ef4444',
+                                            border: 'none',
+                                            color: '#fff',
+                                            cursor: 'pointer',
+                                            padding: '6px 12px',
+                                            borderRadius: 6,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 6,
+                                            fontWeight: 500
+                                        }}
+                                    >
+                                        <Trash2 size={14} /> Eliminar
+                                    </button>
                                 </div>
-
-                                {/* Columnas de redes sociales con donas */}
-                                {SOCIAL_NETWORKS.map((net) => (
-                                    <div key={net.key} style={{ width: 130, textAlign: 'center', position: 'relative' }}>
-                                        <DonutChartCell
-                                            data={char.donutData[net.key]}
-                                            colors={DONUT_CATEGORIES.map(c => c.color)}
-                                            labels={DONUT_CATEGORIES.map(c => c.label)}
-                                            size={120}
-                                        />
-                                        {/* Inputs para editar valores (ocultos en vista previa, visibles solo en edición) */}
-                                        <details style={{ marginTop: 4 }}>
-                                            <summary style={{ fontSize: 9, color: '#666', cursor: 'pointer', userSelect: 'none' }}>Editar</summary>
-                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2, marginTop: 3 }}>
+                                
+                                {/* Controles para editar valores por red social */}
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
+                                    {SOCIAL_NETWORKS.map((net) => (
+                                        <div key={net.key} style={{ background: '#fff', padding: 8, borderRadius: 6, border: '1px solid #e5e7eb' }}>
+                                            <div style={{ fontSize: 11, fontWeight: 600, marginBottom: 6, textAlign: 'center' }}>{net.label}</div>
+                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 3 }}>
                                                 {DONUT_CATEGORIES.map((cat, catIdx) => (
                                                     <input
                                                         key={cat.key}
@@ -409,17 +381,170 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
                                                         onChange={e => updateDonutValue(charIdx, net.key, catIdx, e.target.value)}
                                                         style={{
                                                             width: '100%',
-                                                            fontSize: 8,
-                                                            border: '1px solid #ddd',
-                                                            borderRadius: 2,
+                                                            fontSize: 10,
+                                                            border: '1px solid #d1d5db',
+                                                            borderRadius: 3,
                                                             textAlign: 'center',
-                                                            padding: '1px'
+                                                            padding: '3px',
+                                                            background: '#fff'
                                                         }}
                                                         title={cat.label}
+                                                        placeholder={cat.label.substring(0, 4)}
                                                     />
                                                 ))}
                                             </div>
-                                        </details>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Vista previa limpia para exportar (SIN controles de edición) */}
+                    <div ref={previewRef} style={{ 
+                        background: '#ffffff', 
+                        padding: '12px 10px',
+                        display: 'inline-block',
+                        fontFamily: 'Arial, sans-serif'
+                    }}>
+                        {/* Leyenda de categorías - estilo compacto horizontal */}
+                        <div style={{ 
+                            display: 'flex', 
+                            gap: 10, 
+                            marginBottom: 10, 
+                            flexWrap: 'wrap', 
+                            alignItems: 'center', 
+                            justifyContent: 'flex-start',
+                            paddingBottom: 8
+                        }}>
+                            {DONUT_CATEGORIES.map(cat => (
+                                <div key={cat.key} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                                    <span style={{ 
+                                        width: 10, 
+                                        height: 10, 
+                                        borderRadius: 2, 
+                                        background: cat.color, 
+                                        display: 'inline-block'
+                                    }}></span>
+                                    <span style={{ fontSize: 9, fontWeight: 500, color: '#1f2937' }}>{cat.label}</span>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Header con íconos de redes sociales */}
+                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+                            <div style={{ width: 100 }}></div>
+                            {SOCIAL_NETWORKS.map(net => (
+                                <div key={net.key} style={{ 
+                                    width: 90, 
+                                    textAlign: 'center', 
+                                    display: 'flex', 
+                                    justifyContent: 'center', 
+                                    alignItems: 'center',
+                                    height: 38
+                                }}>
+                                    {socialIconImages[net.key] ? (
+                                        <img 
+                                            src={socialIconImages[net.key].src} 
+                                            alt={net.label}
+                                            title={net.label}
+                                            style={{ 
+                                                width: 32, 
+                                                height: 32, 
+                                                display: 'block',
+                                                margin: '0 auto'
+                                            }} 
+                                        />
+                                    ) : (
+                                        <div style={{ 
+                                            width: 32, 
+                                            height: 32, 
+                                            background: '#e5e7eb',
+                                            borderRadius: '50%',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontSize: 8,
+                                            fontWeight: 600,
+                                            color: '#6b7280'
+                                        }}>
+                                            {net.label.substring(0, 2)}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Filas de personajes - SOLO VISUALIZACIÓN */}
+                        {characters.map((char, charIdx) => (
+                            <div key={charIdx} style={{ 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                marginBottom: 8
+                            }}>
+                                {/* Columna de personaje */}
+                                <div style={{ width: 100, display: 'flex', alignItems: 'center', gap: 8, paddingRight: 8 }}>
+                                    <div style={{ position: 'relative', flexShrink: 0 }}>
+                                        <img
+                                            src={char.avatarUrl}
+                                            alt={char.name}
+                                            crossOrigin="anonymous"
+                                            style={{
+                                                width: 42,
+                                                height: 42,
+                                                borderRadius: '50%',
+                                                objectFit: 'cover',
+                                                border: '3px solid #b13b2e',
+                                                background: '#fff'
+                                            }}
+                                        />
+                                        <div style={{
+                                            position: 'absolute',
+                                            bottom: -2,
+                                            right: -2,
+                                            background: '#b13b2e',
+                                            border: '1.5px solid white',
+                                            color: '#fff',
+                                            width: 16,
+                                            height: 16,
+                                            borderRadius: '50%',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}>
+                                            <Trash2 size={8} />
+                                        </div>
+                                    </div>
+                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                        <div style={{
+                                            fontWeight: 700,
+                                            fontSize: 10,
+                                            color: '#1f2937',
+                                            lineHeight: 1.2,
+                                            wordBreak: 'break-word'
+                                        }}>
+                                            {char.name}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Columnas de redes sociales con donas - SOLO VISUALIZACIÓN */}
+                                {SOCIAL_NETWORKS.map((net) => (
+                                    <div key={net.key} style={{ 
+                                        width: 90, 
+                                        textAlign: 'center', 
+                                        position: 'relative',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <DonutChartCell
+                                            data={char.donutData[net.key]}
+                                            colors={DONUT_CATEGORIES.map(c => c.color)}
+                                            labels={DONUT_CATEGORIES.map(c => c.label)}
+                                            size={75}
+                                        />
                                     </div>
                                 ))}
                             </div>
