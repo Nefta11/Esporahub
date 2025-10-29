@@ -266,9 +266,10 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
         const colWidth = 110;
         const nameColWidth = 140;
 
-    // El ancho debe considerar todas las redes de la leyenda (incluyendo efemérides y share news)
-    const legendColCount = SOCIAL_NETWORKS_FOR_LEGEND ? SOCIAL_NETWORKS_FOR_LEGEND.length : SOCIAL_NETWORKS.length;
-    const totalWidth = (nameColWidth + (legendColCount * colWidth) + (padding * 2)) * scale;
+    // El ancho debe ajustarse al último ícono/texto visible de la leyenda
+    // Calculamos el ancho real de la leyenda sumando el espacio de la columna de nombre y el de cada ícono
+    const legendIconWidth = 90; // Debe coincidir con el width de cada ícono en el header
+    const totalWidth = (nameColWidth + (SOCIAL_NETWORKS_FOR_LEGEND.length * legendIconWidth) + (padding * 2)) * scale;
     const totalHeight = (legendHeight + headerHeight + (characters.length * rowHeight) + padding + extraBottomPadding) * scale;
 
         tempCanvas.width = totalWidth;
