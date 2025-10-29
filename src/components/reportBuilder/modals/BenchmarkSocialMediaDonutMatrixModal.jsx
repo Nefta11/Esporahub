@@ -160,7 +160,7 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
                     img.src = network.icon;
                 });
             });
-            
+
             const results = await Promise.all(imagePromises);
             const imagesMap = {};
             results.forEach(({ key, img }) => {
@@ -168,7 +168,7 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
             });
             setSocialIconImages(imagesMap);
         };
-        
+
         if (isOpen) {
             loadImages();
         }
@@ -225,57 +225,207 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
     // Insertar imagen de la matriz al canvas principal
     const insertMatrixToCanvas = async () => {
         if (!canvas) return;
-        const node = previewRef.current;
-        
-        // Precargar todos los íconos de redes sociales como data URLs
-        const images = node.querySelectorAll('img');
-        const loadPromises = Array.from(images).map(img => {
-            return new Promise((resolve) => {
-                if (img.complete) {
+
+        // Crear un canvas temporal con dimensiones correctas
+        const scale = 2.5; // Mayor escala para mejor calidad
+        const tempCanvas = document.createElement('canvas');
+        const padding = 15;
+        const legendHeight = 35;
+        const headerHeight = 50;
+        const rowHeight = 95;
+        const colWidth = 95;
+        const nameColWidth = 110;
+
+        const totalWidth = (nameColWidth + (SOCIAL_NETWORKS.length * colWidth) + (padding * 2)) * scale;
+        const totalHeight = (legendHeight + headerHeight + (characters.length * rowHeight) + (padding * 2)) * scale;
+
+        tempCanvas.width = totalWidth;
+        tempCanvas.height = totalHeight;
+        const ctx = tempCanvas.getContext('2d');
+        ctx.scale(scale, scale);
+
+        // Fondo blanco
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, totalWidth / scale, totalHeight / scale);
+
+        let currentY = padding;
+
+        // Dibujar leyenda
+        ctx.font = '9px Arial';
+        ctx.textBaseline = 'middle';
+        let legendX = padding + 5;
+
+        DONUT_CATEGORIES.forEach(cat => {
+            ctx.fillStyle = cat.color;
+            ctx.fillRect(legendX, currentY + 3, 9, 9);
+            legendX += 12;
+            ctx.fillStyle = '#1f2937';
+            ctx.textAlign = 'left';
+            ctx.fillText(cat.label, legendX, currentY + 7.5);
+            legendX += ctx.measureText(cat.label).width + 10;
+        });
+
+        currentY += legendHeight;
+
+        // Dibujar íconos de redes sociales
+        const iconSize = 34;
+        await Promise.all(SOCIAL_NETWORKS.map(async (net, idx) => {
+            const x = nameColWidth + (idx * colWidth) + (colWidth - iconSize) / 2 + padding;
+            const y = currentY + (headerHeight - iconSize) / 2;
+
+            if (socialIconImages[net.key]) {
+                ctx.drawImage(socialIconImages[net.key], x, y, iconSize, iconSize);
+            }
+        }));
+
+        currentY += headerHeight;
+
+        // Dibujar filas de personajes
+        for (const char of characters) {
+            const rowY = currentY;
+
+            // Avatar
+            const avatarSize = 48;
+            const avatarX = padding + 8;
+            const avatarY = rowY + (rowHeight - avatarSize) / 2;
+
+            await new Promise((resolve) => {
+                const avatarImg = new window.Image();
+                avatarImg.crossOrigin = 'anonymous';
+                avatarImg.onload = () => {
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(avatarX + avatarSize / 2, avatarY + avatarSize / 2, avatarSize / 2, 0, 2 * Math.PI);
+                    ctx.clip();
+                    ctx.drawImage(avatarImg, avatarX, avatarY, avatarSize, avatarSize);
+                    ctx.restore();
+                    ctx.strokeStyle = '#b13b2e';
+                    ctx.lineWidth = 3.5;
+                    ctx.beginPath();
+                    ctx.arc(avatarX + avatarSize / 2, avatarY + avatarSize / 2, avatarSize / 2, 0, 2 * Math.PI);
+                    ctx.stroke();
                     resolve();
+                };
+                avatarImg.onerror = resolve;
+                avatarImg.src = char.avatarUrl;
+            });
+
+            // Nombre - dividido en líneas si es necesario
+            ctx.fillStyle = '#1f2937';
+            ctx.font = 'bold 11px Arial';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+
+            const nameX = avatarX + avatarSize + 10;
+            const nameY = rowY + rowHeight / 2;
+            const maxNameWidth = nameColWidth - avatarSize - 25;
+
+            const words = char.name.split(' ');
+            const lines = [];
+            let currentLine = '';
+
+            words.forEach(word => {
+                const testLine = currentLine + (currentLine ? ' ' : '') + word;
+                const metrics = ctx.measureText(testLine);
+                if (metrics.width > maxNameWidth && currentLine) {
+                    lines.push(currentLine);
+                    currentLine = word;
                 } else {
-                    img.onload = () => resolve();
-                    img.onerror = () => resolve();
+                    currentLine = testLine;
                 }
             });
-        });
-        
-        await Promise.all(loadPromises);
-        
-        // Esperar un poco más para asegurar que todo esté renderizado
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
-        // Renderizar la vista previa a imagen usando html2canvas
-        const html2canvas = (await import('html2canvas')).default;
-        const imgCanvas = await html2canvas(node, { 
-            backgroundColor: '#ffffff', 
-            scale: 2.5,
-            useCORS: true,
-            allowTaint: true,
-            logging: false,
-            imageTimeout: 0,
-            removeContainer: true
-        });
-        
-        const dataURL = imgCanvas.toDataURL('image/png');
+            if (currentLine) lines.push(currentLine);
+
+            const lineHeight = 12;
+            const startY = nameY - ((lines.length - 1) * lineHeight) / 2;
+            lines.forEach((line, idx) => {
+                ctx.fillText(line, nameX, startY + (idx * lineHeight));
+            });
+
+            // Dibujar donas
+            SOCIAL_NETWORKS.forEach((net, netIdx) => {
+                const donutCenterX = nameColWidth + (netIdx * colWidth) + colWidth / 2 + padding;
+                const donutCenterY = rowY + rowHeight / 2;
+                const radius = 24;
+                const innerRadius = radius * 0.58;
+
+                const data = char.donutData[net.key];
+                const total = data.reduce((sum, val) => sum + val, 0);
+
+                if (total === 0) {
+                    ctx.fillStyle = '#b0b0b0';
+                    ctx.beginPath();
+                    ctx.arc(donutCenterX, donutCenterY, radius, 0, 2 * Math.PI);
+                    ctx.fill();
+                    ctx.fillStyle = '#fff';
+                    ctx.beginPath();
+                    ctx.arc(donutCenterX, donutCenterY, innerRadius, 0, 2 * Math.PI);
+                    ctx.fill();
+                    ctx.fillStyle = '#6b7280';
+                    ctx.font = 'bold 7px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('Sin', donutCenterX, donutCenterY - 3);
+                    ctx.fillText('Publicaciones', donutCenterX, donutCenterY + 4);
+                } else {
+                    let currentAngle = -Math.PI / 2;
+                    const labels = [];
+
+                    data.forEach((value, index) => {
+                        if (value <= 0) return;
+
+                        const sliceAngle = (value / total) * 2 * Math.PI;
+                        const endAngle = currentAngle + sliceAngle;
+
+                        ctx.fillStyle = DONUT_CATEGORIES[index].color;
+                        ctx.beginPath();
+                        ctx.arc(donutCenterX, donutCenterY, radius, currentAngle, endAngle);
+                        ctx.arc(donutCenterX, donutCenterY, innerRadius, endAngle, currentAngle, true);
+                        ctx.fill();
+
+                        const middleAngle = currentAngle + sliceAngle / 2;
+                        const labelRadius = radius + 14;
+                        const labelX = donutCenterX + Math.cos(middleAngle) * labelRadius;
+                        const labelY = donutCenterY + Math.sin(middleAngle) * labelRadius;
+
+                        labels.push({ value, x: labelX, y: labelY });
+                        currentAngle = endAngle;
+                    });
+
+                    // Dibujar etiquetas de porcentaje
+                    ctx.font = 'bold 9px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillStyle = '#1f2937';
+                    labels.forEach(({ value, x, y }) => {
+                        ctx.fillText(`${value}%`, x, y);
+                    });
+                }
+            });
+
+            currentY += rowHeight;
+        }
+
+        // Convertir a imagen y agregar al canvas
+        const dataURL = tempCanvas.toDataURL('image/png');
         const imgElement = new window.Image();
         imgElement.onload = () => {
             const fabricImg = new FabricImage(imgElement, {
                 left: 50,
                 top: 50,
-                scaleX: 0.3,
-                scaleY: 0.3
+                scaleX: 0.35,
+                scaleY: 0.35
             });
             canvas.add(fabricImg);
             canvas.setActiveObject(fabricImg);
             canvas.renderAll();
-            setTimeout(onClose, 0);
+            onClose();
         };
         imgElement.src = dataURL;
     };
 
     if (!isOpen) return null;
-    
+
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal-content modal-large" onClick={e => e.stopPropagation()} style={{ maxWidth: '1400px', maxHeight: '95vh', overflowY: 'auto' }}>
@@ -308,10 +458,10 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
                     {/* Vista de edición con controles */}
                     <div style={{ marginBottom: 20 }}>
                         {characters.map((char, charIdx) => (
-                            <div key={charIdx} style={{ 
-                                background: '#f9fafb', 
-                                padding: 12, 
-                                borderRadius: 8, 
+                            <div key={charIdx} style={{
+                                background: '#f9fafb',
+                                padding: 12,
+                                borderRadius: 8,
                                 marginBottom: 12,
                                 border: '1px solid #e5e7eb'
                             }}>
@@ -364,7 +514,7 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
                                         <Trash2 size={14} /> Eliminar
                                     </button>
                                 </div>
-                                
+
                                 {/* Controles para editar valores por red social */}
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
                                     {SOCIAL_NETWORKS.map((net) => (
@@ -401,29 +551,29 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
                     </div>
 
                     {/* Vista previa limpia para exportar (SIN controles de edición) */}
-                    <div ref={previewRef} style={{ 
-                        background: '#ffffff', 
+                    <div ref={previewRef} style={{
+                        background: '#ffffff',
                         padding: '12px 10px',
                         display: 'inline-block',
                         fontFamily: 'Arial, sans-serif'
                     }}>
                         {/* Leyenda de categorías - estilo compacto horizontal */}
-                        <div style={{ 
-                            display: 'flex', 
-                            gap: 10, 
-                            marginBottom: 10, 
-                            flexWrap: 'wrap', 
-                            alignItems: 'center', 
+                        <div style={{
+                            display: 'flex',
+                            gap: 10,
+                            marginBottom: 10,
+                            flexWrap: 'wrap',
+                            alignItems: 'center',
                             justifyContent: 'flex-start',
                             paddingBottom: 8
                         }}>
                             {DONUT_CATEGORIES.map(cat => (
                                 <div key={cat.key} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                                    <span style={{ 
-                                        width: 10, 
-                                        height: 10, 
-                                        borderRadius: 2, 
-                                        background: cat.color, 
+                                    <span style={{
+                                        width: 10,
+                                        height: 10,
+                                        borderRadius: 2,
+                                        background: cat.color,
                                         display: 'inline-block'
                                     }}></span>
                                     <span style={{ fontSize: 9, fontWeight: 500, color: '#1f2937' }}>{cat.label}</span>
@@ -432,33 +582,33 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
                         </div>
 
                         {/* Header con íconos de redes sociales */}
-                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 24 }}>
                             <div style={{ width: 100 }}></div>
                             {SOCIAL_NETWORKS.map(net => (
-                                <div key={net.key} style={{ 
-                                    width: 90, 
-                                    textAlign: 'center', 
-                                    display: 'flex', 
-                                    justifyContent: 'center', 
+                                <div key={net.key} style={{
+                                    width: 90,
+                                    textAlign: 'center',
+                                    display: 'flex',
+                                    justifyContent: 'center',
                                     alignItems: 'center',
                                     height: 38
                                 }}>
                                     {socialIconImages[net.key] ? (
-                                        <img 
-                                            src={socialIconImages[net.key].src} 
+                                        <img
+                                            src={socialIconImages[net.key].src}
                                             alt={net.label}
                                             title={net.label}
-                                            style={{ 
-                                                width: 32, 
-                                                height: 32, 
+                                            style={{
+                                                width: 32,
+                                                height: 32,
                                                 display: 'block',
                                                 margin: '0 auto'
-                                            }} 
+                                            }}
                                         />
                                     ) : (
-                                        <div style={{ 
-                                            width: 32, 
-                                            height: 32, 
+                                        <div style={{
+                                            width: 32,
+                                            height: 32,
                                             background: '#e5e7eb',
                                             borderRadius: '50%',
                                             display: 'flex',
@@ -477,10 +627,10 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
 
                         {/* Filas de personajes - SOLO VISUALIZACIÓN */}
                         {characters.map((char, charIdx) => (
-                            <div key={charIdx} style={{ 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                marginBottom: 8
+                            <div key={charIdx} style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                marginBottom: 18 // Más espacio entre filas
                             }}>
                                 {/* Columna de personaje */}
                                 <div style={{ width: 100, display: 'flex', alignItems: 'center', gap: 8, paddingRight: 8 }}>
@@ -498,22 +648,6 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
                                                 background: '#fff'
                                             }}
                                         />
-                                        <div style={{
-                                            position: 'absolute',
-                                            bottom: -2,
-                                            right: -2,
-                                            background: '#b13b2e',
-                                            border: '1.5px solid white',
-                                            color: '#fff',
-                                            width: 16,
-                                            height: 16,
-                                            borderRadius: '50%',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center'
-                                        }}>
-                                            <Trash2 size={8} />
-                                        </div>
                                     </div>
                                     <div style={{ flex: 1, minWidth: 0 }}>
                                         <div style={{
@@ -521,7 +655,8 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
                                             fontSize: 10,
                                             color: '#1f2937',
                                             lineHeight: 1.2,
-                                            wordBreak: 'break-word'
+                                            wordBreak: 'break-word',
+                                            marginTop: 6 // Separación extra entre nombre y gráficos
                                         }}>
                                             {char.name}
                                         </div>
@@ -530,9 +665,9 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
 
                                 {/* Columnas de redes sociales con donas - SOLO VISUALIZACIÓN */}
                                 {SOCIAL_NETWORKS.map((net) => (
-                                    <div key={net.key} style={{ 
-                                        width: 90, 
-                                        textAlign: 'center', 
+                                    <div key={net.key} style={{
+                                        width: 90,
+                                        textAlign: 'center',
                                         position: 'relative',
                                         display: 'flex',
                                         flexDirection: 'column',
