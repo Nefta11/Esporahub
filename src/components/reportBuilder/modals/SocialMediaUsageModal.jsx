@@ -4,54 +4,54 @@ import { Image as FabricImage } from 'fabric';
 
 const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
   const [platforms, setPlatforms] = useState([
-    { 
-      name: 'Facebook', 
-      icon: '📘',
+    {
+      name: 'Facebook',
+      logoUrl: 'https://cdn.simpleicons.org/facebook/1877F2',
       color: '#1877F2',
       registeredUsers: '2.76M',
       activeDailyUsers: '1.79 M',
       activeHoursDaily: '1.15 Hrs',
       platformUsers: '2.1 M'
     },
-    { 
-      name: 'YouTube', 
-      icon: '▶️',
+    {
+      name: 'YouTube',
+      logoUrl: 'https://cdn.simpleicons.org/youtube/FF0000',
       color: '#FF0000',
       registeredUsers: '2.24M',
       activeDailyUsers: '1.43 M',
       activeHoursDaily: '1.33 Hrs',
       platformUsers: '1.9 M'
     },
-    { 
-      name: 'TikTok', 
-      icon: '🎵',
+    {
+      name: 'TikTok',
+      logoUrl: 'https://cdn.simpleicons.org/tiktok/000000',
       color: '#000000',
       registeredUsers: '2.18M',
       activeDailyUsers: '1.96 M',
       activeHoursDaily: '1.28 Hrs',
       platformUsers: '2.5 M'
     },
-    { 
-      name: 'Instagram', 
-      icon: '📷',
+    {
+      name: 'Instagram',
+      logoUrl: 'https://cdn.simpleicons.org/instagram/E4405F',
       color: '#E4405F',
       registeredUsers: '1.23M',
       activeDailyUsers: '0.86 M',
       activeHoursDaily: '1.11 Hrs',
       platformUsers: '1.0 M'
     },
-    { 
-      name: 'X (Twitter)', 
-      icon: '✖️',
+    {
+      name: 'X (Twitter)',
+      logoUrl: 'https://cdn.simpleicons.org/x/000000',
       color: '#000000',
       registeredUsers: '0.46M',
       activeDailyUsers: '0.27 M',
       activeHoursDaily: '0.40 Hrs',
       platformUsers: '0.1 M'
     },
-    { 
-      name: 'Whatsapp', 
-      icon: '💬',
+    {
+      name: 'Whatsapp',
+      logoUrl: 'https://cdn.simpleicons.org/whatsapp/25D366',
       color: '#25D366',
       registeredUsers: '2.45M',
       activeDailyUsers: '2.01 M',
@@ -60,12 +60,39 @@ const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
     }
   ]);
   const canvasRef = useRef(null);
+  const [loadedLogos, setLoadedLogos] = useState({});
 
+  // Cargar logos cuando cambian las plataformas
   useEffect(() => {
-    if (isOpen && canvasRef.current) {
-      drawPreview();
+    const loadLogos = async () => {
+      const logoPromises = platforms.map((platform) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = () => resolve({ url: platform.logoUrl, img });
+          img.onerror = () => resolve({ url: platform.logoUrl, img: null });
+          img.src = platform.logoUrl;
+        });
+      });
+
+      const results = await Promise.all(logoPromises);
+      const logosMap = {};
+      results.forEach(({ url, img }) => {
+        if (img) logosMap[url] = img;
+      });
+      setLoadedLogos(logosMap);
+    };
+
+    if (isOpen) {
+      loadLogos();
     }
   }, [platforms, isOpen]);
+
+  useEffect(() => {
+    if (isOpen && canvasRef.current && Object.keys(loadedLogos).length > 0) {
+      drawPreview();
+    }
+  }, [loadedLogos, platforms, isOpen]);
 
   const drawPreview = () => {
     if (!canvasRef.current) return;
@@ -123,10 +150,18 @@ const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
       ctx.lineTo(startX + columnWidths.reduce((a, b) => a + b, 0), currentY);
       ctx.stroke();
 
-      // Icono y nombre de la plataforma
-      ctx.font = '16px Arial';
-      ctx.fillText(platform.icon, startX + 15, currentY + 28);
-      
+      // Logo y nombre de la plataforma
+      const logo = loadedLogos[platform.logoUrl];
+      if (logo) {
+        ctx.drawImage(logo, startX + 10, currentY + 14, 20, 20);
+      } else {
+        // Fallback: dibujar círculo de color si no carga el logo
+        ctx.fillStyle = platform.color;
+        ctx.beginPath();
+        ctx.arc(startX + 20, currentY + 24, 10, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
       ctx.fillStyle = platform.color;
       ctx.font = 'bold 11px Arial';
       ctx.textAlign = 'left';
@@ -205,9 +240,9 @@ const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
   const addPlatform = () => {
     setPlatforms([
       ...platforms,
-      { 
-        name: `Plataforma ${platforms.length + 1}`, 
-        icon: '📱',
+      {
+        name: `Plataforma ${platforms.length + 1}`,
+        logoUrl: 'https://cdn.simpleicons.org/genericbrand/000000',
         color: '#000000',
         registeredUsers: '0M',
         activeDailyUsers: '0 M',
@@ -229,8 +264,25 @@ const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
     setPlatforms(newPlatforms);
   };
 
-  const insertTableToCanvas = () => {
+  const insertTableToCanvas = async () => {
     if (!canvas) return;
+
+    // Asegurarse de que todos los logos estén cargados
+    const logoPromises = platforms.map((platform) => {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => resolve({ url: platform.logoUrl, img });
+        img.onerror = () => resolve({ url: platform.logoUrl, img: null });
+        img.src = platform.logoUrl;
+      });
+    });
+
+    const results = await Promise.all(logoPromises);
+    const logosMap = {};
+    results.forEach(({ url, img }) => {
+      if (img) logosMap[url] = img;
+    });
 
     // Crear canvas temporal
     const tempCanvas = document.createElement('canvas');
@@ -307,10 +359,18 @@ const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
       tempCtx.lineTo(startX + columnWidths.reduce((a, b) => a + b, 0), currentY);
       tempCtx.stroke();
 
-      // Icono y nombre de la plataforma
-      tempCtx.font = '32px Arial';
-      tempCtx.fillText(platform.icon, startX + 30, currentY + 55);
-      
+      // Logo y nombre de la plataforma
+      const logo = logosMap[platform.logoUrl];
+      if (logo) {
+        tempCtx.drawImage(logo, startX + 20, currentY + 25, 40, 40);
+      } else {
+        // Fallback: dibujar círculo de color si no carga el logo
+        tempCtx.fillStyle = platform.color;
+        tempCtx.beginPath();
+        tempCtx.arc(startX + 40, currentY + 45, 20, 0, Math.PI * 2);
+        tempCtx.fill();
+      }
+
       tempCtx.fillStyle = platform.color;
       tempCtx.font = 'bold 20px Arial';
       tempCtx.textAlign = 'left';
@@ -407,54 +467,54 @@ const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
 
   const handleClose = () => {
     setPlatforms([
-      { 
-        name: 'Facebook', 
-        icon: '📘',
+      {
+        name: 'Facebook',
+        logoUrl: 'https://cdn.simpleicons.org/facebook/1877F2',
         color: '#1877F2',
         registeredUsers: '2.76M',
         activeDailyUsers: '1.79 M',
         activeHoursDaily: '1.15 Hrs',
         platformUsers: '2.1 M'
       },
-      { 
-        name: 'YouTube', 
-        icon: '▶️',
+      {
+        name: 'YouTube',
+        logoUrl: 'https://cdn.simpleicons.org/youtube/FF0000',
         color: '#FF0000',
         registeredUsers: '2.24M',
         activeDailyUsers: '1.43 M',
         activeHoursDaily: '1.33 Hrs',
         platformUsers: '1.9 M'
       },
-      { 
-        name: 'TikTok', 
-        icon: '🎵',
+      {
+        name: 'TikTok',
+        logoUrl: 'https://cdn.simpleicons.org/tiktok/000000',
         color: '#000000',
         registeredUsers: '2.18M',
         activeDailyUsers: '1.96 M',
         activeHoursDaily: '1.28 Hrs',
         platformUsers: '2.5 M'
       },
-      { 
-        name: 'Instagram', 
-        icon: '📷',
+      {
+        name: 'Instagram',
+        logoUrl: 'https://cdn.simpleicons.org/instagram/E4405F',
         color: '#E4405F',
         registeredUsers: '1.23M',
         activeDailyUsers: '0.86 M',
         activeHoursDaily: '1.11 Hrs',
         platformUsers: '1.0 M'
       },
-      { 
-        name: 'X (Twitter)', 
-        icon: '✖️',
+      {
+        name: 'X (Twitter)',
+        logoUrl: 'https://cdn.simpleicons.org/x/000000',
         color: '#000000',
         registeredUsers: '0.46M',
         activeDailyUsers: '0.27 M',
         activeHoursDaily: '0.40 Hrs',
         platformUsers: '0.1 M'
       },
-      { 
-        name: 'Whatsapp', 
-        icon: '💬',
+      {
+        name: 'Whatsapp',
+        logoUrl: 'https://cdn.simpleicons.org/whatsapp/25D366',
         color: '#25D366',
         registeredUsers: '2.45M',
         activeDailyUsers: '2.01 M',
@@ -462,6 +522,7 @@ const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
         platformUsers: '5.5 M'
       }
     ]);
+    setLoadedLogos({});
     onClose();
   };
 
@@ -489,21 +550,27 @@ const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
             </div>
 
             <div style={{ marginBottom: '15px', fontSize: '12px', color: '#666' }}>
-              <strong>Nota:</strong> Puedes usar emojis como iconos (📘, ▶️, 🎵, 📷, ✖️, 💬, 📱, etc.)
+              <strong>Nota:</strong> Los logos se cargan desde Simple Icons CDN.
+              <br />
+              Formato: <code>https://cdn.simpleicons.org/[nombre]/[color]</code>
+              <br />
+              Ejemplo: <code>https://cdn.simpleicons.org/facebook/1877F2</code>
             </div>
 
             {platforms.map((platform, index) => (
               <div key={index} style={{ marginBottom: '20px', padding: '15px', border: '1px solid #ddd', borderRadius: '8px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '50px 1fr 1fr 100px 40px', gap: '10px', marginBottom: '10px', alignItems: 'center' }}>
-                  <input
-                    type="text"
-                    placeholder="🎵"
-                    value={platform.icon}
-                    onChange={(e) => updatePlatform(index, 'icon', e.target.value)}
-                    className="input-field"
-                    style={{ textAlign: 'center', fontSize: '20px' }}
-                    maxLength="2"
-                  />
+                  <div style={{ width: '50px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #ddd', borderRadius: '4px' }}>
+                    {loadedLogos[platform.logoUrl] ? (
+                      <img
+                        src={platform.logoUrl}
+                        alt={platform.name}
+                        style={{ width: '32px', height: '32px' }}
+                      />
+                    ) : (
+                      <div style={{ width: '32px', height: '32px', background: platform.color, borderRadius: '4px' }} />
+                    )}
+                  </div>
                   <input
                     type="text"
                     placeholder="Nombre de la plataforma"
@@ -528,6 +595,20 @@ const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
                   >
                     <Trash2 size={16} />
                   </button>
+                </div>
+
+                <div style={{ marginBottom: '10px' }}>
+                  <label style={{ fontSize: '11px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+                    URL del Logo
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="https://cdn.simpleicons.org/facebook/1877F2"
+                    value={platform.logoUrl}
+                    onChange={(e) => updatePlatform(index, 'logoUrl', e.target.value)}
+                    className="input-field"
+                    style={{ fontSize: '11px' }}
+                  />
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '10px' }}>

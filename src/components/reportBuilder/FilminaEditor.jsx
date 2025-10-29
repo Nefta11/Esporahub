@@ -17,6 +17,7 @@ import StackedBarChartModal from './modals/StackedBarChartModal';
 import DemographicsTableModal from './modals/DemographicsTableModal';
 import SocialMediaUsageModal from './modals/SocialMediaUsageModal';
 import InfluencersTableModal from './modals/InfluencersTableModal';
+import BenchmarkSocialMediaModal from './modals/BenchmarkSocialMediaModal';
 import ShapePickerModal from './modals/ShapePickerModal';
 import '@/styles/reportBuilder/FilminaEditor.css';
 import '@/styles/reportBuilder/EditorComponents.css';
@@ -296,19 +297,25 @@ const FilminaEditor = () => {
           onAddText={() => fabricObject.addText()}
           onAddShape={() => setActiveModal('shape')}
           onAddImage={() => fabricObject.addImage()}
-          onAddLine={() => fabricObject.addLine()}
+          onAddLine={() => setActiveModal('line')}
           onOpenTableModal={() => setActiveModal('table')}
           onOpenDonutModal={() => setActiveModal('donut')}
           onOpenUsoMediosModal={() => setActiveModal('usoMedios')}
           onOpenStackedBarModal={() => setActiveModal('stackedBar')}
           onOpenDemographicsModal={() => setActiveModal('demographics')}
           onOpenSocialMediaUsageModal={() => setActiveModal('socialMediaUsage')}
+          onOpenBenchmarkSocialMediaModal={() => setActiveModal('benchmarkSocialMedia')}
           onOpenInfluencersModal={() => setActiveModal('influencers')}
           layers={layers}
           selectedLayer={selectedObject}
           onSelectLayer={handleSelectLayer}
           currentFilmina={filmina}
         />
+      <BenchmarkSocialMediaModal
+        isOpen={activeModal === 'benchmarkSocialMedia'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
 
         {/* Canvas central */}
         <main className="editor-canvas-area">
