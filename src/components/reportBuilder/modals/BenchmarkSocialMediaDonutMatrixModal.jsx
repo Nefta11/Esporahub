@@ -241,15 +241,15 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
         const node = previewRef.current;
         // Renderizar la vista previa a imagen usando html2canvas
         const html2canvas = (await import('html2canvas')).default;
-        const imgCanvas = await html2canvas(node, { backgroundColor: '#ffffff', scale: 2 });
+        const imgCanvas = await html2canvas(node, { backgroundColor: '#ffffff', scale: 1.5 });
         const dataURL = imgCanvas.toDataURL('image/png');
         const imgElement = new window.Image();
         imgElement.onload = () => {
             const fabricImg = new FabricImage(imgElement, {
                 left: 50,
                 top: 50,
-                scaleX: 0.7,
-                scaleY: 0.7
+                scaleX: 0.4,
+                scaleY: 0.4
             });
             canvas.add(fabricImg);
             canvas.setActiveObject(fabricImg);
@@ -300,30 +300,29 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
                     </div>
 
                     {/* Matriz de donas */}
-                    <div ref={previewRef} style={{ background: '#fff', borderRadius: 12, padding: 24, boxShadow: '0 2px 12px rgba(0,0,0,0.08)' }}>
+                    <div ref={previewRef} style={{ background: '#fff', padding: 12, display: 'inline-block' }}>
                         {/* Header con íconos de redes sociales */}
-                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20, paddingBottom: 16, borderBottom: '2px solid #e0e0e0' }}>
-                            <div style={{ width: 200 }}></div>
+                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10, paddingBottom: 8 }}>
+                            <div style={{ width: 150 }}></div>
                             {SOCIAL_NETWORKS.map(net => (
-                                <div key={net.key} style={{ width: 150, textAlign: 'center' }}>
-                                    {loadedSocialIcons[net.key] && <img src={net.icon} alt={net.label} style={{ width: 40, height: 40, marginBottom: 6 }} />}
-                                    <div style={{ fontWeight: 600, fontSize: 14, color: '#333' }}>{net.label}</div>
+                                <div key={net.key} style={{ width: 125, textAlign: 'center' }}>
+                                    {loadedSocialIcons[net.key] && <img src={net.icon} alt={net.label} style={{ width: 38, height: 38 }} />}
                                 </div>
                             ))}
                         </div>
 
                         {/* Filas de personajes */}
                         {characters.map((char, charIdx) => (
-                            <div key={charIdx} style={{ display: 'flex', alignItems: 'center', marginBottom: 30, paddingBottom: 20, borderBottom: charIdx < characters.length - 1 ? '1px solid #f0f0f0' : 'none' }}>
+                            <div key={charIdx} style={{ display: 'flex', alignItems: 'center', marginBottom: 18 }}>
                                 {/* Columna de personaje */}
-                                <div style={{ width: 200, display: 'flex', alignItems: 'center', gap: 12 }}>
-                                    <div style={{ position: 'relative' }}>
+                                <div style={{ width: 150, display: 'flex', alignItems: 'center', gap: 10, paddingRight: 10 }}>
+                                    <div style={{ position: 'relative', flexShrink: 0 }}>
                                         <img
                                             src={char.avatarUrl}
                                             alt={char.name}
                                             style={{
-                                                width: 70,
-                                                height: 70,
+                                                width: 60,
+                                                height: 60,
                                                 borderRadius: '50%',
                                                 objectFit: 'cover',
                                                 border: '4px solid #b13b2e',
@@ -335,39 +334,37 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
                                             onClick={() => removeCharacter(charIdx)}
                                             style={{
                                                 position: 'absolute',
-                                                bottom: -4,
-                                                right: -4,
+                                                bottom: -2,
+                                                right: -2,
                                                 background: '#b13b2e',
                                                 border: 'none',
                                                 color: '#fff',
                                                 cursor: 'pointer',
-                                                width: 24,
-                                                height: 24,
+                                                width: 22,
+                                                height: 22,
                                                 borderRadius: '50%',
                                                 display: 'flex',
                                                 alignItems: 'center',
-                                                justifyContent: 'center',
-                                                fontSize: 11,
-                                                fontWeight: 'bold'
+                                                justifyContent: 'center'
                                             }}
                                             title="Eliminar personaje"
                                         >
-                                            <Trash2 size={14} />
+                                            <Trash2 size={12} />
                                         </button>
                                     </div>
-                                    <div style={{ flex: 1 }}>
+                                    <div style={{ flex: 1, minWidth: 0 }}>
                                         <input
                                             type="text"
                                             value={char.name}
                                             onChange={e => updateCharName(charIdx, e.target.value)}
                                             style={{
                                                 fontWeight: 700,
-                                                fontSize: 15,
+                                                fontSize: 14,
                                                 border: '1px solid #e0e0e0',
-                                                borderRadius: 6,
-                                                padding: '4px 8px',
+                                                borderRadius: 4,
+                                                padding: '3px 6px',
                                                 width: '100%',
-                                                marginBottom: 4
+                                                marginBottom: 3
                                             }}
                                         />
                                         <input
@@ -375,31 +372,31 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
                                             value={char.avatarUrl}
                                             onChange={e => updateCharAvatar(charIdx, e.target.value)}
                                             style={{
-                                                fontSize: 11,
+                                                fontSize: 9,
                                                 border: '1px solid #e0e0e0',
-                                                borderRadius: 6,
-                                                padding: '3px 6px',
+                                                borderRadius: 3,
+                                                padding: '2px 4px',
                                                 width: '100%',
                                                 color: '#666'
                                             }}
-                                            placeholder="URL avatar"
+                                            placeholder="URL"
                                         />
                                     </div>
                                 </div>
 
                                 {/* Columnas de redes sociales con donas */}
                                 {SOCIAL_NETWORKS.map((net) => (
-                                    <div key={net.key} style={{ width: 150, textAlign: 'center', position: 'relative' }}>
+                                    <div key={net.key} style={{ width: 125, textAlign: 'center', position: 'relative' }}>
                                         <DonutChartCell
                                             data={char.donutData[net.key]}
                                             colors={DONUT_CATEGORIES.map(c => c.color)}
                                             labels={DONUT_CATEGORIES.map(c => c.label)}
-                                            size={140}
+                                            size={120}
                                         />
                                         {/* Inputs para editar valores (ocultos en vista previa, visibles solo en edición) */}
-                                        <details style={{ marginTop: 8 }}>
-                                            <summary style={{ fontSize: 11, color: '#666', cursor: 'pointer', userSelect: 'none' }}>Editar valores</summary>
-                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 4, marginTop: 6 }}>
+                                        <details style={{ marginTop: 4 }}>
+                                            <summary style={{ fontSize: 9, color: '#666', cursor: 'pointer', userSelect: 'none' }}>Editar</summary>
+                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2, marginTop: 3 }}>
                                                 {DONUT_CATEGORIES.map((cat, catIdx) => (
                                                     <input
                                                         key={cat.key}
@@ -410,11 +407,11 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
                                                         onChange={e => updateDonutValue(charIdx, net.key, catIdx, e.target.value)}
                                                         style={{
                                                             width: '100%',
-                                                            fontSize: 10,
+                                                            fontSize: 8,
                                                             border: '1px solid #ddd',
-                                                            borderRadius: 4,
+                                                            borderRadius: 2,
                                                             textAlign: 'center',
-                                                            padding: '2px'
+                                                            padding: '1px'
                                                         }}
                                                         title={cat.label}
                                                     />
