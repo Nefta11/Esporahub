@@ -268,16 +268,6 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
                     <button className="modal-close" onClick={onClose}><X size={20} /></button>
                 </div>
                 <div className="modal-body">
-                    {/* Leyenda de categorías */}
-                    <div style={{ display: 'flex', gap: 16, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center', background: '#f8f8f8', padding: '12px 16px', borderRadius: 8 }}>
-                        {DONUT_CATEGORIES.map(cat => (
-                            <div key={cat.key} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                <span style={{ width: 18, height: 18, borderRadius: 4, background: cat.color, display: 'inline-block' }}></span>
-                                <span style={{ fontSize: 13, fontWeight: 500 }}>{cat.label}</span>
-                            </div>
-                        ))}
-                    </div>
-
                     {/* Formulario para agregar personaje */}
                     <div style={{ display: 'flex', gap: 10, marginBottom: 20, alignItems: 'center', background: '#f0f7ff', padding: '12px 16px', borderRadius: 8 }}>
                         <input
@@ -299,27 +289,38 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
                         </button>
                     </div>
 
-                    {/* Matriz de donas */}
+                    {/* Matriz de donas CON leyenda incluida */}
                     <div ref={previewRef} style={{ background: '#fff', padding: 12, display: 'inline-block' }}>
+                        {/* Leyenda de categorías */}
+                        <div style={{ display: 'flex', gap: 14, marginBottom: 12, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center' }}>
+                            {DONUT_CATEGORIES.map(cat => (
+                                <div key={cat.key} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                    <span style={{ width: 14, height: 14, borderRadius: 3, background: cat.color, display: 'inline-block' }}></span>
+                                    <span style={{ fontSize: 11, fontWeight: 500 }}>{cat.label}</span>
+                                </div>
+                            ))}
+                        </div>
+
                         {/* Header con íconos de redes sociales */}
-                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10, paddingBottom: 8 }}>
-                            <div style={{ width: 150 }}></div>
+                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 12, paddingBottom: 8 }}>
+                            <div style={{ width: 180 }}></div>
                             {SOCIAL_NETWORKS.map(net => (
-                                <div key={net.key} style={{ width: 125, textAlign: 'center' }}>
-                                    {loadedSocialIcons[net.key] && <img src={net.icon} alt={net.label} style={{ width: 38, height: 38 }} />}
+                                <div key={net.key} style={{ width: 130, textAlign: 'center' }}>
+                                    <img src={net.icon} alt={net.label} style={{ width: 40, height: 40 }} crossOrigin="anonymous" />
                                 </div>
                             ))}
                         </div>
 
                         {/* Filas de personajes */}
                         {characters.map((char, charIdx) => (
-                            <div key={charIdx} style={{ display: 'flex', alignItems: 'center', marginBottom: 18 }}>
+                            <div key={charIdx} style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
                                 {/* Columna de personaje */}
-                                <div style={{ width: 150, display: 'flex', alignItems: 'center', gap: 10, paddingRight: 10 }}>
+                                <div style={{ width: 180, display: 'flex', alignItems: 'center', gap: 10, paddingRight: 15 }}>
                                     <div style={{ position: 'relative', flexShrink: 0 }}>
                                         <img
                                             src={char.avatarUrl}
                                             alt={char.name}
+                                            crossOrigin="anonymous"
                                             style={{
                                                 width: 60,
                                                 height: 60,
@@ -362,9 +363,10 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
                                                 fontSize: 14,
                                                 border: '1px solid #e0e0e0',
                                                 borderRadius: 4,
-                                                padding: '3px 6px',
+                                                padding: '4px 6px',
                                                 width: '100%',
-                                                marginBottom: 3
+                                                marginBottom: 3,
+                                                background: '#fff'
                                             }}
                                         />
                                         <input
@@ -386,7 +388,7 @@ const BenchmarkSocialMediaDonutMatrixModal = ({ isOpen, onClose, canvas }) => {
 
                                 {/* Columnas de redes sociales con donas */}
                                 {SOCIAL_NETWORKS.map((net) => (
-                                    <div key={net.key} style={{ width: 125, textAlign: 'center', position: 'relative' }}>
+                                    <div key={net.key} style={{ width: 130, textAlign: 'center', position: 'relative' }}>
                                         <DonutChartCell
                                             data={char.donutData[net.key]}
                                             colors={DONUT_CATEGORIES.map(c => c.color)}
