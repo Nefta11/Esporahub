@@ -19,6 +19,7 @@ const EditorSidebar = ({
   onOpenDemografiaSociedadRedModal,
   onOpenBenchmarkAdjetivacionTableroModal,
   onOpenBenchmarkAudienciaTableroModal,
+  onOpenBenchmarkIntegradoTableroModal,
   layers,
   selectedLayer,
   onSelectLayer,
@@ -126,6 +127,16 @@ const EditorSidebar = ({
               <button className="tool-card" onClick={onOpenBenchmarkAudienciaTableroModal} title="Tablero de Análisis de Audiencia">
                 <Users size={24} />
                 <span>Tablero Audiencia</span>
+              </button>
+          )}
+
+          {/* Herramienta de Benchmark Integrado para la filmina específica */}
+          {currentFilmina &&
+            currentFilmina.title === 'Benchmark de mensaje integrado' &&
+            typeof onOpenBenchmarkIntegradoTableroModal === 'function' && (
+              <button className="tool-card" onClick={onOpenBenchmarkIntegradoTableroModal} title="Benchmark de mensaje integrado">
+                <Share2 size={24} />
+                <span>Benchmark Integrado</span>
               </button>
           )}
 

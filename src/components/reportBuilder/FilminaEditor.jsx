@@ -1,5 +1,6 @@
 import BenchmarkAdjetivacionTableroModal from './modals/BenchmarkAdjetivacionTableroModal';
 import BenchmarkAudienciaTableroModal from './modals/BenchmarkAudienciaTableroModal';
+import BenchmarkIntegradoTableroModal from './modals/BenchmarkIntegradoTableroModal';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Download } from 'lucide-react';
@@ -264,6 +265,8 @@ const FilminaEditor = () => {
       autoInsertAudienciaTablero(canvas);
     } else if (filminaTitle === 'RRSSS Externas. Benchmark audiencia p/contenido difundido') {
       autoInsertAudienciaTablero(canvas);
+    } else if (filminaTitle === 'Benchmark de mensaje integrado') {
+      // No auto-insert por ahora, el usuario usará el modal
     }
   }, [filmina, getCanvas]);
 
@@ -377,6 +380,7 @@ const FilminaEditor = () => {
         <EditorSidebar
           onOpenBenchmarkAdjetivacionTableroModal={() => setActiveModal('benchmarkAdjetivacionTablero')}
           onOpenBenchmarkAudienciaTableroModal={() => setActiveModal('benchmarkAudienciaTablero')}
+          onOpenBenchmarkIntegradoTableroModal={() => setActiveModal('benchmarkIntegradoTablero')}
           onAddText={() => fabricObject.addText()}
           onAddShape={() => setActiveModal('shape')}
           onAddImage={() => fabricObject.addImage()}
@@ -397,6 +401,15 @@ const FilminaEditor = () => {
           currentFilmina={filmina}
           onOpenDemografiaSociedadRedModal={() => setActiveModal('demografiaSociedadRed')}
         />
+
+        {activeModal === 'benchmarkIntegradoTablero' && (
+          <BenchmarkIntegradoTableroModal
+            isOpen={true}
+            onClose={() => setActiveModal(null)}
+            canvas={canvas}
+            filminaTitle={filmina?.title}
+          />
+        )}
 
         {/* Modal Tablero Adjetivación */}
         {activeModal === 'benchmarkAdjetivacionTablero' && (
