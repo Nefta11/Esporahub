@@ -2,50 +2,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import { X, Plus, Trash2 } from 'lucide-react';
 import { Image as FabricImage } from 'fabric';
 
-const initialProfiles = [
-    {
-        name: 'Manuel Guerra',
-        avatarUrl: '',
-        tag: 'Morena',
-        message: 'Consolida una estrategia digital orientada a visibilizar avances en infraestructura, seguridad y programas públicos, con el objetivo de fortalecer la imagen institucional, mientras busca conectar con audiencias más sensibles a la eficacia gubernamental.',
-        audience: 'Animalistas',
-        posts: '301',
-        imageUrl: ''
-    },
-    {
-        name: 'Clara Luz',
-        avatarUrl: '',
-        tag: 'Morena',
-        message: 'Articula una estrategia digital centrada en la visibilidad institucional, con un enfoque prioritario en audiencias clave como mujeres, familias y personas beneficiarias de programas sociales.',
-        audience: 'Religiosos',
-        posts: '137',
-        imageUrl: ''
-    },
-    {
-        name: 'Waldo Fernández',
-        avatarUrl: '',
-        tag: 'Morena',
-        message: 'Desarrolla una estrategia sobria, estructurada y coherente con su perfil legislativo, centrada en reforzar su imagen institucional, mientras incorpora temas clave que le permitan conectar y activar en el territorio.',
-        audience: 'Morena Duro',
-        posts: '413',
-        imageUrl: ''
-    },
-];
-
 const BenchmarkIntegradoTableroModal = ({ isOpen, onClose, canvas }) => {
-    const [profiles, setProfiles] = useState(initialProfiles);
-    const [radarData, setRadarData] = useState([7, 8, 6, 5, 6, 7, 8, 7]);
-    const [radarLabels, setRadarLabels] = useState([
-        'Eficacia', 'Gestión', 'Visibilidad', 'Infraestructura',
-        'Seguridad', 'Programas', 'Credibilidad', 'Institucional'
+    // minimal local state and refs required by the component
+    const [profiles, setProfiles] = useState([
+        { name: '', avatarUrl: '', tag: '', message: '', audience: '', posts: '', imageUrl: '' }
     ]);
     const canvasRef = useRef(null);
-
-    // Dibuja el dashboard en el canvas de preview
-    useEffect(() => {
-        if (!isOpen || !canvasRef.current) return;
-        drawDashboard(canvasRef.current);
-    }, [profiles, radarData, radarLabels, isOpen]);
+    const radarData = [6, 7, 5, 8, 6]; // sample defaults
+    const radarLabels = ['Alcance', 'Engagement', 'Frecuencia', 'Calidad', 'Consistencia'];
 
     function drawDashboard(targetCanvas) {
         const ctx = targetCanvas.getContext('2d');
@@ -59,25 +23,61 @@ const BenchmarkIntegradoTableroModal = ({ isOpen, onClose, canvas }) => {
         ctx.fillStyle = '#f8f9fa';
         ctx.fillRect(0, 0, width, height);
 
-        // Radar chart en la izquierda (más grande y reposicionado)
-        drawRadar(ctx, 230, 350, 170, radarData, radarLabels);
+        // Radar chart alineado a la izquierda y centrado verticalmente
+        const radarCenterX = 200;
+        const radarCenterY = height / 2;
+        const radarRadius = 120;
+        drawRadar(ctx, radarCenterX, radarCenterY, radarRadius, radarData, radarLabels);
 
-        // Perfiles en la derecha (más espaciados)
+        // Perfiles y tarjetas alineados a la derecha del radar
+        const profileStartX = 370;
+        const cardStartX = profileStartX + 110;
+        const cardWidth = 750;
+        const cardHeight = 120;
+        const avatarRadius = 45;
+        const verticalSpacing = 30;
+        const totalProfiles = profiles.length;
+        // Calcular el espacio vertical total ocupado
+        const totalCardsHeight = totalProfiles * cardHeight + (totalProfiles - 1) * verticalSpacing;
+        // Centrar verticalmente
+        const firstCardY = (height - totalCardsHeight) / 2;
+
         profiles.forEach((profile, idx) => {
-            const cardY = 40 + idx * 215;
-            const cardX = 520;
-            const cardWidth = 850;
-            const cardHeight = 190;
+            const cardY = firstCardY + idx * (cardHeight + verticalSpacing);
 
-            // Fondo de la tarjeta con sombra
+            // Avatar circular alineado a la izquierda de la tarjeta
+            const avatarX = profileStartX;
+            const avatarY = cardY + cardHeight / 2;
+
             ctx.save();
-            ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
-            ctx.shadowBlur = 10;
+            ctx.beginPath();
+            ctx.arc(avatarX, avatarY, avatarRadius, 0, 2 * Math.PI);
+            ctx.closePath();
+            ctx.fillStyle = '#ccc';
+            ctx.fill();
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = '#b71c1c';
+            ctx.stroke();
+            ctx.restore();
+
+            // Nombre y tag alineados a la derecha del avatar
+            ctx.font = 'bold 16px Arial';
+            ctx.fillStyle = '#333';
+            ctx.textAlign = 'left';
+            ctx.fillText(profile.name, avatarX + avatarRadius + 12, avatarY - 8);
+            ctx.font = '13px Arial';
+            ctx.fillStyle = '#b71c1c';
+            ctx.fillText(profile.tag, avatarX + avatarRadius + 12, avatarY + 14);
+
+            // Tarjeta de mensaje a la derecha del avatar
+            ctx.save();
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.10)';
+            ctx.shadowBlur = 8;
             ctx.shadowOffsetX = 2;
             ctx.shadowOffsetY = 2;
-            ctx.fillStyle = '#ffffff';
+            ctx.fillStyle = '#fff';
             ctx.beginPath();
-            ctx.roundRect(cardX, cardY, cardWidth, cardHeight, 15);
+            ctx.roundRect(cardStartX, cardY, cardWidth, cardHeight, 18);
             ctx.fill();
             ctx.shadowColor = 'transparent';
             ctx.strokeStyle = '#e0e0e0';
@@ -85,115 +85,41 @@ const BenchmarkIntegradoTableroModal = ({ isOpen, onClose, canvas }) => {
             ctx.stroke();
             ctx.restore();
 
-            // Avatar circular (más grande)
-            const avatarX = cardX - 70;
-            const avatarY = cardY + cardHeight / 2;
-            const avatarRadius = 55;
-
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(avatarX, avatarY, avatarRadius, 0, 2 * Math.PI);
-            ctx.closePath();
-
-            // Borde del avatar
-            ctx.strokeStyle = '#b71c1c';
-            ctx.lineWidth = 4;
-            ctx.stroke();
-
-            ctx.clip();
-            if (profile.avatarUrl) {
-                const img = new window.Image();
-                img.crossOrigin = 'anonymous';
-                img.src = profile.avatarUrl;
-                img.onload = () => {
-                    ctx.drawImage(img, avatarX - avatarRadius, avatarY - avatarRadius, avatarRadius * 2, avatarRadius * 2);
-                };
-            } else {
-                ctx.fillStyle = '#ccc';
-                ctx.fillRect(avatarX - avatarRadius, avatarY - avatarRadius, avatarRadius * 2, avatarRadius * 2);
-            }
-            ctx.restore();
-
-            // Tag debajo del avatar
-            ctx.save();
-            ctx.fillStyle = '#b71c1c';
-            ctx.beginPath();
-            ctx.roundRect(avatarX - 30, avatarY + avatarRadius + 5, 60, 20, 10);
-            ctx.fill();
-            ctx.font = 'bold 11px Arial';
-            ctx.fillStyle = '#fff';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(profile.tag, avatarX, avatarY + avatarRadius + 15);
-            ctx.restore();
-
-            // Nombre junto al avatar
+            // Texto dentro de la tarjeta
+            let textX = cardStartX + 24;
+            let textY = cardY + 32;
             ctx.font = 'bold 16px Arial';
-            ctx.fillStyle = '#333';
+            ctx.fillStyle = '#222';
             ctx.textAlign = 'left';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(profile.name, avatarX + avatarRadius + 15, avatarY);
-
-            // Contenido de la tarjeta
-            const contentX = cardX + 25;
-            const contentY = cardY + 20;
-
-            // Número de publicaciones
-            ctx.font = 'bold 16px Arial';
-            ctx.fillStyle = '#1a1a1a';
-            ctx.fillText(`Número de publicaciones: ${profile.posts}`, contentX, contentY);
-
-            // Población objetivo
-            ctx.font = 'bold 16px Arial';
-            ctx.fillStyle = '#1a1a1a';
-            ctx.fillText(`Población objetivo: ${profile.audience}`, contentX, contentY + 30);
-
-            // Mensaje central (título)
-            ctx.font = 'bold 16px Arial';
-            ctx.fillStyle = '#1a1a1a';
-            ctx.fillText('Mensaje central:', contentX, contentY + 60);
-
-            // Mensaje central (texto) - más espacio y mejor formato
-            ctx.font = '13px Arial';
+            ctx.fillText(`Número de publicaciones: ${profile.posts || ''}`, textX, textY);
+            textY += 22;
+            ctx.font = '15px Arial';
             ctx.fillStyle = '#444';
-            wrapText(ctx, profile.message, contentX, contentY + 85, cardWidth - 200, 18, 4);
+            ctx.fillText(`Población objetivo: ${profile.audience || ''}`, textX, textY);
+            textY += 22;
+            ctx.font = 'bold 15px Arial';
+            ctx.fillStyle = '#222';
+            ctx.fillText('Mensaje central:', textX, textY);
+            textY += 20;
+            ctx.font = '14px Arial';
+            ctx.fillStyle = '#333';
+            wrapText(ctx, profile.message, textX, textY, cardWidth - 160, 18, 4);
 
-            // Imagen de ejemplo en la esquina superior derecha (más grande)
+            // Imagen/collage a la derecha de la tarjeta
             if (profile.imageUrl) {
-                const imgX = cardX + cardWidth - 165;
-                const imgY = cardY + 20;
-                const imgWidth = 140;
-                const imgHeight = 150;
-
-                ctx.save();
-                ctx.fillStyle = '#fff';
-                ctx.fillRect(imgX, imgY, imgWidth, imgHeight);
-                ctx.strokeStyle = '#ddd';
-                ctx.lineWidth = 2;
-                ctx.strokeRect(imgX, imgY, imgWidth, imgHeight);
-
                 const img = new window.Image();
-                img.crossOrigin = 'anonymous';
                 img.src = profile.imageUrl;
-                img.onload = () => {
-                    ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-                };
-                ctx.restore();
+                img.onload = () => ctx.drawImage(img, cardStartX + cardWidth - 90, cardY + 20, 70, 70);
             } else {
-                // Placeholder para imagen (más grande)
-                const imgX = cardX + cardWidth - 165;
-                const imgY = cardY + 20;
-                const imgWidth = 140;
-                const imgHeight = 150;
-
-                ctx.fillStyle = '#f0f0f0';
-                ctx.fillRect(imgX, imgY, imgWidth, imgHeight);
-                ctx.strokeStyle = '#ddd';
+                // Placeholder
+                ctx.save();
+                ctx.strokeStyle = '#bbb';
                 ctx.lineWidth = 2;
-                ctx.strokeRect(imgX, imgY, imgWidth, imgHeight);
+                ctx.strokeRect(cardStartX + cardWidth - 90, cardY + 20, 70, 70);
+                ctx.restore();
             }
         });
-    }
+    } // <-- cierre correcto de drawDashboard
 
     // Radar chart drawing helper
     function drawRadar(ctx, cx, cy, r, data, labels) {

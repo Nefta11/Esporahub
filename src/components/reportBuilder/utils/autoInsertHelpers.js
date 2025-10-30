@@ -975,27 +975,27 @@ export const autoInsertBenchmarkIntegrado = async (canvas) => {
 
   const initialProfiles = [
     {
-      name: 'Manuel Guerra',
+      name: 'Personaje 1',
       avatarUrl: '',
-      tag: 'Morena',
+      tag: 'Partido 1',
       message: 'Consolida una estrategia digital orientada a visibilizar avances en infraestructura, seguridad y programas públicos, con el objetivo de fortalecer la imagen institucional, mientras busca conectar con audiencias más sensibles a la eficacia gubernamental.',
       audience: 'Animalistas',
       posts: '301',
       imageUrl: ''
     },
     {
-      name: 'Clara Luz',
+      name: 'Personaje 2',
       avatarUrl: '',
-      tag: 'Morena',
+      tag: 'Partido 2',
       message: 'Articula una estrategia digital centrada en la visibilidad institucional, con un enfoque prioritario en audiencias clave como mujeres, familias y personas beneficiarias de programas sociales.',
       audience: 'Religiosos',
       posts: '137',
       imageUrl: ''
     },
     {
-      name: 'Waldo Fernández',
+      name: 'Personaje 3',
       avatarUrl: '',
-      tag: 'Morena',
+      tag: 'Partido 3',
       message: 'Desarrolla una estrategia sobria, estructurada y coherente con su perfil legislativo, centrada en reforzar su imagen institucional, mientras incorpora temas clave que le permitan conectar y activar en el territorio.',
       audience: 'Morena Duro',
       posts: '413',
@@ -1021,25 +1021,72 @@ export const autoInsertBenchmarkIntegrado = async (canvas) => {
   ctx.fillStyle = '#f8f9fa';
   ctx.fillRect(0, 0, width, height);
 
-  // Radar chart
-  drawRadarChart(ctx, 230, 350, 170, radarData, radarLabels);
+  // Radar chart alineado a la izquierda y centrado verticalmente
+  const radarCenterX = 230;
+  const radarCenterY = height / 2;
+  const radarRadius = 170;
+  drawRadarChart(ctx, radarCenterX, radarCenterY, radarRadius, radarData, radarLabels);
 
-  // Perfiles
+  // Ajuste de layout para evitar encimado
+  const totalProfiles = initialProfiles.length;
+  const avatarRadius = 60;
+  const cardHeight = 190;
+  const verticalSpacing = 44;
+  const totalCardsHeight = totalProfiles * cardHeight + (totalProfiles - 1) * verticalSpacing;
+  // Centrar el bloque de perfiles respecto al canvas
+  const firstCardY = (height - totalCardsHeight) / 2;
+  // Alineación horizontal
+  const profileStartX = radarCenterX + radarRadius + 60; // a la derecha del radar
+  const cardStartX = profileStartX + avatarRadius + 40;
+  const cardWidth = 780;
+
   initialProfiles.forEach((profile, idx) => {
-    const cardY = 40 + idx * 215;
-    const cardX = 520;
-    const cardWidth = 850;
-    const cardHeight = 190;
+    // Centrar cada avatar y tarjeta respecto al bloque
+    const cardY = firstCardY + idx * (cardHeight + verticalSpacing);
+    const avatarX = profileStartX;
+    const avatarY = cardY + cardHeight / 2;
 
-    // Fondo de tarjeta
+    // Avatar
     ctx.save();
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
-    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    ctx.arc(avatarX, avatarY, avatarRadius, 0, 2 * Math.PI);
+    ctx.closePath();
+    ctx.fillStyle = '#ccc';
+    ctx.fill();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = '#b71c1c';
+    ctx.stroke();
+    ctx.restore();
+
+    // Tag debajo del avatar
+    ctx.save();
+    ctx.fillStyle = '#b71c1c';
+    ctx.beginPath();
+    ctx.roundRect(avatarX - 35, avatarY + avatarRadius + 8, 70, 24, 12);
+    ctx.fill();
+    ctx.font = 'bold 13px Arial';
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(profile.tag, avatarX, avatarY + avatarRadius + 20);
+    ctx.restore();
+
+    // Nombre debajo del tag
+    ctx.font = 'bold 16px Arial';
+    ctx.fillStyle = '#333';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText(profile.name, avatarX, avatarY + avatarRadius + 38);
+
+    // Tarjeta de mensaje a la derecha del avatar
+    ctx.save();
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.10)';
+    ctx.shadowBlur = 8;
     ctx.shadowOffsetX = 2;
     ctx.shadowOffsetY = 2;
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = '#fff';
     ctx.beginPath();
-    ctx.roundRect(cardX, cardY, cardWidth, cardHeight, 15);
+    ctx.roundRect(cardStartX, cardY, cardWidth, cardHeight, 22);
     ctx.fill();
     ctx.shadowColor = 'transparent';
     ctx.strokeStyle = '#e0e0e0';
@@ -1047,66 +1094,39 @@ export const autoInsertBenchmarkIntegrado = async (canvas) => {
     ctx.stroke();
     ctx.restore();
 
-    // Avatar
-    const avatarX = cardX - 70;
-    const avatarY = cardY + cardHeight / 2;
-    const avatarRadius = 55;
+  // Texto dentro de la tarjeta (más padding y más espacio)
+  let textX = cardStartX + 60;
+  let textY = cardY + 38;
+  ctx.font = 'bold 17px Arial';
+  ctx.fillStyle = '#222';
+  ctx.textAlign = 'left';
+  ctx.fillText(`Número de publicaciones: ${profile.posts || ''}`, textX, textY);
+  textY += 26;
+  ctx.font = '16px Arial';
+  ctx.fillStyle = '#444';
+  ctx.fillText(`Población objetivo: ${profile.audience || ''}`, textX, textY);
+  textY += 26;
+  ctx.font = 'bold 16px Arial';
+  ctx.fillStyle = '#222';
+  ctx.fillText('Mensaje central:', textX, textY);
+  textY += 22;
+  ctx.font = '15px Arial';
+  ctx.fillStyle = '#333';
+  wrapTextHelper(ctx, profile.message, textX, textY, cardWidth - 160, 20, 8);
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(avatarX, avatarY, avatarRadius, 0, 2 * Math.PI);
-    ctx.strokeStyle = '#b71c1c';
-    ctx.lineWidth = 4;
-    ctx.stroke();
-    ctx.clip();
-    ctx.fillStyle = '#ccc';
-    ctx.fillRect(avatarX - avatarRadius, avatarY - avatarRadius, avatarRadius * 2, avatarRadius * 2);
-    ctx.restore();
-
-    // Tag
-    ctx.save();
-    ctx.fillStyle = '#b71c1c';
-    ctx.beginPath();
-    ctx.roundRect(avatarX - 30, avatarY + avatarRadius + 5, 60, 20, 10);
-    ctx.fill();
-    ctx.font = 'bold 11px Arial';
-    ctx.fillStyle = '#fff';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(profile.tag, avatarX, avatarY + avatarRadius + 15);
-    ctx.restore();
-
-    // Nombre
-    ctx.font = 'bold 16px Arial';
-    ctx.fillStyle = '#333';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(profile.name, avatarX + avatarRadius + 15, avatarY);
-
-    // Contenido
-    const contentX = cardX + 25;
-    const contentY = cardY + 20;
-
-    ctx.font = 'bold 16px Arial';
-    ctx.fillStyle = '#1a1a1a';
-    ctx.fillText(`Número de publicaciones: ${profile.posts}`, contentX, contentY);
-    ctx.fillText(`Población objetivo: ${profile.audience}`, contentX, contentY + 30);
-    ctx.fillText('Mensaje central:', contentX, contentY + 60);
-
-    ctx.font = '13px Arial';
-    ctx.fillStyle = '#444';
-    wrapTextHelper(ctx, profile.message, contentX, contentY + 85, cardWidth - 200, 18, 4);
-
-    // Placeholder imagen
-    const imgX = cardX + cardWidth - 165;
-    const imgY = cardY + 20;
-    const imgWidth = 140;
-    const imgHeight = 150;
-    ctx.fillStyle = '#f0f0f0';
-    ctx.fillRect(imgX, imgY, imgWidth, imgHeight);
-    ctx.strokeStyle = '#ddd';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(imgX, imgY, imgWidth, imgHeight);
+    // Imagen/collage a la derecha de la tarjeta
+    if (profile.imageUrl) {
+      const img = new window.Image();
+      img.src = profile.imageUrl;
+      img.onload = () => ctx.drawImage(img, cardStartX + cardWidth - 70, cardY + 30, 55, 55);
+    } else {
+      // Placeholder
+      ctx.save();
+      ctx.strokeStyle = '#bbb';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(cardStartX + cardWidth - 70, cardY + 30, 55, 55);
+      ctx.restore();
+    }
   });
 
   // Exportar
