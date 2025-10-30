@@ -22,6 +22,7 @@ const DEFAULT_PROFILES = [
 const BenchmarkDifusionOficialModal = ({ isOpen, onClose, canvas }) => {
     const canvasRef = useRef(null);
     const [profiles, setProfiles] = useState(DEFAULT_PROFILES);
+    const [metaLogoUrl, setMetaLogoUrl] = useState('https://cdn.simpleicons.org/meta/0081FB');
 
     const updateProfileField = (index, field, value) => {
         setProfiles(prev => {
@@ -33,10 +34,10 @@ const BenchmarkDifusionOficialModal = ({ isOpen, onClose, canvas }) => {
 
     useEffect(() => {
         if (!isOpen || !canvasRef.current) return;
-        drawChart(canvasRef.current, profiles);
-    }, [isOpen, profiles]);
+        drawChart(canvasRef.current, profiles, metaLogoUrl);
+    }, [isOpen, profiles, metaLogoUrl]);
 
-    const drawChart = (targetCanvas, profiles) => {
+    const drawChart = (targetCanvas, profiles, logoUrl) => {
         const width = 1200;
         const height = 500;
         targetCanvas.width = width;
@@ -109,42 +110,50 @@ const BenchmarkDifusionOficialModal = ({ isOpen, onClose, canvas }) => {
             ctx.fillText(`No. Anuncios: ${profile.anuncios}`, x, centerY + avatarRadius + 115);
         });
 
-        // Periodo (abajo izquierda)
+        // Periodo (abajo izquierda) - rectángulo más ancho
         ctx.save();
         ctx.fillStyle = '#111';
         ctx.font = 'bold 16px Arial';
-        ctx.fillRect(30, height - 50, 370, 32);
+        ctx.fillRect(30, height - 50, 450, 35);
         ctx.fillStyle = '#fff';
         ctx.font = 'bold 15px Arial';
-        ctx.fillText('Periodo: Del 5 de julio al 5 de octubre 2025', 45, height - 28);
+        ctx.textAlign = 'left';
+        ctx.fillText('Periodo: Del 5 de julio al 5 de octubre 2025', 45, height - 26);
         ctx.restore();
 
-        // Fuente (abajo derecha)
+        // Fuente (abajo derecha) con logo
         ctx.font = '15px Arial';
         ctx.fillStyle = '#222';
         ctx.textAlign = 'right';
-        ctx.fillText('Fuente: Meta', width - 40, height - 28);
+        ctx.fillText('Fuente:', width - 110, height - 28);
+
+        // Logo de Meta
+        if (logoUrl) {
+            const logoImg = new window.Image();
+            logoImg.crossOrigin = 'anonymous';
+            logoImg.src = logoUrl;
+            logoImg.onload = () => {
+                ctx.drawImage(logoImg, width - 90, height - 42, 50, 26);
+            };
+        } else {
+            ctx.fillText('Meta', width - 40, height - 28);
+        }
     };
 
     const insertToCanvas = () => {
         if (!canvas) return;
         const tempCanvas = document.createElement('canvas');
-        drawChart(tempCanvas, profiles);
+        drawChart(tempCanvas, profiles, metaLogoUrl);
+
+        // Esperar a que el logo cargue antes de exportar
+        setTimeout(() => {
         const dataURL = tempCanvas.toDataURL('image/png');
         const imgElement = new window.Image();
         imgElement.onload = () => {
-            // Calcular escala para que la imagen quepa dentro del canvas sin recortes
-            const imgWidth = imgElement.width;
-            const imgHeight = imgElement.height;
-            const canvasWidth = typeof canvas.getWidth === 'function' ? canvas.getWidth() : canvas.width || 960;
-            const canvasHeight = typeof canvas.getHeight === 'function' ? canvas.getHeight() : canvas.height || 540;
-            const margin = 40; // dejar margen alrededor
-            const maxW = canvasWidth - margin * 2;
-            const maxH = canvasHeight - margin * 2;
-            const scale = Math.min(1, Math.min(maxW / imgWidth, maxH / imgHeight));
-
-            const left = Math.round((canvasWidth - imgWidth * scale) / 2);
-            const top = Math.round((canvasHeight - imgHeight * scale) / 2);
+            // Insertar con escala fija para que se vea completo (sin reducir demasiado)
+            const scale = 0.75;
+            const left = 40;
+            const top = 40;
 
             const fabricImg = new FabricImage(imgElement, {
                 left,
@@ -197,6 +206,7 @@ const BenchmarkDifusionOficialModal = ({ isOpen, onClose, canvas }) => {
             onClose();
         };
         imgElement.src = dataURL;
+        }, 300); // Esperar para que el logo se cargue
     };
 
     if (!isOpen) return null;
@@ -210,6 +220,22 @@ const BenchmarkDifusionOficialModal = ({ isOpen, onClose, canvas }) => {
                 <div className="modal-body">
                     <div style={{ display: 'grid', gap: 12 }}>
                         <h4>Configuración</h4>
+
+                        {/* Logo de Meta */}
+                        <div style={{ padding: 12, borderRadius: 8, border: '1px solid #e6e6e6', background: '#f9f9f9' }}>
+                            <label style={{ fontSize: 13, fontWeight: 'bold', marginBottom: 6, display: 'block' }}>Logo de Meta (URL)</label>
+                            <input
+                                className="property-input"
+                                value={metaLogoUrl}
+                                onChange={(e) => setMetaLogoUrl(e.target.value)}
+                                placeholder="https://cdn.simpleicons.org/meta/0081FB"
+                                style={{ width: '100%' }}
+                            />
+                            <small style={{ fontSize: 11, color: '#666', marginTop: 4, display: 'block' }}>
+                                Deja vacío para mostrar solo texto "Meta"
+                            </small>
+                        </div>
+
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                             {profiles.map((p, i) => (
                                 <div key={i} style={{ padding: 12, borderRadius: 8, border: '1px solid #e6e6e6', background: '#fff' }}>

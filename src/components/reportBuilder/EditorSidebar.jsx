@@ -143,10 +143,10 @@ const EditorSidebar = ({
 
           {/* Herramienta de Benchmark Difusión Oficial para la filmina específica */}
           {currentFilmina &&
-            (currentFilmina.title === 'RRSS Propias. Benchmark de difusión oficial' ||
-              currentFilmina.title === 'RRRSS Propias. Benchmark de difusión oficial') &&
+            (currentFilmina.title === 'RRRSS Propias. Benchmark de difusión oficial' ||
+              currentFilmina.title === 'RRRSS Propias. Benchmark de difusión alterna') &&
             typeof onOpenBenchmarkDifusionOficialModal === 'function' && (
-              <button className="tool-card" onClick={onOpenBenchmarkDifusionOficialModal} title="Benchmark de difusión oficial">
+              <button className="tool-card" onClick={onOpenBenchmarkDifusionOficialModal} title="Benchmark de difusión oficial/alterna">
                 <Share2 size={24} />
                 <span>Benchmark Difusión</span>
               </button>

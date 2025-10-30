@@ -54,7 +54,7 @@ export const templates = [
     name: 'Benchmark RRSS',
     description: 'Análisis exhaustivo de redes sociales propias y externas',
     color: '#AF52DE',
-    filminaCount: 15,
+    filminaCount: 18,
     filminas: [
       { id: 1, title: 'Subportada A2: Benchmark Redes Sociales', order: 13, background: 'subportada2.jpeg' },
       { id: 2, title: 'RRSS Propias: Benchmark Cuantitativo', order: 14, background: 'membretesimple.jpeg' },

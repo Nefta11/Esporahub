@@ -93,37 +93,43 @@ export const autoInsertBenchmarkDifusionOficial = async (canvas) => {
     ctx.fillText(`No. Anuncios: ${profile.anuncios}`, x, centerY + avatarRadius + 115);
   });
 
-  // Periodo (abajo izquierda)
+  // Periodo (abajo izquierda) - rectángulo más ancho
   ctx.save();
   ctx.fillStyle = '#111';
   ctx.font = 'bold 16px Arial';
-  ctx.fillRect(30, height - 50, 370, 32);
+  ctx.fillRect(30, height - 50, 450, 35);
   ctx.fillStyle = '#fff';
   ctx.font = 'bold 15px Arial';
-  ctx.fillText('Periodo: Del 5 de julio al 5 de octubre 2025', 45, height - 28);
+  ctx.textAlign = 'left';
+  ctx.fillText('Periodo: Del 5 de julio al 5 de octubre 2025', 45, height - 26);
   ctx.restore();
 
-  // Fuente (abajo derecha)
+  // Fuente (abajo derecha) con logo
   ctx.font = '15px Arial';
   ctx.fillStyle = '#222';
   ctx.textAlign = 'right';
-  ctx.fillText('Fuente: Meta', width - 40, height - 28);
+  ctx.fillText('Fuente:', width - 110, height - 28);
 
-  // Exportar
-  const dataURL = tempCanvas.toDataURL('image/png');
-  const imgElement = new Image();
-  imgElement.onload = () => {
-    // Ajustar escala para que la imagen quepa sin recortes en el canvas
-    const imgWidth = imgElement.width;
-    const imgHeight = imgElement.height;
-    const canvasWidth = typeof canvas.getWidth === 'function' ? canvas.getWidth() : canvas.width || 960;
-    const canvasHeight = typeof canvas.getHeight === 'function' ? canvas.getHeight() : canvas.height || 540;
-    const margin = 40;
-    const maxW = canvasWidth - margin * 2;
-    const maxH = canvasHeight - margin * 2;
-    const scale = Math.min(1, Math.min(maxW / imgWidth, maxH / imgHeight));
-    const left = Math.round((canvasWidth - imgWidth * scale) / 2);
-    const top = Math.round((canvasHeight - imgHeight * scale) / 2);
+  // Logo de Meta
+  const logoUrl = 'https://cdn.simpleicons.org/meta/0081FB';
+  if (logoUrl) {
+    const logoImg = new window.Image();
+    logoImg.crossOrigin = 'anonymous';
+    logoImg.src = logoUrl;
+    logoImg.onload = () => {
+      ctx.drawImage(logoImg, width - 90, height - 42, 50, 26);
+    };
+  }
+
+  // Exportar (con delay para que el logo cargue)
+  setTimeout(() => {
+    const dataURL = tempCanvas.toDataURL('image/png');
+    const imgElement = new Image();
+    imgElement.onload = () => {
+      // Usar escala fija para que se vea completo
+      const scale = 0.75;
+      const left = 40;
+      const top = 40;
 
     const fabricImg = new FabricImage(imgElement, {
       left,
@@ -165,8 +171,9 @@ export const autoInsertBenchmarkDifusionOficial = async (canvas) => {
     } catch (err) {
       console.warn('autoInsert: could not fully enable interaction on inserted object', err);
     }
-  };
-  imgElement.src = dataURL;
+    };
+    imgElement.src = dataURL;
+  }, 300); // Esperar para que el logo cargue
 };
 import { Image as FabricImage } from 'fabric';
 import { renderBenchmarkMatrix } from './benchmarkMatrixRenderer';

@@ -244,7 +244,7 @@ const FilminaEditor = () => {
       autoInsertBenchmarkSocialMedia(canvas);
     } else if (filminaTitle === 'RRSS Externas: Benchmark Cuantitativo') {
       autoInsertBenchmarkSocialMediaExternas(canvas);
-    } else if (filminaTitle === 'RRSS Propias. Benchmark de difusión oficial' || filminaTitle === 'RRRSS Propias. Benchmark de difusión oficial') {
+    } else if (filminaTitle === 'RRRSS Propias. Benchmark de difusión oficial' || filminaTitle === 'RRRSS Propias. Benchmark de difusión alterna') {
       autoInsertBenchmarkDifusionOficial(canvas);
     } else if (filminaTitle === "RRSS Propias: Benchmark's de mensaje por contenido posteado") {
       autoInsertBenchmarkMatrix(canvas);
