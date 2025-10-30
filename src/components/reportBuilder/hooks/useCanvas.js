@@ -12,6 +12,8 @@ export const useCanvas = (initialConfig) => {
       width: 960,
       height: 540,
       backgroundColor: '#ffffff',
+      selection: true,
+      allowTouchScrolling: true,
       ...initialConfig
     });
 

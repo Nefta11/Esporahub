@@ -147,9 +147,24 @@ export const autoInsertBenchmarkDifusionOficial = async (canvas) => {
       mt: true, mb: true, ml: true, mr: true, bl: true, br: true, tl: true, tr: true
     });
     canvas.add(fabricImg);
-    fabricImg.bringToFront && fabricImg.bringToFront();
-    fabricImg.setCoords && fabricImg.setCoords();
-    canvas.requestRenderAll ? canvas.requestRenderAll() : canvas.renderAll();
+
+    // Defensive: make sure object and canvas are configured to allow interaction
+    try {
+      fabricImg.selectable = true;
+      fabricImg.evented = true;
+      fabricImg.hasControls = true;
+      fabricImg.hasBorders = true;
+      fabricImg.hoverCursor = 'move';
+      if (canvas.upperCanvasEl) canvas.upperCanvasEl.style.pointerEvents = 'auto';
+      if (canvas.lowerCanvasEl) canvas.lowerCanvasEl.style.pointerEvents = 'auto';
+      canvas.calcOffset && canvas.calcOffset();
+      fabricImg.bringToFront && fabricImg.bringToFront();
+      fabricImg.setCoords && fabricImg.setCoords();
+      canvas.setActiveObject && canvas.setActiveObject(fabricImg);
+      canvas.requestRenderAll ? canvas.requestRenderAll() : canvas.renderAll();
+    } catch (err) {
+      console.warn('autoInsert: could not fully enable interaction on inserted object', err);
+    }
   };
   imgElement.src = dataURL;
 };

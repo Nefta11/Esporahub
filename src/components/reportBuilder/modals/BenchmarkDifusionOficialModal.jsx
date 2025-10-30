@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { X } from 'lucide-react';
+import { Image as FabricImage } from 'fabric';
 
 const DEFAULT_PROFILES = [
     {
@@ -127,12 +128,6 @@ const BenchmarkDifusionOficialModal = ({ isOpen, onClose, canvas }) => {
 
     const insertToCanvas = () => {
         if (!canvas) return;
-        // Close modal immediately when user clicks Insert
-        try {
-            onClose();
-        } catch (e) {
-            // ignore
-        }
         const tempCanvas = document.createElement('canvas');
         drawChart(tempCanvas, profiles);
         const dataURL = tempCanvas.toDataURL('image/png');
@@ -151,7 +146,7 @@ const BenchmarkDifusionOficialModal = ({ isOpen, onClose, canvas }) => {
             const left = Math.round((canvasWidth - imgWidth * scale) / 2);
             const top = Math.round((canvasHeight - imgHeight * scale) / 2);
 
-            const fabricImg = new window.fabric.Image(imgElement, {
+            const fabricImg = new FabricImage(imgElement, {
                 left,
                 top,
                 scaleX: scale,
@@ -176,10 +171,29 @@ const BenchmarkDifusionOficialModal = ({ isOpen, onClose, canvas }) => {
             // Ensure origin/top-left and update coordinates so object is fully inside canvas
             fabricImg.set({ originX: 'left', originY: 'top' });
             canvas.add(fabricImg);
-            fabricImg.bringToFront && fabricImg.bringToFront();
-            fabricImg.setCoords && fabricImg.setCoords();
-            canvas.setActiveObject(fabricImg);
-            canvas.requestRenderAll ? canvas.requestRenderAll() : canvas.renderAll();
+
+            // Make absolutely sure the object is interactive
+            try {
+                fabricImg.selectable = true;
+                fabricImg.evented = true;
+                fabricImg.hasControls = true;
+                fabricImg.hasBorders = true;
+                fabricImg.hoverCursor = 'move';
+
+                // Fix canvas offset / pointer handling in case it's been modified elsewhere
+                if (canvas.upperCanvasEl) canvas.upperCanvasEl.style.pointerEvents = 'auto';
+                if (canvas.lowerCanvasEl) canvas.lowerCanvasEl.style.pointerEvents = 'auto';
+                canvas.calcOffset && canvas.calcOffset();
+
+                fabricImg.bringToFront && fabricImg.bringToFront();
+                fabricImg.setCoords && fabricImg.setCoords();
+                canvas.setActiveObject(fabricImg);
+                canvas.requestRenderAll ? canvas.requestRenderAll() : canvas.renderAll();
+            } catch (err) {
+                console.warn('Could not force interactive flags on fabric object', err);
+            }
+
+            // Close modal after insertion
             onClose();
         };
         imgElement.src = dataURL;
