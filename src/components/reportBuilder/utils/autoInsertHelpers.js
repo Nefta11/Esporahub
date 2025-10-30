@@ -880,7 +880,7 @@ export const autoInsertAudienciaTablero = async (canvas) => {
   ctx.strokeStyle = '#ccc';
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.roundRect(400, 40, 760, 280, 30);
+  ctx.roundRect(400, 40, 760, 292, 30);
   ctx.fill();
   ctx.stroke();
   ctx.font = 'bold 22px Arial';
