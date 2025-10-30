@@ -1,6 +1,7 @@
 import BenchmarkAdjetivacionTableroModal from './modals/BenchmarkAdjetivacionTableroModal';
 import BenchmarkAudienciaTableroModal from './modals/BenchmarkAudienciaTableroModal';
 import BenchmarkIntegradoTableroModal from './modals/BenchmarkIntegradoTableroModal';
+import BenchmarkDifusionOficialModal from './modals/BenchmarkDifusionOficialModal';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Download } from 'lucide-react';
@@ -16,7 +17,8 @@ import {
   autoInsertBenchmarkMatrix,
   autoInsertAdjetivacionTablero,
   autoInsertAudienciaTablero,
-  autoInsertBenchmarkIntegrado
+  autoInsertBenchmarkIntegrado,
+  autoInsertBenchmarkDifusionOficial
 } from './utils/autoInsertHelpers';
 import {
   autoInsertBenchmarkSocialMedia,
@@ -242,6 +244,8 @@ const FilminaEditor = () => {
       autoInsertBenchmarkSocialMedia(canvas);
     } else if (filminaTitle === 'RRSS Externas: Benchmark Cuantitativo') {
       autoInsertBenchmarkSocialMediaExternas(canvas);
+    } else if (filminaTitle === 'RRSS Propias. Benchmark de difusión oficial' || filminaTitle === 'RRRSS Propias. Benchmark de difusión oficial') {
+      autoInsertBenchmarkDifusionOficial(canvas);
     } else if (filminaTitle === "RRSS Propias: Benchmark's de mensaje por contenido posteado") {
       autoInsertBenchmarkMatrix(canvas);
     } else if (filminaTitle === "RRSS Externas: Benchmark's de mensaje por contenido difundido") {
@@ -382,6 +386,7 @@ const FilminaEditor = () => {
           onOpenBenchmarkAdjetivacionTableroModal={() => setActiveModal('benchmarkAdjetivacionTablero')}
           onOpenBenchmarkAudienciaTableroModal={() => setActiveModal('benchmarkAudienciaTablero')}
           onOpenBenchmarkIntegradoTableroModal={() => setActiveModal('benchmarkIntegradoTablero')}
+          onOpenBenchmarkDifusionOficialModal={() => setActiveModal('benchmarkDifusionOficial')}
           onAddText={() => fabricObject.addText()}
           onAddShape={() => setActiveModal('shape')}
           onAddImage={() => fabricObject.addImage()}
@@ -402,6 +407,14 @@ const FilminaEditor = () => {
           currentFilmina={filmina}
           onOpenDemografiaSociedadRedModal={() => setActiveModal('demografiaSociedadRed')}
         />
+        {/* Modal Benchmark Difusión Oficial */}
+        {activeModal === 'benchmarkDifusionOficial' && (
+          <BenchmarkDifusionOficialModal
+            isOpen={true}
+            onClose={() => setActiveModal(null)}
+            canvas={canvas}
+          />
+        )}
 
         {activeModal === 'benchmarkIntegradoTablero' && (
           <BenchmarkIntegradoTableroModal

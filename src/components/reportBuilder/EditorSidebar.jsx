@@ -20,6 +20,7 @@ const EditorSidebar = ({
   onOpenBenchmarkAdjetivacionTableroModal,
   onOpenBenchmarkAudienciaTableroModal,
   onOpenBenchmarkIntegradoTableroModal,
+  onOpenBenchmarkDifusionOficialModal,
   layers,
   selectedLayer,
   onSelectLayer,
@@ -32,7 +33,7 @@ const EditorSidebar = ({
   };
 
   const getLayerIcon = (type) => {
-    switch(type) {
+    switch (type) {
       case 'i-text':
       case 'text':
         return '📝';
@@ -114,7 +115,7 @@ const EditorSidebar = ({
                 <PieChart size={24} />
                 <span>Tablero Adjetivación</span>
               </button>
-          )}
+            )}
 
           {/* Herramienta de Tablero de Audiencia para filminas específicas */}
           {currentFilmina &&
@@ -128,7 +129,7 @@ const EditorSidebar = ({
                 <Users size={24} />
                 <span>Tablero Audiencia</span>
               </button>
-          )}
+            )}
 
           {/* Herramienta de Benchmark Integrado para la filmina específica */}
           {currentFilmina &&
@@ -138,21 +139,32 @@ const EditorSidebar = ({
                 <Share2 size={24} />
                 <span>Benchmark Integrado</span>
               </button>
-          )}
+            )}
+
+          {/* Herramienta de Benchmark Difusión Oficial para la filmina específica */}
+          {currentFilmina &&
+            (currentFilmina.title === 'RRSS Propias. Benchmark de difusión oficial' ||
+              currentFilmina.title === 'RRRSS Propias. Benchmark de difusión oficial') &&
+            typeof onOpenBenchmarkDifusionOficialModal === 'function' && (
+              <button className="tool-card" onClick={onOpenBenchmarkDifusionOficialModal} title="Benchmark de difusión oficial">
+                <Share2 size={24} />
+                <span>Benchmark Difusión</span>
+              </button>
+            )}
 
           {/* Mostrar botón de Benchmark RRSSS Mensaje por Contenido en filminas 4, 5, 6 y 7 de Benchmark RRSS */}
           {currentFilmina &&
             (currentFilmina.title === "RRSS Propias: Benchmark's de mensaje por contenido posteado" ||
-             currentFilmina.title === 'RRSSS Propias. Benchmark de mensaje por contenido posteado' ||
-             currentFilmina.title === "RRSS Externas: Benchmark's de mensaje por contenido diferido" ||
-             currentFilmina.title === "RRSS Externas: Benchmark's de mensaje por contenido difundido" ||
-             currentFilmina.title === "RRSSS Propias. Benchmark de mensaje por contenido difundi" ||
-             currentFilmina.title === "RRSSS Externas. Benchmark de mensaje por contenido difundido") && (
+              currentFilmina.title === 'RRSSS Propias. Benchmark de mensaje por contenido posteado' ||
+              currentFilmina.title === "RRSS Externas: Benchmark's de mensaje por contenido diferido" ||
+              currentFilmina.title === "RRSS Externas: Benchmark's de mensaje por contenido difundido" ||
+              currentFilmina.title === "RRSSS Propias. Benchmark de mensaje por contenido difundi" ||
+              currentFilmina.title === "RRSSS Externas. Benchmark de mensaje por contenido difundido") && (
               <button className="tool-card" onClick={onOpenBenchmarkSocialMediaDonutMatrixModal} title={hasChartInCanvas('benchmark-matrix') ? 'Editar Benchmark' : 'Agregar Benchmark'}>
                 <Share2 size={24} />
                 <span>{hasChartInCanvas('benchmark-matrix') ? 'Editar' : 'Benchmark'}</span>
               </button>
-          )}
+            )}
           {/* Mostrar botón de Demografía solo en la filmina específica */}
           {currentFilmina && currentFilmina.title === 'Demografía General y Digital' && (
             <button className="tool-card" onClick={onOpenDemographicsModal} title={hasChartInCanvas('demographics-table') ? 'Editar Demografía' : 'Agregar Demografía'}>
@@ -201,7 +213,7 @@ const EditorSidebar = ({
                 <BarChart3 size={24} />
                 <span>{hasChartInCanvas('demografia-sociedad-red') ? 'Editar' : 'Sociedad Red'}</span>
               </button>
-          )}
+            )}
         </div>
       </section>
 

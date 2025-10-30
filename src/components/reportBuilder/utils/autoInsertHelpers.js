@@ -1,3 +1,158 @@
+// Auto-insertar Benchmark de Difusión Oficial (RRSS Propias)
+export const autoInsertBenchmarkDifusionOficial = async (canvas) => {
+  if (!canvas) return;
+
+  // Datos de ejemplo
+  const profiles = [
+    {
+      name: 'Personaje 1',
+      partido: 'Partido 1',
+      avatarUrl: '', // Puedes poner una url real si tienes
+      inversion: '$0',
+      anuncios: '0',
+    },
+    {
+      name: 'Personaje 2',
+      partido: 'Partido 2',
+      avatarUrl: '',
+      inversion: '$64,392',
+      anuncios: '15',
+    }
+  ];
+
+  const tempCanvas = document.createElement('canvas');
+  const width = 1200;
+  const height = 500;
+  tempCanvas.width = width;
+  tempCanvas.height = height;
+  const ctx = tempCanvas.getContext('2d');
+
+  // Fondo blanco
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, width, height);
+
+  // Título
+  ctx.font = 'bold 22px Arial';
+  ctx.fillStyle = '#111';
+  ctx.textAlign = 'left';
+  ctx.fillText('a. Comparativa pauta oficial por personaje', 30, 45);
+  ctx.font = 'italic 15px Arial';
+  ctx.fillStyle = '#444';
+  ctx.fillText('Inversión en Meta (MXN)', 30, 70);
+
+  // Perfiles centrados
+  const centerY = 220;
+  const avatarRadius = 70;
+  const profileSpacing = 350;
+  const startX = width / 2 - profileSpacing / 2;
+
+  profiles.forEach((profile, idx) => {
+    const x = startX + idx * profileSpacing;
+    // Avatar con borde
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(x, centerY, avatarRadius, 0, 2 * Math.PI);
+    ctx.closePath();
+    ctx.lineWidth = 6;
+    ctx.strokeStyle = '#b71c1c';
+    ctx.stroke();
+    ctx.clip();
+    ctx.fillStyle = '#ccc';
+    ctx.fillRect(x - avatarRadius, centerY - avatarRadius, avatarRadius * 2, avatarRadius * 2);
+    ctx.restore();
+
+    // Partido (esquina inferior derecha del avatar)
+    ctx.save();
+    ctx.fillStyle = '#b71c1c';
+    ctx.beginPath();
+    ctx.roundRect(x + avatarRadius - 60, centerY + avatarRadius - 30, 90, 32, 16);
+    ctx.fill();
+    ctx.font = 'bold 18px Arial';
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(profile.partido, x + avatarRadius + 20, centerY + avatarRadius - 14);
+    ctx.restore();
+
+    // Nombre (debajo del avatar)
+    ctx.font = 'bold 18px Arial';
+    ctx.fillStyle = '#222';
+    ctx.textAlign = 'center';
+    ctx.fillText(profile.name, x, centerY + avatarRadius + 38);
+
+    // Fanpage label
+    ctx.font = '14px Arial';
+    ctx.fillStyle = '#666';
+    ctx.fillText('Fanpage', x, centerY + avatarRadius + 62);
+
+    // Inversión y anuncios
+    ctx.font = '15px Arial';
+    ctx.fillStyle = '#222';
+    ctx.textAlign = 'center';
+    ctx.fillText(`Inversión: ${profile.inversion}`, x, centerY + avatarRadius + 90);
+    ctx.fillText(`No. Anuncios: ${profile.anuncios}`, x, centerY + avatarRadius + 115);
+  });
+
+  // Periodo (abajo izquierda)
+  ctx.save();
+  ctx.fillStyle = '#111';
+  ctx.font = 'bold 16px Arial';
+  ctx.fillRect(30, height - 50, 370, 32);
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 15px Arial';
+  ctx.fillText('Periodo: Del 5 de julio al 5 de octubre 2025', 45, height - 28);
+  ctx.restore();
+
+  // Fuente (abajo derecha)
+  ctx.font = '15px Arial';
+  ctx.fillStyle = '#222';
+  ctx.textAlign = 'right';
+  ctx.fillText('Fuente: Meta', width - 40, height - 28);
+
+  // Exportar
+  const dataURL = tempCanvas.toDataURL('image/png');
+  const imgElement = new Image();
+  imgElement.onload = () => {
+    // Ajustar escala para que la imagen quepa sin recortes en el canvas
+    const imgWidth = imgElement.width;
+    const imgHeight = imgElement.height;
+    const canvasWidth = typeof canvas.getWidth === 'function' ? canvas.getWidth() : canvas.width || 960;
+    const canvasHeight = typeof canvas.getHeight === 'function' ? canvas.getHeight() : canvas.height || 540;
+    const margin = 40;
+    const maxW = canvasWidth - margin * 2;
+    const maxH = canvasHeight - margin * 2;
+    const scale = Math.min(1, Math.min(maxW / imgWidth, maxH / imgHeight));
+    const left = Math.round((canvasWidth - imgWidth * scale) / 2);
+    const top = Math.round((canvasHeight - imgHeight * scale) / 2);
+
+    const fabricImg = new FabricImage(imgElement, {
+      left,
+      top,
+      scaleX: scale,
+      scaleY: scale,
+      name: 'benchmark-difusion-oficial',
+      selectable: true,
+      hasControls: true,
+      hasBorders: true,
+      evented: true,
+      lockRotation: false,
+      lockScalingX: false,
+      lockScalingY: false,
+      lockMovementX: false,
+      lockMovementY: false
+    });
+    // Ensure correct origin and coords so it doesn't appear cropped and is movable
+    fabricImg.set({ originX: 'left', originY: 'top' });
+    fabricImg.setControlsVisibility && fabricImg.setControlsVisibility({
+      mt: true, mb: true, ml: true, mr: true, bl: true, br: true, tl: true, tr: true
+    });
+    canvas.add(fabricImg);
+    fabricImg.bringToFront && fabricImg.bringToFront();
+    fabricImg.setCoords && fabricImg.setCoords();
+    canvas.requestRenderAll ? canvas.requestRenderAll() : canvas.renderAll();
+  };
+  imgElement.src = dataURL;
+};
 import { Image as FabricImage } from 'fabric';
 import { renderBenchmarkMatrix } from './benchmarkMatrixRenderer';
 
