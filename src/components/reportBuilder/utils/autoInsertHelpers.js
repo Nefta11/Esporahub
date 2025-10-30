@@ -814,7 +814,7 @@ export const autoInsertAudienciaTablero = async (canvas) => {
   if (!canvas) return;
 
   const state = defaultAudienciaData;
-  const width = 1200, height = 700;
+  const width = 1200, height = 720;
   const tempCanvas = document.createElement('canvas');
   tempCanvas.width = width;
   tempCanvas.height = height;
@@ -874,13 +874,13 @@ export const autoInsertAudienciaTablero = async (canvas) => {
   wrapText(state.message, 55, 230, 290, 20);
   ctx.restore();
 
-  // Volumen y collage
+  // Volumen y collage - Card más grande
   ctx.save();
   ctx.fillStyle = '#fff';
   ctx.strokeStyle = '#ccc';
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.roundRect(400, 40, 760, 220, 30);
+  ctx.roundRect(400, 40, 760, 280, 30);
   ctx.fill();
   ctx.stroke();
   ctx.font = 'bold 22px Arial';
@@ -895,14 +895,14 @@ export const autoInsertAudienciaTablero = async (canvas) => {
   ctx.fillStyle = '#555';
   ctx.fillText('Posts orgánicos de cuentas oficiales', 420, 115);
 
-  // Collage placeholders
-  const collageX = 420, collageY = 145, imgSize = 60, gap = 8;
+  // Collage placeholders - con más espacio
+  const collageX = 420, collageY = 155, imgSize = 60, gap = 8;
   for (let i = 0; i < 12; i++) {
     ctx.fillStyle = '#e0e0e0';
     ctx.fillRect(collageX + (i % 6) * (imgSize + gap), collageY + Math.floor(i / 6) * (imgSize + gap), imgSize, imgSize);
   }
 
-  // Demographics - Gender (en la parte derecha)
+  // Demographics - Gender (separado del radar)
   ctx.font = 'bold 16px Arial';
   ctx.fillStyle = '#333';
   ctx.fillText('Género:', 950, 70);
@@ -911,31 +911,31 @@ export const autoInsertAudienciaTablero = async (canvas) => {
     ctx.fillText(`${item.label}: ${item.value}%`, 950, 95 + i * 22);
   });
 
-  // Radar de Edad
-  drawRadarAge(ctx, 1000, 180, 70, state.demographics.age, RADAR_AXES_AGE);
+  // Radar de Edad - más abajo para no encimarse
+  drawRadarAge(ctx, 1000, 210, 70, state.demographics.age, RADAR_AXES_AGE);
   ctx.restore();
 
-  // Contenidos TOP
+  // Contenidos TOP - bajado para no encimarse
   ctx.save();
   ctx.fillStyle = '#fff';
   ctx.strokeStyle = '#ccc';
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.roundRect(40, 320, 1120, 350, 30);
+  ctx.roundRect(40, 340, 1120, 350, 30);
   ctx.fill();
   ctx.stroke();
   ctx.font = 'bold 24px Arial';
   ctx.fillStyle = '#333';
-  ctx.fillText('Publicaciones con Mayor Alcance:', 60, 355);
+  ctx.fillText('Publicaciones con Mayor Alcance:', 60, 375);
 
   // Top posts placeholders
   state.topPosts.forEach((post, i) => {
     ctx.fillStyle = '#e0e0e0';
-    ctx.fillRect(70 + i * 220, 390, 180, 200);
+    ctx.fillRect(70 + i * 220, 410, 180, 200);
     ctx.font = 'bold 18px Arial';
     ctx.fillStyle = '#888';
     ctx.textAlign = 'center';
-    ctx.fillText('Sin Publicación', 160 + i * 220, 490);
+    ctx.fillText('Sin Publicación', 160 + i * 220, 510);
 
     // Icono red social
     const icon = SOCIAL_ICONS.find(ic => ic.key === post.network);
@@ -943,7 +943,7 @@ export const autoInsertAudienciaTablero = async (canvas) => {
       const netImg = new Image();
       netImg.crossOrigin = 'anonymous';
       netImg.onload = () => {
-        ctx.drawImage(netImg, 150 + i * 220, 605, 32, 32);
+        ctx.drawImage(netImg, 150 + i * 220, 625, 32, 32);
       };
       netImg.src = icon.icon;
     }
