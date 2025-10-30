@@ -11,7 +11,8 @@ import {
   autoInsertDemographicsTable,
   autoInsertSocialMediaUsageTable,
   autoInsertInfluencersTable,
-  autoInsertBenchmarkMatrix
+  autoInsertBenchmarkMatrix,
+  autoInsertAdjetivacionTablero
 } from './utils/autoInsertHelpers';
 import {
   autoInsertBenchmarkSocialMedia,
@@ -245,6 +246,14 @@ const FilminaEditor = () => {
       autoInsertBenchmarkMatrix(canvas);
     } else if (filminaTitle === "RRSSS Externas. Benchmark de mensaje por contenido difundido") {
       autoInsertBenchmarkMatrix(canvas);
+    } else if (filminaTitle === 'RRSSS Propias. Benchmark adjetivación p/contenido posteado') {
+      autoInsertAdjetivacionTablero(canvas);
+    } else if (filminaTitle === 'RRSSS Externas. Benchmark adjetivación p/contenido posteado') {
+      autoInsertAdjetivacionTablero(canvas);
+    } else if (filminaTitle === 'RRSSS Propias. Benchmark adjetivación p/contenido difundido') {
+      autoInsertAdjetivacionTablero(canvas);
+    } else if (filminaTitle === 'RRSSS Externas. Benchmark adjetivación p/contenido difundido') {
+      autoInsertAdjetivacionTablero(canvas);
     }
   }, [filmina, getCanvas]);
 
@@ -384,6 +393,7 @@ const FilminaEditor = () => {
             isOpen={true}
             onClose={() => setActiveModal(null)}
             canvas={canvas}
+            filminaTitle={filmina?.title}
           />
         )}
         <DemografiaSociedadRedModal

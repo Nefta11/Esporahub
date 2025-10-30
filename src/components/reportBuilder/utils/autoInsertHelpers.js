@@ -499,3 +499,227 @@ export const autoInsertBenchmarkMatrix = async (canvas) => {
   // Usar la función completa de renderizado
   await renderBenchmarkMatrix(canvas);
 };
+
+// Datos por defecto para Tablero de Adjetivación
+const SOCIAL_ICONS = [
+  { key: 'facebook', icon: 'https://cdn.simpleicons.org/facebook/1877F2' },
+  { key: 'instagram', icon: 'https://cdn.simpleicons.org/instagram/E4405F' },
+  { key: 'tiktok', icon: 'https://cdn.simpleicons.org/tiktok/000000' },
+  { key: 'x', icon: 'https://cdn.simpleicons.org/x/000000' },
+  { key: 'youtube', icon: 'https://cdn.simpleicons.org/youtube/FF0000' },
+];
+
+const RADAR_AXES = [
+  'Formal',
+  'Serio',
+  'Colaborativo',
+  'Activo',
+  'Cercano',
+];
+
+const defaultAdjetivacionData = {
+  profile: {
+    name: 'Manuel Guerra',
+    avatar: '',
+  },
+  message: 'Análisis estratégico del contenido y mensaje comunicacional',
+  numPosts: 301,
+  collage: [],
+  radar: [28, 23, 18, 17, 14],
+  topPosts: [
+    { src: '', network: 'facebook' },
+    { src: '', network: 'instagram' },
+    { src: '', network: 'tiktok' },
+    { src: '', network: 'x' },
+    { src: '', network: 'youtube' },
+  ],
+};
+
+function drawRadar(ctx, centerX, centerY, radius, values, axes) {
+  ctx.save();
+  ctx.strokeStyle = '#b0b0b0';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (let i = 0; i < axes.length; i++) {
+    const angle = (Math.PI * 2 * i) / axes.length - Math.PI / 2;
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(centerX + Math.cos(angle) * radius, centerY + Math.sin(angle) * radius);
+  }
+  ctx.stroke();
+  // Draw axes labels
+  ctx.font = 'bold 13px Arial';
+  ctx.fillStyle = '#333';
+  for (let i = 0; i < axes.length; i++) {
+    const angle = (Math.PI * 2 * i) / axes.length - Math.PI / 2;
+    const x = centerX + Math.cos(angle) * (radius + 18);
+    const y = centerY + Math.sin(angle) * (radius + 18);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(axes[i], x, y);
+  }
+  // Draw radar area
+  ctx.beginPath();
+  for (let i = 0; i < values.length; i++) {
+    const angle = (Math.PI * 2 * i) / values.length - Math.PI / 2;
+    const r = radius * (values[i] / 100);
+    const x = centerX + Math.cos(angle) * r;
+    const y = centerY + Math.sin(angle) * r;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(180, 60, 180, 0.25)';
+  ctx.fill();
+  ctx.strokeStyle = '#b43cb4';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  // Draw values
+  ctx.font = 'bold 13px Arial';
+  ctx.fillStyle = '#b43cb4';
+  for (let i = 0; i < values.length; i++) {
+    const angle = (Math.PI * 2 * i) / values.length - Math.PI / 2;
+    const r = radius * (values[i] / 100) + 18;
+    const x = centerX + Math.cos(angle) * r;
+    const y = centerY + Math.sin(angle) * r;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(values[i] + '%', x, y);
+  }
+  ctx.restore();
+}
+
+// Auto-insertar Tablero de Adjetivación
+export const autoInsertAdjetivacionTablero = async (canvas) => {
+  if (!canvas) return;
+
+  const state = defaultAdjetivacionData;
+  const width = 1200, height = 650;
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = width;
+  tempCanvas.height = height;
+  const ctx = tempCanvas.getContext('2d');
+
+  ctx.fillStyle = '#f5f5f5';
+  ctx.fillRect(0, 0, width, height);
+
+  // Perfil
+  ctx.save();
+  ctx.fillStyle = '#fff';
+  ctx.strokeStyle = '#b13b2e';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.arc(120, 110, 60, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = 'bold 22px Arial';
+  ctx.fillStyle = '#333';
+  ctx.textAlign = 'left';
+  ctx.fillText(state.profile.name, 200, 110);
+  ctx.font = 'bold 13px Arial';
+  ctx.fillStyle = '#b13b2e';
+  ctx.fillText('PERFIL', 200, 140);
+  ctx.restore();
+
+  // Mensaje
+  ctx.save();
+  ctx.fillStyle = '#e5e5e5';
+  ctx.fillRect(40, 180, 320, 120);
+  ctx.font = 'bold 18px Arial';
+  ctx.fillStyle = '#333';
+  ctx.fillText('Mensaje:', 55, 205);
+  ctx.font = '14px Arial';
+  ctx.fillStyle = '#222';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+
+  // Función para envolver texto
+  const wrapText = (text, x, y, maxWidth, lineHeight) => {
+    const words = text.split(' ');
+    let line = '';
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + ' ';
+      const metrics = ctx.measureText(testLine);
+      if (metrics.width > maxWidth && n > 0) {
+        ctx.fillText(line, x, y);
+        line = words[n] + ' ';
+        y += lineHeight;
+      } else {
+        line = testLine;
+      }
+    }
+    ctx.fillText(line, x, y);
+  };
+  wrapText(state.message, 55, 230, 290, 20);
+  ctx.restore();
+
+  // Volumen y collage
+  ctx.save();
+  ctx.fillStyle = '#fff';
+  ctx.strokeStyle = '#ccc';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(400, 40, 760, 220, 30);
+  ctx.fill();
+  ctx.stroke();
+  ctx.font = 'bold 22px Arial';
+  ctx.fillStyle = '#333';
+  ctx.fillText('Número de publicaciones: ' + state.numPosts, 420, 70);
+
+  // Radar
+  drawRadar(ctx, 1000, 150, 70, state.radar, RADAR_AXES);
+  ctx.restore();
+
+  // Contenidos TOP - Ahora más grande
+  ctx.save();
+  ctx.fillStyle = '#fff';
+  ctx.strokeStyle = '#ccc';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(40, 320, 1120, 300, 30);
+  ctx.fill();
+  ctx.stroke();
+  ctx.font = 'bold 24px Arial';
+  ctx.fillStyle = '#333';
+  ctx.fillText('Publicaciones TOP:', 60, 355);
+
+  // Top posts placeholders - más grandes
+  state.topPosts.forEach((post, i) => {
+    ctx.fillStyle = '#e0e0e0';
+    ctx.fillRect(70 + i * 220, 390, 180, 160);
+    ctx.font = 'bold 18px Arial';
+    ctx.fillStyle = '#888';
+    ctx.textAlign = 'center';
+    ctx.fillText('Sin Publicación', 160 + i * 220, 470);
+
+    // Icono red social - más grande y reposicionado
+    const icon = SOCIAL_ICONS.find(ic => ic.key === post.network);
+    if (icon) {
+      const netImg = new Image();
+      netImg.crossOrigin = 'anonymous';
+      netImg.onload = () => {
+        ctx.drawImage(netImg, 150 + i * 220, 565, 32, 32);
+      };
+      netImg.src = icon.icon;
+    }
+  });
+  ctx.restore();
+
+  // Exportar a Fabric
+  setTimeout(() => {
+    const dataURL = tempCanvas.toDataURL('image/png');
+    const imgElement = new Image();
+    imgElement.onload = () => {
+      const fabricImg = new FabricImage(imgElement, {
+        left: 50,
+        top: 50,
+        scaleX: 0.7,
+        scaleY: 0.7,
+        name: 'adjetivacion-tablero'
+      });
+      canvas.add(fabricImg);
+      canvas.renderAll();
+    };
+    imgElement.src = dataURL;
+  }, 400);
+};

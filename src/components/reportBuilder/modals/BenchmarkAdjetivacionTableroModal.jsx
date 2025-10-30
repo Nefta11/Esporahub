@@ -89,11 +89,29 @@ function drawRadar(ctx, centerX, centerY, radius, values, axes) {
     ctx.restore();
 }
 
-const BenchmarkAdjetivacionTableroModal = ({ isOpen, onClose, canvas }) => {
+const BenchmarkAdjetivacionTableroModal = ({ isOpen, onClose, canvas, filminaTitle }) => {
     const [state, setState] = useState(initialState);
     const [collageFiles, setCollageFiles] = useState([]);
     const [topFiles, setTopFiles] = useState([null, null, null, null, null]);
     const previewRef = useRef(null);
+
+    // Determinar tipo de análisis según filmina
+    const getAnalysisType = () => {
+        if (!filminaTitle) return { source: 'Propias', type: 'Posteado' };
+
+        const isPropias = filminaTitle.includes('Propias');
+        const isPosteado = filminaTitle.includes('posteado');
+
+        return {
+            source: isPropias ? 'Propias' : 'Externas',
+            type: isPosteado ? 'Posteado' : 'Difundido',
+            description: isPropias
+                ? (isPosteado ? 'Posts orgánicos de cuentas oficiales' : 'Posts pagados (pauta) de cuentas oficiales')
+                : (isPosteado ? 'Posts orgánicos de cuentas alternas' : 'Posts pagados (pauta) de cuentas alternas')
+        };
+    };
+
+    const analysisType = getAnalysisType();
 
     // Handlers para inputs
     const handleProfileChange = (field, value) => {
@@ -102,8 +120,31 @@ const BenchmarkAdjetivacionTableroModal = ({ isOpen, onClose, canvas }) => {
     const handleMessageChange = e => setState(s => ({ ...s, message: e.target.value }));
     const handleNumPostsChange = e => setState(s => ({ ...s, numPosts: Number(e.target.value) }));
     const handleRadarChange = (idx, value) => {
+        const newValue = Math.max(0, Math.min(100, Number(value) || 0));
         const radar = [...state.radar];
-        radar[idx] = Number(value);
+        radar[idx] = newValue;
+
+        // Calcular la suma de todos los valores
+        const sum = radar.reduce((acc, val) => acc + val, 0);
+
+        // Si la suma excede 100, ajustar los demás valores proporcionalmente
+        if (sum > 100) {
+            const excess = sum - 100;
+            const otherIndices = radar.map((_, i) => i).filter(i => i !== idx);
+            const otherSum = otherIndices.reduce((acc, i) => acc + radar[i], 0);
+
+            if (otherSum > 0) {
+                // Distribuir el exceso proporcionalmente entre los otros valores
+                otherIndices.forEach(i => {
+                    const proportion = radar[i] / otherSum;
+                    radar[i] = Math.max(0, Math.round(radar[i] - (excess * proportion)));
+                });
+            } else {
+                // Si todos los demás están en 0, ajustar el valor actual
+                radar[idx] = 100;
+            }
+        }
+
         setState(s => ({ ...s, radar }));
     };
     // Collage
@@ -147,15 +188,42 @@ const BenchmarkAdjetivacionTableroModal = ({ isOpen, onClose, canvas }) => {
     };
 
     // Exportar tablero a canvas
-    const insertTableroToCanvas = () => {
+    const insertTableroToCanvas = async () => {
         if (!canvas) return;
-        const width = 1200, height = 600;
+
+        const width = 1200, height = 650;
         const tempCanvas = document.createElement('canvas');
         tempCanvas.width = width;
         tempCanvas.height = height;
         const ctx = tempCanvas.getContext('2d');
+
+        // Función para cargar imágenes
+        const loadImage = (src) => {
+            return new Promise((resolve) => {
+                const img = new window.Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = () => resolve(img);
+                img.onerror = () => resolve(null);
+                img.src = src;
+            });
+        };
+
+        // Cargar todas las imágenes primero
+        const avatarImg = state.profile.avatar ? await loadImage(state.profile.avatar) : null;
+        const collageImgs = await Promise.all(
+            state.collage.slice(0, 12).map(imgObj => loadImage(imgObj.src))
+        );
+        const topPostImgs = await Promise.all(
+            state.topPosts.map(post => post.src ? loadImage(post.src) : Promise.resolve(null))
+        );
+        const socialIconImgs = await Promise.all(
+            SOCIAL_ICONS.map(ic => loadImage(ic.icon))
+        );
+
+        // Ahora dibujamos todo
         ctx.fillStyle = '#f5f5f5';
         ctx.fillRect(0, 0, width, height);
+
         // Perfil
         ctx.save();
         ctx.fillStyle = '#fff';
@@ -165,19 +233,17 @@ const BenchmarkAdjetivacionTableroModal = ({ isOpen, onClose, canvas }) => {
         ctx.arc(120, 110, 60, 0, 2 * Math.PI);
         ctx.fill();
         ctx.stroke();
-        if (state.profile.avatar) {
-            const img = new window.Image();
-            img.onload = () => {
-                ctx.save();
-                ctx.beginPath();
-                ctx.arc(120, 110, 56, 0, 2 * Math.PI);
-                ctx.closePath();
-                ctx.clip();
-                ctx.drawImage(img, 64, 54, 112, 112);
-                ctx.restore();
-            };
-            img.src = state.profile.avatar;
+
+        if (avatarImg) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(120, 110, 56, 0, 2 * Math.PI);
+            ctx.closePath();
+            ctx.clip();
+            ctx.drawImage(avatarImg, 64, 54, 112, 112);
+            ctx.restore();
         }
+
         ctx.font = 'bold 22px Arial';
         ctx.fillStyle = '#333';
         ctx.textAlign = 'left';
@@ -186,6 +252,7 @@ const BenchmarkAdjetivacionTableroModal = ({ isOpen, onClose, canvas }) => {
         ctx.fillStyle = '#b13b2e';
         ctx.fillText('PERFIL', 200, 140);
         ctx.restore();
+
         // Mensaje
         ctx.save();
         ctx.fillStyle = '#e5e5e5';
@@ -197,24 +264,28 @@ const BenchmarkAdjetivacionTableroModal = ({ isOpen, onClose, canvas }) => {
         ctx.fillStyle = '#222';
         ctx.textAlign = 'left';
         ctx.textBaseline = 'top';
-        ctx.wrapText = function (text, x, y, maxWidth, lineHeight) {
+
+        // Wrap text
+        const wrapText = (text, x, y, maxWidth, lineHeight) => {
             const words = text.split(' ');
             let line = '';
+            let currentY = y;
             for (let n = 0; n < words.length; n++) {
                 const testLine = line + words[n] + ' ';
                 const metrics = ctx.measureText(testLine);
                 if (metrics.width > maxWidth && n > 0) {
-                    ctx.fillText(line, x, y);
+                    ctx.fillText(line, x, currentY);
                     line = words[n] + ' ';
-                    y += lineHeight;
+                    currentY += lineHeight;
                 } else {
                     line = testLine;
                 }
             }
-            ctx.fillText(line, x, y);
+            ctx.fillText(line, x, currentY);
         };
-        ctx.wrapText(state.message, 55, 230, 290, 20);
+        wrapText(state.message, 55, 230, 290, 20);
         ctx.restore();
+
         // Volumen y collage
         ctx.save();
         ctx.fillStyle = '#fff';
@@ -227,84 +298,78 @@ const BenchmarkAdjetivacionTableroModal = ({ isOpen, onClose, canvas }) => {
         ctx.font = 'bold 22px Arial';
         ctx.fillStyle = '#333';
         ctx.fillText('Número de publicaciones: ' + state.numPosts, 420, 70);
+
+        // Tipo de análisis
+        ctx.font = 'bold 16px Arial';
+        ctx.fillStyle = '#b13b2e';
+        ctx.fillText(`Tipo: ${analysisType.source} - ${analysisType.type}`, 420, 95);
+        ctx.font = '13px Arial';
+        ctx.fillStyle = '#555';
+        wrapText(analysisType.description, 420, 115, 500, 18);
+
         // Collage
-        const collageX = 420, collageY = 90, imgSize = 60, gap = 8;
-        state.collage.slice(0, 12).forEach((imgObj, i) => {
-            const img = new window.Image();
-            img.onload = () => {
+        const collageX = 420, collageY = 145, imgSize = 60, gap = 8;
+        collageImgs.forEach((img, i) => {
+            if (img) {
                 ctx.drawImage(img, collageX + (i % 6) * (imgSize + gap), collageY + Math.floor(i / 6) * (imgSize + gap), imgSize, imgSize);
-            };
-            img.src = imgObj.src;
+            }
         });
+
         // Radar
         drawRadar(ctx, 1000, 150, 70, state.radar, RADAR_AXES);
         ctx.restore();
-        // Contenidos TOP
+
+        // Contenidos TOP - Ahora más grande
         ctx.save();
         ctx.fillStyle = '#fff';
         ctx.strokeStyle = '#ccc';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.roundRect(40, 320, 1120, 210, 30);
+        ctx.roundRect(40, 320, 1120, 300, 30);
         ctx.fill();
         ctx.stroke();
-        ctx.font = 'bold 22px Arial';
+        ctx.font = 'bold 24px Arial';
         ctx.fillStyle = '#333';
-        ctx.fillText('Publicaciones TOP:', 60, 350);
-        // Top posts
+        ctx.fillText('Publicaciones TOP:', 60, 355);
+
+        // Top posts - más grandes
         state.topPosts.forEach((post, i) => {
-            if (post.src) {
-                const img = new window.Image();
-                img.onload = () => {
-                    ctx.drawImage(img, 70 + i * 220, 380, 140, 120);
-                };
-                img.src = post.src;
+            if (topPostImgs[i]) {
+                ctx.drawImage(topPostImgs[i], 70 + i * 220, 390, 180, 160);
             } else {
                 ctx.fillStyle = '#e0e0e0';
-                ctx.fillRect(70 + i * 220, 380, 140, 120);
-                ctx.font = 'bold 16px Arial';
+                ctx.fillRect(70 + i * 220, 390, 180, 160);
+                ctx.font = 'bold 18px Arial';
                 ctx.fillStyle = '#888';
-                ctx.fillText('Sin Publicación', 140 + i * 220, 440);
+                ctx.textAlign = 'center';
+                ctx.fillText('Sin Publicación', 160 + i * 220, 470);
             }
-            // Icono red
-            const icon = SOCIAL_ICONS.find(ic => ic.key === post.network);
-            if (icon) {
-                const netImg = new window.Image();
-                netImg.onload = () => {
-                    ctx.drawImage(netImg, 120 + i * 220, 510, 28, 28);
-                };
-                netImg.src = icon.icon;
+
+            // Icono red - más grande y reposicionado
+            const iconIndex = SOCIAL_ICONS.findIndex(ic => ic.key === post.network);
+            if (iconIndex >= 0 && socialIconImgs[iconIndex]) {
+                ctx.drawImage(socialIconImgs[iconIndex], 150 + i * 220, 565, 32, 32);
             }
         });
         ctx.restore();
-        // Footer: iconos de redes
-        ctx.save();
-        SOCIAL_ICONS.forEach((ic, i) => {
-            const img = new window.Image();
-            img.onload = () => {
-                ctx.drawImage(img, 1040 + i * 30, 550, 28, 28);
-            };
-            img.src = ic.icon;
-        });
-        ctx.restore();
+
         // Exportar a Fabric
-        setTimeout(() => {
-            const dataURL = tempCanvas.toDataURL('image/png');
-            const imgElement = new window.Image();
-            imgElement.onload = () => {
-                const fabricImg = new FabricImage(imgElement, {
-                    left: 50,
-                    top: 50,
-                    scaleX: 0.7,
-                    scaleY: 0.7
-                });
-                canvas.add(fabricImg);
-                canvas.setActiveObject(fabricImg);
-                canvas.renderAll();
-                onClose();
-            };
-            imgElement.src = dataURL;
-        }, 400);
+        const dataURL = tempCanvas.toDataURL('image/png');
+        const imgElement = new window.Image();
+        imgElement.onload = () => {
+            const fabricImg = new FabricImage(imgElement, {
+                left: 50,
+                top: 50,
+                scaleX: 0.7,
+                scaleY: 0.7,
+                name: 'adjetivacion-tablero'
+            });
+            canvas.add(fabricImg);
+            canvas.setActiveObject(fabricImg);
+            canvas.renderAll();
+            onClose();
+        };
+        imgElement.src = dataURL;
     };
 
     if (!isOpen) return null;
@@ -317,6 +382,15 @@ const BenchmarkAdjetivacionTableroModal = ({ isOpen, onClose, canvas }) => {
                     <button className="modal-close" onClick={onClose}><X size={20} /></button>
                 </div>
                 <div className="modal-body">
+                    {/* Tipo de análisis */}
+                    <div style={{ backgroundColor: '#f0f9ff', border: '2px solid #b13b2e', borderRadius: 8, padding: 12, marginBottom: 18 }}>
+                        <div style={{ fontWeight: 'bold', fontSize: 16, color: '#b13b2e', marginBottom: 4 }}>
+                            Tipo de análisis: {analysisType.source} - {analysisType.type}
+                        </div>
+                        <div style={{ fontSize: 13, color: '#555' }}>
+                            {analysisType.description}
+                        </div>
+                    </div>
                     {/* Perfil */}
                     <div style={{ display: 'flex', gap: 20, marginBottom: 18 }}>
                         <div>
@@ -353,7 +427,19 @@ const BenchmarkAdjetivacionTableroModal = ({ isOpen, onClose, canvas }) => {
                     </div>
                     {/* Radar */}
                     <div style={{ marginBottom: 18 }}>
-                        <label>Adjetivación (Tono):</label>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                            <label>Adjetivación (Tono):</label>
+                            <span style={{
+                                fontWeight: 'bold',
+                                fontSize: 14,
+                                color: state.radar.reduce((a, b) => a + b, 0) === 100 ? '#059669' : '#dc2626',
+                                backgroundColor: state.radar.reduce((a, b) => a + b, 0) === 100 ? '#d1fae5' : '#fee2e2',
+                                padding: '4px 12px',
+                                borderRadius: 6
+                            }}>
+                                Total: {state.radar.reduce((a, b) => a + b, 0)}%
+                            </span>
+                        </div>
                         <div style={{ display: 'flex', gap: 10 }}>
                             {RADAR_AXES.map((ax, idx) => (
                                 <div key={ax} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
