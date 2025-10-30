@@ -376,12 +376,12 @@ const BenchmarkAdjetivacionTableroModal = ({ isOpen, onClose, canvas, filminaTit
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content modal-large" onClick={e => e.stopPropagation()} style={{ maxWidth: 1300, maxHeight: '98vh', overflowY: 'auto' }}>
+            <div className="modal-content modal-large" onClick={e => e.stopPropagation()} style={{ maxWidth: 1300, maxHeight: '98vh', overflowY: 'hidden', display: 'flex', flexDirection: 'column' }}>
                 <div className="modal-header">
                     <h3 className="modal-title">Tablero de Análisis de Contenido y Mensaje</h3>
                     <button className="modal-close" onClick={onClose}><X size={20} /></button>
                 </div>
-                <div className="modal-body">
+                <div className="modal-body" style={{ overflowY: 'auto', maxHeight: 'calc(98vh - 140px)', paddingRight: '10px' }}>
                     {/* Tipo de análisis */}
                     <div style={{ backgroundColor: '#f0f9ff', border: '2px solid #b13b2e', borderRadius: 8, padding: 12, marginBottom: 18 }}>
                         <div style={{ fontWeight: 'bold', fontSize: 16, color: '#b13b2e', marginBottom: 4 }}>
@@ -453,18 +453,38 @@ const BenchmarkAdjetivacionTableroModal = ({ isOpen, onClose, canvas, filminaTit
                     {/* Top posts */}
                     <div style={{ marginBottom: 18 }}>
                         <label>Publicaciones TOP:</label>
-                        <div style={{ display: 'flex', gap: 18, marginTop: 8 }}>
-                            {state.topPosts.map((post, idx) => (
-                                <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-                                    <input type="file" accept="image/*" onChange={e => handleTopUpload(idx, e)} />
-                                    <select value={post.network} onChange={e => handleTopNetworkChange(idx, e.target.value)}>
-                                        {SOCIAL_ICONS.map(ic => (
-                                            <option key={ic.key} value={ic.key}>{ic.key.charAt(0).toUpperCase() + ic.key.slice(1)}</option>
-                                        ))}
-                                    </select>
-                                    {post.src && <img src={post.src} alt="top" style={{ width: 80, height: 70, objectFit: 'cover', borderRadius: 4, border: '1px solid #ccc' }} />}
-                                </div>
-                            ))}
+                        {/* Primera fila: 3 redes sociales */}
+                        <div style={{ display: 'flex', gap: 18, marginTop: 8, justifyContent: 'center' }}>
+                            {state.topPosts.slice(0, 3).map((post, idx) => {
+                                const socialIcon = SOCIAL_ICONS.find(ic => ic.key === post.network);
+                                return (
+                                    <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                                            {socialIcon && <img src={socialIcon.icon} alt={post.network} style={{ width: 20, height: 20 }} />}
+                                            <span style={{ fontWeight: 'bold', fontSize: 14, textTransform: 'capitalize' }}>{post.network}</span>
+                                        </div>
+                                        <input type="file" accept="image/*" onChange={e => handleTopUpload(idx, e)} />
+                                        {post.src && <img src={post.src} alt="top" style={{ width: 100, height: 110, objectFit: 'cover', borderRadius: 4, border: '2px solid #ccc' }} />}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        {/* Segunda fila: 2 redes sociales */}
+                        <div style={{ display: 'flex', gap: 18, marginTop: 12, justifyContent: 'center' }}>
+                            {state.topPosts.slice(3, 5).map((post, idx) => {
+                                const actualIdx = idx + 3;
+                                const socialIcon = SOCIAL_ICONS.find(ic => ic.key === post.network);
+                                return (
+                                    <div key={actualIdx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                                            {socialIcon && <img src={socialIcon.icon} alt={post.network} style={{ width: 20, height: 20 }} />}
+                                            <span style={{ fontWeight: 'bold', fontSize: 14, textTransform: 'capitalize' }}>{post.network}</span>
+                                        </div>
+                                        <input type="file" accept="image/*" onChange={e => handleTopUpload(actualIdx, e)} />
+                                        {post.src && <img src={post.src} alt="top" style={{ width: 100, height: 110, objectFit: 'cover', borderRadius: 4, border: '2px solid #ccc' }} />}
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 </div>
