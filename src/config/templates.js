@@ -70,7 +70,10 @@ export const templates = [
       { id: 12, title: 'RRSSS Propias. Benchmark audiencia p/contenido posteado', order: 24, background: 'membretesimple.jpeg' },
       { id: 13, title: 'RRSSS Externas. Benchmark audiencia p/contenido posteado', order: 25, background: 'membretesimple.jpeg' },
       { id: 14, title: 'RRSSS Propias. Benchmark audiencia p/contenido difundido', order: 26, background: 'membretesimple.jpeg' },
-      { id: 15, title: 'RRSSS Externas. Benchmark audiencia p/contenido difundido', order: 27, background: 'membretesimple.jpeg' },
+  { id: 15, title: 'RRSSS Externas. Benchmark audiencia p/contenido difundido', order: 27, background: 'membretesimple.jpeg' },
+  { id: 16, title: 'Benchmark de mensaje integrado', order: 28, background: 'membretesimple.jpeg' },
+  { id: 17, title: 'RRRSS Propias. Benchmark de difusión oficial', order: 29, background: 'membretesimple.jpeg' },
+  { id: 18, title: 'RRRSS Propias. Benchmark de difusión alterna', order: 30, background: 'membretesimple.jpeg' },
     ],
     canvasConfig: {
       text: 'Benchmark RRSS',
