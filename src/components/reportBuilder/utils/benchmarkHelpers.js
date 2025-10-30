@@ -2,8 +2,8 @@ import { Image as FabricImage } from 'fabric';
 
 const defaultBenchmarkData = [
   {
-    name: 'Manuel Guerra',
-    avatarUrl: 'https://placehold.co/100x100/EBF4FF/333333?text=MG',
+    name: 'Personaje 1',
+    avatarUrl: 'https://placehold.co/100x100/EBF4FF/333333?text=P1',
     facebook: { followers: '318.6K', posts: '155' },
     x: { followers: '1.3K', posts: '2' },
     instagram: { followers: '55.3K', posts: '103' },
@@ -11,8 +11,8 @@ const defaultBenchmarkData = [
     youtube: { followers: '406', posts: '0' },
   },
   {
-    name: 'Manuel Guerra Flores',
-    avatarUrl: 'https://placehold.co/100x100/FFEBEB/333333?text=MF',
+    name: 'Personaje 2',
+    avatarUrl: 'https://placehold.co/100x100/FFEBEB/333333?text=P2',
     facebook: { followers: '595K', posts: '54' },
     x: { followers: '49K', posts: '27' },
     instagram: { followers: '33.2K', posts: '41' },
@@ -20,8 +20,8 @@ const defaultBenchmarkData = [
     youtube: { followers: '1.5K', posts: '1' },
   },
   {
-    name: 'Waldo Fernandez',
-    avatarUrl: 'https://placehold.co/100x100/EBFFF5/333333?text=WF',
+    name: 'Personaje 3',
+    avatarUrl: 'https://placehold.co/100x100/EBFFF5/333333?text=P3',
     facebook: { followers: '1.4M', posts: '218' },
     x: { followers: '16.3K', posts: '26' },
     instagram: { followers: '19.3K', posts: '121' },
@@ -178,8 +178,8 @@ export const autoInsertBenchmarkSocialMedia = async (canvas) => {
 
   const characters = [
     {
-      name: 'Manuel Guerra',
-      avatarUrl: 'https://placehold.co/100x100/EBF4FF/333333?text=MG',
+      name: 'Personaje 1',
+      avatarUrl: 'https://placehold.co/100x100/EBF4FF/333333?text=P1',
       facebook: { followers: '318.6K', posts: '155' },
       x: { followers: '1.3K', posts: '2' },
       instagram: { followers: '55.3K', posts: '103' },
@@ -187,8 +187,8 @@ export const autoInsertBenchmarkSocialMedia = async (canvas) => {
       youtube: { followers: '406', posts: '0' },
     },
     {
-      name: 'Manuel Guerra Flores',
-      avatarUrl: 'https://placehold.co/100x100/FFEBEB/333333?text=MF',
+      name: 'Personaje 2',
+      avatarUrl: 'https://placehold.co/100x100/FFEBEB/333333?text=P2',
       facebook: { followers: '595K', posts: '54' },
       x: { followers: '49K', posts: '27' },
       instagram: { followers: '33.2K', posts: '41' },
@@ -196,8 +196,8 @@ export const autoInsertBenchmarkSocialMedia = async (canvas) => {
       youtube: { followers: '1.5K', posts: '1' },
     },
     {
-      name: 'Waldo Fernandez',
-      avatarUrl: 'https://placehold.co/100x100/EBFFF5/333333?text=WF',
+      name: 'Personaje 3',
+      avatarUrl: 'https://placehold.co/100x100/EBFFF5/333333?text=P3',
       facebook: { followers: '1.4M', posts: '218' },
       x: { followers: '16.3K', posts: '26' },
       instagram: { followers: '19.3K', posts: '121' },
@@ -400,8 +400,8 @@ export const autoInsertBenchmarkSocialMediaExternas = async (canvas) => {
 
   const characters = [
     {
-      name: 'AMLO',
-      avatarUrl: 'https://placehold.co/100x100/8C2E3A/FFFFFF?text=AMLO',
+      name: 'Personaje 1',
+      avatarUrl: 'https://placehold.co/100x100/8C2E3A/FFFFFF?text=P1',
       facebook: { followers: '10.2M', posts: '150' },
       x: { followers: '10M', posts: '210' },
       instagram: { followers: '1.5M', posts: '90' },
@@ -409,8 +409,8 @@ export const autoInsertBenchmarkSocialMediaExternas = async (canvas) => {
       youtube: { followers: '4.5M', posts: '300' },
     },
     {
-      name: 'Claudia Sheinbaum',
-      avatarUrl: 'https://placehold.co/100x100/8C2E3A/FFFFFF?text=CS',
+      name: 'Personaje 2',
+      avatarUrl: 'https://placehold.co/100x100/8C2E3A/FFFFFF?text=P2',
       facebook: { followers: '6M', posts: '180' },
       x: { followers: '3.1M', posts: '250' },
       instagram: { followers: '1.2M', posts: '120' },
@@ -418,8 +418,8 @@ export const autoInsertBenchmarkSocialMediaExternas = async (canvas) => {
       youtube: { followers: '1M', posts: '80' },
     },
     {
-      name: 'Xóchitl Gálvez',
-      avatarUrl: 'https://placehold.co/100x100/003366/FFFFFF?text=XG',
+      name: 'Personaje 3',
+      avatarUrl: 'https://placehold.co/100x100/003366/FFFFFF?text=P3',
       facebook: { followers: '1.5M', posts: '160' },
       x: { followers: '1.8M', posts: '300' },
       instagram: { followers: '700K', posts: '110' },

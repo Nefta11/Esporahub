@@ -696,7 +696,7 @@ const RADAR_AXES = [
 
 const defaultAdjetivacionData = {
   profile: {
-    name: 'Manuel Guerra',
+    name: 'Personaje 1',
     avatar: '',
   },
   message: 'Análisis estratégico del contenido y mensaje comunicacional',
@@ -911,7 +911,7 @@ const RADAR_AXES_AGE = [
 
 const defaultAudienciaData = {
   profile: {
-    name: 'Manuel Guerra',
+    name: 'Personaje 1',
     avatar: '',
   },
   message: 'Análisis de audiencia y alcance',

@@ -32,8 +32,8 @@ const SOCIAL_NETWORKS_FOR_LEGEND = [
 
 const initialCharacters = [
     {
-        name: 'Manuel Guerra',
-        avatarUrl: 'https://placehold.co/100x100/EBF4FF/333333?text=MG',
+        name: 'Personaje 1',
+        avatarUrl: 'https://placehold.co/100x100/EBF4FF/333333?text=P1',
         donutData: {
             facebook: [31, 15, 20, 18, 12, 6, 5, 7],
             x: [50, 0, 0, 0, 50, 0, 8, 5],
@@ -43,8 +43,8 @@ const initialCharacters = [
         },
     },
     {
-        name: 'Manuel Guerra Flores',
-        avatarUrl: 'https://placehold.co/100x100/FFEBEB/333333?text=MF',
+        name: 'Personaje 2',
+        avatarUrl: 'https://placehold.co/100x100/FFEBEB/333333?text=P2',
         donutData: {
             facebook: [17, 19, 22, 22, 4, 17, 7, 6],
             x: [7, 22, 37, 19, 7, 7, 5, 7],
@@ -54,8 +54,8 @@ const initialCharacters = [
         },
     },
     {
-        name: 'Waldo Fernández',
-        avatarUrl: 'https://placehold.co/100x100/EBFFF5/333333?text=WF',
+        name: 'Personaje 3',
+        avatarUrl: 'https://placehold.co/100x100/EBFFF5/333333?text=P3',
         donutData: {
             facebook: [40, 8, 22, 3, 7, 10, 9, 8],
             x: [58, 0, 12, 0, 23, 0, 7, 7],

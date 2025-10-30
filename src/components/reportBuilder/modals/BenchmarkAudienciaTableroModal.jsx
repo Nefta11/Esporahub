@@ -26,7 +26,7 @@ const RADAR_AXES_AGE = [
 
 const initialState = {
     profile: {
-        name: 'Manuel Guerra',
+        name: 'Personaje 1',
         avatar: '',
     },
     message: '',

@@ -22,7 +22,7 @@ const DEFAULT_PROFILES = [
 const BenchmarkDifusionOficialModal = ({ isOpen, onClose, canvas }) => {
     const canvasRef = useRef(null);
     const [profiles, setProfiles] = useState(DEFAULT_PROFILES);
-    const [metaLogoUrl, setMetaLogoUrl] = useState('https://cdn.simpleicons.org/meta/0081FB');
+    const [metaLogoUrl, setMetaLogoUrl] = useState('');
 
     const updateProfileField = (index, field, value) => {
         setProfiles(prev => {
@@ -78,17 +78,17 @@ const BenchmarkDifusionOficialModal = ({ isOpen, onClose, canvas }) => {
             ctx.fillRect(x - avatarRadius, centerY - avatarRadius, avatarRadius * 2, avatarRadius * 2);
             ctx.restore();
 
-            // Partido (esquina inferior derecha del avatar)
+            // Partido (esquina inferior derecha del avatar) - más grande
             ctx.save();
             ctx.fillStyle = '#b71c1c';
             ctx.beginPath();
-            ctx.roundRect(x + avatarRadius - 60, centerY + avatarRadius - 30, 90, 32, 16);
+            ctx.roundRect(x + avatarRadius - 70, centerY + avatarRadius - 35, 110, 42, 20);
             ctx.fill();
-            ctx.font = 'bold 18px Arial';
+            ctx.font = 'bold 20px Arial';
             ctx.fillStyle = '#fff';
             ctx.textAlign = 'right';
             ctx.textBaseline = 'middle';
-            ctx.fillText(profile.partido, x + avatarRadius + 20, centerY + avatarRadius - 14);
+            ctx.fillText(profile.partido, x + avatarRadius + 30, centerY + avatarRadius - 14);
             ctx.restore();
 
             // Nombre (debajo del avatar)
@@ -221,22 +221,7 @@ const BenchmarkDifusionOficialModal = ({ isOpen, onClose, canvas }) => {
                     <div style={{ display: 'grid', gap: 12 }}>
                         <h4>Configuración</h4>
 
-                        {/* Logo de Meta */}
-                        <div style={{ padding: 12, borderRadius: 8, border: '1px solid #e6e6e6', background: '#f9f9f9' }}>
-                            <label style={{ fontSize: 13, fontWeight: 'bold', marginBottom: 6, display: 'block' }}>Logo de Meta (URL)</label>
-                            <input
-                                className="property-input"
-                                value={metaLogoUrl}
-                                onChange={(e) => setMetaLogoUrl(e.target.value)}
-                                placeholder="https://cdn.simpleicons.org/meta/0081FB"
-                                style={{ width: '100%' }}
-                            />
-                            <small style={{ fontSize: 11, color: '#666', marginTop: 4, display: 'block' }}>
-                                Deja vacío para mostrar solo texto "Meta"
-                            </small>
-                        </div>
-
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 12 }}>
                             {profiles.map((p, i) => (
                                 <div key={i} style={{ padding: 12, borderRadius: 8, border: '1px solid #e6e6e6', background: '#fff' }}>
                                     <h5 style={{ margin: '0 0 8px 0' }}>Perfil {i + 1}</h5>
