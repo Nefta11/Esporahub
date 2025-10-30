@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 
 const DEFAULT_PROFILES = [
@@ -20,12 +20,20 @@ const DEFAULT_PROFILES = [
 
 const BenchmarkDifusionOficialModal = ({ isOpen, onClose, canvas }) => {
     const canvasRef = useRef(null);
-    const profiles = DEFAULT_PROFILES;
+    const [profiles, setProfiles] = useState(DEFAULT_PROFILES);
+
+    const updateProfileField = (index, field, value) => {
+        setProfiles(prev => {
+            const copy = [...prev];
+            copy[index] = { ...copy[index], [field]: value };
+            return copy;
+        });
+    };
 
     useEffect(() => {
         if (!isOpen || !canvasRef.current) return;
         drawChart(canvasRef.current, profiles);
-    }, [isOpen]);
+    }, [isOpen, profiles]);
 
     const drawChart = (targetCanvas, profiles) => {
         const width = 1200;
@@ -119,6 +127,12 @@ const BenchmarkDifusionOficialModal = ({ isOpen, onClose, canvas }) => {
 
     const insertToCanvas = () => {
         if (!canvas) return;
+        // Close modal immediately when user clicks Insert
+        try {
+            onClose();
+        } catch (e) {
+            // ignore
+        }
         const tempCanvas = document.createElement('canvas');
         drawChart(tempCanvas, profiles);
         const dataURL = tempCanvas.toDataURL('image/png');
@@ -180,10 +194,33 @@ const BenchmarkDifusionOficialModal = ({ isOpen, onClose, canvas }) => {
                     <button className="modal-close" onClick={onClose}><X size={20} /></button>
                 </div>
                 <div className="modal-body">
-                    <div className="chart-preview" style={{ marginTop: '20px' }}>
-                        <h4>Vista Previa</h4>
-                        <div className="preview-container" style={{ maxHeight: '400px', overflow: 'auto', background: '#f9f9f9', border: '1px solid #ccc', borderRadius: '8px', padding: '10px' }}>
-                            <canvas ref={canvasRef}></canvas>
+                    <div style={{ display: 'grid', gap: 12 }}>
+                        <h4>Configuración</h4>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                            {profiles.map((p, i) => (
+                                <div key={i} style={{ padding: 12, borderRadius: 8, border: '1px solid #e6e6e6', background: '#fff' }}>
+                                    <h5 style={{ margin: '0 0 8px 0' }}>Perfil {i + 1}</h5>
+                                    <div style={{ display: 'grid', gap: 8 }}>
+                                        <label style={{ fontSize: 12, opacity: 0.8 }}>Nombre</label>
+                                        <input className="property-input" value={p.name} onChange={(e) => updateProfileField(i, 'name', e.target.value)} />
+                                        <label style={{ fontSize: 12, opacity: 0.8 }}>Partido / Tag</label>
+                                        <input className="property-input" value={p.partido} onChange={(e) => updateProfileField(i, 'partido', e.target.value)} />
+                                        <label style={{ fontSize: 12, opacity: 0.8 }}>Inversión</label>
+                                        <input className="property-input" value={p.inversion} onChange={(e) => updateProfileField(i, 'inversion', e.target.value)} />
+                                        <label style={{ fontSize: 12, opacity: 0.8 }}>No. Anuncios</label>
+                                        <input className="property-input" value={p.anuncios} onChange={(e) => updateProfileField(i, 'anuncios', e.target.value)} />
+                                        <label style={{ fontSize: 12, opacity: 0.8 }}>Avatar URL (opcional)</label>
+                                        <input className="property-input" value={p.avatarUrl} onChange={(e) => updateProfileField(i, 'avatarUrl', e.target.value)} />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="chart-preview" style={{ marginTop: '6px' }}>
+                            <h4>Vista Previa</h4>
+                            <div className="preview-container" style={{ maxHeight: '400px', overflow: 'auto', background: '#f9f9f9', border: '1px solid #ccc', borderRadius: '8px', padding: '10px' }}>
+                                <canvas ref={canvasRef}></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
