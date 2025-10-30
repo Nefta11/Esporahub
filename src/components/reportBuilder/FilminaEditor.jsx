@@ -240,6 +240,10 @@ const FilminaEditor = () => {
       autoInsertBenchmarkMatrix(canvas);
     } else if (filminaTitle === "RRSS Externas: Benchmark's de mensaje por contenido difundido") {
       autoInsertBenchmarkMatrix(canvas);
+    } else if (filminaTitle === "RRSSS Propias. Benchmark de mensaje por contenido difundi") {
+      autoInsertBenchmarkMatrix(canvas);
+    } else if (filminaTitle === "RRSSS Externas. Benchmark de mensaje por contenido difundido") {
+      autoInsertBenchmarkMatrix(canvas);
     }
   }, [filmina, getCanvas]);
 

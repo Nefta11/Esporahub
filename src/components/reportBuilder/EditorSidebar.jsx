@@ -105,12 +105,14 @@ const EditorSidebar = ({
             <span>Apilado</span>
           </button>
 
-          {/* Mostrar botón de Benchmark RRSSS Mensaje por Contenido en filminas 4 y 5 de Benchmark RRSS */}
+          {/* Mostrar botón de Benchmark RRSSS Mensaje por Contenido en filminas 4, 5, 6 y 7 de Benchmark RRSS */}
           {currentFilmina &&
             (currentFilmina.title === "RRSS Propias: Benchmark's de mensaje por contenido posteado" ||
              currentFilmina.title === 'RRSSS Propias. Benchmark de mensaje por contenido posteado' ||
              currentFilmina.title === "RRSS Externas: Benchmark's de mensaje por contenido diferido" ||
-             currentFilmina.title === "RRSS Externas: Benchmark's de mensaje por contenido difundido") && (
+             currentFilmina.title === "RRSS Externas: Benchmark's de mensaje por contenido difundido" ||
+             currentFilmina.title === "RRSSS Propias. Benchmark de mensaje por contenido difundi" ||
+             currentFilmina.title === "RRSSS Externas. Benchmark de mensaje por contenido difundido") && (
               <button className="tool-card" onClick={onOpenBenchmarkSocialMediaDonutMatrixModal} title={hasChartInCanvas('benchmark-matrix') ? 'Editar Benchmark' : 'Agregar Benchmark'}>
                 <Share2 size={24} />
                 <span>{hasChartInCanvas('benchmark-matrix') ? 'Editar' : 'Benchmark'}</span>
