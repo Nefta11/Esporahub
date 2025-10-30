@@ -725,31 +725,27 @@ export const autoInsertAdjetivacionTablero = async (canvas) => {
 };
 
 // Datos por defecto para Tablero de Audiencia
+const RADAR_AXES_AGE = [
+  '18-24',
+  '25-34',
+  '35-44',
+  '45+',
+];
+
 const defaultAudienciaData = {
   profile: {
     name: 'Manuel Guerra',
     avatar: '',
   },
   message: 'Análisis de audiencia y alcance',
-  totalReach: '1.2M',
-  totalEngagement: '850K',
+  numPosts: 301,
+  collage: [],
   demographics: {
     gender: [
       { label: 'Masculino', value: 52 },
       { label: 'Femenino', value: 48 },
     ],
-    age: [
-      { label: '18-24', value: 25 },
-      { label: '25-34', value: 35 },
-      { label: '35-44', value: 22 },
-      { label: '45+', value: 18 },
-    ],
-    location: [
-      { label: 'México', value: 45 },
-      { label: 'USA', value: 30 },
-      { label: 'España', value: 15 },
-      { label: 'Otros', value: 10 },
-    ],
+    age: [25, 35, 22, 18], // Array simple para el radar
   },
   topPosts: [
     { src: '', network: 'facebook' },
@@ -759,6 +755,59 @@ const defaultAudienciaData = {
     { src: '', network: 'youtube' },
   ],
 };
+
+function drawRadarAge(ctx, centerX, centerY, radius, values, axes) {
+  ctx.save();
+  ctx.strokeStyle = '#b0b0b0';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (let i = 0; i < axes.length; i++) {
+    const angle = (Math.PI * 2 * i) / axes.length - Math.PI / 2;
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(centerX + Math.cos(angle) * radius, centerY + Math.sin(angle) * radius);
+  }
+  ctx.stroke();
+  // Draw axes labels
+  ctx.font = 'bold 13px Arial';
+  ctx.fillStyle = '#333';
+  for (let i = 0; i < axes.length; i++) {
+    const angle = (Math.PI * 2 * i) / axes.length - Math.PI / 2;
+    const x = centerX + Math.cos(angle) * (radius + 18);
+    const y = centerY + Math.sin(angle) * (radius + 18);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(axes[i], x, y);
+  }
+  // Draw radar area
+  ctx.beginPath();
+  for (let i = 0; i < values.length; i++) {
+    const angle = (Math.PI * 2 * i) / values.length - Math.PI / 2;
+    const r = radius * (values[i] / 100);
+    const x = centerX + Math.cos(angle) * r;
+    const y = centerY + Math.sin(angle) * r;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(25, 103, 210, 0.25)';
+  ctx.fill();
+  ctx.strokeStyle = '#1967D2';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  // Draw values
+  ctx.font = 'bold 13px Arial';
+  ctx.fillStyle = '#1967D2';
+  for (let i = 0; i < values.length; i++) {
+    const angle = (Math.PI * 2 * i) / values.length - Math.PI / 2;
+    const r = radius * (values[i] / 100) + 18;
+    const x = centerX + Math.cos(angle) * r;
+    const y = centerY + Math.sin(angle) * r;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(values[i] + '%', x, y);
+  }
+  ctx.restore();
+}
 
 // Auto-insertar Tablero de Audiencia
 export const autoInsertAudienciaTablero = async (canvas) => {
@@ -825,42 +874,45 @@ export const autoInsertAudienciaTablero = async (canvas) => {
   wrapText(state.message, 55, 230, 290, 20);
   ctx.restore();
 
-  // Métricas y Demographics
+  // Volumen y collage
   ctx.save();
   ctx.fillStyle = '#fff';
   ctx.strokeStyle = '#ccc';
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.roundRect(400, 40, 760, 260, 30);
+  ctx.roundRect(400, 40, 760, 220, 30);
   ctx.fill();
   ctx.stroke();
-
-  ctx.font = 'bold 20px Arial';
+  ctx.font = 'bold 22px Arial';
   ctx.fillStyle = '#333';
-  ctx.fillText('Alcance Total: ' + state.totalReach, 420, 70);
-  ctx.fillText('Engagement Total: ' + state.totalEngagement, 420, 100);
+  ctx.fillText('Número de publicaciones: ' + state.numPosts, 420, 70);
 
-  // Demographics
-  ctx.font = 'bold 14px Arial';
-  ctx.fillText('Género:', 420, 140);
-  ctx.font = '12px Arial';
+  // Tipo de análisis (placeholder)
+  ctx.font = 'bold 16px Arial';
+  ctx.fillStyle = '#1967D2';
+  ctx.fillText('Tipo: Propias - Posteado', 420, 95);
+  ctx.font = '13px Arial';
+  ctx.fillStyle = '#555';
+  ctx.fillText('Posts orgánicos de cuentas oficiales', 420, 115);
+
+  // Collage placeholders
+  const collageX = 420, collageY = 145, imgSize = 60, gap = 8;
+  for (let i = 0; i < 12; i++) {
+    ctx.fillStyle = '#e0e0e0';
+    ctx.fillRect(collageX + (i % 6) * (imgSize + gap), collageY + Math.floor(i / 6) * (imgSize + gap), imgSize, imgSize);
+  }
+
+  // Demographics - Gender (en la parte derecha)
+  ctx.font = 'bold 16px Arial';
+  ctx.fillStyle = '#333';
+  ctx.fillText('Género:', 950, 70);
+  ctx.font = '14px Arial';
   state.demographics.gender.forEach((item, i) => {
-    ctx.fillText(`${item.label}: ${item.value}%`, 420, 160 + i * 20);
+    ctx.fillText(`${item.label}: ${item.value}%`, 950, 95 + i * 22);
   });
 
-  ctx.font = 'bold 14px Arial';
-  ctx.fillText('Edad:', 600, 140);
-  ctx.font = '12px Arial';
-  state.demographics.age.forEach((item, i) => {
-    ctx.fillText(`${item.label}: ${item.value}%`, 600, 160 + i * 20);
-  });
-
-  ctx.font = 'bold 14px Arial';
-  ctx.fillText('Ubicación:', 780, 140);
-  ctx.font = '12px Arial';
-  state.demographics.location.forEach((item, i) => {
-    ctx.fillText(`${item.label}: ${item.value}%`, 780, 160 + i * 20);
-  });
+  // Radar de Edad
+  drawRadarAge(ctx, 1000, 180, 70, state.demographics.age, RADAR_AXES_AGE);
   ctx.restore();
 
   // Contenidos TOP

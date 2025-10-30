@@ -17,31 +17,27 @@ const DEMOGRAPHIC_CATEGORIES = [
     'Intereses',
 ];
 
+const RADAR_AXES_AGE = [
+    '18-24',
+    '25-34',
+    '35-44',
+    '45+',
+];
+
 const initialState = {
     profile: {
         name: 'Manuel Guerra',
         avatar: '',
     },
     message: '',
-    totalReach: '1.2M',
-    totalEngagement: '850K',
+    numPosts: 301,
+    collage: [],
     demographics: {
         gender: [
             { label: 'Masculino', value: 52 },
             { label: 'Femenino', value: 48 },
         ],
-        age: [
-            { label: '18-24', value: 25 },
-            { label: '25-34', value: 35 },
-            { label: '35-44', value: 22 },
-            { label: '45+', value: 18 },
-        ],
-        location: [
-            { label: 'México', value: 45 },
-            { label: 'USA', value: 30 },
-            { label: 'España', value: 15 },
-            { label: 'Otros', value: 10 },
-        ],
+        age: [25, 35, 22, 18], // Array simple para el radar
     },
     topPosts: [
         { src: '', network: 'facebook' },
@@ -52,8 +48,62 @@ const initialState = {
     ],
 };
 
+function drawRadar(ctx, centerX, centerY, radius, values, axes) {
+    ctx.save();
+    ctx.strokeStyle = '#b0b0b0';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let i = 0; i < axes.length; i++) {
+        const angle = (Math.PI * 2 * i) / axes.length - Math.PI / 2;
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(centerX + Math.cos(angle) * radius, centerY + Math.sin(angle) * radius);
+    }
+    ctx.stroke();
+    // Draw axes labels
+    ctx.font = 'bold 13px Arial';
+    ctx.fillStyle = '#333';
+    for (let i = 0; i < axes.length; i++) {
+        const angle = (Math.PI * 2 * i) / axes.length - Math.PI / 2;
+        const x = centerX + Math.cos(angle) * (radius + 18);
+        const y = centerY + Math.sin(angle) * (radius + 18);
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(axes[i], x, y);
+    }
+    // Draw radar area
+    ctx.beginPath();
+    for (let i = 0; i < values.length; i++) {
+        const angle = (Math.PI * 2 * i) / values.length - Math.PI / 2;
+        const r = radius * (values[i] / 100);
+        const x = centerX + Math.cos(angle) * r;
+        const y = centerY + Math.sin(angle) * r;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(25, 103, 210, 0.25)';
+    ctx.fill();
+    ctx.strokeStyle = '#1967D2';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    // Draw values
+    ctx.font = 'bold 13px Arial';
+    ctx.fillStyle = '#1967D2';
+    for (let i = 0; i < values.length; i++) {
+        const angle = (Math.PI * 2 * i) / values.length - Math.PI / 2;
+        const r = radius * (values[i] / 100) + 18;
+        const x = centerX + Math.cos(angle) * r;
+        const y = centerY + Math.sin(angle) * r;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(values[i] + '%', x, y);
+    }
+    ctx.restore();
+}
+
 const BenchmarkAudienciaTableroModal = ({ isOpen, onClose, canvas, filminaTitle }) => {
     const [state, setState] = useState(initialState);
+    const [collageFiles, setCollageFiles] = useState([]);
     const [topFiles, setTopFiles] = useState([null, null, null, null, null]);
 
     // Determinar tipo de análisis según filmina
@@ -79,32 +129,69 @@ const BenchmarkAudienciaTableroModal = ({ isOpen, onClose, canvas, filminaTitle 
         setState(s => ({ ...s, profile: { ...s.profile, [field]: value } }));
     };
     const handleMessageChange = e => setState(s => ({ ...s, message: e.target.value }));
-    const handleReachChange = e => setState(s => ({ ...s, totalReach: e.target.value }));
-    const handleEngagementChange = e => setState(s => ({ ...s, totalEngagement: e.target.value }));
+    const handleNumPostsChange = e => setState(s => ({ ...s, numPosts: Number(e.target.value) }));
 
-    const handleDemographicChange = (category, index, value) => {
+    const handleCollageUpload = e => {
+        const files = Array.from(e.target.files);
+        const readers = files.map(file => {
+            return new Promise(resolve => {
+                const reader = new FileReader();
+                reader.onload = ev => resolve({ src: ev.target.result, file });
+                reader.readAsDataURL(file);
+            });
+        });
+        Promise.all(readers).then(images => {
+            setState(s => ({ ...s, collage: [...s.collage, ...images] }));
+            setCollageFiles(f => [...f, ...files]);
+        });
+    };
+
+    const handleRemoveCollage = idx => {
+        setState(s => ({ ...s, collage: s.collage.filter((_, i) => i !== idx) }));
+        setCollageFiles(f => f.filter((_, i) => i !== idx));
+    };
+
+    const handleGenderChange = (index, value) => {
         const newValue = Math.max(0, Math.min(100, Number(value) || 0));
-        const demographics = { ...state.demographics };
-        demographics[category][index].value = newValue;
+        const gender = [...state.demographics.gender];
+        gender[index].value = newValue;
 
         // Ajustar automáticamente para que sume 100%
-        const sum = demographics[category].reduce((acc, item) => acc + item.value, 0);
+        const sum = gender.reduce((acc, item) => acc + item.value, 0);
         if (sum > 100) {
             const excess = sum - 100;
-            const otherIndices = demographics[category].map((_, i) => i).filter(i => i !== index);
-            const otherSum = otherIndices.reduce((acc, i) => acc + demographics[category][i].value, 0);
+            const otherIndex = index === 0 ? 1 : 0;
+            gender[otherIndex].value = Math.max(0, gender[otherIndex].value - excess);
+        }
+
+        setState(s => ({ ...s, demographics: { ...s.demographics, gender } }));
+    };
+
+    const handleAgeChange = (idx, value) => {
+        const newValue = Math.max(0, Math.min(100, Number(value) || 0));
+        const age = [...state.demographics.age];
+        age[idx] = newValue;
+
+        // Calcular la suma
+        const sum = age.reduce((acc, val) => acc + val, 0);
+
+        // Ajustar si excede 100%
+        if (sum > 100) {
+            const excess = sum - 100;
+            const otherIndices = age.map((_, i) => i).filter(i => i !== idx);
+            const otherSum = otherIndices.reduce((acc, i) => acc + age[i], 0);
 
             if (otherSum > 0) {
                 otherIndices.forEach(i => {
-                    const proportion = demographics[category][i].value / otherSum;
-                    demographics[category][i].value = Math.max(0, Math.round(demographics[category][i].value - (excess * proportion)));
+                    const proportion = age[i] / otherSum;
+                    age[i] = Math.max(0, Math.round(age[i] - (excess * proportion)));
                 });
             } else {
-                demographics[category][index].value = 100;
+                age[idx] = 100;
             }
         }
 
-        setState(s => ({ ...s, demographics }));
+        setState(s => ({ ...s, demographics: { ...s.demographics, age } }));
     };
 
     const handleTopUpload = (idx, e) => {
@@ -151,6 +238,9 @@ const BenchmarkAudienciaTableroModal = ({ isOpen, onClose, canvas, filminaTitle 
 
         // Cargar todas las imágenes primero
         const avatarImg = state.profile.avatar ? await loadImage(state.profile.avatar) : null;
+        const collageImgs = await Promise.all(
+            state.collage.slice(0, 12).map(imgObj => loadImage(imgObj.src))
+        );
         const topPostImgs = await Promise.all(
             state.topPosts.map(post => post.src ? loadImage(post.src) : Promise.resolve(null))
         );
@@ -223,54 +313,46 @@ const BenchmarkAudienciaTableroModal = ({ isOpen, onClose, canvas, filminaTitle 
         wrapText(state.message || 'Análisis de audiencia y alcance', 55, 230, 290, 20);
         ctx.restore();
 
-        // Métricas y Demographics
+        // Volumen y collage
         ctx.save();
         ctx.fillStyle = '#fff';
         ctx.strokeStyle = '#ccc';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.roundRect(400, 40, 760, 260, 30);
+        ctx.roundRect(400, 40, 760, 220, 30);
         ctx.fill();
         ctx.stroke();
-
-        ctx.font = 'bold 20px Arial';
+        ctx.font = 'bold 22px Arial';
         ctx.fillStyle = '#333';
-        ctx.fillText('Alcance Total: ' + state.totalReach, 420, 70);
-        ctx.fillText('Engagement Total: ' + state.totalEngagement, 420, 100);
+        ctx.fillText('Número de publicaciones: ' + state.numPosts, 420, 70);
 
         // Tipo de análisis
         ctx.font = 'bold 16px Arial';
         ctx.fillStyle = '#1967D2';
-        ctx.fillText(`Tipo: ${analysisType.source} - ${analysisType.type}`, 420, 130);
+        ctx.fillText(`Tipo: ${analysisType.source} - ${analysisType.type}`, 420, 95);
         ctx.font = '13px Arial';
         ctx.fillStyle = '#555';
-        wrapText(analysisType.description, 420, 150, 500, 18);
+        wrapText(analysisType.description, 420, 115, 500, 18);
 
-        // Demographics - Gender
-        ctx.font = 'bold 14px Arial';
+        // Collage
+        const collageX = 420, collageY = 145, imgSize = 60, gap = 8;
+        collageImgs.forEach((img, i) => {
+            if (img) {
+                ctx.drawImage(img, collageX + (i % 6) * (imgSize + gap), collageY + Math.floor(i / 6) * (imgSize + gap), imgSize, imgSize);
+            }
+        });
+
+        // Demographics - Gender (en la parte derecha)
+        ctx.font = 'bold 16px Arial';
         ctx.fillStyle = '#333';
-        ctx.fillText('Género:', 420, 190);
-        ctx.font = '12px Arial';
+        ctx.fillText('Género:', 950, 70);
+        ctx.font = '14px Arial';
         state.demographics.gender.forEach((item, i) => {
-            ctx.fillText(`${item.label}: ${item.value}%`, 420, 210 + i * 20);
+            ctx.fillText(`${item.label}: ${item.value}%`, 950, 95 + i * 22);
         });
 
-        // Demographics - Age
-        ctx.font = 'bold 14px Arial';
-        ctx.fillText('Edad:', 600, 190);
-        ctx.font = '12px Arial';
-        state.demographics.age.forEach((item, i) => {
-            ctx.fillText(`${item.label}: ${item.value}%`, 600, 210 + i * 20);
-        });
-
-        // Demographics - Location
-        ctx.font = 'bold 14px Arial';
-        ctx.fillText('Ubicación:', 780, 190);
-        ctx.font = '12px Arial';
-        state.demographics.location.forEach((item, i) => {
-            ctx.fillText(`${item.label}: ${item.value}%`, 780, 210 + i * 20);
-        });
-
+        // Radar de Edad
+        drawRadar(ctx, 1000, 180, 70, state.demographics.age, RADAR_AXES_AGE);
         ctx.restore();
 
         // Contenidos TOP
@@ -328,8 +410,12 @@ const BenchmarkAudienciaTableroModal = ({ isOpen, onClose, canvas, filminaTitle 
 
     if (!isOpen) return null;
 
-    const getTotalPercentage = (category) => {
-        return state.demographics[category].reduce((acc, item) => acc + item.value, 0);
+    const getTotalGender = () => {
+        return state.demographics.gender.reduce((acc, item) => acc + item.value, 0);
+    };
+
+    const getTotalAge = () => {
+        return state.demographics.age.reduce((acc, val) => acc + val, 0);
     };
 
     return (
@@ -370,12 +456,20 @@ const BenchmarkAudienciaTableroModal = ({ isOpen, onClose, canvas, filminaTitle 
                         </div>
                     </div>
 
-                    {/* Métricas */}
+                    {/* Volumen y collage */}
                     <div style={{ marginBottom: 18 }}>
-                        <label>Alcance Total:</label>
-                        <input type="text" value={state.totalReach} onChange={handleReachChange} style={{ width: 120, marginRight: 20 }} placeholder="1.2M" />
-                        <label>Engagement Total:</label>
-                        <input type="text" value={state.totalEngagement} onChange={handleEngagementChange} style={{ width: 120 }} placeholder="850K" />
+                        <label>Número de publicaciones:</label>
+                        <input type="number" value={state.numPosts} onChange={handleNumPostsChange} style={{ width: 80, marginRight: 20 }} />
+                        <label>Imágenes para collage:</label>
+                        <input type="file" accept="image/*" multiple onChange={handleCollageUpload} />
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8 }}>
+                            {state.collage.map((img, idx) => (
+                                <div key={idx} style={{ position: 'relative' }}>
+                                    <img src={img.src} alt="collage" style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 4, border: '1px solid #ccc' }} />
+                                    <button onClick={() => handleRemoveCollage(idx)} style={{ position: 'absolute', top: -8, right: -8, background: '#fff', border: '1px solid #ccc', borderRadius: '50%', width: 18, height: 18, cursor: 'pointer' }}><Trash2 size={12} /></button>
+                                </div>
+                            ))}
+                        </div>
                     </div>
 
                     {/* Demographics */}
@@ -389,71 +483,45 @@ const BenchmarkAudienciaTableroModal = ({ isOpen, onClose, canvas, filminaTitle 
                                 <span style={{
                                     fontWeight: 'bold',
                                     fontSize: 14,
-                                    color: getTotalPercentage('gender') === 100 ? '#059669' : '#dc2626',
-                                    backgroundColor: getTotalPercentage('gender') === 100 ? '#d1fae5' : '#fee2e2',
+                                    color: getTotalGender() === 100 ? '#059669' : '#dc2626',
+                                    backgroundColor: getTotalGender() === 100 ? '#d1fae5' : '#fee2e2',
                                     padding: '4px 12px',
                                     borderRadius: 6
                                 }}>
-                                    Total: {getTotalPercentage('gender')}%
+                                    Total: {getTotalGender()}%
                                 </span>
                             </div>
                             <div style={{ display: 'flex', gap: 10 }}>
                                 {state.demographics.gender.map((item, idx) => (
                                     <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                         <span style={{ fontWeight: 'bold', fontSize: 13 }}>{item.label}</span>
-                                        <input type="number" min={0} max={100} value={item.value} onChange={e => handleDemographicChange('gender', idx, e.target.value)} style={{ width: 60 }} />
+                                        <input type="number" min={0} max={100} value={item.value} onChange={e => handleGenderChange(idx, e.target.value)} style={{ width: 60 }} />
                                         <span>%</span>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
-                        {/* Edad */}
+                        {/* Edad (Radar) */}
                         <div style={{ marginBottom: 12 }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-                                <label>Edad:</label>
+                                <label>Edad (se graficará en radar):</label>
                                 <span style={{
                                     fontWeight: 'bold',
                                     fontSize: 14,
-                                    color: getTotalPercentage('age') === 100 ? '#059669' : '#dc2626',
-                                    backgroundColor: getTotalPercentage('age') === 100 ? '#d1fae5' : '#fee2e2',
+                                    color: getTotalAge() === 100 ? '#059669' : '#dc2626',
+                                    backgroundColor: getTotalAge() === 100 ? '#d1fae5' : '#fee2e2',
                                     padding: '4px 12px',
                                     borderRadius: 6
                                 }}>
-                                    Total: {getTotalPercentage('age')}%
+                                    Total: {getTotalAge()}%
                                 </span>
                             </div>
                             <div style={{ display: 'flex', gap: 10 }}>
-                                {state.demographics.age.map((item, idx) => (
-                                    <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                        <span style={{ fontWeight: 'bold', fontSize: 13 }}>{item.label}</span>
-                                        <input type="number" min={0} max={100} value={item.value} onChange={e => handleDemographicChange('age', idx, e.target.value)} style={{ width: 60 }} />
-                                        <span>%</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Ubicación */}
-                        <div style={{ marginBottom: 12 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-                                <label>Ubicación:</label>
-                                <span style={{
-                                    fontWeight: 'bold',
-                                    fontSize: 14,
-                                    color: getTotalPercentage('location') === 100 ? '#059669' : '#dc2626',
-                                    backgroundColor: getTotalPercentage('location') === 100 ? '#d1fae5' : '#fee2e2',
-                                    padding: '4px 12px',
-                                    borderRadius: 6
-                                }}>
-                                    Total: {getTotalPercentage('location')}%
-                                </span>
-                            </div>
-                            <div style={{ display: 'flex', gap: 10 }}>
-                                {state.demographics.location.map((item, idx) => (
-                                    <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                        <span style={{ fontWeight: 'bold', fontSize: 13 }}>{item.label}</span>
-                                        <input type="number" min={0} max={100} value={item.value} onChange={e => handleDemographicChange('location', idx, e.target.value)} style={{ width: 60 }} />
+                                {RADAR_AXES_AGE.map((ax, idx) => (
+                                    <div key={ax} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                        <span style={{ fontWeight: 'bold', fontSize: 13 }}>{ax}</span>
+                                        <input type="number" min={0} max={100} value={state.demographics.age[idx]} onChange={e => handleAgeChange(idx, e.target.value)} style={{ width: 60 }} />
                                         <span>%</span>
                                     </div>
                                 ))}
