@@ -19,6 +19,7 @@ import DonutChartModal from './modals/DonutChartModal';
 import UsoMediosModal from './modals/UsoMediosModal';
 import StackedBarChartModal from './modals/StackedBarChartModal';
 import DemographicsTableModal from './modals/DemographicsTableModal';
+import DemografiaSociedadRedModal from './modals/DemografiaSociedadRedModal';
 import SocialMediaUsageModal from './modals/SocialMediaUsageModal';
 import InfluencersTableModal from './modals/InfluencersTableModal';
 import BenchmarkSocialMediaModal from './modals/BenchmarkSocialMediaModal';
@@ -358,7 +359,13 @@ const FilminaEditor = () => {
           selectedLayer={selectedObject}
           onSelectLayer={handleSelectLayer}
           currentFilmina={filmina}
+          onOpenDemografiaSociedadRedModal={() => setActiveModal('demografiaSociedadRed')}
         />
+      <DemografiaSociedadRedModal
+        isOpen={activeModal === 'demografiaSociedadRed'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
 
 
       {/* Modales Avanzados */}

@@ -16,6 +16,7 @@ const EditorSidebar = ({
   onOpenBenchmarkSocialMediaDonutMatrixModal,
   onOpenBenchmarkSocialMediaExternasModal,
   onOpenInfluencersModal,
+  onOpenDemografiaSociedadRedModal,
   layers,
   selectedLayer,
   onSelectLayer,
@@ -154,6 +155,15 @@ const EditorSidebar = ({
               <Award size={24} />
               <span>Influencers</span>
             </button>
+          )}
+
+          {/* Botón para Estrategia Digital y Estudio de Impacto de Medios */}
+          {currentFilmina &&
+            (currentFilmina.title === 'Estrategia Digital' || currentFilmina.title === 'Estudio de Impacto de Medios') && (
+              <button className="tool-card" onClick={onOpenDemografiaSociedadRedModal} title="Demografía de la Sociedad Red">
+                <BarChart3 size={24} />
+                <span>Sociedad Red</span>
+              </button>
           )}
         </div>
       </section>
