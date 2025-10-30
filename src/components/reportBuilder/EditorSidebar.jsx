@@ -17,6 +17,7 @@ const EditorSidebar = ({
   onOpenBenchmarkSocialMediaExternasModal,
   onOpenInfluencersModal,
   onOpenDemografiaSociedadRedModal,
+  onOpenBenchmarkAdjetivacionTableroModal,
   layers,
   selectedLayer,
   onSelectLayer,
@@ -53,6 +54,7 @@ const EditorSidebar = ({
     return `${layer.type} ${index + 1}`;
   };
 
+
   return (
     <aside className="editor-sidebar-left">
       {/* Elementos Básicos */}
@@ -63,17 +65,14 @@ const EditorSidebar = ({
             <Type size={24} />
             <span>Texto</span>
           </button>
-
           <button className="tool-card" onClick={onAddShape} title="Agregar Forma">
             <Square size={24} />
             <span>Formas</span>
           </button>
-
           <button className="tool-card" onClick={onAddImage} title="Agregar Imagen">
             <Image size={24} />
             <span>Imagen</span>
           </button>
-
           <button className="tool-card" onClick={onAddLine} title="Agregar Línea">
             <Minus size={24} />
             <span>Línea</span>
@@ -89,21 +88,31 @@ const EditorSidebar = ({
             <Table size={24} />
             <span>Tabla</span>
           </button>
-
           <button className="tool-card" onClick={onOpenDonutModal} title="Gráfico Donut">
             <PieChart size={24} />
             <span>Donut</span>
           </button>
-
           <button className="tool-card" onClick={onOpenUsoMediosModal} title="Uso de Medios">
             <BarChart3 size={24} />
             <span>Medios</span>
           </button>
-
           <button className="tool-card" onClick={onOpenStackedBarModal} title="Gráfico Apilado">
             <BarChartHorizontal size={24} />
             <span>Apilado</span>
           </button>
+          {/* Herramienta de Tablero de Adjetivación para filminas específicas */}
+          {currentFilmina &&
+            (
+              currentFilmina.title === 'RRSSS Propias. Benchmark adjetivación p/contenido posteado' ||
+              currentFilmina.title === 'RRSSS Externas. Benchmark adjetivación p/contenido posteado' ||
+              currentFilmina.title === 'RRSSS Propias. Benchmark adjetivación p/contenido difundido' ||
+              currentFilmina.title === 'RRSSS Externas. Benchmark adjetivación p/contenido difundido'
+            ) && typeof onOpenBenchmarkAdjetivacionTableroModal === 'function' && (
+              <button className="tool-card" onClick={onOpenBenchmarkAdjetivacionTableroModal} title="Tablero de Análisis de Contenido y Mensaje">
+                <PieChart size={24} />
+                <span>Tablero Adjetivación</span>
+              </button>
+          )}
 
           {/* Mostrar botón de Benchmark RRSSS Mensaje por Contenido en filminas 4, 5, 6 y 7 de Benchmark RRSS */}
           {currentFilmina &&

@@ -1,3 +1,4 @@
+import BenchmarkAdjetivacionTableroModal from './modals/BenchmarkAdjetivacionTableroModal';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Download } from 'lucide-react';
@@ -325,7 +326,7 @@ const FilminaEditor = () => {
   }
 
   return (
-  <div className={`filmina-editor-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
+    <div className={`filmina-editor-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       <PageHeader
         title={filmina.title}
         subtitle="Editor de filminas"
@@ -355,6 +356,7 @@ const FilminaEditor = () => {
         {/* Sidebar izquierdo - Herramientas */}
 
         <EditorSidebar
+          onOpenBenchmarkAdjetivacionTableroModal={() => setActiveModal('benchmarkAdjetivacionTablero')}
           onAddText={() => fabricObject.addText()}
           onAddShape={() => setActiveModal('shape')}
           onAddImage={() => fabricObject.addImage()}
@@ -375,38 +377,47 @@ const FilminaEditor = () => {
           currentFilmina={filmina}
           onOpenDemografiaSociedadRedModal={() => setActiveModal('demografiaSociedadRed')}
         />
-      <DemografiaSociedadRedModal
-        isOpen={activeModal === 'demografiaSociedadRed'}
-        onClose={() => setActiveModal(null)}
-        canvas={canvas}
-      />
+
+        {/* Modal Tablero Adjetivación */}
+        {activeModal === 'benchmarkAdjetivacionTablero' && (
+          <BenchmarkAdjetivacionTableroModal
+            isOpen={true}
+            onClose={() => setActiveModal(null)}
+            canvas={canvas}
+          />
+        )}
+        <DemografiaSociedadRedModal
+          isOpen={activeModal === 'demografiaSociedadRed'}
+          onClose={() => setActiveModal(null)}
+          canvas={canvas}
+        />
 
 
-      {/* Modales Avanzados */}
-      <BenchmarkSocialMediaDonutMatrixModal
-        isOpen={activeModal === 'benchmarkSocialMediaDonutMatrix'}
-        onClose={() => setActiveModal(null)}
-        canvas={canvas}
-        title={
-          filmina?.title === "RRSS Propias: Benchmark's de mensaje por contenido posteado" ||
-          filmina?.title === "RRSSS Propias. Benchmark de mensaje por contenido posteado"
-            ? "RRSS Propias: Benchmark de mensaje por contenido posteado"
-            : filmina?.title === "RRSS Externas: Benchmark's de mensaje por contenido diferido" ||
-              filmina?.title === "RRSS Externas: Benchmark's de mensaje por contenido difundido"
-            ? "RRSS Externas: Benchmark de mensaje por contenido difundido"
-            : "RRSS Propias: Benchmark de mensaje por contenido posteado"
-        }
-      />
-      <BenchmarkSocialMediaModal
-        isOpen={activeModal === 'benchmarkSocialMedia'}
-        onClose={() => setActiveModal(null)}
-        canvas={canvas}
-      />
-      <BenchmarkSocialMediaExternasModal
-        isOpen={activeModal === 'benchmarkSocialMediaExternas'}
-        onClose={() => setActiveModal(null)}
-        canvas={canvas}
-      />
+        {/* Modales Avanzados */}
+        <BenchmarkSocialMediaDonutMatrixModal
+          isOpen={activeModal === 'benchmarkSocialMediaDonutMatrix'}
+          onClose={() => setActiveModal(null)}
+          canvas={canvas}
+          title={
+            filmina?.title === "RRSS Propias: Benchmark's de mensaje por contenido posteado" ||
+              filmina?.title === "RRSSS Propias. Benchmark de mensaje por contenido posteado"
+              ? "RRSS Propias: Benchmark de mensaje por contenido posteado"
+              : filmina?.title === "RRSS Externas: Benchmark's de mensaje por contenido diferido" ||
+                filmina?.title === "RRSS Externas: Benchmark's de mensaje por contenido difundido"
+                ? "RRSS Externas: Benchmark de mensaje por contenido difundido"
+                : "RRSS Propias: Benchmark de mensaje por contenido posteado"
+          }
+        />
+        <BenchmarkSocialMediaModal
+          isOpen={activeModal === 'benchmarkSocialMedia'}
+          onClose={() => setActiveModal(null)}
+          canvas={canvas}
+        />
+        <BenchmarkSocialMediaExternasModal
+          isOpen={activeModal === 'benchmarkSocialMediaExternas'}
+          onClose={() => setActiveModal(null)}
+          canvas={canvas}
+        />
 
         {/* Canvas central */}
         <main className="editor-canvas-area">
