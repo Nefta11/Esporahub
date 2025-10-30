@@ -8,8 +8,15 @@ import { useCanvas } from './hooks/useCanvas';
 import { useFabricObject } from './hooks/useFabricObject';
 import {
   autoInsertDemographicsTable,
-  autoInsertSocialMediaUsageTable
+  autoInsertSocialMediaUsageTable,
+  autoInsertInfluencersTable,
+  autoInsertBenchmarkMatrix
 } from './utils/autoInsertHelpers';
+import {
+  autoInsertBenchmarkSocialMedia,
+  autoInsertBenchmarkSocialMediaExternas,
+  autoInsertDemografiaSociedadRed
+} from './utils/benchmarkHelpers';
 import PageHeader from '@/components/layout/PageHeader';
 import PageFooter from '@/components/layout/PageFooter';
 import EditorSidebar from './EditorSidebar';
@@ -222,14 +229,17 @@ const FilminaEditor = () => {
     } else if (filminaTitle === 'Estudio de Uso de Medios') {
       autoInsertSocialMediaUsageTable(canvas);
     } else if (filminaTitle === 'Estudio de Influenciadores') {
-      // TODO: Auto-insertar tabla influencers
-      console.log('Auto-inserting Influencers table');
+      autoInsertInfluencersTable(canvas);
+    } else if (filminaTitle === 'Estudio de Impacto de Medios') {
+      autoInsertDemografiaSociedadRed(canvas);
+    } else if (filminaTitle === 'RRSS Propias: Benchmark Cuantitativo') {
+      autoInsertBenchmarkSocialMedia(canvas);
+    } else if (filminaTitle === 'RRSS Externas: Benchmark Cuantitativo') {
+      autoInsertBenchmarkSocialMediaExternas(canvas);
     } else if (filminaTitle === "RRSS Propias: Benchmark's de mensaje por contenido posteado") {
-      // TODO: Auto-insertar matriz benchmark
-      console.log('Auto-inserting Benchmark Matrix - Propias');
+      autoInsertBenchmarkMatrix(canvas);
     } else if (filminaTitle === "RRSS Externas: Benchmark's de mensaje por contenido difundido") {
-      // TODO: Auto-insertar matriz benchmark
-      console.log('Auto-inserting Benchmark Matrix - Externas');
+      autoInsertBenchmarkMatrix(canvas);
     }
   }, [filmina, getCanvas]);
 

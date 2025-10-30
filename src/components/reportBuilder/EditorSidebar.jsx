@@ -111,9 +111,9 @@ const EditorSidebar = ({
              currentFilmina.title === 'RRSSS Propias. Benchmark de mensaje por contenido posteado' ||
              currentFilmina.title === "RRSS Externas: Benchmark's de mensaje por contenido diferido" ||
              currentFilmina.title === "RRSS Externas: Benchmark's de mensaje por contenido difundido") && (
-              <button className="tool-card" onClick={onOpenBenchmarkSocialMediaDonutMatrixModal} title="Benchmark de mensaje por contenido">
+              <button className="tool-card" onClick={onOpenBenchmarkSocialMediaDonutMatrixModal} title={hasChartInCanvas('benchmark-matrix') ? 'Editar Benchmark' : 'Agregar Benchmark'}>
                 <Share2 size={24} />
-                <span>Benchmark Mensaje</span>
+                <span>{hasChartInCanvas('benchmark-matrix') ? 'Editar' : 'Benchmark'}</span>
               </button>
           )}
           {/* Mostrar botón de Demografía solo en la filmina específica */}
@@ -135,34 +135,34 @@ const EditorSidebar = ({
 
           {/* Mostrar botón de Benchmark RRSSS Propias solo en la filmina específica */}
           {currentFilmina && currentFilmina.title === 'RRSS Propias: Benchmark Cuantitativo' && (
-            <button className="tool-card" onClick={onOpenBenchmarkSocialMediaModal} title="RRSS Propias: Benchmark Cuantitativo">
+            <button className="tool-card" onClick={onOpenBenchmarkSocialMediaModal} title={hasChartInCanvas('benchmark-social-media') ? 'Editar Benchmark Propias' : 'Agregar Benchmark Propias'}>
               <Share2 size={24} />
-              <span>RRSSS Benchmark</span>
+              <span>{hasChartInCanvas('benchmark-social-media') ? 'Editar' : 'Benchmark'}</span>
             </button>
           )}
 
           {/* Mostrar botón de Benchmark RRSSS Externas solo en la filmina específica */}
           {currentFilmina && currentFilmina.title === 'RRSS Externas: Benchmark Cuantitativo' && (
-            <button className="tool-card" onClick={onOpenBenchmarkSocialMediaExternasModal} title="RRSS Externas: Benchmark Cuantitativo">
+            <button className="tool-card" onClick={onOpenBenchmarkSocialMediaExternasModal} title={hasChartInCanvas('benchmark-social-media-externas') ? 'Editar Benchmark Externas' : 'Agregar Benchmark Externas'}>
               <Share2 size={24} />
-              <span>RRSSS Externas</span>
+              <span>{hasChartInCanvas('benchmark-social-media-externas') ? 'Editar' : 'Benchmark'}</span>
             </button>
           )}
 
           {/* Mostrar botón de Influencers solo en la filmina específica */}
           {currentFilmina && currentFilmina.title === 'Estudio de Influenciadores' && (
-            <button className="tool-card" onClick={onOpenInfluencersModal} title="Estudio de Influenciadores">
+            <button className="tool-card" onClick={onOpenInfluencersModal} title={hasChartInCanvas('influencers-table') ? 'Editar Influencers' : 'Agregar Influencers'}>
               <Award size={24} />
-              <span>Influencers</span>
+              <span>{hasChartInCanvas('influencers-table') ? 'Editar' : 'Influencers'}</span>
             </button>
           )}
 
           {/* Botón para Estrategia Digital y Estudio de Impacto de Medios */}
           {currentFilmina &&
             (currentFilmina.title === 'Estrategia Digital' || currentFilmina.title === 'Estudio de Impacto de Medios') && (
-              <button className="tool-card" onClick={onOpenDemografiaSociedadRedModal} title="Demografía de la Sociedad Red">
+              <button className="tool-card" onClick={onOpenDemografiaSociedadRedModal} title={hasChartInCanvas('demografia-sociedad-red') ? 'Editar Sociedad Red' : 'Agregar Sociedad Red'}>
                 <BarChart3 size={24} />
-                <span>Sociedad Red</span>
+                <span>{hasChartInCanvas('demografia-sociedad-red') ? 'Editar' : 'Sociedad Red'}</span>
               </button>
           )}
         </div>

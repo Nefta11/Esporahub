@@ -1,4 +1,5 @@
 import { Image as FabricImage } from 'fabric';
+import { renderBenchmarkMatrix } from './benchmarkMatrixRenderer';
 
 // Datos por defecto para Demographics Table
 export const defaultDemographicsData = [
@@ -382,4 +383,119 @@ export const autoInsertSocialMediaUsageTable = async (canvas) => {
   };
 
   imgElement.src = dataURL;
+};
+
+// Datos por defecto para Influencers
+export const defaultInfluencersData = {
+  title: 'Influencers (alcance local): Baja California',
+  subtitle: 'Periodo de análisis: 09 al 29 de abril',
+  influencers: [
+    { name: 'Michel Chávez', username: '@lis.michihn', platform: 'TikTok', followers: '37.7M', topic: 'Música, entretenimiento' },
+    { name: 'Braulio Rod', username: '@brauliorodrg', platform: 'TikTok', followers: '6.8M', topic: 'Comedia, sketch' },
+    { name: 'Melissa Muro', username: '@melissamuroo', platform: 'TikTok', followers: '2.3M', topic: 'Vlog, cocina, humor' },
+    { name: 'Diana Montoya', username: '@montoyadiana_', platform: 'TikTok', followers: '2.1M', topic: 'Belleza' },
+    { name: 'Marbella Beltrán', username: '@marbellalb', platform: 'TikTok', followers: '1.8M', topic: 'Moda, belleza' }
+  ]
+};
+
+// Auto-insertar tabla de influencers
+export const autoInsertInfluencersTable = async (canvas) => {
+  if (!canvas) return;
+
+  const { title, subtitle, influencers } = defaultInfluencersData;
+  const tempCanvas = document.createElement('canvas');
+  const padding = 20;
+  const titleHeight = 40;
+  const subtitleHeight = 30;
+  const headerHeight = 35;
+  const rowHeight = 45;
+  const columnWidths = [200, 150, 100, 120, 200];
+
+  tempCanvas.width = columnWidths.reduce((a, b) => a + b, 0) + (padding * 2);
+  tempCanvas.height = padding + titleHeight + subtitleHeight + headerHeight + (influencers.length * rowHeight) + padding;
+  const ctx = tempCanvas.getContext('2d');
+
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+  let currentY = padding;
+  ctx.fillStyle = '#1f2937';
+  ctx.font = 'bold 18px Arial';
+  ctx.textAlign = 'left';
+  ctx.fillText(title, padding, currentY + 25);
+  currentY += titleHeight;
+
+  ctx.fillStyle = '#6b7280';
+  ctx.font = '14px Arial';
+  ctx.fillText(subtitle, padding, currentY + 18);
+  currentY += subtitleHeight;
+
+  const headers = ['Nombre', 'Usuario', 'Plataforma', 'Seguidores', 'Temática'];
+  ctx.fillStyle = '#1967D2';
+  ctx.fillRect(padding, currentY, columnWidths.reduce((a, b) => a + b, 0), headerHeight);
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 13px Arial';
+  ctx.textAlign = 'center';
+  let headerX = padding;
+  headers.forEach((header, idx) => {
+    ctx.fillText(header, headerX + columnWidths[idx] / 2, currentY + 22);
+    headerX += columnWidths[idx];
+  });
+
+  currentY += headerHeight;
+
+  influencers.forEach((influencer, rowIndex) => {
+    const rowY = currentY + (rowIndex * rowHeight);
+    ctx.fillStyle = rowIndex % 2 === 0 ? '#ffffff' : '#f9fafb';
+    ctx.fillRect(padding, rowY, columnWidths.reduce((a, b) => a + b, 0), rowHeight);
+
+    ctx.strokeStyle = '#e5e7eb';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(padding, rowY, columnWidths.reduce((a, b) => a + b, 0), rowHeight);
+
+    ctx.fillStyle = '#1f2937';
+    ctx.font = 'bold 12px Arial';
+    ctx.textAlign = 'left';
+    ctx.fillText(influencer.name, padding + 10, rowY + 28);
+
+    ctx.fillStyle = '#6b7280';
+    ctx.font = '11px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(influencer.username, padding + columnWidths[0] + columnWidths[1] / 2, rowY + 28);
+
+    ctx.fillStyle = '#1967D2';
+    ctx.font = 'bold 11px Arial';
+    ctx.fillText(influencer.platform, padding + columnWidths[0] + columnWidths[1] + columnWidths[2] / 2, rowY + 28);
+
+    ctx.fillStyle = '#059669';
+    ctx.font = 'bold 12px Arial';
+    ctx.fillText(influencer.followers, padding + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3] / 2, rowY + 28);
+
+    ctx.fillStyle = '#6b7280';
+    ctx.font = '11px Arial';
+    ctx.textAlign = 'left';
+    ctx.fillText(influencer.topic, padding + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3] + 10, rowY + 28);
+  });
+
+  const dataURL = tempCanvas.toDataURL('image/png');
+  const imgElement = new Image();
+  imgElement.onload = () => {
+    const fabricImg = new FabricImage(imgElement, {
+      left: 50,
+      top: 150,
+      scaleX: 0.9,
+      scaleY: 0.9,
+      name: 'influencers-table'
+    });
+    canvas.add(fabricImg);
+    canvas.renderAll();
+  };
+  imgElement.src = dataURL;
+};
+
+// Auto-insertar Benchmark Matrix (placeholder)
+export const autoInsertBenchmarkMatrix = async (canvas) => {
+  // Usar la función completa de renderizado
+  await renderBenchmarkMatrix(canvas);
 };

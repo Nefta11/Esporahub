@@ -16,44 +16,86 @@ const DemografiaSociedadRedModal = ({ isOpen, onClose, canvas }) => {
     // Exportar gráfico al canvas
     const insertChartToCanvas = () => {
         if (!canvas) return;
-        const width = 540, height = 340, barWidth = 90, barGap = 8, leftPad = 60, topPad = 60;
+
+        const width = 700;
+        const height = 450;
+        const barWidth = 180;
+        const leftPad = 40;
+        const topPad = 40;
+        const labelOffset = 60;
+
         const tempCanvas = document.createElement('canvas');
         tempCanvas.width = width;
         tempCanvas.height = height;
         const ctx = tempCanvas.getContext('2d');
+
+        // Fondo blanco
         ctx.fillStyle = '#fff';
         ctx.fillRect(0, 0, width, height);
 
-        // Dibujar barras
-        let y = topPad;
+        // Calcular altura total disponible para las barras
+        const totalHeight = 350;
+
+        // Dibujar barras apiladas verticalmente
+        let currentY = topPad;
+
         bars.forEach((bar, i) => {
-            const barHeight = (bar.percent / 100) * 180;
+            const barHeight = (bar.percent / 100) * totalHeight;
+
+            // Dibujar la barra
             ctx.fillStyle = bar.color;
-            ctx.fillRect(leftPad, y, barWidth, barHeight);
-            // Porcentaje
+            ctx.fillRect(leftPad, currentY, barWidth, barHeight);
+
+            // Porcentaje dentro de la barra (centrado)
             ctx.fillStyle = '#fff';
+            ctx.font = 'bold 48px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(bar.percent + '%', leftPad + barWidth / 2, currentY + barHeight / 2);
+
+            // Etiqueta del concepto (a la derecha de la barra)
             ctx.font = 'bold 32px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText(bar.percent + '%', leftPad + barWidth / 2, y + barHeight / 2 + 10);
-            // Etiqueta izquierda
-            ctx.save();
-            ctx.translate(leftPad - 10, y + barHeight / 2);
-            ctx.rotate(-Math.PI / 2);
-            ctx.font = 'bold 22px Arial';
             ctx.fillStyle = bar.color;
-            ctx.textAlign = 'center';
-            ctx.fillText(bar.label, 0, 0);
-            ctx.restore();
-            // Etiqueta derecha
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+
+            const labelX = leftPad + barWidth + 30;
+            const labelY = currentY + barHeight / 2;
+
+            ctx.fillText(bar.label, labelX, labelY);
+
+            // Línea de conexión (flecha)
+            ctx.strokeStyle = bar.color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(leftPad + barWidth + 10, labelY);
+            ctx.lineTo(labelX - 10, labelY);
+            ctx.stroke();
+
+            // Flecha
+            ctx.beginPath();
+            ctx.moveTo(labelX - 10, labelY);
+            ctx.lineTo(labelX - 18, labelY - 5);
+            ctx.lineTo(labelX - 18, labelY + 5);
+            ctx.closePath();
+            ctx.fillStyle = bar.color;
+            ctx.fill();
+
+            // Etiqueta adicional (más a la derecha)
             if (bar.rightLabel) {
-                ctx.font = '16px Arial';
-                ctx.fillStyle = '#7c2222';
+                ctx.font = '20px Arial';
+                ctx.fillStyle = '#333';
                 ctx.textAlign = 'left';
-                bar.rightLabel.split('\n').forEach((line, idx) => {
-                    ctx.fillText(line, leftPad + barWidth + 60, y + 30 + idx * 22);
+                const lines = bar.rightLabel.split('\n');
+                const rightLabelX = labelX + ctx.measureText(bar.label).width + 80;
+                const startY = labelY - (lines.length - 1) * 12;
+
+                lines.forEach((line, idx) => {
+                    ctx.fillText(line, rightLabelX, startY + idx * 24);
                 });
             }
-            y += barHeight + barGap;
+
+            currentY += barHeight;
         });
 
         // Exportar a Fabric
@@ -63,8 +105,8 @@ const DemografiaSociedadRedModal = ({ isOpen, onClose, canvas }) => {
             const fabricImg = new FabricImage(imgElement, {
                 left: 50,
                 top: 50,
-                scaleX: 0.7,
-                scaleY: 0.7
+                scaleX: 0.85,
+                scaleY: 0.85
             });
             canvas.add(fabricImg);
             canvas.setActiveObject(fabricImg);
@@ -92,24 +134,62 @@ const DemografiaSociedadRedModal = ({ isOpen, onClose, canvas }) => {
                                     const newBars = [...bars];
                                     newBars[idx].label = e.target.value;
                                     setBars(newBars);
-                                }} style={{ width: 120, fontWeight: 600 }} />
+                                }} style={{ width: 160, fontWeight: 600 }} placeholder="Etiqueta" />
                                 <input type="number" min={0} max={100} value={bar.percent} onChange={e => {
                                     const newBars = [...bars];
                                     newBars[idx].percent = Number(e.target.value);
                                     setBars(newBars);
                                 }} style={{ width: 60 }} />
+                                <span>%</span>
                                 <input type="text" value={bar.rightLabel} onChange={e => {
                                     const newBars = [...bars];
                                     newBars[idx].rightLabel = e.target.value;
                                     setBars(newBars);
-                                }} style={{ width: 180 }} placeholder="Etiqueta derecha (opcional)" />
+                                }} style={{ width: 180 }} placeholder="Etiqueta derecha (usar \n para salto)" />
                                 <input type="color" value={bar.color} onChange={e => {
                                     const newBars = [...bars];
                                     newBars[idx].color = e.target.value;
                                     setBars(newBars);
-                                }} />
+                                }} style={{ width: 50, height: 35 }} />
                             </div>
                         ))}
+                    </div>
+
+                    {/* Vista previa */}
+                    <div style={{ marginTop: 20, padding: 15, background: '#f5f5f5', borderRadius: 8 }}>
+                        <h4 style={{ marginBottom: 10 }}>Vista previa:</h4>
+                        <div style={{ background: '#fff', padding: 20, borderRadius: 4, display: 'flex', alignItems: 'flex-start' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', width: 100 }}>
+                                {bars.map((bar, idx) => (
+                                    <div key={idx} style={{
+                                        height: `${bar.percent * 2}px`,
+                                        background: bar.color,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        color: '#fff',
+                                        fontWeight: 'bold',
+                                        fontSize: 20
+                                    }}>
+                                        {bar.percent}%
+                                    </div>
+                                ))}
+                            </div>
+                            <div style={{ marginLeft: 20, display: 'flex', flexDirection: 'column', justifyContent: 'space-around', height: `${bars.reduce((sum, b) => sum + b.percent * 2, 0)}px` }}>
+                                {bars.map((bar, idx) => (
+                                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+                                        <span style={{ fontWeight: 'bold', color: bar.color, fontSize: 16 }}>
+                                            → {bar.label}
+                                        </span>
+                                        {bar.rightLabel && (
+                                            <span style={{ fontSize: 12, color: '#666' }}>
+                                                {bar.rightLabel.replace('\n', ' / ')}
+                                            </span>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div className="modal-footer">
