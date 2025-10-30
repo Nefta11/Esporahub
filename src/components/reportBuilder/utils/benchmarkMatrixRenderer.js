@@ -263,7 +263,7 @@ export const renderBenchmarkMatrix = async (canvas) => {
   imgElement.onload = () => {
     const fabricImg = new FabricImage(imgElement, {
       left: 50,
-      top: 50,
+      top: 120,
       scaleX: 0.35,
       scaleY: 0.35,
       name: 'benchmark-matrix'

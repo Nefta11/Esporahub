@@ -174,11 +174,447 @@ export const renderBenchmarkTable = async (canvas, tableName) => {
 };
 
 export const autoInsertBenchmarkSocialMedia = async (canvas) => {
-  await renderBenchmarkTable(canvas, 'benchmark-social-media');
+  if (!canvas) return;
+
+  const characters = [
+    {
+      name: 'Manuel Guerra',
+      avatarUrl: 'https://placehold.co/100x100/EBF4FF/333333?text=MG',
+      facebook: { followers: '318.6K', posts: '155' },
+      x: { followers: '1.3K', posts: '2' },
+      instagram: { followers: '55.3K', posts: '103' },
+      tiktok: { followers: '486.6K', posts: '41' },
+      youtube: { followers: '406', posts: '0' },
+    },
+    {
+      name: 'Manuel Guerra Flores',
+      avatarUrl: 'https://placehold.co/100x100/FFEBEB/333333?text=MF',
+      facebook: { followers: '595K', posts: '54' },
+      x: { followers: '49K', posts: '27' },
+      instagram: { followers: '33.2K', posts: '41' },
+      tiktok: { followers: '11.8K', posts: '14' },
+      youtube: { followers: '1.5K', posts: '1' },
+    },
+    {
+      name: 'Waldo Fernandez',
+      avatarUrl: 'https://placehold.co/100x100/EBFFF5/333333?text=WF',
+      facebook: { followers: '1.4M', posts: '218' },
+      x: { followers: '16.3K', posts: '26' },
+      instagram: { followers: '19.3K', posts: '121' },
+      tiktok: { followers: '149.6K', posts: '16' },
+      youtube: { followers: '102K', posts: '32' },
+    },
+  ];
+
+  // Cargar íconos
+  const iconPromises = SOCIAL_NETWORKS.map(network => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => resolve({ key: network.key, img });
+      img.onerror = () => resolve({ key: network.key, img: null });
+      img.src = network.icon;
+    });
+  });
+
+  const iconResults = await Promise.all(iconPromises);
+  const iconsMap = {};
+  iconResults.forEach(({ key, img }) => {
+    if (img) iconsMap[key] = img;
+  });
+
+  // Cargar avatares
+  const avatarPromises = characters.map(char => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => resolve({ url: char.avatarUrl, img });
+      img.onerror = () => resolve({ url: char.avatarUrl, img: null });
+      img.src = char.avatarUrl;
+    });
+  });
+
+  const avatarResults = await Promise.all(avatarPromises);
+  const avatarsMap = {};
+  avatarResults.forEach(({ url, img }) => {
+    if (img) avatarsMap[url] = img;
+  });
+
+  const tempCanvas = document.createElement('canvas');
+  const TOP_HEADER_H = 70;
+  const SUB_HEADER_H = 40;
+  const ROW_H = 65;
+  const ROW_NUM_W = 50;
+  const PERSONAJE_W = 200;
+  const DATA_SUB_W = 95;
+  const DATA_COL_W = DATA_SUB_W * 2;
+  const AVATAR_SIZE = 45;
+
+  const totalWidth = ROW_NUM_W + PERSONAJE_W + (SOCIAL_NETWORKS.length * DATA_COL_W);
+  const totalHeight = TOP_HEADER_H + SUB_HEADER_H + (characters.length * ROW_H);
+
+  tempCanvas.width = totalWidth;
+  tempCanvas.height = totalHeight;
+  const ctx = tempCanvas.getContext('2d');
+
+  const fontSize = 11;
+  const fontBold = `bold ${fontSize + 1}px Arial`;
+  const fontRegular = `${fontSize}px Arial`;
+  ctx.textBaseline = 'middle';
+
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, totalWidth, totalHeight);
+
+  let currentY = 0;
+  let currentX = 0;
+
+  // Top header con íconos
+  currentX = ROW_NUM_W + PERSONAJE_W;
+  const iconSize = 28;
+  const iconHeaderY = 12;
+  const textHeaderY = iconHeaderY + iconSize + 12;
+  SOCIAL_NETWORKS.forEach((network) => {
+    const icon = iconsMap[network.key];
+    const colSpan = DATA_COL_W;
+    if (icon) {
+      ctx.drawImage(icon, currentX + colSpan / 2 - iconSize / 2, iconHeaderY, iconSize, iconSize);
+    }
+    ctx.fillStyle = '#222';
+    ctx.font = fontBold;
+    ctx.textAlign = 'center';
+    ctx.fillText(network.label, currentX + colSpan / 2, textHeaderY);
+    currentX += DATA_COL_W;
+  });
+  currentY += TOP_HEADER_H;
+
+  // Sub-header
+  ctx.fillStyle = '#f0f0f0';
+  ctx.fillRect(0, currentY, totalWidth, SUB_HEADER_H);
+  ctx.strokeStyle = '#d0d0d0';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, currentY);
+  ctx.lineTo(totalWidth, currentY);
+  ctx.stroke();
+  ctx.fillStyle = '#555';
+  ctx.font = `bold ${fontSize + 1}px Arial`;
+  ctx.textAlign = 'center';
+  ctx.fillText('Personaje', ROW_NUM_W + PERSONAJE_W / 2, currentY + SUB_HEADER_H / 2);
+  currentX = ROW_NUM_W + PERSONAJE_W;
+  SOCIAL_NETWORKS.forEach((network) => {
+    ctx.beginPath();
+    ctx.moveTo(currentX, currentY);
+    ctx.lineTo(currentX, currentY + SUB_HEADER_H);
+    ctx.stroke();
+    ctx.fillText('Seguidores', currentX + DATA_SUB_W / 2, currentY + SUB_HEADER_H / 2);
+    ctx.fillText('No Publicaciones', currentX + DATA_SUB_W + DATA_SUB_W / 2, currentY + SUB_HEADER_H / 2);
+    ctx.strokeStyle = '#e0e0e0';
+    ctx.beginPath();
+    ctx.moveTo(currentX + DATA_SUB_W, currentY);
+    ctx.lineTo(currentX + DATA_SUB_W, currentY + SUB_HEADER_H);
+    ctx.stroke();
+    ctx.strokeStyle = '#d0d0d0';
+    currentX += DATA_COL_W;
+  });
+  ctx.beginPath();
+  ctx.moveTo(0, currentY + SUB_HEADER_H);
+  ctx.lineTo(totalWidth, currentY + SUB_HEADER_H);
+  ctx.stroke();
+  currentY += SUB_HEADER_H;
+
+  // Filas de personajes
+  characters.forEach((char, index) => {
+    const rowCenterY = currentY + ROW_H / 2;
+    ctx.fillStyle = (index % 2 === 0) ? '#ffffff' : '#f9f9f9';
+    ctx.fillRect(0, currentY, totalWidth, ROW_H);
+    ctx.fillStyle = '#333';
+    ctx.beginPath();
+    ctx.arc(ROW_NUM_W / 2, rowCenterY, 13, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.font = fontBold;
+    ctx.textAlign = 'center';
+    ctx.fillText(index + 1, ROW_NUM_W / 2, rowCenterY);
+    const avatarX = ROW_NUM_W + 12;
+    const avatarY = rowCenterY - AVATAR_SIZE / 2;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(avatarX + AVATAR_SIZE / 2, avatarY + AVATAR_SIZE / 2, AVATAR_SIZE / 2, 0, 2 * Math.PI);
+    ctx.clip();
+    const avatarImg = avatarsMap[char.avatarUrl];
+    if (avatarImg) {
+      ctx.drawImage(avatarImg, avatarX, avatarY, AVATAR_SIZE, AVATAR_SIZE);
+    } else {
+      ctx.fillStyle = '#eee';
+      ctx.fillRect(avatarX, avatarY, AVATAR_SIZE, AVATAR_SIZE);
+    }
+    ctx.restore();
+    ctx.fillStyle = '#333';
+    ctx.font = fontBold;
+    ctx.textAlign = 'left';
+    const nameX = avatarX + AVATAR_SIZE + 10;
+    ctx.fillText(char.name, nameX, rowCenterY);
+    currentX = ROW_NUM_W + PERSONAJE_W;
+    ctx.font = fontRegular;
+    ctx.textAlign = 'center';
+    SOCIAL_NETWORKS.forEach((network) => {
+      const data = char[network.key];
+      ctx.fillStyle = '#333';
+      ctx.fillText(data?.followers || '-', currentX + DATA_SUB_W / 2, rowCenterY);
+      ctx.fillStyle = '#777';
+      ctx.fillText(data?.posts || '-', currentX + DATA_SUB_W + DATA_SUB_W / 2, rowCenterY);
+      ctx.strokeStyle = '#e0e0e0';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(currentX, currentY);
+      ctx.lineTo(currentX, currentY + ROW_H);
+      ctx.stroke();
+      currentX += DATA_COL_W;
+    });
+    ctx.strokeStyle = '#e0e0e0';
+    ctx.beginPath();
+    ctx.moveTo(0, currentY + ROW_H);
+    ctx.lineTo(totalWidth, currentY + ROW_H);
+    ctx.stroke();
+    currentY += ROW_H;
+  });
+
+  const dataURL = tempCanvas.toDataURL('image/png');
+  const imgElement = new Image();
+  imgElement.onload = () => {
+    const fabricImg = new FabricImage(imgElement, {
+      left: 50,
+      top: 150,
+      scaleX: 0.8,
+      scaleY: 0.8,
+      name: 'benchmark-social-media'
+    });
+    canvas.add(fabricImg);
+    canvas.renderAll();
+  };
+  imgElement.src = dataURL;
 };
 
 export const autoInsertBenchmarkSocialMediaExternas = async (canvas) => {
-  await renderBenchmarkTable(canvas, 'benchmark-social-media-externas');
+  if (!canvas) return;
+
+  const characters = [
+    {
+      name: 'AMLO',
+      avatarUrl: 'https://placehold.co/100x100/8C2E3A/FFFFFF?text=AMLO',
+      facebook: { followers: '10.2M', posts: '150' },
+      x: { followers: '10M', posts: '210' },
+      instagram: { followers: '1.5M', posts: '90' },
+      tiktok: { followers: '1.1M', posts: '45' },
+      youtube: { followers: '4.5M', posts: '300' },
+    },
+    {
+      name: 'Claudia Sheinbaum',
+      avatarUrl: 'https://placehold.co/100x100/8C2E3A/FFFFFF?text=CS',
+      facebook: { followers: '6M', posts: '180' },
+      x: { followers: '3.1M', posts: '250' },
+      instagram: { followers: '1.2M', posts: '120' },
+      tiktok: { followers: '2.5M', posts: '95' },
+      youtube: { followers: '1M', posts: '80' },
+    },
+    {
+      name: 'Xóchitl Gálvez',
+      avatarUrl: 'https://placehold.co/100x100/003366/FFFFFF?text=XG',
+      facebook: { followers: '1.5M', posts: '160' },
+      x: { followers: '1.8M', posts: '300' },
+      instagram: { followers: '700K', posts: '110' },
+      tiktok: { followers: '1.9M', posts: '130' },
+      youtube: { followers: '350K', posts: '70' },
+    },
+  ];
+
+  // Cargar íconos
+  const iconPromises = SOCIAL_NETWORKS.map(network => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => resolve({ key: network.key, img });
+      img.onerror = () => resolve({ key: network.key, img: null });
+      img.src = network.icon;
+    });
+  });
+
+  const iconResults = await Promise.all(iconPromises);
+  const iconsMap = {};
+  iconResults.forEach(({ key, img }) => {
+    if (img) iconsMap[key] = img;
+  });
+
+  // Cargar avatares
+  const avatarPromises = characters.map(char => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => resolve({ url: char.avatarUrl, img });
+      img.onerror = () => resolve({ url: char.avatarUrl, img: null });
+      img.src = char.avatarUrl;
+    });
+  });
+
+  const avatarResults = await Promise.all(avatarPromises);
+  const avatarsMap = {};
+  avatarResults.forEach(({ url, img }) => {
+    if (img) avatarsMap[url] = img;
+  });
+
+  const tempCanvas = document.createElement('canvas');
+  const TOP_HEADER_H = 70;
+  const SUB_HEADER_H = 40;
+  const ROW_H = 65;
+  const ROW_NUM_W = 50;
+  const PERSONAJE_W = 200;
+  const DATA_SUB_W = 95;
+  const DATA_COL_W = DATA_SUB_W * 2;
+  const AVATAR_SIZE = 45;
+
+  const totalWidth = ROW_NUM_W + PERSONAJE_W + (SOCIAL_NETWORKS.length * DATA_COL_W);
+  const totalHeight = TOP_HEADER_H + SUB_HEADER_H + (characters.length * ROW_H);
+
+  tempCanvas.width = totalWidth;
+  tempCanvas.height = totalHeight;
+  const ctx = tempCanvas.getContext('2d');
+
+  const fontSize = 11;
+  const fontBold = `bold ${fontSize + 1}px Arial`;
+  const fontRegular = `${fontSize}px Arial`;
+  ctx.textBaseline = 'middle';
+
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, totalWidth, totalHeight);
+
+  let currentY = 0;
+  let currentX = 0;
+
+  // Top header con íconos
+  currentX = ROW_NUM_W + PERSONAJE_W;
+  const iconSize = 28;
+  const iconHeaderY = 12;
+  const textHeaderY = iconHeaderY + iconSize + 12;
+  SOCIAL_NETWORKS.forEach((network) => {
+    const icon = iconsMap[network.key];
+    const colSpan = DATA_COL_W;
+    if (icon) {
+      ctx.drawImage(icon, currentX + colSpan / 2 - iconSize / 2, iconHeaderY, iconSize, iconSize);
+    }
+    ctx.fillStyle = '#222';
+    ctx.font = fontBold;
+    ctx.textAlign = 'center';
+    ctx.fillText(network.label, currentX + colSpan / 2, textHeaderY);
+    currentX += DATA_COL_W;
+  });
+  currentY += TOP_HEADER_H;
+
+  // Sub-header
+  ctx.fillStyle = '#f0f0f0';
+  ctx.fillRect(0, currentY, totalWidth, SUB_HEADER_H);
+  ctx.strokeStyle = '#d0d0d0';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, currentY);
+  ctx.lineTo(totalWidth, currentY);
+  ctx.stroke();
+  ctx.fillStyle = '#555';
+  ctx.font = `bold ${fontSize + 1}px Arial`;
+  ctx.textAlign = 'center';
+  ctx.fillText('Personaje', ROW_NUM_W + PERSONAJE_W / 2, currentY + SUB_HEADER_H / 2);
+  currentX = ROW_NUM_W + PERSONAJE_W;
+  SOCIAL_NETWORKS.forEach((network) => {
+    ctx.beginPath();
+    ctx.moveTo(currentX, currentY);
+    ctx.lineTo(currentX, currentY + SUB_HEADER_H);
+    ctx.stroke();
+    ctx.fillText('Seguidores', currentX + DATA_SUB_W / 2, currentY + SUB_HEADER_H / 2);
+    ctx.fillText('No Publicaciones', currentX + DATA_SUB_W + DATA_SUB_W / 2, currentY + SUB_HEADER_H / 2);
+    ctx.strokeStyle = '#e0e0e0';
+    ctx.beginPath();
+    ctx.moveTo(currentX + DATA_SUB_W, currentY);
+    ctx.lineTo(currentX + DATA_SUB_W, currentY + SUB_HEADER_H);
+    ctx.stroke();
+    ctx.strokeStyle = '#d0d0d0';
+    currentX += DATA_COL_W;
+  });
+  ctx.beginPath();
+  ctx.moveTo(0, currentY + SUB_HEADER_H);
+  ctx.lineTo(totalWidth, currentY + SUB_HEADER_H);
+  ctx.stroke();
+  currentY += SUB_HEADER_H;
+
+  // Filas de personajes
+  characters.forEach((char, index) => {
+    const rowCenterY = currentY + ROW_H / 2;
+    ctx.fillStyle = (index % 2 === 0) ? '#ffffff' : '#f9f9f9';
+    ctx.fillRect(0, currentY, totalWidth, ROW_H);
+    ctx.fillStyle = '#333';
+    ctx.beginPath();
+    ctx.arc(ROW_NUM_W / 2, rowCenterY, 13, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.font = fontBold;
+    ctx.textAlign = 'center';
+    ctx.fillText(index + 1, ROW_NUM_W / 2, rowCenterY);
+    const avatarX = ROW_NUM_W + 12;
+    const avatarY = rowCenterY - AVATAR_SIZE / 2;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(avatarX + AVATAR_SIZE / 2, avatarY + AVATAR_SIZE / 2, AVATAR_SIZE / 2, 0, 2 * Math.PI);
+    ctx.clip();
+    const avatarImg = avatarsMap[char.avatarUrl];
+    if (avatarImg) {
+      ctx.drawImage(avatarImg, avatarX, avatarY, AVATAR_SIZE, AVATAR_SIZE);
+    } else {
+      ctx.fillStyle = '#eee';
+      ctx.fillRect(avatarX, avatarY, AVATAR_SIZE, AVATAR_SIZE);
+    }
+    ctx.restore();
+    ctx.fillStyle = '#333';
+    ctx.font = fontBold;
+    ctx.textAlign = 'left';
+    const nameX = avatarX + AVATAR_SIZE + 10;
+    ctx.fillText(char.name, nameX, rowCenterY);
+    currentX = ROW_NUM_W + PERSONAJE_W;
+    ctx.font = fontRegular;
+    ctx.textAlign = 'center';
+    SOCIAL_NETWORKS.forEach((network) => {
+      const data = char[network.key];
+      ctx.fillStyle = '#333';
+      ctx.fillText(data?.followers || '-', currentX + DATA_SUB_W / 2, rowCenterY);
+      ctx.fillStyle = '#777';
+      ctx.fillText(data?.posts || '-', currentX + DATA_SUB_W + DATA_SUB_W / 2, rowCenterY);
+      ctx.strokeStyle = '#e0e0e0';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(currentX, currentY);
+      ctx.lineTo(currentX, currentY + ROW_H);
+      ctx.stroke();
+      currentX += DATA_COL_W;
+    });
+    ctx.strokeStyle = '#e0e0e0';
+    ctx.beginPath();
+    ctx.moveTo(0, currentY + ROW_H);
+    ctx.lineTo(totalWidth, currentY + ROW_H);
+    ctx.stroke();
+    currentY += ROW_H;
+  });
+
+  const dataURL = tempCanvas.toDataURL('image/png');
+  const imgElement = new Image();
+  imgElement.onload = () => {
+    const fabricImg = new FabricImage(imgElement, {
+      left: 50,
+      top: 150,
+      scaleX: 0.8,
+      scaleY: 0.8,
+      name: 'benchmark-social-media-externas'
+    });
+    canvas.add(fabricImg);
+    canvas.renderAll();
+  };
+  imgElement.src = dataURL;
 };
 
 export const autoInsertDemografiaSociedadRed = async (canvas) => {

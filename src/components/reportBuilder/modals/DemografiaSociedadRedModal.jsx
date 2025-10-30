@@ -35,6 +35,7 @@ const DemografiaSociedadRedModal = ({ isOpen, onClose, canvas }) => {
 
         // Calcular altura total disponible para las barras
         const totalHeight = 350;
+        const barGap = 3; // Espacio entre barras
 
         // Dibujar barras apiladas verticalmente
         let currentY = topPad;
@@ -46,25 +47,27 @@ const DemografiaSociedadRedModal = ({ isOpen, onClose, canvas }) => {
             ctx.fillStyle = bar.color;
             ctx.fillRect(leftPad, currentY, barWidth, barHeight);
 
-            // Porcentaje dentro de la barra (centrado)
+            // Porcentaje dentro de la barra (centrado verticalmente en la barra)
             ctx.fillStyle = '#fff';
             ctx.font = 'bold 48px Arial';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(bar.percent + '%', leftPad + barWidth / 2, currentY + barHeight / 2);
 
-            // Etiqueta del concepto (a la derecha de la barra)
+            // Calcular posición Y para la etiqueta (centrada en esta barra específica)
+            const labelY = currentY + barHeight / 2;
+
+            // Etiqueta del concepto (a la derecha de la barra, alineada con el centro de ESTA barra)
             ctx.font = 'bold 32px Arial';
             ctx.fillStyle = bar.color;
             ctx.textAlign = 'left';
             ctx.textBaseline = 'middle';
 
             const labelX = leftPad + barWidth + 30;
-            const labelY = currentY + barHeight / 2;
 
             ctx.fillText(bar.label, labelX, labelY);
 
-            // Línea de conexión (flecha)
+            // Línea de conexión (flecha desde el centro de la barra)
             ctx.strokeStyle = bar.color;
             ctx.lineWidth = 2;
             ctx.beginPath();
@@ -81,21 +84,27 @@ const DemografiaSociedadRedModal = ({ isOpen, onClose, canvas }) => {
             ctx.fillStyle = bar.color;
             ctx.fill();
 
-            // Etiqueta adicional (más a la derecha)
+            // Etiqueta adicional (más a la derecha, alineada con esta barra)
             if (bar.rightLabel) {
                 ctx.font = '20px Arial';
                 ctx.fillStyle = '#333';
                 ctx.textAlign = 'left';
+                ctx.textBaseline = 'middle';
                 const lines = bar.rightLabel.split('\n');
                 const rightLabelX = labelX + ctx.measureText(bar.label).width + 80;
-                const startY = labelY - (lines.length - 1) * 12;
+
+                // Si hay múltiples líneas, centrarlas alrededor de labelY
+                const lineHeight = 24;
+                const totalTextHeight = lines.length * lineHeight;
+                let textY = labelY - (totalTextHeight / 2) + (lineHeight / 2);
 
                 lines.forEach((line, idx) => {
-                    ctx.fillText(line, rightLabelX, startY + idx * 24);
+                    ctx.fillText(line, rightLabelX, textY);
+                    textY += lineHeight;
                 });
             }
 
-            currentY += barHeight;
+            currentY += barHeight + barGap;
         });
 
         // Exportar a Fabric
@@ -159,7 +168,7 @@ const DemografiaSociedadRedModal = ({ isOpen, onClose, canvas }) => {
                     <div style={{ marginTop: 20, padding: 15, background: '#f5f5f5', borderRadius: 8 }}>
                         <h4 style={{ marginBottom: 10 }}>Vista previa:</h4>
                         <div style={{ background: '#fff', padding: 20, borderRadius: 4, display: 'flex', alignItems: 'flex-start' }}>
-                            <div style={{ display: 'flex', flexDirection: 'column', width: 100 }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', width: 100, gap: '2px' }}>
                                 {bars.map((bar, idx) => (
                                     <div key={idx} style={{
                                         height: `${bar.percent * 2}px`,
@@ -175,7 +184,7 @@ const DemografiaSociedadRedModal = ({ isOpen, onClose, canvas }) => {
                                     </div>
                                 ))}
                             </div>
-                            <div style={{ marginLeft: 20, display: 'flex', flexDirection: 'column', justifyContent: 'space-around', height: `${bars.reduce((sum, b) => sum + b.percent * 2, 0)}px` }}>
+                            <div style={{ marginLeft: 20, display: 'flex', flexDirection: 'column', justifyContent: 'space-around', height: `${bars.reduce((sum, b) => sum + b.percent * 2, 0) + (bars.length - 1) * 2}px` }}>
                                 {bars.map((bar, idx) => (
                                     <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
                                         <span style={{ fontWeight: 'bold', color: bar.color, fontSize: 16 }}>
