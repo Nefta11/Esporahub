@@ -15,7 +15,8 @@ import {
   autoInsertInfluencersTable,
   autoInsertBenchmarkMatrix,
   autoInsertAdjetivacionTablero,
-  autoInsertAudienciaTablero
+  autoInsertAudienciaTablero,
+  autoInsertBenchmarkIntegrado
 } from './utils/autoInsertHelpers';
 import {
   autoInsertBenchmarkSocialMedia,
@@ -266,7 +267,7 @@ const FilminaEditor = () => {
     } else if (filminaTitle === 'RRSSS Externas. Benchmark audiencia p/contenido difundido') {
       autoInsertAudienciaTablero(canvas);
     } else if (filminaTitle === 'Benchmark de mensaje integrado') {
-      // No auto-insert por ahora, el usuario usará el modal
+      autoInsertBenchmarkIntegrado(canvas);
     }
   }, [filmina, getCanvas]);
 

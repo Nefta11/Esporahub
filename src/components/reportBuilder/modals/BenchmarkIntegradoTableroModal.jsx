@@ -49,38 +49,46 @@ const BenchmarkIntegradoTableroModal = ({ isOpen, onClose, canvas }) => {
 
     function drawDashboard(targetCanvas) {
         const ctx = targetCanvas.getContext('2d');
-        const width = 1100;
-        const height = 550;
+        const width = 1400;
+        const height = 700;
         targetCanvas.width = width;
         targetCanvas.height = height;
         ctx.clearRect(0, 0, width, height);
 
         // Fondo
-        ctx.fillStyle = '#fff';
+        ctx.fillStyle = '#f8f9fa';
         ctx.fillRect(0, 0, width, height);
 
-        // Radar chart en la izquierda
-        drawRadar(ctx, 200, 275, 140, radarData, radarLabels);
+        // Radar chart en la izquierda (más grande y reposicionado)
+        drawRadar(ctx, 230, 350, 170, radarData, radarLabels);
 
-        // Perfiles en la derecha
+        // Perfiles en la derecha (más espaciados)
         profiles.forEach((profile, idx) => {
-            const cardY = 30 + idx * 170;
-            const cardX = 420;
-            const cardWidth = 650;
-            const cardHeight = 150;
+            const cardY = 40 + idx * 215;
+            const cardX = 520;
+            const cardWidth = 850;
+            const cardHeight = 190;
 
-            // Fondo de la tarjeta
+            // Fondo de la tarjeta con sombra
             ctx.save();
-            ctx.fillStyle = '#e8e8e8';
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
+            ctx.shadowBlur = 10;
+            ctx.shadowOffsetX = 2;
+            ctx.shadowOffsetY = 2;
+            ctx.fillStyle = '#ffffff';
             ctx.beginPath();
             ctx.roundRect(cardX, cardY, cardWidth, cardHeight, 15);
             ctx.fill();
+            ctx.shadowColor = 'transparent';
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 2;
+            ctx.stroke();
             ctx.restore();
 
-            // Avatar circular
-            const avatarX = cardX - 60;
+            // Avatar circular (más grande)
+            const avatarX = cardX - 70;
             const avatarY = cardY + cardHeight / 2;
-            const avatarRadius = 45;
+            const avatarRadius = 55;
 
             ctx.save();
             ctx.beginPath();
@@ -127,35 +135,35 @@ const BenchmarkIntegradoTableroModal = ({ isOpen, onClose, canvas }) => {
             ctx.fillText(profile.name, avatarX + avatarRadius + 15, avatarY);
 
             // Contenido de la tarjeta
-            const contentX = cardX + 20;
-            const contentY = cardY + 15;
+            const contentX = cardX + 25;
+            const contentY = cardY + 20;
 
             // Número de publicaciones
-            ctx.font = 'bold 14px Arial';
-            ctx.fillStyle = '#222';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillStyle = '#1a1a1a';
             ctx.fillText(`Número de publicaciones: ${profile.posts}`, contentX, contentY);
 
             // Población objetivo
-            ctx.font = 'bold 14px Arial';
-            ctx.fillStyle = '#222';
-            ctx.fillText(`Población objetivo: ${profile.audience}`, contentX, contentY + 25);
+            ctx.font = 'bold 16px Arial';
+            ctx.fillStyle = '#1a1a1a';
+            ctx.fillText(`Población objetivo: ${profile.audience}`, contentX, contentY + 30);
 
             // Mensaje central (título)
-            ctx.font = 'bold 14px Arial';
-            ctx.fillStyle = '#222';
-            ctx.fillText('Mensaje central:', contentX, contentY + 50);
+            ctx.font = 'bold 16px Arial';
+            ctx.fillStyle = '#1a1a1a';
+            ctx.fillText('Mensaje central:', contentX, contentY + 60);
 
-            // Mensaje central (texto)
-            ctx.font = '12px Arial';
-            ctx.fillStyle = '#333';
-            wrapText(ctx, profile.message, contentX, contentY + 70, cardWidth - 180, 16, 3);
+            // Mensaje central (texto) - más espacio y mejor formato
+            ctx.font = '13px Arial';
+            ctx.fillStyle = '#444';
+            wrapText(ctx, profile.message, contentX, contentY + 85, cardWidth - 200, 18, 4);
 
-            // Imagen de ejemplo en la esquina superior derecha
+            // Imagen de ejemplo en la esquina superior derecha (más grande)
             if (profile.imageUrl) {
-                const imgX = cardX + cardWidth - 140;
-                const imgY = cardY + 15;
-                const imgWidth = 120;
-                const imgHeight = 120;
+                const imgX = cardX + cardWidth - 165;
+                const imgY = cardY + 20;
+                const imgWidth = 140;
+                const imgHeight = 150;
 
                 ctx.save();
                 ctx.fillStyle = '#fff';
@@ -172,11 +180,11 @@ const BenchmarkIntegradoTableroModal = ({ isOpen, onClose, canvas }) => {
                 };
                 ctx.restore();
             } else {
-                // Placeholder para imagen
-                const imgX = cardX + cardWidth - 140;
-                const imgY = cardY + 15;
-                const imgWidth = 120;
-                const imgHeight = 120;
+                // Placeholder para imagen (más grande)
+                const imgX = cardX + cardWidth - 165;
+                const imgY = cardY + 20;
+                const imgWidth = 140;
+                const imgHeight = 150;
 
                 ctx.fillStyle = '#f0f0f0';
                 ctx.fillRect(imgX, imgY, imgWidth, imgHeight);
@@ -219,14 +227,14 @@ const BenchmarkIntegradoTableroModal = ({ isOpen, onClose, canvas }) => {
             ctx.stroke();
         }
 
-        // Etiquetas
-        ctx.font = 'bold 12px Arial';
-        ctx.fillStyle = '#333';
+        // Etiquetas (más grandes y legibles)
+        ctx.font = 'bold 14px Arial';
+        ctx.fillStyle = '#1a1a1a';
         for (let i = 0; i < N; ++i) {
             const angle = (2 * Math.PI * i) / N - Math.PI / 2;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(labels[i], cx + Math.cos(angle) * (r + 30), cy + Math.sin(angle) * (r + 30));
+            ctx.fillText(labels[i], cx + Math.cos(angle) * (r + 40), cy + Math.sin(angle) * (r + 40));
         }
 
         // Polígono de datos con gradiente de colores
@@ -323,8 +331,9 @@ const BenchmarkIntegradoTableroModal = ({ isOpen, onClose, canvas }) => {
             const fabricImg = new FabricImage(imgElement, {
                 left: 40,
                 top: 40,
-                scaleX: 0.8,
-                scaleY: 0.8
+                scaleX: 0.6,
+                scaleY: 0.6,
+                name: 'benchmark-integrado'
             });
             canvas.add(fabricImg);
             canvas.setActiveObject(fabricImg);
