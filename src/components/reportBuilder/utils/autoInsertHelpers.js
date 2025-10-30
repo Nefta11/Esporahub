@@ -912,7 +912,7 @@ export const autoInsertAudienciaTablero = async (canvas) => {
   });
 
   // Radar de Edad - más abajo para no encimarse
-  drawRadarAge(ctx, 1000, 210, 70, state.demographics.age, RADAR_AXES_AGE);
+  drawRadarAge(ctx, 1000, 230, 70, state.demographics.age, RADAR_AXES_AGE);
   ctx.restore();
 
   // Contenidos TOP - bajado para no encimarse

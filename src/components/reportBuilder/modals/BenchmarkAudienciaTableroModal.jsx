@@ -352,7 +352,7 @@ const BenchmarkAudienciaTableroModal = ({ isOpen, onClose, canvas, filminaTitle 
         });
 
         // Radar de Edad - más abajo para no encimarse
-        drawRadar(ctx, 1000, 210, 70, state.demographics.age, RADAR_AXES_AGE);
+        drawRadar(ctx, 1000, 230, 70, state.demographics.age, RADAR_AXES_AGE);
         ctx.restore();
 
         // Contenidos TOP - bajado para no encimarse
