@@ -18,6 +18,7 @@ const EditorSidebar = ({
   onOpenInfluencersModal,
   onOpenDemografiaSociedadRedModal,
   onOpenBenchmarkAdjetivacionTableroModal,
+  onOpenBenchmarkAudienciaTableroModal,
   layers,
   selectedLayer,
   onSelectLayer,
@@ -111,6 +112,20 @@ const EditorSidebar = ({
               <button className="tool-card" onClick={onOpenBenchmarkAdjetivacionTableroModal} title="Tablero de Análisis de Contenido y Mensaje">
                 <PieChart size={24} />
                 <span>Tablero Adjetivación</span>
+              </button>
+          )}
+
+          {/* Herramienta de Tablero de Audiencia para filminas específicas */}
+          {currentFilmina &&
+            (
+              currentFilmina.title === 'RRSSS Propias. Benchmark audiencia p/contenido posteado' ||
+              currentFilmina.title === 'RRSSS Externas. Benchmark audiencia p/contenido posteado' ||
+              currentFilmina.title === 'RRSSS Propias. Benchmark audiencia p/contenido difundido' ||
+              currentFilmina.title === 'RRSSS Externas. Benchmark audiencia p/contenido difundido'
+            ) && typeof onOpenBenchmarkAudienciaTableroModal === 'function' && (
+              <button className="tool-card" onClick={onOpenBenchmarkAudienciaTableroModal} title="Tablero de Análisis de Audiencia">
+                <Users size={24} />
+                <span>Tablero Audiencia</span>
               </button>
           )}
 

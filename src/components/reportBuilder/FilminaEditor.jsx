@@ -1,4 +1,5 @@
 import BenchmarkAdjetivacionTableroModal from './modals/BenchmarkAdjetivacionTableroModal';
+import BenchmarkAudienciaTableroModal from './modals/BenchmarkAudienciaTableroModal';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Download } from 'lucide-react';
@@ -12,7 +13,8 @@ import {
   autoInsertSocialMediaUsageTable,
   autoInsertInfluencersTable,
   autoInsertBenchmarkMatrix,
-  autoInsertAdjetivacionTablero
+  autoInsertAdjetivacionTablero,
+  autoInsertAudienciaTablero
 } from './utils/autoInsertHelpers';
 import {
   autoInsertBenchmarkSocialMedia,
@@ -254,6 +256,14 @@ const FilminaEditor = () => {
       autoInsertAdjetivacionTablero(canvas);
     } else if (filminaTitle === 'RRSSS Externas. Benchmark adjetivación p/contenido difundido') {
       autoInsertAdjetivacionTablero(canvas);
+    } else if (filminaTitle === 'RRSSS Propias. Benchmark audiencia p/contenido posteado') {
+      autoInsertAudienciaTablero(canvas);
+    } else if (filminaTitle === 'RRSSS Externas. Benchmark audiencia p/contenido posteado') {
+      autoInsertAudienciaTablero(canvas);
+    } else if (filminaTitle === 'RRSSS Propias. Benchmark audiencia p/contenido difundido') {
+      autoInsertAudienciaTablero(canvas);
+    } else if (filminaTitle === 'RRSSS Externas. Benchmark audiencia p/contenido difundido') {
+      autoInsertAudienciaTablero(canvas);
     }
   }, [filmina, getCanvas]);
 
@@ -366,6 +376,7 @@ const FilminaEditor = () => {
 
         <EditorSidebar
           onOpenBenchmarkAdjetivacionTableroModal={() => setActiveModal('benchmarkAdjetivacionTablero')}
+          onOpenBenchmarkAudienciaTableroModal={() => setActiveModal('benchmarkAudienciaTablero')}
           onAddText={() => fabricObject.addText()}
           onAddShape={() => setActiveModal('shape')}
           onAddImage={() => fabricObject.addImage()}
@@ -396,6 +407,17 @@ const FilminaEditor = () => {
             filminaTitle={filmina?.title}
           />
         )}
+
+        {/* Modal Tablero Audiencia */}
+        {activeModal === 'benchmarkAudienciaTablero' && (
+          <BenchmarkAudienciaTableroModal
+            isOpen={true}
+            onClose={() => setActiveModal(null)}
+            canvas={canvas}
+            filminaTitle={filmina?.title}
+          />
+        )}
+
         <DemografiaSociedadRedModal
           isOpen={activeModal === 'demografiaSociedadRed'}
           onClose={() => setActiveModal(null)}

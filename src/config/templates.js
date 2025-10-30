@@ -54,7 +54,7 @@ export const templates = [
     name: 'Benchmark RRSS',
     description: 'Análisis exhaustivo de redes sociales propias y externas',
     color: '#AF52DE',
-    filminaCount: 11,
+    filminaCount: 15,
     filminas: [
       { id: 1, title: 'Subportada A2: Benchmark Redes Sociales', order: 13, background: 'subportada2.jpeg' },
       { id: 2, title: 'RRSS Propias: Benchmark Cuantitativo', order: 14, background: 'membretesimple.jpeg' },
@@ -67,6 +67,10 @@ export const templates = [
       { id: 9, title: 'RRSSS Externas. Benchmark adjetivación p/contenido posteado', order: 21, background: 'membretesimple.jpeg' },
       { id: 10, title: 'RRSSS Propias. Benchmark adjetivación p/contenido difundido', order: 22, background: 'membretesimple.jpeg' },
       { id: 11, title: 'RRSSS Externas. Benchmark adjetivación p/contenido difundido', order: 23, background: 'membretesimple.jpeg' },
+      { id: 12, title: 'RRSSS Propias. Benchmark audiencia p/contenido posteado', order: 24, background: 'membretesimple.jpeg' },
+      { id: 13, title: 'RRSSS Externas. Benchmark audiencia p/contenido posteado', order: 25, background: 'membretesimple.jpeg' },
+      { id: 14, title: 'RRSSS Propias. Benchmark audiencia p/contenido difundido', order: 26, background: 'membretesimple.jpeg' },
+      { id: 15, title: 'RRSSS Externas. Benchmark audiencia p/contenido difundido', order: 27, background: 'membretesimple.jpeg' },
     ],
     canvasConfig: {
       text: 'Benchmark RRSS',

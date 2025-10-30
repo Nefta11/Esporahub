@@ -723,3 +723,196 @@ export const autoInsertAdjetivacionTablero = async (canvas) => {
     imgElement.src = dataURL;
   }, 400);
 };
+
+// Datos por defecto para Tablero de Audiencia
+const defaultAudienciaData = {
+  profile: {
+    name: 'Manuel Guerra',
+    avatar: '',
+  },
+  message: 'Análisis de audiencia y alcance',
+  totalReach: '1.2M',
+  totalEngagement: '850K',
+  demographics: {
+    gender: [
+      { label: 'Masculino', value: 52 },
+      { label: 'Femenino', value: 48 },
+    ],
+    age: [
+      { label: '18-24', value: 25 },
+      { label: '25-34', value: 35 },
+      { label: '35-44', value: 22 },
+      { label: '45+', value: 18 },
+    ],
+    location: [
+      { label: 'México', value: 45 },
+      { label: 'USA', value: 30 },
+      { label: 'España', value: 15 },
+      { label: 'Otros', value: 10 },
+    ],
+  },
+  topPosts: [
+    { src: '', network: 'facebook' },
+    { src: '', network: 'instagram' },
+    { src: '', network: 'tiktok' },
+    { src: '', network: 'x' },
+    { src: '', network: 'youtube' },
+  ],
+};
+
+// Auto-insertar Tablero de Audiencia
+export const autoInsertAudienciaTablero = async (canvas) => {
+  if (!canvas) return;
+
+  const state = defaultAudienciaData;
+  const width = 1200, height = 700;
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = width;
+  tempCanvas.height = height;
+  const ctx = tempCanvas.getContext('2d');
+
+  ctx.fillStyle = '#f5f5f5';
+  ctx.fillRect(0, 0, width, height);
+
+  // Perfil
+  ctx.save();
+  ctx.fillStyle = '#fff';
+  ctx.strokeStyle = '#1967D2';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.arc(120, 110, 60, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = 'bold 22px Arial';
+  ctx.fillStyle = '#333';
+  ctx.textAlign = 'left';
+  ctx.fillText(state.profile.name, 200, 110);
+  ctx.font = 'bold 13px Arial';
+  ctx.fillStyle = '#1967D2';
+  ctx.fillText('PERFIL DE AUDIENCIA', 200, 140);
+  ctx.restore();
+
+  // Mensaje
+  ctx.save();
+  ctx.fillStyle = '#e5e5e5';
+  ctx.fillRect(40, 180, 320, 120);
+  ctx.font = 'bold 18px Arial';
+  ctx.fillStyle = '#333';
+  ctx.fillText('Insights:', 55, 205);
+  ctx.font = '14px Arial';
+  ctx.fillStyle = '#222';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+
+  const wrapText = (text, x, y, maxWidth, lineHeight) => {
+    const words = text.split(' ');
+    let line = '';
+    let currentY = y;
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + ' ';
+      const metrics = ctx.measureText(testLine);
+      if (metrics.width > maxWidth && n > 0) {
+        ctx.fillText(line, x, currentY);
+        line = words[n] + ' ';
+        currentY += lineHeight;
+      } else {
+        line = testLine;
+      }
+    }
+    ctx.fillText(line, x, currentY);
+  };
+  wrapText(state.message, 55, 230, 290, 20);
+  ctx.restore();
+
+  // Métricas y Demographics
+  ctx.save();
+  ctx.fillStyle = '#fff';
+  ctx.strokeStyle = '#ccc';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(400, 40, 760, 260, 30);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = 'bold 20px Arial';
+  ctx.fillStyle = '#333';
+  ctx.fillText('Alcance Total: ' + state.totalReach, 420, 70);
+  ctx.fillText('Engagement Total: ' + state.totalEngagement, 420, 100);
+
+  // Demographics
+  ctx.font = 'bold 14px Arial';
+  ctx.fillText('Género:', 420, 140);
+  ctx.font = '12px Arial';
+  state.demographics.gender.forEach((item, i) => {
+    ctx.fillText(`${item.label}: ${item.value}%`, 420, 160 + i * 20);
+  });
+
+  ctx.font = 'bold 14px Arial';
+  ctx.fillText('Edad:', 600, 140);
+  ctx.font = '12px Arial';
+  state.demographics.age.forEach((item, i) => {
+    ctx.fillText(`${item.label}: ${item.value}%`, 600, 160 + i * 20);
+  });
+
+  ctx.font = 'bold 14px Arial';
+  ctx.fillText('Ubicación:', 780, 140);
+  ctx.font = '12px Arial';
+  state.demographics.location.forEach((item, i) => {
+    ctx.fillText(`${item.label}: ${item.value}%`, 780, 160 + i * 20);
+  });
+  ctx.restore();
+
+  // Contenidos TOP
+  ctx.save();
+  ctx.fillStyle = '#fff';
+  ctx.strokeStyle = '#ccc';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(40, 320, 1120, 350, 30);
+  ctx.fill();
+  ctx.stroke();
+  ctx.font = 'bold 24px Arial';
+  ctx.fillStyle = '#333';
+  ctx.fillText('Publicaciones con Mayor Alcance:', 60, 355);
+
+  // Top posts placeholders
+  state.topPosts.forEach((post, i) => {
+    ctx.fillStyle = '#e0e0e0';
+    ctx.fillRect(70 + i * 220, 390, 180, 200);
+    ctx.font = 'bold 18px Arial';
+    ctx.fillStyle = '#888';
+    ctx.textAlign = 'center';
+    ctx.fillText('Sin Publicación', 160 + i * 220, 490);
+
+    // Icono red social
+    const icon = SOCIAL_ICONS.find(ic => ic.key === post.network);
+    if (icon) {
+      const netImg = new Image();
+      netImg.crossOrigin = 'anonymous';
+      netImg.onload = () => {
+        ctx.drawImage(netImg, 150 + i * 220, 605, 32, 32);
+      };
+      netImg.src = icon.icon;
+    }
+  });
+  ctx.restore();
+
+  // Exportar a Fabric
+  setTimeout(() => {
+    const dataURL = tempCanvas.toDataURL('image/png');
+    const imgElement = new Image();
+    imgElement.onload = () => {
+      const fabricImg = new FabricImage(imgElement, {
+        left: 50,
+        top: 50,
+        scaleX: 0.7,
+        scaleY: 0.7,
+        name: 'audiencia-tablero'
+      });
+      canvas.add(fabricImg);
+      canvas.renderAll();
+    };
+    imgElement.src = dataURL;
+  }, 400);
+};
