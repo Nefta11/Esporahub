@@ -24,7 +24,9 @@
 .workhub-page.dark-theme .clean-header,
 .construction-page.dark-theme .clean-header,
 .espora-report-builder-page.dark-theme .clean-header,
-.formulario-page.dark-theme .clean-header {
+.formulario-page.dark-theme .clean-header,
+.template-selector-page.dark-theme .clean-header,
+.filmina-editor-page.dark-theme .clean-header {
     background: rgba(28, 28, 30, 0.4);
     border-bottom-color: rgba(84, 84, 88, 0.65);
 }
@@ -44,7 +46,9 @@
 .workhub-page.light-theme .clean-header,
 .construction-page.light-theme .clean-header,
 .espora-report-builder-page.light-theme .clean-header,
-.formulario-page.light-theme .clean-header {
+.formulario-page.light-theme .clean-header,
+.template-selector-page.light-theme .clean-header,
+.filmina-editor-page.light-theme .clean-header {
     background: rgba(255, 255, 255, 0.3);
     border-bottom-color: rgba(0, 0, 0, 0.1);
 }
@@ -126,7 +130,9 @@
 .workhub-page.dark-theme .back-button,
 .construction-page.dark-theme .back-button,
 .espora-report-builder-page.dark-theme .back-button,
-.formulario-page.dark-theme .back-button {
+.formulario-page.dark-theme .back-button,
+.template-selector-page.dark-theme .back-button,
+.filmina-editor-page.dark-theme .back-button {
     background: rgba(0, 122, 255, 0.1);
     color: #0A84FF;
     border: 1px solid rgba(0, 122, 255, 0.2);
@@ -146,7 +152,9 @@
 .workhub-page.dark-theme .back-button:hover,
 .construction-page.dark-theme .back-button:hover,
 .espora-report-builder-page.dark-theme .back-button:hover,
-.formulario-page.dark-theme .back-button:hover {
+.formulario-page.dark-theme .back-button:hover,
+.template-selector-page.dark-theme .back-button:hover,
+.filmina-editor-page.dark-theme .back-button:hover {
     background: rgba(0, 122, 255, 0.2);
     transform: scale(1.05);
 }
@@ -166,7 +174,9 @@
 .workhub-page.light-theme .back-button,
 .construction-page.light-theme .back-button,
 .espora-report-builder-page.light-theme .back-button,
-.formulario-page.light-theme .back-button {
+.formulario-page.light-theme .back-button,
+.template-selector-page.light-theme .back-button,
+.filmina-editor-page.light-theme .back-button {
     background: rgba(0, 122, 255, 0.1);
     color: #007AFF;
     border: 1px solid rgba(0, 122, 255, 0.2);
@@ -186,7 +196,9 @@
 .workhub-page.light-theme .back-button:hover,
 .construction-page.light-theme .back-button:hover,
 .espora-report-builder-page.light-theme .back-button:hover,
-.formulario-page.light-theme .back-button:hover {
+.formulario-page.light-theme .back-button:hover,
+.template-selector-page.light-theme .back-button:hover,
+.filmina-editor-page.light-theme .back-button:hover {
     background: rgba(0, 122, 255, 0.15);
     transform: scale(1.05);
 }
@@ -238,7 +250,9 @@
 .workhub-page.dark-theme .header-title p,
 .construction-page.dark-theme .header-title p,
 .espora-report-builder-page.dark-theme .header-title p,
-.formulario-page.dark-theme .header-title p {
+.formulario-page.dark-theme .header-title p,
+.template-selector-page.dark-theme .header-title p,
+.filmina-editor-page.dark-theme .header-title p {
     color: rgba(255, 255, 255, 0.6);
 }
 
@@ -257,7 +271,9 @@
 .workhub-page.light-theme .header-title p,
 .construction-page.light-theme .header-title p,
 .espora-report-builder-page.light-theme .header-title p,
-.formulario-page.light-theme .header-title p {
+.formulario-page.light-theme .header-title p,
+.template-selector-page.light-theme .header-title p,
+.filmina-editor-page.light-theme .header-title p {
     color: #1a202c !important;
     opacity: 1 !important;
 }
@@ -295,7 +311,9 @@
 .account-page.dark-theme .theme-toggle-btn,
 .construction-page.dark-theme .theme-toggle-btn,
 .espora-report-builder-page.dark-theme .theme-toggle-btn,
-.formulario-page.dark-theme .theme-toggle-btn {
+.formulario-page.dark-theme .theme-toggle-btn,
+.template-selector-page.dark-theme .theme-toggle-btn,
+.filmina-editor-page.dark-theme .theme-toggle-btn {
     background: rgba(118, 118, 128, 0.12);
 }
 
@@ -309,7 +327,9 @@
 .account-page.dark-theme .theme-toggle-btn:hover,
 .construction-page.dark-theme .theme-toggle-btn:hover,
 .espora-report-builder-page.dark-theme .theme-toggle-btn:hover,
-.formulario-page.dark-theme .theme-toggle-btn:hover {
+.formulario-page.dark-theme .theme-toggle-btn:hover,
+.template-selector-page.dark-theme .theme-toggle-btn:hover,
+.filmina-editor-page.dark-theme .theme-toggle-btn:hover {
     background: rgba(118, 118, 128, 0.24);
     transform: scale(1.1);
 }
@@ -325,7 +345,9 @@
 .account-page.light-theme .theme-toggle-btn,
 .construction-page.light-theme .theme-toggle-btn,
 .espora-report-builder-page.light-theme .theme-toggle-btn,
-.formulario-page.light-theme .theme-toggle-btn {
+.formulario-page.light-theme .theme-toggle-btn,
+.template-selector-page.light-theme .theme-toggle-btn,
+.filmina-editor-page.light-theme .theme-toggle-btn {
     background: rgba(118, 118, 128, 0.12);
 }
 
@@ -339,7 +361,9 @@
 .account-page.light-theme .theme-toggle-btn:hover,
 .construction-page.light-theme .theme-toggle-btn:hover,
 .espora-report-builder-page.light-theme .theme-toggle-btn:hover,
-.formulario-page.light-theme .theme-toggle-btn:hover {
+.formulario-page.light-theme .theme-toggle-btn:hover,
+.template-selector-page.light-theme .theme-toggle-btn:hover,
+.filmina-editor-page.light-theme .theme-toggle-btn:hover {
     background: rgba(118, 118, 128, 0.24);
     transform: scale(1.1);
 }
