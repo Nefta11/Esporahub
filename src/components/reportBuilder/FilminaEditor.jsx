@@ -14,6 +14,7 @@ import HumorHistogramModal from './modals/HumorHistogramModal';
 import PerfilesArquetiposModal from './modals/PerfilesArquetiposModal';
 import PerfilesIdentificacionModal from './modals/PerfilesIdentificacionModal';
 import PerfilPersonasModal from './modals/PerfilPersonasModal';
+import DilemasRentablesModal from './modals/DilemasRentablesModal';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Download } from 'lucide-react';
@@ -44,7 +45,8 @@ import {
   autoInsertHumorHistogram,
   autoInsertPerfilesArquetipos,
   autoInsertPerfilIdentificacion,
-  autoInsertPerfilPersonas
+  autoInsertPerfilPersonas,
+  autoInsertDilemasRentables
 } from './utils/autoInsertHelpers2';
 import {
   autoInsertBenchmarkSocialMedia,
@@ -258,6 +260,7 @@ const FilminaEditor = () => {
       'perfiles-arquetipos': 'perfilesArquetipos',
       'perfil-identificacion': 'perfilIdentificacion',
       'perfil-personas': 'perfilPersonas',
+      'dilemas-rentables': 'dilemasRentables',
       'benchmark-social-media': 'benchmarkSocialMedia',
       'benchmark-social-media-externas': 'benchmarkSocialMediaExternas',
       'demografia-sociedad-red': 'demografiaSociedadRed'
@@ -370,6 +373,8 @@ const FilminaEditor = () => {
       autoInsertPerfilesArquetipos(canvas);
     } else if (filminaTitle === 'Análisis Comparativo de Perfil') {
       autoInsertPerfilPersonas(canvas);
+    } else if (filminaTitle === 'Identificación de los dilemas rentables') {
+      autoInsertDilemasRentables(canvas);
     }
   }, [filmina, getCanvas]);
 
@@ -497,6 +502,7 @@ const FilminaEditor = () => {
           onOpenPerfilesArquetiposModal={() => setActiveModal('perfilesArquetipos')}
           onOpenPerfilIdentificacionModal={() => setActiveModal('perfilIdentificacion')}
           onOpenPerfilPersonasModal={() => setActiveModal('perfilPersonas')}
+          onOpenDilemasRentablesModal={() => setActiveModal('dilemasRentables')}
           onAddText={() => fabricObject.addText()}
           onAddShape={() => setActiveModal('shape')}
           onAddImage={() => fabricObject.addImage()}
@@ -723,6 +729,12 @@ const FilminaEditor = () => {
 
       <PerfilPersonasModal
         isOpen={activeModal === 'perfilPersonas'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
+
+      <DilemasRentablesModal
+        isOpen={activeModal === 'dilemasRentables'}
         onClose={() => setActiveModal(null)}
         canvas={canvas}
       />

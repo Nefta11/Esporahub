@@ -33,6 +33,7 @@ const EditorSidebar = ({
   onOpenPerfilesArquetiposModal,
   onOpenPerfilIdentificacionModal,
   onOpenPerfilPersonasModal,
+  onOpenDilemasRentablesModal,
   layers,
   selectedLayer,
   onSelectLayer,
@@ -281,6 +282,16 @@ const EditorSidebar = ({
               <button className="tool-card" onClick={onOpenPerfilPersonasModal} title="Análisis Comparativo de Perfil">
                 <Users size={24} />
                 <span>Perfil Personas</span>
+              </button>
+            )}
+
+          {/* Herramienta Dilemas Rentables (filmina 45) */}
+          {currentFilmina &&
+            currentFilmina.title === 'Identificación de los dilemas rentables' &&
+            typeof onOpenDilemasRentablesModal === 'function' && (
+              <button className="tool-card" onClick={onOpenDilemasRentablesModal} title="Dilemas Rentables">
+                <Activity size={24} />
+                <span>Dilemas Rentables</span>
               </button>
             )}
 
