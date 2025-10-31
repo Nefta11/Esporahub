@@ -11,6 +11,7 @@ import AmplificadoresChartModal from './modals/AmplificadoresChartModal';
 import ActivacionPorTemaModal from './modals/ActivacionPorTemaModal';
 import HumorSocialModal from './modals/HumorSocialModal';
 import HumorHistogramModal from './modals/HumorHistogramModal';
+import PerfilesArquetiposModal from './modals/PerfilesArquetiposModal';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Download } from 'lucide-react';
@@ -479,6 +480,7 @@ const FilminaEditor = () => {
           onOpenActivacionPorTemaModal={() => setActiveModal('activacionPorTema')}
           onOpenHumorSocialModal={() => setActiveModal('humorSocial')}
           onOpenHumorHistogramModal={() => setActiveModal('humorHistogram')}
+          onOpenPerfilesArquetiposModal={() => setActiveModal('perfilesArquetipos')}
           onAddText={() => fabricObject.addText()}
           onAddShape={() => setActiveModal('shape')}
           onAddImage={() => fabricObject.addImage()}
@@ -687,6 +689,12 @@ const FilminaEditor = () => {
 
       <HumorHistogramModal
         isOpen={activeModal === 'humorHistogram'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
+
+      <PerfilesArquetiposModal
+        isOpen={activeModal === 'perfilesArquetipos'}
         onClose={() => setActiveModal(null)}
         canvas={canvas}
       />

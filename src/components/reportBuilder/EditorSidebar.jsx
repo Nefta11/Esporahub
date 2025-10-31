@@ -30,6 +30,7 @@ const EditorSidebar = ({
   onOpenActivacionPorTemaModal,
   onOpenHumorSocialModal,
   onOpenHumorHistogramModal,
+  onOpenPerfilesArquetiposModal,
   layers,
   selectedLayer,
   onSelectLayer,
@@ -248,6 +249,16 @@ const EditorSidebar = ({
               <button className="tool-card" onClick={onOpenHumorHistogramModal} title="Histograma del Humor Social">
                 <BarChart3 size={24} />
                 <span>Histograma Humor</span>
+              </button>
+            )}
+
+          {/* Herramienta Perfiles y Arquetipos (filmina específica) */}
+          {currentFilmina &&
+            currentFilmina.title === 'Perfiles y Arquetipos' &&
+            typeof onOpenPerfilesArquetiposModal === 'function' && (
+              <button className="tool-card" onClick={onOpenPerfilesArquetiposModal} title="Perfiles y Arquetipos">
+                <Users size={24} />
+                <span>Perfiles</span>
               </button>
             )}
 

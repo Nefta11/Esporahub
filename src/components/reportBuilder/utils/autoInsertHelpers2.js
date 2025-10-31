@@ -312,3 +312,98 @@ export const autoInsertHumorHistogram = async (canvas) => {
   };
   img.src = dataURL;
 };
+
+// Auto-insert an Arquetipos ring (Perfiles y Arquetipos)
+export const autoInsertPerfilesArquetipos = async (canvas) => {
+  if (!canvas) return;
+
+  // Draw a ring chart similar to the modal but for auto-insert
+  const tempCanvas = document.createElement('canvas');
+  const width = 1400;
+  const height = 900;
+  tempCanvas.width = width;
+  tempCanvas.height = height;
+  const ctx = tempCanvas.getContext('2d');
+
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, width, height);
+
+  const title = 'Arquetipos | Sub-arquetipos';
+  ctx.fillStyle = '#111';
+  ctx.font = 'bold 28px Arial';
+  ctx.textAlign = 'left';
+  ctx.fillText(title, 40, 50);
+
+  const centerX = width / 2;
+  const centerY = height / 2 + 20;
+  const outerR = 300;
+  const innerR = 220;
+
+  const sections = [
+    { label: 'Transformador', color: '#F6C358' },
+    { label: 'Impulsor', color: '#F39C12' },
+    { label: 'Justiciero', color: '#F08A5D' },
+    { label: 'Generoso', color: '#E94E77' },
+    { label: 'Amigo', color: '#D7263D' },
+    { label: 'Protector', color: '#8E44AD' },
+    { label: 'Héroe', color: '#2E9CCA' },
+    { label: 'Conciliador', color: '#3D6B9B' },
+    { label: 'Líder', color: '#2E8B57' },
+    { label: 'Ejecutivo', color: '#1F8A70' },
+    { label: 'Mentor', color: '#27AE60' },
+    { label: 'Estratega', color: '#9ACD32' }
+  ];
+
+  const full = Math.PI * 2;
+  const per = full / sections.length;
+
+  sections.forEach((s, i) => {
+    const start = -Math.PI / 2 + i * per;
+    const end = start + per;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, outerR, start, end, false);
+    ctx.arc(centerX, centerY, innerR, end, start, true);
+    ctx.closePath();
+    ctx.fillStyle = s.color;
+    ctx.fill();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#fff';
+    ctx.stroke();
+  });
+
+  ctx.font = '12px Arial';
+  ctx.fillStyle = '#333';
+  ctx.textAlign = 'right';
+  ctx.fillText('*Arquetipos ejemplo', width - 40, height - 30);
+
+  const dataURL = tempCanvas.toDataURL('image/png');
+  const { Image: FabricImage } = await import('fabric');
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = () => {
+    try {
+      const fabricImg = new FabricImage(img, {
+        left: 60,
+        top: 60,
+        selectable: true,
+        evented: true,
+        hasControls: true,
+        hasBorders: true,
+        name: 'perfiles-arquetipos'
+      });
+
+      const targetWidth = 960;
+      const scale = targetWidth / fabricImg.width;
+      fabricImg.scaleX = scale;
+      fabricImg.scaleY = scale;
+
+      canvas.add(fabricImg);
+      canvas.setActiveObject(fabricImg);
+      fabricImg.setCoords();
+      canvas.requestRenderAll();
+    } catch (err) {
+      console.error('Error inserting perfiles arquetipos:', err);
+    }
+  };
+  img.src = dataURL;
+};
