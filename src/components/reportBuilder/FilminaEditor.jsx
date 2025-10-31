@@ -12,6 +12,7 @@ import ActivacionPorTemaModal from './modals/ActivacionPorTemaModal';
 import HumorSocialModal from './modals/HumorSocialModal';
 import HumorHistogramModal from './modals/HumorHistogramModal';
 import PerfilesArquetiposModal from './modals/PerfilesArquetiposModal';
+import PerfilesIdentificacionModal from './modals/PerfilesIdentificacionModal';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Download } from 'lucide-react';
@@ -40,7 +41,8 @@ import {
 } from './utils/autoInsertHelpers';
 import {
   autoInsertHumorHistogram,
-  autoInsertPerfilesArquetipos
+  autoInsertPerfilesArquetipos,
+  autoInsertPerfilIdentificacion
 } from './utils/autoInsertHelpers2';
 import {
   autoInsertBenchmarkSocialMedia,
@@ -358,6 +360,8 @@ const FilminaEditor = () => {
       autoInsertHumorSocial(canvas);
     } else if (filminaTitle === 'Histograma del Humor Social') {
       autoInsertHumorHistogram(canvas);
+    } else if (filminaTitle === 'Estudio de Identificación y definición del Perfil') {
+      autoInsertPerfilIdentificacion(canvas);
     } else if (filminaTitle === 'Perfiles y Arquetipos') {
       autoInsertPerfilesArquetipos(canvas);
     }
@@ -485,6 +489,7 @@ const FilminaEditor = () => {
           onOpenHumorSocialModal={() => setActiveModal('humorSocial')}
           onOpenHumorHistogramModal={() => setActiveModal('humorHistogram')}
           onOpenPerfilesArquetiposModal={() => setActiveModal('perfilesArquetipos')}
+          onOpenPerfilIdentificacionModal={() => setActiveModal('perfilIdentificacion')}
           onAddText={() => fabricObject.addText()}
           onAddShape={() => setActiveModal('shape')}
           onAddImage={() => fabricObject.addImage()}
@@ -699,6 +704,12 @@ const FilminaEditor = () => {
 
       <PerfilesArquetiposModal
         isOpen={activeModal === 'perfilesArquetipos'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
+
+      <PerfilesIdentificacionModal
+        isOpen={activeModal === 'perfilIdentificacion'}
         onClose={() => setActiveModal(null)}
         canvas={canvas}
       />

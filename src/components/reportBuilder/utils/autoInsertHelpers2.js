@@ -643,3 +643,218 @@ export const autoInsertPerfilesArquetipos = async (canvas) => {
   };
   img.src = dataURL;
 };
+
+// Auto-insert for "Estudio de Identificación y definición del Perfil"
+export const autoInsertPerfilIdentificacion = async (canvas) => {
+  if (!canvas) return;
+
+  // Default positive/negative bullets
+  const positive = [
+    "La población digital de Nuevo León busca en su próximo Gobernador la figura arquetípica de un Impulsor",
+    "Quieren que posea un carácter fuerte para combatir problemas de inseguridad y criminalidad",
+    "Buscan un enfoque renovado de la política que transforme la manera de abordar los problemas del Estado",
+  ];
+
+  const negative = [
+    "Les enfadaría que haga mega obras sin dar cuentas claras sobre el gasto público",
+    "No desean a alguien que se limite a aparecer en redes sociales mientras permanece ausente",
+    "Les enojaría que sus promesas de campaña no llegaran a realizarse o fueran ineficientes",
+  ];
+
+  // Draw to temp canvas
+  const tempCanvas = document.createElement("canvas");
+  const width = 1400;
+  const height = 720;
+  tempCanvas.width = width;
+  tempCanvas.height = height;
+  const ctx = tempCanvas.getContext("2d");
+
+  // Background
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, width, height);
+
+  // Left rounded card
+  const cardX = 40;
+  const cardY = 40;
+  const cardW = 360;
+  const cardH = 640;
+  const radius = 24;
+  ctx.fillStyle = "#f3f4f6";
+  ctx.beginPath();
+  ctx.moveTo(cardX + radius, cardY);
+  ctx.arcTo(cardX + cardW, cardY, cardX + cardW, cardY + cardH, radius);
+  ctx.arcTo(cardX + cardW, cardY + cardH, cardX, cardY + cardH, radius);
+  ctx.arcTo(cardX, cardY + cardH, cardX, cardY, radius);
+  ctx.arcTo(cardX, cardY, cardX + cardW, cardY, radius);
+  ctx.closePath();
+  ctx.fill();
+
+  // Draw donut segments
+  const centerX = cardX + cardW / 2;
+  const centerY = cardY + 140;
+  const outerR = 90;
+  const innerR = 45;
+  const segments = 10;
+  for (let i = 0; i < segments; i++) {
+    const ang = (i / segments) * Math.PI * 2 - Math.PI / 2;
+    const nx = Math.cos(ang);
+    const ny = Math.sin(ang);
+    const segColor = `hsl(${(i / segments) * 360},60%,45%)`;
+    ctx.beginPath();
+    ctx.fillStyle = segColor;
+    ctx.moveTo(centerX + nx * innerR, centerY + ny * innerR);
+    ctx.arc(centerX, centerY, outerR, ang, ang + (Math.PI * 2) / segments);
+    ctx.lineTo(centerX + nx * innerR, centerY + ny * innerR);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // center emblem
+  ctx.fillStyle = "#fef3c7";
+  ctx.beginPath();
+  const polyR = 28;
+  const points = 6;
+  for (let i = 0; i < points; i++) {
+    const a = (i / points) * Math.PI * 2 - Math.PI / 2;
+    const x = centerX + Math.cos(a) * polyR;
+    const y = centerY + Math.sin(a) * polyR;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.fill();
+
+  // Text below ring
+  ctx.fillStyle = "#6b7280";
+  ctx.font = "14px Arial";
+  ctx.textAlign = "center";
+  const subtitle =
+    "La población digital de Nuevo León busca en su próximo Gobernador la figura arquetípica de un";
+  wrapText(ctx, subtitle, centerX, centerY + 120, cardW - 40, 18);
+  ctx.fillStyle = "#5b21b6";
+  ctx.font = "bold 22px Arial";
+  ctx.fillText("Impulsor", centerX, centerY + 190);
+
+  // Middle and right columns
+  const col1X = cardX + cardW + 60;
+  const col2X = col1X + 520;
+  const colYStart = 80;
+
+  // Headers
+  ctx.fillStyle = "#14532d";
+  ctx.fillRect(col1X - 12, colYStart - 36, 360, 44);
+  ctx.fillStyle = "#fff";
+  ctx.font = "bold 20px Arial";
+  ctx.textAlign = "left";
+  ctx.fillText("Positivo", col1X, colYStart - 8);
+
+  ctx.fillStyle = "#4c0519";
+  ctx.fillRect(col2X - 12, colYStart - 36, 360, 44);
+  ctx.fillStyle = "#fff";
+  ctx.font = "bold 20px Arial";
+  ctx.fillText("Negativo", col2X, colYStart - 8);
+
+  // Bulleted lists
+  ctx.fillStyle = "#111827";
+  ctx.font = "15px Arial";
+  const lineHeight = 28;
+  let y = colYStart + 10;
+  positive.forEach((txt) => {
+    drawBulletText(ctx, txt, col1X, y, 340, lineHeight);
+    y += estimateLines(txt, 340, ctx) * lineHeight + 8;
+  });
+
+  y = colYStart + 10;
+  negative.forEach((txt) => {
+    drawBulletText(ctx, txt, col2X, y, 340, lineHeight);
+    y += estimateLines(txt, 340, ctx) * lineHeight + 8;
+  });
+
+  // Footer
+  ctx.font = "12px Arial";
+  ctx.fillStyle = "#555";
+  ctx.textAlign = "right";
+  ctx.fillText(
+    "*Perfil realizado el 11.Diciembre.2024",
+    width - 40,
+    height - 30
+  );
+
+  // helpers
+  function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+    const words = text.split(" ");
+    let line = "";
+    let curY = y;
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + " ";
+      const metrics = ctx.measureText(testLine);
+      const testWidth = metrics.width;
+      if (testWidth > maxWidth && n > 0) {
+        ctx.fillText(line, x, curY);
+        line = words[n] + " ";
+        curY += lineHeight;
+      } else {
+        line = testLine;
+      }
+    }
+    ctx.fillText(line, x, curY);
+  }
+
+  function drawBulletText(ctx, text, x, y, maxWidth, lineHeight) {
+    ctx.beginPath();
+    ctx.fillStyle = "#111827";
+    ctx.arc(x + 6, y - 6, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.textAlign = "left";
+    wrapText(ctx, text, x + 18, y, maxWidth - 18, lineHeight);
+  }
+
+  function estimateLines(text, maxWidth, ctx) {
+    const words = text.split(" ");
+    let line = "";
+    let lines = 1;
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + " ";
+      const testWidth = ctx.measureText(testLine).width;
+      if (testWidth > maxWidth && n > 0) {
+        line = words[n] + " ";
+        lines++;
+      } else {
+        line = testLine;
+      }
+    }
+    return lines;
+  }
+
+  // Convert and insert
+  const dataURL = tempCanvas.toDataURL("image/png");
+  const { Image: FabricImage } = await import("fabric");
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.onload = () => {
+    try {
+      const fImg = new FabricImage(img, {
+        left: 40,
+        top: 30,
+        selectable: true,
+        evented: true,
+        hasControls: true,
+        hasBorders: true,
+        name: "perfil-identificacion",
+      });
+
+      const targetWidth = 920;
+      const scale = targetWidth / fImg.width;
+      fImg.scaleX = scale;
+      fImg.scaleY = scale;
+
+      canvas.add(fImg);
+      canvas.setActiveObject(fImg);
+      fImg.setCoords();
+      canvas.requestRenderAll();
+    } catch (err) {
+      console.error("Error inserting perfil identificacion", err);
+    }
+  };
+  img.src = dataURL;
+};

@@ -31,6 +31,7 @@ const EditorSidebar = ({
   onOpenHumorSocialModal,
   onOpenHumorHistogramModal,
   onOpenPerfilesArquetiposModal,
+  onOpenPerfilIdentificacionModal,
   layers,
   selectedLayer,
   onSelectLayer,
@@ -259,6 +260,16 @@ const EditorSidebar = ({
               <button className="tool-card" onClick={onOpenPerfilesArquetiposModal} title="Perfiles y Arquetipos">
                 <Users size={24} />
                 <span>Perfiles</span>
+              </button>
+            )}
+
+          {/* Herramienta Estudio de Identificación y definición del Perfil */}
+          {currentFilmina &&
+            currentFilmina.title === 'Estudio de Identificación y definición del Perfil' &&
+            typeof onOpenPerfilIdentificacionModal === 'function' && (
+              <button className="tool-card" onClick={onOpenPerfilIdentificacionModal} title="Identificación de Perfil">
+                <Users size={24} />
+                <span>Identificación</span>
               </button>
             )}
 
