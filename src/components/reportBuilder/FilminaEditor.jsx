@@ -247,6 +247,7 @@ const FilminaEditor = () => {
       'amplificadores-chart': 'amplificadores',
       'activacion-por-tema-chart': 'activacionPorTema',
       'humor-social-chart': 'humorSocial',
+      'humor-histogram-chart': 'humorHistogram',
       'benchmark-social-media': 'benchmarkSocialMedia',
       'benchmark-social-media-externas': 'benchmarkSocialMediaExternas',
       'demografia-sociedad-red': 'demografiaSociedadRed'

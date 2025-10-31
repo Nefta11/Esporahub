@@ -4,42 +4,32 @@
 export const autoInsertHumorHistogram = async (canvas) => {
   if (!canvas) return;
 
-  // Datos de ejemplo para el histograma
+  // Datos de ejemplo para el histograma (usando datos genéricos de Lorem Ipsum)
   const candidateData = [
     {
       id: 'p1',
-      name: 'Personaje 1',
-      logo: 'morena',
+      name: 'Lorem Ipsum',
+      avatar: '',
       ringColor: '#A6343C',
       sentiment: 'Incertidumbre',
-      percentage: '15%',
-      matrix: { x: -1.2, y: -1.5 },
-      chart: { v: 0.2, h: -0.6, norm_w: 0.5, norm_h: 0.6, norm_dot: [-0.1, -0.1] }
+      percentage: '0%',
+      matrix: { x: 0, y: 0 },
+      chart: { v: 0.1, h: -0.1, norm_w: 0.5, norm_h: 0.6, norm_dot: [-0.1, -0.1] }
     },
     {
       id: 'p2',
-      name: 'Personaje 2',
-      logo: 'pri',
+      name: 'Dolor Sit',
+      avatar: '',
       ringColor: '#00843D',
       sentiment: 'Aceptación',
-      percentage: '22%',
-      matrix: { x: 0.8, y: 0.5 },
-      chart: { v: 0.5, h: 0.2, norm_w: 0.5, norm_h: 0.6, norm_dot: [0.1, 0.1] }
-    },
-    {
-      id: 'p3',
-      name: 'Personaje 3',
-      logo: 'mc',
-      ringColor: '#E67E22',
-      sentiment: 'Decepción',
-      percentage: '18%',
-      matrix: { x: -0.5, y: -2.0 },
-      chart: { v: 0.1, h: -0.4, norm_w: 0.5, norm_h: 0.6, norm_dot: [-0.1, -0.1] }
+      percentage: '0%',
+      matrix: { x: 0, y: 0 },
+      chart: { v: 0.1, h: 0.1, norm_w: 0.5, norm_h: 0.6, norm_dot: [0.1, 0.1] }
     },
   ];
 
   const title = 'Histograma del Humor Social';
-  const footnote = '*Histograma del Humor Social realizado el ' + new Date().toLocaleDateString('es-MX');
+  const footnote = '*Histograma del Humor Social realizado el 11.Diciembre.2024';
 
   // Datos de la matriz de emociones
   const emotionLabels = [
@@ -60,14 +50,20 @@ export const autoInsertHumorHistogram = async (canvas) => {
     return '#888';
   };
 
-  const getLogoColor = (logo) => {
-    switch (logo) {
-      case 'morena': return '#A6343C';
-      case 'pri': return '#00843D';
-      case 'mc': return '#E67E22';
-      default: return '#999';
-    }
-  };
+  // Precargar todos los avatares
+  const avatarImages = await Promise.all(
+    candidateData.map(profile => {
+      if (profile.avatar) {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = () => resolve(null);
+          img.src = profile.avatar;
+        });
+      }
+      return Promise.resolve(null);
+    })
+  );
 
   // Crear canvas temporal
   const tempCanvas = document.createElement('canvas');
@@ -163,7 +159,7 @@ export const autoInsertHumorHistogram = async (canvas) => {
   const col2Data = candidateData.slice(itemsPerCol, itemsPerCol * 2);
   const col3Data = candidateData.slice(itemsPerCol * 2);
 
-  const drawProfileRow = (ctx, profile, x, y) => {
+  const drawProfileRow = (ctx, profile, x, y, avatarImg) => {
     const avatarR = 30;
     const avatarX = x + avatarR + 10;
     const avatarY = y + avatarR + 10;
@@ -176,13 +172,32 @@ export const autoInsertHumorHistogram = async (canvas) => {
     ctx.strokeStyle = '#fff';
     ctx.stroke();
 
-    ctx.beginPath();
-    ctx.arc(avatarX + avatarR - 5, avatarY + avatarR - 5, 12, 0, Math.PI * 2);
-    ctx.fillStyle = getLogoColor(profile.logo);
-    ctx.fill();
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 2;
-    ctx.stroke();
+    // Dibujar avatar/logo si existe
+    if (avatarImg) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(avatarX + avatarR - 5, avatarY + avatarR - 5, 12, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.clip();
+      ctx.drawImage(avatarImg, avatarX + avatarR - 17, avatarY + avatarR - 17, 24, 24);
+      ctx.restore();
+
+      // Borde del avatar pequeño
+      ctx.beginPath();
+      ctx.arc(avatarX + avatarR - 5, avatarY + avatarR - 5, 12, 0, Math.PI * 2);
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    } else {
+      // Placeholder si no hay avatar
+      ctx.beginPath();
+      ctx.arc(avatarX + avatarR - 5, avatarY + avatarR - 5, 12, 0, Math.PI * 2);
+      ctx.fillStyle = '#999';
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
 
     ctx.font = 'bold 12px Arial';
     ctx.fillStyle = '#111';
@@ -241,13 +256,16 @@ export const autoInsertHumorHistogram = async (canvas) => {
   };
 
   col1Data.forEach((p, i) => {
-    drawProfileRow(ctx, p, col1Left, panelTop + i * rowH);
+    const avatarImg = avatarImages[candidateData.indexOf(p)];
+    drawProfileRow(ctx, p, col1Left, panelTop + i * rowH, avatarImg);
   });
   col2Data.forEach((p, i) => {
-    drawProfileRow(ctx, p, col2Left, panelTop + i * rowH);
+    const avatarImg = avatarImages[candidateData.indexOf(p)];
+    drawProfileRow(ctx, p, col2Left, panelTop + i * rowH, avatarImg);
   });
   col3Data.forEach((p, i) => {
-    drawProfileRow(ctx, p, col3Left, panelTop + i * rowH);
+    const avatarImg = avatarImages[candidateData.indexOf(p)];
+    drawProfileRow(ctx, p, col3Left, panelTop + i * rowH, avatarImg);
   });
 
   // 5. Pie de página

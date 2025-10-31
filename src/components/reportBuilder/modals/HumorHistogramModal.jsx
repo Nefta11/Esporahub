@@ -5,8 +5,8 @@ import { Image as FabricImage } from 'fabric';
 const initialCandidateData = [
     {
         id: 'personaje1',
-        name: 'Personaje 1',
-        logo: 'morena',
+        name: 'Lorem Ipsum',
+        avatar: '',
         ringColor: '#A6343C',
         sentiment: 'Incertidumbre',
         percentage: '0%',
@@ -15,8 +15,8 @@ const initialCandidateData = [
     },
     {
         id: 'personaje2',
-        name: 'Personaje 2',
-        logo: 'pri',
+        name: 'Dolor Sit',
+        avatar: '',
         ringColor: '#00843D',
         sentiment: 'Aceptación',
         percentage: '0%',
@@ -29,7 +29,7 @@ const initialCandidateData = [
 const newCandidateTemplate = {
     id: `new_${Date.now()}`,
     name: 'Nuevo Personaje',
-    logo: 'morena',
+    avatar: '',
     ringColor: '#A6343C',
     sentiment: 'Incertidumbre',
     percentage: '0%',
@@ -57,14 +57,6 @@ const getGridColor = (r, c) => {
     return '#888';
 };
 
-const getLogoColor = (logo) => {
-    switch (logo) {
-        case 'morena': return '#A6343C';
-        case 'pri': return '#00843D';
-        case 'mc': return '#E67E22';
-        default: return '#999';
-    }
-};
 
 // --- Componente React del Modal ---
 const HumorHistogramModal = ({ isOpen, onClose, canvas }) => {
@@ -75,13 +67,28 @@ const HumorHistogramModal = ({ isOpen, onClose, canvas }) => {
     if (!isOpen) return null;
 
     // --- Función de Dibujo Principal ---
-    const drawHistogram = (candidateData) => {
+    const drawHistogram = async (candidateData) => {
         const c = document.createElement('canvas');
         const width = 1700;
         const height = 900;
         c.width = width;
         c.height = height;
         const ctx = c.getContext('2d');
+
+        // Precargar todos los avatares
+        const avatarImages = await Promise.all(
+            candidateData.map(profile => {
+                if (profile.avatar) {
+                    return new Promise((resolve) => {
+                        const img = new Image();
+                        img.onload = () => resolve(img);
+                        img.onerror = () => resolve(null);
+                        img.src = profile.avatar;
+                    });
+                }
+                return Promise.resolve(null);
+            })
+        );
 
         // 1. Fondo
         ctx.fillStyle = '#ffffff';
@@ -171,7 +178,7 @@ const HumorHistogramModal = ({ isOpen, onClose, canvas }) => {
         const col3Data = candidateData.slice(itemsPerCol * 2);
 
         // Helper para dibujar fila de perfil
-        const drawProfileRow = (ctx, profile, x, y) => {
+        const drawProfileRow = (ctx, profile, x, y, avatarImg) => {
             const avatarR = 30;
             const avatarX = x + avatarR + 10;
             const avatarY = y + avatarR + 10;
@@ -184,13 +191,32 @@ const HumorHistogramModal = ({ isOpen, onClose, canvas }) => {
             ctx.strokeStyle = '#fff';
             ctx.stroke();
 
-            ctx.beginPath();
-            ctx.arc(avatarX + avatarR - 5, avatarY + avatarR - 5, 12, 0, Math.PI * 2);
-            ctx.fillStyle = getLogoColor(profile.logo);
-            ctx.fill();
-            ctx.strokeStyle = '#fff';
-            ctx.lineWidth = 2;
-            ctx.stroke();
+            // Dibujar avatar/logo si existe
+            if (avatarImg) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(avatarX + avatarR - 5, avatarY + avatarR - 5, 12, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.clip();
+                ctx.drawImage(avatarImg, avatarX + avatarR - 17, avatarY + avatarR - 17, 24, 24);
+                ctx.restore();
+
+                // Borde del avatar pequeño
+                ctx.beginPath();
+                ctx.arc(avatarX + avatarR - 5, avatarY + avatarR - 5, 12, 0, Math.PI * 2);
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            } else {
+                // Placeholder si no hay avatar
+                ctx.beginPath();
+                ctx.arc(avatarX + avatarR - 5, avatarY + avatarR - 5, 12, 0, Math.PI * 2);
+                ctx.fillStyle = '#999';
+                ctx.fill();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
 
             // Nombre
             ctx.font = 'bold 12px Arial';
@@ -260,13 +286,16 @@ const HumorHistogramModal = ({ isOpen, onClose, canvas }) => {
 
         // Dibujar las tres columnas
         col1Data.forEach((p, i) => {
-            drawProfileRow(ctx, p, col1Left, panelTop + i * rowH);
+            const avatarImg = avatarImages[candidateData.indexOf(p)];
+            drawProfileRow(ctx, p, col1Left, panelTop + i * rowH, avatarImg);
         });
         col2Data.forEach((p, i) => {
-            drawProfileRow(ctx, p, col2Left, panelTop + i * rowH);
+            const avatarImg = avatarImages[candidateData.indexOf(p)];
+            drawProfileRow(ctx, p, col2Left, panelTop + i * rowH, avatarImg);
         });
         col3Data.forEach((p, i) => {
-            drawProfileRow(ctx, p, col3Left, panelTop + i * rowH);
+            const avatarImg = avatarImages[candidateData.indexOf(p)];
+            drawProfileRow(ctx, p, col3Left, panelTop + i * rowH, avatarImg);
         });
 
         // --- 5. Pie de página ---
@@ -308,11 +337,23 @@ const HumorHistogramModal = ({ isOpen, onClose, canvas }) => {
         setCandidates(candidates.filter((_, i) => i !== index));
     };
 
+    const handleAvatarUpload = (index, e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            const newCandidates = [...candidates];
+            newCandidates[index].avatar = ev.target.result;
+            setCandidates(newCandidates);
+        };
+        reader.readAsDataURL(file);
+    };
+
     // --- Función de Inserción ---
     const handleInsert = async () => {
         if (!canvas) return;
 
-        const tempCanvas = drawHistogram(candidates);
+        const tempCanvas = await drawHistogram(candidates);
         const dataURL = tempCanvas.toDataURL('image/png');
 
         const { Image: FabricImageClass } = await import('fabric');
@@ -396,8 +437,13 @@ const HumorHistogramModal = ({ isOpen, onClose, canvas }) => {
                                     <input value={candidate.sentiment} onChange={(e) => handleCandidateChange(index, 'sentiment', e.target.value)} />
                                 </div>
                                 <div className="chart-modal-field">
-                                    <label>Logo (morena, pri, mc)</label>
-                                    <input value={candidate.logo} onChange={(e) => handleCandidateChange(index, 'logo', e.target.value)} />
+                                    <label>Avatar/Logo (imagen)</label>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => handleAvatarUpload(index, e)}
+                                        className="chart-form-input"
+                                    />
                                 </div>
                                 <div className="chart-modal-field">
                                     <label>Color Anillo (hex)</label>

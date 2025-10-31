@@ -2851,61 +2851,106 @@ export const autoInsertHumorSocial = async (canvas) => {
 export const autoInsertHumorHistogram = async (canvas) => {
   if (!canvas) return;
 
-  const width = 1200;
-  const height = 540;
+  // Datos de ejemplo para el histograma (usando datos genéricos de Lorem Ipsum)
+  const candidateData = [
+    {
+      id: 'p1',
+      name: 'Lorem Ipsum',
+      avatar: '',
+      ringColor: '#A6343C',
+      sentiment: 'Incertidumbre',
+      percentage: '0%',
+      matrix: { x: 0, y: 0 },
+      chart: { v: 0.1, h: -0.1, norm_w: 0.5, norm_h: 0.6, norm_dot: [-0.1, -0.1] }
+    },
+    {
+      id: 'p2',
+      name: 'Dolor Sit',
+      avatar: '',
+      ringColor: '#00843D',
+      sentiment: 'Aceptación',
+      percentage: '0%',
+      matrix: { x: 0, y: 0 },
+      chart: { v: 0.1, h: 0.1, norm_w: 0.5, norm_h: 0.6, norm_dot: [0.1, 0.1] }
+    },
+  ];
+
+  const title = 'Histograma del Humor Social';
+  const footnote = '*Histograma del Humor Social realizado el 11.Diciembre.2024';
+
+  // Datos de la matriz de emociones
+  const emotionLabels = [
+    ['Cólera', 'Odio', 'Miedo', 'Entusiasmo', 'Amor', 'Euforia'],
+    ['Repulsión', 'Enojo', 'Irritación', 'Motivación', 'Admiración', 'Fascinación'],
+    ['Desprecio', 'Impotencia', 'Indignación', 'Curiosidad', 'Alegría', 'Orgullo'],
+    ['Vergüenza', 'Desconfianza', 'Vulnerabilidad', 'Satisfacción', 'Confianza', 'Esperanza'],
+    ['Desdén', 'Duda', 'Incertidumbre', 'Aceptación', 'Lealtad', 'Optimismo'],
+    ['Depresión', 'Desolación', 'Inquietud', 'Seguridad', 'Tranquilidad', '']
+  ];
+
+  const getGridColor = (r, c) => {
+    const lightness = 35 + (5 - r) * 5;
+    if (c < 3 && r < 3) return `hsl(0, 60%, ${lightness + 5}%)`;
+    if (c >= 3 && r < 3) return `hsl(120, 60%, ${lightness}%)`;
+    if (c < 3 && r >= 3) return `hsl(0, 65%, ${lightness - 5}%)`;
+    if (c >= 3 && r >= 3) return `hsl(80, 60%, ${lightness - 5}%)`;
+    return '#888';
+  };
+
+  // Precargar todos los avatares
+  const avatarImages = await Promise.all(
+    candidateData.map(profile => {
+      if (profile.avatar) {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = () => resolve(null);
+          img.src = profile.avatar;
+        });
+      }
+      return Promise.resolve(null);
+    })
+  );
+
+  // Crear canvas temporal
   const tempCanvas = document.createElement('canvas');
+  const width = 1700;
+  const height = 900;
   tempCanvas.width = width;
   tempCanvas.height = height;
   const ctx = tempCanvas.getContext('2d');
 
-  // Background
+  // 1. Fondo
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, width, height);
 
-  // Title
+  // 2. Título
   ctx.fillStyle = '#111';
-  ctx.font = 'bold 22px Arial';
+  ctx.font = 'bold 28px Arial';
   ctx.textAlign = 'left';
-  ctx.fillText('Histograma del Humor Social', 30, 44);
-  ctx.font = '14px Arial';
-  ctx.fillStyle = '#444';
-  ctx.fillText('Periodo: 01-Enero-2025 al 30-Junio-2025', 30, 72);
+  ctx.fillText(title, 50, 60);
 
-  // Bars
-  // Draw left 6x6 matrix to mimic Humor Social visual
-  const gridLeft = 40;
-  const gridTop = 90;
-  const gridWidth = 420;
-  const gridHeight = 420;
+  // 3. Matriz de Emociones (Izquierda)
+  const gridLeft = 50;
+  const gridTop = 120;
+  const gridWidth = 600;
+  const gridHeight = 600;
   const cols = 6;
   const rows = 6;
   const cellW = gridWidth / cols;
   const cellH = gridHeight / rows;
-
-  const emotions = [
-    ['Cultura', 'Odio', 'Miedo', 'Entusiasmo', 'Amor', 'Euforia'],
-    ['Reacción', 'Enojo', 'Irritación', 'Ilusión', 'Admiración', 'Fascinación'],
-    ['Desprecio', 'Desdicha', 'Antipatía', 'Gratitud', 'Afín', 'Júbilo'],
-    ['Vergüenza', 'Desconfianza', 'Rechazo', 'Simetría', 'Benéfico', 'Esperanza'],
-    ['', 'Desconfiado', 'Indeciso', 'Bienestar', 'Confianza', 'Esperanza'],
-    ['Depresión', 'Desprecio', 'Indiferencia', 'Arrepentido', 'Gratitud', 'Optimismo']
-  ];
+  const centerX = gridLeft + gridWidth / 2;
+  const centerY = gridTop + gridHeight / 2;
 
   for (let r = 0; r < rows; r++) {
     for (let cidx = 0; cidx < cols; cidx++) {
       const x = gridLeft + cidx * cellW;
       const y = gridTop + r * cellH;
-      const hue = (cidx / cols) * 120;
-      const light = 30 + ((cols - r) / cols) * 40;
-      ctx.fillStyle = `hsl(${hue},60%,${light}%)`;
+      ctx.fillStyle = getGridColor(r, cidx);
       ctx.fillRect(x, y, cellW, cellH);
-      ctx.strokeStyle = '#fff';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(x, y, cellW, cellH);
-
-      const label = emotions[r] && emotions[r][cidx];
+      const label = emotionLabels[r] && emotionLabels[r][cidx];
       if (label) {
-        ctx.fillStyle = '#fff';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
         ctx.font = 'bold 10px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -2914,11 +2959,8 @@ export const autoInsertHumorHistogram = async (canvas) => {
     }
   }
 
-  // center axes
-  const centerX = gridLeft + gridWidth / 2;
-  const centerY = gridTop + gridHeight / 2;
-  ctx.strokeStyle = '#000';
-  ctx.lineWidth = 2;
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 3;
   ctx.beginPath();
   ctx.moveTo(centerX, gridTop);
   ctx.lineTo(centerX, gridTop + gridHeight);
@@ -2928,93 +2970,178 @@ export const autoInsertHumorHistogram = async (canvas) => {
   ctx.lineTo(gridLeft + gridWidth, centerY);
   ctx.stroke();
 
-  // sample avatars plotted
-  const candidates = [
-    { name: 'CLF', x: -1.6, y: -1.8, color: '#C0392B' },
-    { name: 'WF', x: -0.5, y: -1.4, color: '#E67E22' },
-    { name: 'TC', x: 0.2, y: -0.9, color: '#3498DB' },
-    { name: 'JD', x: 1.1, y: -0.5, color: '#9B59B6' }
-  ];
+  ctx.fillStyle = '#111';
+  ctx.font = 'bold 14px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('Alta actividad (+)', centerX + gridWidth / 4, gridTop + gridHeight + 20);
+  ctx.fillText('Baja actividad (-)', centerX - gridWidth / 4, gridTop + gridHeight + 20);
+  ctx.save();
+  ctx.translate(gridLeft - 20, centerY);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Agrada (+)', gridHeight / 4, 0);
+  ctx.fillText('Desagrado (-)', -gridHeight / 4, 0);
+  ctx.restore();
 
-  candidates.forEach((cand) => {
-    const px = centerX + (cand.x / 3) * (gridWidth / 2);
-    const py = centerY - (cand.y / 3) * (gridHeight / 2);
+  candidateData.forEach((cand) => {
+    const px = centerX + (cand.matrix.x / 3) * (gridWidth / 2);
+    const py = centerY - (cand.matrix.y / 3) * (gridHeight / 2);
     ctx.beginPath();
     ctx.arc(px, py, 18, 0, Math.PI * 2);
-    ctx.fillStyle = cand.color;
+    ctx.fillStyle = cand.ringColor;
     ctx.fill();
     ctx.lineWidth = 3;
     ctx.strokeStyle = '#fff';
     ctx.stroke();
   });
 
-  // Right panel profiles with mini-bars
-  const panelLeft = 520;
-  const panelTop = 80;
-  const rowH = 72;
-  const avatarR = 28;
-  const profiles = [
-    { name: 'Clara Luz Flores', color: '#C0392B', value: 32 },
-    { name: 'Waldo Fernández', color: '#E67E22', value: 21 },
-    { name: 'Tatiana Clouthier', color: '#3498DB', value: 27 },
-    { name: 'Judith Díaz', color: '#9B59B6', value: 18 },
-    { name: 'Jesús Nava', color: '#FF69B4', value: 15 },
-    { name: 'Andrés Mijes', color: '#2ECC71', value: 12 }
-  ];
+  // 4. Columnas de Perfiles (Derecha) - 3 COLUMNAS
+  const col1Left = 700;
+  const col2Left = 1070;
+  const col3Left = 1440;
+  const panelTop = 100;
+  const rowH = 120;
 
-  profiles.forEach((p, i) => {
-    const y = panelTop + i * rowH;
+  const itemsPerCol = Math.ceil(candidateData.length / 3);
+  const col1Data = candidateData.slice(0, itemsPerCol);
+  const col2Data = candidateData.slice(itemsPerCol, itemsPerCol * 2);
+  const col3Data = candidateData.slice(itemsPerCol * 2);
+
+  const drawProfileRow = (ctx, profile, x, y, avatarImg) => {
+    const avatarR = 30;
+    const avatarX = x + avatarR + 10;
+    const avatarY = y + avatarR + 10;
+
     ctx.beginPath();
-    ctx.arc(panelLeft + 24, y + 12, avatarR, 0, Math.PI * 2);
-    ctx.fillStyle = p.color;
+    ctx.arc(avatarX, avatarY, avatarR, 0, Math.PI * 2);
+    ctx.fillStyle = profile.ringColor;
     ctx.fill();
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 4;
     ctx.strokeStyle = '#fff';
     ctx.stroke();
 
-    ctx.font = 'bold 13px Arial';
+    // Dibujar avatar/logo si existe
+    if (avatarImg) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(avatarX + avatarR - 5, avatarY + avatarR - 5, 12, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.clip();
+      ctx.drawImage(avatarImg, avatarX + avatarR - 17, avatarY + avatarR - 17, 24, 24);
+      ctx.restore();
+
+      // Borde del avatar pequeño
+      ctx.beginPath();
+      ctx.arc(avatarX + avatarR - 5, avatarY + avatarR - 5, 12, 0, Math.PI * 2);
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    } else {
+      // Placeholder si no hay avatar
+      ctx.beginPath();
+      ctx.arc(avatarX + avatarR - 5, avatarY + avatarR - 5, 12, 0, Math.PI * 2);
+      ctx.fillStyle = '#999';
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    ctx.font = 'bold 12px Arial';
     ctx.fillStyle = '#111';
     ctx.textAlign = 'left';
-    ctx.fillText(p.name, panelLeft + 64, y + 8);
+    ctx.fillText(profile.name, x + avatarR * 2 + 20, avatarY - 10);
 
-    const axisWidth = 200;
-    const w = (p.value / 40) * axisWidth;
-    ctx.fillStyle = '#4CD964';
-    ctx.fillRect(panelLeft + 64, y + 18, w, 12);
-    ctx.strokeStyle = '#6f2d91';
-    ctx.lineWidth = 3;
+    ctx.font = 'bold 11px Arial';
+    ctx.fillStyle = '#555';
+    ctx.fillText(profile.percentage || '0%', x + avatarR * 2 + 20, avatarY + 5);
+
+    ctx.font = 'bold 12px Arial';
+    ctx.fillStyle = '#333';
+    ctx.textAlign = 'left';
+    ctx.fillText(profile.sentiment, x + 10, avatarY + 65);
+
+    const chartX = x + 120;
+    const chartY = y + 15;
+    const chartW = 80;
+    const chartH = 70;
+    const cX = chartX + chartW / 2;
+    const cY = chartY + chartH / 2;
+
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(panelLeft + 64, y + 30);
-    ctx.lineTo(panelLeft + 64 + axisWidth, y + 30);
+    ctx.moveTo(cX, chartY);
+    ctx.lineTo(cX, chartY + chartH);
     ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(chartX, cY);
+    ctx.lineTo(chartX + chartW, cY);
+    ctx.stroke();
+
+    const vBarVal = profile.chart.v * (chartH / 2);
+    const hBarVal = profile.chart.h * (chartW / 2);
+
+    ctx.fillStyle = 'rgba(146, 208, 80, 0.7)';
+    ctx.fillRect(cX + 2, cY - vBarVal, 10, vBarVal);
+
+    ctx.fillStyle = 'rgba(192, 0, 0, 0.7)';
+    ctx.fillRect(cX, cY - 2, hBarVal, 10);
+
+    const normW = profile.chart.norm_w * (chartW / 2);
+    const normH = profile.chart.norm_h * (chartH / 2);
+    ctx.strokeStyle = '#888';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([2, 2]);
+    ctx.strokeRect(cX - normW / 2, cY - normH / 2, normW, normH);
+    ctx.setLineDash([]);
+
+    const [dotX, dotY] = profile.chart.norm_dot;
+    ctx.beginPath();
+    ctx.arc(cX + dotX * (chartW / 2), cY - dotY * (chartH / 2), 3, 0, Math.PI * 2);
+    ctx.fillStyle = '#0070C0';
+    ctx.fill();
+  };
+
+  col1Data.forEach((p, i) => {
+    const avatarImg = avatarImages[candidateData.indexOf(p)];
+    drawProfileRow(ctx, p, col1Left, panelTop + i * rowH, avatarImg);
+  });
+  col2Data.forEach((p, i) => {
+    const avatarImg = avatarImages[candidateData.indexOf(p)];
+    drawProfileRow(ctx, p, col2Left, panelTop + i * rowH, avatarImg);
+  });
+  col3Data.forEach((p, i) => {
+    const avatarImg = avatarImages[candidateData.indexOf(p)];
+    drawProfileRow(ctx, p, col3Left, panelTop + i * rowH, avatarImg);
   });
 
-  // bottom footnote
-  ctx.font = '11px Arial';
-  ctx.fillStyle = '#333';
+  // 5. Pie de página
+  ctx.font = '12px Arial';
+  ctx.fillStyle = '#555';
   ctx.textAlign = 'right';
-  ctx.fillText('*Humor Social realizado el 11.Diciembre.2024', width - 18, height - 12);
+  ctx.fillText(footnote, width - 50, height - 30);
 
+  // Convertir a imagen y agregar al canvas
   const dataURL = tempCanvas.toDataURL('image/png');
   const { Image: FabricImage } = await import('fabric');
+
   const img = new Image();
   img.crossOrigin = 'anonymous';
   img.onload = () => {
     try {
       const fabricImg = new FabricImage(img, {
         left: 60,
-        top: 40,
+        top: 60,
         selectable: true,
         evented: true,
         hasControls: true,
         hasBorders: true,
-        name: 'humor-histogram'
+        hoverCursor: 'move',
+        name: 'humor-histogram-chart'
       });
 
-      // scale to fit canvas (960x540)
-      const scaleX = 960 / fabricImg.width;
-      const scaleY = 540 / fabricImg.height;
-      const scale = Math.min(scaleX, scaleY, 1);
+      const targetWidth = 960;
+      const scale = targetWidth / fabricImg.width;
       fabricImg.scaleX = scale;
       fabricImg.scaleY = scale;
 
@@ -3023,7 +3150,7 @@ export const autoInsertHumorHistogram = async (canvas) => {
       fabricImg.setCoords();
       canvas.requestRenderAll();
     } catch (err) {
-      console.error('Error inserting auto histogram:', err);
+      console.error('Error inserting histogram:', err);
     }
   };
   img.src = dataURL;
