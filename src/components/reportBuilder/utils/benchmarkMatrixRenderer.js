@@ -80,15 +80,17 @@ export const renderBenchmarkMatrix = async (canvas) => {
   // Crear canvas temporal
   const scale = 2.5;
   const tempCanvas = document.createElement('canvas');
-  const padding = 15;
-  const legendHeight = 35;
-  const headerHeight = 50;
-  const rowHeight = 95;
-  const colWidth = 95;
-  const nameColWidth = 110;
+  const padding = 30;
+  const extraBottomPadding = 40;
+  const legendHeight = 38;
+  const headerHeight = 70;
+  const rowHeight = 110;
+  const colWidth = 110;
+  const nameColWidth = 140;
 
-  const totalWidth = (nameColWidth + (SOCIAL_NETWORKS.length * colWidth) + (padding * 2)) * scale;
-  const totalHeight = (legendHeight + headerHeight + (characters.length * rowHeight) + (padding * 2)) * scale;
+  const extraWidthForLegend = 50; // Espacio extra para que no se corte "Share news" en la leyenda
+  const totalWidth = (nameColWidth + (SOCIAL_NETWORKS.length * colWidth) + (padding * 2) + extraWidthForLegend) * scale;
+  const totalHeight = (legendHeight + headerHeight + (characters.length * rowHeight) + padding + extraBottomPadding) * scale;
 
   tempCanvas.width = totalWidth;
   tempCanvas.height = totalHeight;
@@ -119,15 +121,15 @@ export const renderBenchmarkMatrix = async (canvas) => {
   currentY += legendHeight;
 
   // Dibujar íconos de redes sociales
-  const iconSize = 34;
-  SOCIAL_NETWORKS.forEach((net, idx) => {
+  const iconSize = 40;
+  await Promise.all(SOCIAL_NETWORKS.map(async (net, idx) => {
     const x = nameColWidth + (idx * colWidth) + (colWidth - iconSize) / 2 + padding;
     const y = currentY + (headerHeight - iconSize) / 2;
 
     if (socialIconImages[net.key]) {
       ctx.drawImage(socialIconImages[net.key], x, y, iconSize, iconSize);
     }
-  });
+  }));
 
   currentY += headerHeight;
 
@@ -262,13 +264,14 @@ export const renderBenchmarkMatrix = async (canvas) => {
   const imgElement = new window.Image();
   imgElement.onload = () => {
     const fabricImg = new FabricImage(imgElement, {
-      left: 40,
-      top: 110,
-      scaleX: 0.30,
-      scaleY: 0.30,
+      left: 50,
+      top: 50,
+      scaleX: 0.35,
+      scaleY: 0.35,
       name: 'benchmark-matrix'
     });
     canvas.add(fabricImg);
+    canvas.setActiveObject(fabricImg);
     canvas.renderAll();
   };
   imgElement.src = dataURL;

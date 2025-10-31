@@ -1,177 +1,254 @@
 // Auto-insert helpers for report builder: humor histogram, perfiles/arquetipos, perfil identificación
 
+// Definición de la Matriz de Emociones
+const emotionLabels = [
+  ['Cólera', 'Odio', 'Miedo', 'Entusiasmo', 'Amor', 'Euforia'],
+  ['Repulsión', 'Enojo', 'Irritación', 'Motivación', 'Admiración', 'Fascinación'],
+  ['Desprecio', 'Impotencia', 'Indignación', 'Curiosidad', 'Alegría', 'Orgullo'],
+  ['Vergüenza', 'Desconfianza', 'Vulnerabilidad', 'Satisfacción', 'Confianza', 'Esperanza'],
+  ['Desdén', 'Duda', 'Incertidumbre', 'Aceptación', 'Lealtad', 'Optimismo'],
+  ['Depresión', 'Desolación', 'Inquietud', 'Seguridad', 'Tranquilidad', '']
+];
+
+// Función para obtener colores de la matriz
+const getGridColor = (r, c) => {
+  const lightness = 35 + (5 - r) * 5;
+  if (c < 3 && r < 3) return `hsl(0, 60%, ${lightness + 5}%)`;
+  if (c >= 3 && r < 3) return `hsl(120, 60%, ${lightness}%)`;
+  if (c < 3 && r >= 3) return `hsl(0, 65%, ${lightness - 5}%)`;
+  if (c >= 3 && r >= 3) return `hsl(80, 60%, ${lightness - 5}%)`;
+  return '#888';
+};
+
 // Auto-insert Histograma del Humor Social
 export const autoInsertHumorHistogram = async (canvas) => {
   if (!canvas) return;
 
-  // Example data (placeholder)
   const candidateData = [
     {
-      id: "p1",
-      name: "Lorem Ipsum",
-      party: "P1",
-      avatar: "",
-      ringColor: "#A6343C",
-      sentiment: "Incertidumbre",
-      percentage: "12%",
-      chart: { v: 0.1, h: -0.1, norm_w: 0.5, norm_h: 0.6, norm_dot: [-0.1, -0.1] },
+      id: 'personaje1',
+      name: 'Lorem Ipsum',
+      party: 'P1',
+      avatar: '',
+      ringColor: '#A6343C',
+      sentiment: 'Incertidumbre',
+      percentage: '0%',
+      matrix: { x: 0, y: 0 },
+      chart: { v: 0.1, h: -0.1, norm_w: 0.5, norm_h: 0.6, norm_dot: [-0.1, -0.1] }
     },
     {
-      id: "p2",
-      name: "Dolor Sit",
-      party: "P2",
-      avatar: "",
-      ringColor: "#00843D",
-      sentiment: "Aceptación",
-      percentage: "8%",
-      chart: { v: 0.1, h: 0.1, norm_w: 0.5, norm_h: 0.6, norm_dot: [0.1, 0.1] },
-    },
-    {
-      id: "p3",
-      name: "Amet Consect",
-      party: "P3",
-      avatar: "",
-      ringColor: "#0070C0",
-      sentiment: "Rechazo",
-      percentage: "5%",
-      chart: { v: -0.2, h: 0.05, norm_w: 0.3, norm_h: 0.4, norm_dot: [0.05, -0.2] },
-    },
-    {
-      id: "p4",
-      name: "Sit Amet",
-      party: "P4",
-      avatar: "",
-      ringColor: "#F39C12",
-      sentiment: "Esperanza",
-      percentage: "18%",
-      chart: { v: 0.3, h: 0.2, norm_w: 0.6, norm_h: 0.5, norm_dot: [0.2, 0.3] },
-    },
-    {
-      id: "p5",
-      name: "Consectetur",
-      party: "P5",
-      avatar: "",
-      ringColor: "#8E44AD",
-      sentiment: "Neutral",
-      percentage: "3%",
-      chart: { v: -0.05, h: -0.15, norm_w: 0.4, norm_h: 0.45, norm_dot: [-0.15, -0.05] },
-    },
+      id: 'personaje2',
+      name: 'Dolor Sit',
+      party: 'P2',
+      avatar: '',
+      ringColor: '#00843D',
+      sentiment: 'Aceptación',
+      percentage: '0%',
+      matrix: { x: 0, y: 0 },
+      chart: { v: 0.1, h: 0.1, norm_w: 0.5, norm_h: 0.6, norm_dot: [0.1, 0.1] }
+    }
   ];
 
-  const width = 1400;
-  const height = 900;
-  const tempCanvas = document.createElement("canvas");
-  tempCanvas.width = width;
-  tempCanvas.height = height;
-  const ctx = tempCanvas.getContext("2d");
+  const title = 'Histograma del Humor Social';
+  const footnote = '*Histograma del Humor Social realizado el 11.Diciembre.2024';
 
-  // Background
-  ctx.fillStyle = "#ffffff";
+  const c = document.createElement('canvas');
+  const width = 1300;
+  const height = 680;
+  c.width = width;
+  c.height = height;
+  const ctx = c.getContext('2d');
+
+  // 1. Fondo
+  ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, width, height);
 
-  // Title
-  ctx.fillStyle = "#111";
-  ctx.font = "bold 28px Arial";
-  ctx.textAlign = "left";
-  ctx.fillText("Histograma del Humor Social", 40, 50);
+  // 2. Título
+  ctx.fillStyle = '#111';
+  ctx.font = 'bold 22px Arial';
+  ctx.textAlign = 'left';
+  ctx.fillText(title, 40, 45);
 
-  // Layout: three columns of rows
-  const panelTop = 110;
-  const rowH = 110;
-  const col1Left = 60;
-  const col2Left = 520;
-  const col3Left = 980;
+  // --- 3. Matriz de Emociones (Izquierda) ---
+  const gridLeft = 40;
+  const gridTop = 90;
+  const gridWidth = 460;
+  const gridHeight = 460;
+  const cols = 6;
+  const rows = 6;
+  const cellW = gridWidth / cols;
+  const cellH = gridHeight / rows;
+  const centerX = gridLeft + gridWidth / 2;
+  const centerY = gridTop + gridHeight / 2;
 
-  function drawProfileRow(ctx, profile, x, y) {
-    const avatarR = 34;
-    const avatarX = x;
-    const avatarY = y;
-
-    // ring
-    ctx.beginPath();
-    ctx.arc(avatarX + avatarR, avatarY + avatarR, avatarR + 6, 0, Math.PI * 2);
-    ctx.fillStyle = profile.ringColor || "#ccc";
-    ctx.fill();
-
-    // inner circle (avatar placeholder)
-    ctx.beginPath();
-    ctx.arc(avatarX + avatarR, avatarY + avatarR, avatarR, 0, Math.PI * 2);
-    ctx.fillStyle = "#fff";
-    ctx.fill();
-
-    // small party circle
-    ctx.beginPath();
-    ctx.arc(avatarX + avatarR + 20, avatarY + avatarR + 20, 12, 0, Math.PI * 2);
-    ctx.fillStyle = "#fff";
-    ctx.fill();
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = profile.ringColor || "#aaa";
-    ctx.stroke();
-
-    // party text
-    ctx.fillStyle = "#333";
-    ctx.font = "bold 10px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(profile.party || "", avatarX + avatarR + 20, avatarY + avatarR + 20);
-
-    // name and percentage
-    ctx.font = "bold 12px Arial";
-    ctx.fillStyle = "#111";
-    ctx.textAlign = "left";
-    ctx.fillText(profile.name, x + avatarR * 2 + 10, avatarY + 12);
-
-    ctx.font = "11px Arial";
-    ctx.fillStyle = "#555";
-    ctx.fillText(profile.percentage || "0%", x + avatarR * 2 + 10, avatarY + 32);
-
-    // small chart box
-    const chartX = x + 120;
-    const chartY = y + 10;
-    const chartW = 120;
-    const chartH = 70;
-
-    ctx.strokeStyle = "#ddd";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.rect(chartX, chartY, chartW, chartH);
-    ctx.stroke();
-
-    // vertical bar based on v
-    const cX = chartX + chartW / 2;
-    const cY = chartY + chartH / 2;
-    const vBarVal = (profile.chart?.v || 0) * (chartH / 2);
-    const hBarVal = (profile.chart?.h || 0) * (chartW / 2);
-
-    ctx.fillStyle = "rgba(146,208,80,0.8)";
-    if (vBarVal > 0) ctx.fillRect(cX - 6, cY - vBarVal, 12, vBarVal);
-    else ctx.fillRect(cX - 6, cY, 12, Math.abs(vBarVal));
-
-    ctx.fillStyle = "rgba(192,0,0,0.8)";
-    if (hBarVal > 0) ctx.fillRect(cX, cY - 6, hBarVal, 12);
-    else ctx.fillRect(cX + hBarVal, cY - 6, Math.abs(hBarVal), 12);
+  for (let r = 0; r < rows; r++) {
+    for (let cidx = 0; cidx < cols; cidx++) {
+      const x = gridLeft + cidx * cellW;
+      const y = gridTop + r * cellH;
+      ctx.fillStyle = getGridColor(r, cidx);
+      ctx.fillRect(x, y, cellW, cellH);
+      const label = emotionLabels[r] && emotionLabels[r][cidx];
+      if (label) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.font = 'bold 8px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(label, x + cellW / 2, y + cellH / 2);
+      }
+    }
   }
 
-  // split into 3 columns
-  const col1 = candidateData.slice(0, 2);
-  const col2 = candidateData.slice(2, 4);
-  const col3 = candidateData.slice(4, 6);
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(centerX, gridTop);
+  ctx.lineTo(centerX, gridTop + gridHeight);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(gridLeft, centerY);
+  ctx.lineTo(gridLeft + gridWidth, centerY);
+  ctx.stroke();
 
-  col1.forEach((p, i) => drawProfileRow(ctx, p, col1Left, panelTop + i * rowH));
-  col2.forEach((p, i) => drawProfileRow(ctx, p, col2Left, panelTop + i * rowH));
-  col3.forEach((p, i) => drawProfileRow(ctx, p, col3Left, panelTop + i * rowH));
+  ctx.fillStyle = '#111';
+  ctx.font = 'bold 11px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('Alta actividad (+)', centerX + gridWidth / 4, gridTop + gridHeight + 16);
+  ctx.fillText('Baja actividad (-)', centerX - gridWidth / 4, gridTop + gridHeight + 16);
+  ctx.save();
+  ctx.translate(gridLeft - 16, centerY);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Agrada (+)', gridHeight / 4, 0);
+  ctx.fillText('Desagrado (-)', -gridHeight / 4, 0);
+  ctx.restore();
 
-  // Footer
-  ctx.font = "12px Arial";
-  ctx.fillStyle = "#555";
-  ctx.textAlign = "right";
-  ctx.fillText("*Datos de muestra", width - 40, height - 30);
+  candidateData.forEach((cand) => {
+    const px = centerX + (cand.matrix.x / 3) * (gridWidth / 2);
+    const py = centerY - (cand.matrix.y / 3) * (gridHeight / 2);
+    ctx.beginPath();
+    ctx.arc(px, py, 14, 0, Math.PI * 2);
+    ctx.fillStyle = cand.ringColor;
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#fff';
+    ctx.stroke();
+  });
+
+  // --- 4. Columnas de Perfiles (Derecha) - 3 COLUMNAS ---
+  const col1Left = 530;
+  const col2Left = 780;
+  const col3Left = 1030;
+  const panelTop = 75;
+  const rowH = 95;
+
+  const itemsPerCol = Math.ceil(candidateData.length / 3);
+  const col1Data = candidateData.slice(0, itemsPerCol);
+  const col2Data = candidateData.slice(itemsPerCol, itemsPerCol * 2);
+  const col3Data = candidateData.slice(itemsPerCol * 2);
+
+  const drawProfileRow = (ctx, profile, x, y) => {
+    const avatarR = 24;
+    const avatarX = x + avatarR + 8;
+    const avatarY = y + avatarR + 8;
+
+    // Borde del círculo grande con color del anillo
+    ctx.beginPath();
+    ctx.arc(avatarX, avatarY, avatarR, 0, Math.PI * 2);
+    ctx.fillStyle = profile.ringColor;
+    ctx.fill();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = profile.ringColor;
+    ctx.stroke();
+
+    // Círculo pequeño para la letra del partido
+    ctx.beginPath();
+    ctx.arc(avatarX + avatarR - 4, avatarY + avatarR - 4, 10, 0, Math.PI * 2);
+    ctx.fillStyle = '#fff';
+    ctx.fill();
+    ctx.strokeStyle = profile.ringColor;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.fillStyle = '#333';
+    ctx.font = 'bold 8px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(profile.party || '', avatarX + avatarR - 4, avatarY + avatarR - 4);
+
+    // Nombre
+    ctx.font = 'bold 10px Arial';
+    ctx.fillStyle = '#111';
+    ctx.textAlign = 'left';
+    ctx.fillText(profile.name, x + avatarR * 2 + 16, avatarY - 8);
+
+    // Porcentaje
+    ctx.font = 'bold 9px Arial';
+    ctx.fillStyle = '#555';
+    ctx.fillText(profile.percentage || '0%', x + avatarR * 2 + 16, avatarY + 4);
+
+    // Sentimiento
+    ctx.font = 'bold 10px Arial';
+    ctx.fillStyle = '#333';
+    ctx.textAlign = 'left';
+    ctx.fillText(profile.sentiment, x + 8, avatarY + 50);
+
+    // Mini-Gráfico
+    const chartX = x + 100;
+    const chartY = y + 12;
+    const chartW = 60;
+    const chartH = 55;
+    const cX = chartX + chartW / 2;
+    const cY = chartY + chartH / 2;
+
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cX, chartY);
+    ctx.lineTo(cX, chartY + chartH);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(chartX, cY);
+    ctx.lineTo(chartX + chartW, cY);
+    ctx.stroke();
+
+    const vBarVal = profile.chart.v * (chartH / 2);
+    const hBarVal = profile.chart.h * (chartW / 2);
+
+    ctx.fillStyle = 'rgba(146, 208, 80, 0.7)';
+    ctx.fillRect(cX + 1, cY - vBarVal, 8, vBarVal);
+
+    ctx.fillStyle = 'rgba(192, 0, 0, 0.7)';
+    ctx.fillRect(cX, cY - 1, hBarVal, 8);
+
+    const normW = profile.chart.norm_w * (chartW / 2);
+    const normH = profile.chart.norm_h * (chartH / 2);
+    ctx.strokeStyle = '#888';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([2, 2]);
+    ctx.strokeRect(cX - normW / 2, cY - normH / 2, normW, normH);
+    ctx.setLineDash([]);
+
+    const [dotX, dotY] = profile.chart.norm_dot;
+    ctx.beginPath();
+    ctx.arc(cX + dotX * (chartW / 2), cY - dotY * (chartH / 2), 3, 0, Math.PI * 2);
+    ctx.fillStyle = '#0070C0';
+    ctx.fill();
+  };
+
+  col1Data.forEach((p, i) => drawProfileRow(ctx, p, col1Left, panelTop + i * rowH));
+  col2Data.forEach((p, i) => drawProfileRow(ctx, p, col2Left, panelTop + i * rowH));
+  col3Data.forEach((p, i) => drawProfileRow(ctx, p, col3Left, panelTop + i * rowH));
+
+  // --- 5. Pie de página ---
+  ctx.font = '10px Arial';
+  ctx.fillStyle = '#555';
+  ctx.textAlign = 'right';
+  ctx.fillText(footnote, width - 40, height - 25);
 
   // Convert to image and insert into Fabric canvas
-  const dataURL = tempCanvas.toDataURL("image/png");
-  const { Image: FabricImage } = await import("fabric");
+  const dataURL = c.toDataURL('image/png');
+  const { Image: FabricImage } = await import('fabric');
   const img = new Image();
-  img.crossOrigin = "anonymous";
+  img.crossOrigin = 'anonymous';
   img.onload = () => {
     try {
       const fabricImg = new FabricImage(img, {
@@ -181,10 +258,11 @@ export const autoInsertHumorHistogram = async (canvas) => {
         evented: true,
         hasControls: true,
         hasBorders: true,
-        name: "humor-histogram-chart",
+        hoverCursor: 'move',
+        name: 'humor-histogram-chart'
       });
 
-      const targetWidth = 960;
+      const targetWidth = 850;
       const scale = targetWidth / fabricImg.width;
       fabricImg.scaleX = scale;
       fabricImg.scaleY = scale;
@@ -194,7 +272,7 @@ export const autoInsertHumorHistogram = async (canvas) => {
       fabricImg.setCoords();
       canvas.requestRenderAll();
     } catch (err) {
-      console.error("Error inserting histogram:", err);
+      console.error('Error inserting histogram:', err);
     }
   };
   img.src = dataURL;
@@ -225,8 +303,8 @@ export const autoInsertPerfilesArquetipos = async (canvas) => {
   };
 
   const tempCanvas = document.createElement("canvas");
-  const width = 1400;
-  const height = 1000;
+  const width = 1000;
+  const height = 720;
   tempCanvas.width = width;
   tempCanvas.height = height;
   const ctx = tempCanvas.getContext("2d");
@@ -237,15 +315,15 @@ export const autoInsertPerfilesArquetipos = async (canvas) => {
 
   // Title
   ctx.fillStyle = "#111";
-  ctx.font = "bold 28px Arial";
+  ctx.font = "bold 24px Arial";
   ctx.textAlign = "left";
-  ctx.fillText(data.title, 40, 50);
+  ctx.fillText(data.title, 40, 40);
 
   // Ring params
   const centerX = width / 2;
-  const centerY = height / 2 + 40;
-  const outerR = 300;
-  const innerR = 200;
+  const centerY = height / 2 + 20;
+  const outerR = 220;
+  const innerR = 150;
 
   data.archeTypes.forEach((archetype, archetypeIndex) => {
     const archetypeAngle = (Math.PI * 2) / data.archeTypes.length;
@@ -286,18 +364,18 @@ export const autoInsertPerfilesArquetipos = async (canvas) => {
     ctx.restore();
 
     // archetype name outside
-    const archetypeRadius = outerR + 50;
+    const archetypeRadius = outerR + 40;
     const archetypeX = centerX + Math.cos(midAngle) * archetypeRadius;
     const archetypeY = centerY + Math.sin(midAngle) * archetypeRadius;
     ctx.fillStyle = "#333";
-    ctx.font = "bold 16px Arial";
+    ctx.font = "bold 13px Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(archetype.name, archetypeX, archetypeY);
   });
 
   // grid
-  const gridExtend = 60;
+  const gridExtend = 45;
   ctx.strokeStyle = "#ddd";
   ctx.lineWidth = 1;
   ctx.setLineDash([5, 5]);
@@ -313,17 +391,17 @@ export const autoInsertPerfilesArquetipos = async (canvas) => {
 
   // axes labels
   ctx.fillStyle = "#666";
-  ctx.font = "bold 14px Arial";
+  ctx.font = "bold 12px Arial";
   ctx.textAlign = "center";
-  ctx.fillText("+" + data.axes.top.toUpperCase(), centerX - 80, centerY - outerR - 80);
+  ctx.fillText("+" + data.axes.top.toUpperCase(), centerX - 60, centerY - outerR - 60);
   ctx.save();
-  ctx.translate(centerX + outerR + 80, centerY - 80);
+  ctx.translate(centerX + outerR + 60, centerY - 60);
   ctx.rotate(Math.PI / 2);
   ctx.fillText("+" + data.axes.right.toUpperCase(), 0, 0);
   ctx.restore();
-  ctx.fillText("+" + data.axes.bottom.toUpperCase(), centerX - 100, centerY + outerR + 80);
+  ctx.fillText("+" + data.axes.bottom.toUpperCase(), centerX - 70, centerY + outerR + 60);
   ctx.save();
-  ctx.translate(centerX - outerR - 80, centerY - 80);
+  ctx.translate(centerX - outerR - 60, centerY - 60);
   ctx.rotate(Math.PI / 2);
   ctx.fillText("+" + data.axes.left.toUpperCase(), 0, 0);
   ctx.restore();
@@ -350,7 +428,7 @@ export const autoInsertPerfilesArquetipos = async (canvas) => {
         name: "perfiles-arquetipos",
       });
 
-      const targetWidth = 960;
+      const targetWidth = 700;
       const scale = targetWidth / fabricImg.width;
       fabricImg.scaleX = scale;
       fabricImg.scaleY = scale;
@@ -384,14 +462,14 @@ export const autoInsertPerfilIdentificacion = async (canvas, data = {}) => {
   ];
 
   // Ajustes para evitar empalme de textos
-  const col1X = 40 + 360 + 60;
-  const col2X = col1X + 520;
-    const colYStart = 210; // aún más abajo para evitar empalme
-  const lineHeight = 34; // más espacio
+  const col1X = 330;
+  const col2X = col1X + 380;
+  const colYStart = 160;
+  const lineHeight = 28;
 
   const tempCanvas = document.createElement("canvas");
-  const width = 1400;
-  const height = 720;
+  const width = 1100;
+  const height = 600;
   tempCanvas.width = width;
   tempCanvas.height = height;
   const ctx = tempCanvas.getContext("2d");
@@ -401,10 +479,10 @@ export const autoInsertPerfilIdentificacion = async (canvas, data = {}) => {
   ctx.fillRect(0, 0, width, height);
 
   // Left rounded card
-  const cardX = 40;
-  const cardY = 40;
-  const cardW = 360;
-  const cardH = 640;
+  const cardX = 30;
+  const cardY = 30;
+  const cardW = 280;
+  const cardH = 540;
   const radius = 24;
   ctx.fillStyle = "#f3f4f6";
   ctx.beginPath();
@@ -418,9 +496,9 @@ export const autoInsertPerfilIdentificacion = async (canvas, data = {}) => {
 
   // Donut ring
   const centerX = cardX + cardW / 2;
-  const centerY = cardY + 140;
-  const outerR = 90;
-  const innerR = 45;
+  const centerY = cardY + 110;
+  const outerR = 70;
+  const innerR = 35;
   const segments = 10;
   for (let i = 0; i < segments; i++) {
     const ang = (i / segments) * Math.PI * 2 - Math.PI / 2;
@@ -439,7 +517,7 @@ export const autoInsertPerfilIdentificacion = async (canvas, data = {}) => {
   // center emblem
   ctx.fillStyle = "#fef3c7";
   ctx.beginPath();
-  const polyR = 28;
+  const polyR = 22;
   const points = 6;
   for (let i = 0; i < points; i++) {
     const a = (i / points) * Math.PI * 2 - Math.PI / 2;
@@ -453,33 +531,33 @@ export const autoInsertPerfilIdentificacion = async (canvas, data = {}) => {
 
   // Text below ring
   ctx.fillStyle = "#6b7280";
-  ctx.font = "14px Arial";
+  ctx.font = "11px Arial";
   ctx.textAlign = "center";
   const subtitle =
     "La población digital de Nuevo León busca en su próximo Gobernador la figura arquetípica de un";
-  wrapText(ctx, subtitle, centerX, centerY + 120, cardW - 40, 18);
+  wrapText(ctx, subtitle, centerX, centerY + 95, cardW - 30, 14);
   ctx.fillStyle = "#5b21b6";
-  ctx.font = "bold 22px Arial";
-  ctx.fillText("Impulsor", centerX, centerY + 190);
+  ctx.font = "bold 18px Arial";
+  ctx.fillText("Impulsor", centerX, centerY + 150);
 
   // Middle and right columns
   // Headers
   ctx.fillStyle = "#14532d";
-  ctx.fillRect(col1X - 12, colYStart - 36, 360, 44);
+  ctx.fillRect(col1X - 10, colYStart - 30, 280, 36);
   ctx.fillStyle = "#fff";
-  ctx.font = "bold 20px Arial";
+  ctx.font = "bold 16px Arial";
   ctx.textAlign = "left";
   ctx.fillText("Positivo", col1X, colYStart - 8);
 
   ctx.fillStyle = "#4c0519";
-  ctx.fillRect(col2X - 12, colYStart - 36, 360, 44);
+  ctx.fillRect(col2X - 10, colYStart - 30, 280, 36);
   ctx.fillStyle = "#fff";
-  ctx.font = "bold 20px Arial";
+  ctx.font = "bold 16px Arial";
   ctx.fillText("Negativo", col2X, colYStart - 8);
 
   // Bulleted lists
   ctx.fillStyle = "#111827";
-  ctx.font = "14px Arial";
+  ctx.font = "11px Arial";
   let y = colYStart + 20;
     const loremPositive = [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.",
@@ -487,8 +565,8 @@ export const autoInsertPerfilIdentificacion = async (canvas, data = {}) => {
       "Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo."
     ];
     loremPositive.forEach((txt) => {
-      drawBulletText(ctx, txt, col1X, y, 340, lineHeight);
-      y += estimateLines(txt, 340, ctx) * lineHeight + 16;
+      drawBulletText(ctx, txt, col1X, y, 260, lineHeight);
+      y += estimateLines(txt, 260, ctx) * lineHeight + 12;
     });
 
   y = colYStart + 20;
@@ -498,8 +576,8 @@ export const autoInsertPerfilIdentificacion = async (canvas, data = {}) => {
       "Maecenas sed diam eget risus varius blandit sit amet non magna."
     ];
     loremNegative.forEach((txt) => {
-      drawBulletText(ctx, txt, col2X, y, 340, lineHeight);
-      y += estimateLines(txt, 340, ctx) * lineHeight + 16;
+      drawBulletText(ctx, txt, col2X, y, 260, lineHeight);
+      y += estimateLines(txt, 260, ctx) * lineHeight + 12;
     });
 
   // Footer
@@ -572,7 +650,7 @@ export const autoInsertPerfilIdentificacion = async (canvas, data = {}) => {
         name: "perfil-identificacion",
       });
 
-      const targetWidth = 920;
+      const targetWidth = 800;
       const scale = targetWidth / fImg.width;
       fImg.scaleX = scale;
       fImg.scaleY = scale;
@@ -668,8 +746,8 @@ export const autoInsertPerfilPersonas = async (canvas) => {
   };
 
   const tempCanvas = document.createElement('canvas');
-  const width = 1600;
-  const height = 900;
+  const width = 1200;
+  const height = 680;
   tempCanvas.width = width;
   tempCanvas.height = height;
   const ctx = tempCanvas.getContext('2d');
@@ -680,88 +758,88 @@ export const autoInsertPerfilPersonas = async (canvas) => {
 
   // Title section
   ctx.fillStyle = '#666';
-  ctx.font = '32px Arial';
+  ctx.font = '24px Arial';
   ctx.textAlign = 'left';
-  ctx.fillText(data.title, 170, 60);
+  ctx.fillText(data.title, 120, 45);
 
   ctx.fillStyle = '#000';
-  ctx.font = 'bold 48px Arial';
-  ctx.fillText(data.subtitle, 70, 120);
+  ctx.font = 'bold 36px Arial';
+  ctx.fillText(data.subtitle, 50, 90);
 
   // Draw boxes for Adjetivos and Contra Adjetivos
-  const boxX = 70;
-  const boxY = 160;
-  const boxWidth = 280;
-  const boxHeight = 180;
+  const boxX = 50;
+  const boxY = 120;
+  const boxWidth = 210;
+  const boxHeight = 140;
 
   // Adjetivos box
   ctx.strokeStyle = '#000';
-  ctx.lineWidth = 3;
+  ctx.lineWidth = 2;
   ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
   ctx.fillStyle = '#000';
-  ctx.font = 'bold 20px Arial';
-  ctx.fillText(data.adjetivos.title, boxX + 10, boxY + 30);
+  ctx.font = 'bold 15px Arial';
+  ctx.fillText(data.adjetivos.title, boxX + 8, boxY + 22);
 
   ctx.fillStyle = '#2196F3';
-  ctx.font = '16px Arial';
+  ctx.font = '12px Arial';
   data.adjetivos.items.forEach((item, i) => {
-    ctx.fillText('• ' + item, boxX + 15, boxY + 60 + (i * 25));
+    ctx.fillText('• ' + item, boxX + 12, boxY + 45 + (i * 20));
   });
 
   // Contra Adjetivos box
-  const boxX2 = boxX + boxWidth + 10;
+  const boxX2 = boxX + boxWidth + 8;
   ctx.strokeRect(boxX2, boxY, boxWidth, boxHeight);
   ctx.fillStyle = '#000';
-  ctx.font = 'bold 20px Arial';
-  ctx.fillText(data.contraAdjetivos.title, boxX2 + 10, boxY + 30);
+  ctx.font = 'bold 15px Arial';
+  ctx.fillText(data.contraAdjetivos.title, boxX2 + 8, boxY + 22);
 
   ctx.fillStyle = '#E53935';
-  ctx.font = '16px Arial';
+  ctx.font = '12px Arial';
   data.contraAdjetivos.items.forEach((item, i) => {
-    ctx.fillText('• ' + item, boxX2 + 15, boxY + 60 + (i * 25));
+    ctx.fillText('• ' + item, boxX2 + 12, boxY + 45 + (i * 20));
   });
 
   // Draw definitions
-  let defY = boxY + boxHeight + 30;
+  let defY = boxY + boxHeight + 20;
   data.definiciones.forEach((def, i) => {
     // Color bar
     ctx.fillStyle = def.color;
-    ctx.fillRect(60, defY, 10, 60);
+    ctx.fillRect(45, defY, 8, 48);
 
     // Term
     ctx.fillStyle = '#000';
-    ctx.font = 'bold 16px Arial';
-    ctx.fillText(def.term, 80, defY + 15);
+    ctx.font = 'bold 12px Arial';
+    ctx.fillText(def.term, 60, defY + 12);
 
     // Description
     ctx.fillStyle = '#555';
-    ctx.font = '13px Arial';
+    ctx.font = '10px Arial';
     const words = def.description.split(' ');
     let line = '';
-    let lineY = defY + 35;
+    let lineY = defY + 28;
     words.forEach(word => {
       const testLine = line + word + ' ';
       const metrics = ctx.measureText(testLine);
-      if (metrics.width > 600 && line !== '') {
-        ctx.fillText(line, 80, lineY);
+      if (metrics.width > 420 && line !== '') {
+        ctx.fillText(line, 60, lineY);
         line = word + ' ';
-        lineY += 18;
+        lineY += 14;
       } else {
         line = testLine;
       }
     });
-    ctx.fillText(line, 80, lineY);
+    ctx.fillText(line, 60, lineY);
 
-    defY += 80;
+    defY += 62;
   });
 
   // Draw personas in grid (3 columns, 2 rows)
-  const startX = 750;
-  const startY = 100;
-  const personWidth = 260;
-  const personHeight = 280;
-  const gapX = 20;
-  const gapY = 30;
+  const startX = 540;
+  const startY = 75;
+  const personWidth = 200;
+  const personHeight = 220;
+  const gapX = 15;
+  const gapY = 25;
 
   data.personas.forEach((persona, i) => {
     const col = i % 3;
@@ -771,44 +849,44 @@ export const autoInsertPerfilPersonas = async (canvas) => {
 
     // Draw person card
     ctx.strokeStyle = '#999';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 1.5;
     ctx.strokeRect(x, y, personWidth, personHeight);
 
     // Photo circle
     ctx.beginPath();
-    ctx.arc(x + personWidth / 2, y + 50, 35, 0, Math.PI * 2);
+    ctx.arc(x + personWidth / 2, y + 38, 28, 0, Math.PI * 2);
     ctx.strokeStyle = '#666';
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 2;
     ctx.stroke();
     ctx.fillStyle = '#f0f0f0';
     ctx.fill();
 
     // Name
     ctx.fillStyle = '#000';
-    ctx.font = 'bold 16px Arial';
+    ctx.font = 'bold 12px Arial';
     ctx.textAlign = 'center';
     const nameLines = persona.name.split('\n');
     nameLines.forEach((line, lineIndex) => {
-      ctx.fillText(line, x + personWidth / 2, y + 105 + (lineIndex * 18));
+      ctx.fillText(line, x + personWidth / 2, y + 80 + (lineIndex * 14));
     });
 
     // Adjetivos list
     ctx.textAlign = 'left';
-    ctx.font = '13px Arial';
-    let adjetivoY = y + 150;
+    ctx.font = '10px Arial';
+    let adjetivoY = y + 115;
     persona.adjetivos.forEach((adj, adjIndex) => {
       const isMafioso = adj.toLowerCase().includes('mafioso');
       ctx.fillStyle = isMafioso ? '#E53935' : '#000';
-      ctx.fillText('• ' + adj, x + 15, adjetivoY);
-      adjetivoY += 22;
+      ctx.fillText('• ' + adj, x + 12, adjetivoY);
+      adjetivoY += 18;
     });
   });
 
   // Legend
-  const legendY = height - 100;
+  const legendY = height - 75;
   const legendX = startX;
   ctx.fillStyle = '#666';
-  ctx.font = '14px Arial';
+  ctx.font = '11px Arial';
   ctx.textAlign = 'left';
   ctx.fillText('Consolidación de adjetivos personales', legendX, legendY);
 
@@ -820,25 +898,25 @@ export const autoInsertPerfilPersonas = async (canvas) => {
   ];
 
   items.forEach((item, i) => {
-    const itemX = legendX + (i * 180);
+    const itemX = legendX + (i * 140);
     ctx.fillStyle = item.color;
-    ctx.fillRect(itemX, legendY + 10, 15, 15);
+    ctx.fillRect(itemX, legendY + 8, 12, 12);
     ctx.fillStyle = '#333';
-    ctx.font = '12px Arial';
-    ctx.fillText(item.text, itemX + 20, legendY + 22);
+    ctx.font = '9px Arial';
+    ctx.fillText(item.text, itemX + 16, legendY + 18);
   });
 
   // Company logo/text
   ctx.fillStyle = '#999';
-  ctx.font = 'bold 24px Arial';
+  ctx.font = 'bold 18px Arial';
   ctx.textAlign = 'right';
-  ctx.fillText(data.company, width - 40, height - 40);
+  ctx.fillText(data.company, width - 30, height - 30);
 
   // Footnote
   ctx.fillStyle = '#666';
-  ctx.font = '12px Arial';
+  ctx.font = '10px Arial';
   ctx.textAlign = 'right';
-  ctx.fillText(data.footnote, width - 40, height - 20);
+  ctx.fillText(data.footnote, width - 30, height - 15);
 
   // Convert and insert
   const dataURL = tempCanvas.toDataURL('image/png');
@@ -858,7 +936,7 @@ export const autoInsertPerfilPersonas = async (canvas) => {
         name: 'perfil-personas'
       });
 
-      const scale = 960 / fabricImg.width;
+      const scale = 750 / fabricImg.width;
       fabricImg.scaleX = scale;
       fabricImg.scaleY = scale;
 
