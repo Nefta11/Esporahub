@@ -672,75 +672,85 @@ export const autoInsertPerfilPersonas = async (canvas) => {
 
   const data = {
     title: 'Perfil:',
-    subtitle: 'Transformador/Impulsor',
-    footnote: '*Adjetivación realizada el 06.Abril.2025',
-    company: 'Rizoma',
+    subtitle: 'Lorem Ipsum/Comparativo',
+    footnote: '*Adjetivación realizada el 31.Octubre.2025',
+    company: 'Lorem Ipsum',
     adjetivos: {
       title: 'Adjetivos',
-      items: ['Transformador', 'Impulsor', 'Innovador', 'Fuerte/firme']
+      items: [
+        'Lorem ipsum',
+        'Dolor sit amet',
+        'Consectetur',
+        'Adipiscing elit'
+      ]
     },
     contraAdjetivos: {
       title: 'Contra Adjetivos',
-      items: ['Mafioso', 'Impuesto', 'Ignorante', 'Lejano']
+      items: [
+        'Sed do eiusmod',
+        'Tempor incididunt',
+        'Ut labore',
+        'Et dolore magna'
+      ]
     },
     definiciones: [
       {
-        term: 'Ineficaz',
+        term: 'Lorem',
         color: '#E8E8E8',
-        description: 'Su gestión sigue siendo criticada por su falta de acción y la demora en resolver el problema de la basura.'
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.'
       },
       {
-        term: 'Mafioso',
+        term: 'Ipsum',
         color: '#E57373',
-        description: 'Es visto como alguien con una mala reputación, evidentemente por su cercanía a la venta del filo y las grandes cantidades de presencia.'
+        description: 'Sed posuere consectetur est at lobortis. Etiam porta sem malesuada magna mollis euismod.'
       },
       {
-        term: 'Incongruente',
+        term: 'Dolor',
         color: '#AED581',
-        description: 'Gran parte de la población considera que tiene acuerdos secretos con el MAS, razón por la cual no ha sido perseguido o enunciado.'
+        description: 'Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo.'
       },
       {
-        term: 'Experimentado',
+        term: 'Sit',
         color: '#FFD54F',
-        description: 'Reconocen su trayectoria política y comentan que es quien se ve mejor preparado.'
+        description: 'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.'
       }
     ],
     personas: [
       {
-        name: 'Manfred\nReyes Villa',
+        name: 'Lorem\nIpsum',
         photo: null,
-        adjetivos: ['Ineficaz', 'Mafioso', 'Incongruente', 'Experimentado'],
-        mafioso: true
+        adjetivos: ['Lorem', 'Ipsum', 'Dolor', 'Sit'],
+        mafioso: false
       },
       {
-        name: 'Tuto\nQuiroga',
+        name: 'Dolor\nSit',
         photo: null,
-        adjetivos: ['Traidor', 'Oportunista', 'Experimentado', 'Mafioso'],
-        mafioso: true
+        adjetivos: ['Amet', 'Consectetur', 'Adipiscing', 'Elit'],
+        mafioso: false
       },
       {
-        name: 'Samuel\nDoria',
+        name: 'Amet\nConsectetur',
         photo: null,
-        adjetivos: ['Mafioso', 'Abusivo', 'Ambicioso', 'Demagogo'],
-        mafioso: true
+        adjetivos: ['Sed', 'Do', 'Eiusmod', 'Tempor'],
+        mafioso: false
       },
       {
-        name: 'Luis\nCamacho',
+        name: 'Incididunt\nUt',
         photo: null,
-        adjetivos: ['Mafioso', 'Oportunista', 'Ambicioso', 'Impuesto'],
-        mafioso: true
+        adjetivos: ['Labore', 'Et', 'Dolore', 'Magna'],
+        mafioso: false
       },
       {
-        name: 'Andrónico\nRodriguez',
+        name: 'Aliqua\nEnim',
         photo: null,
-        adjetivos: ['Traidor', 'Subordinado', 'Ineficaz', 'Mafioso'],
-        mafioso: true
+        adjetivos: ['Ad', 'Minim', 'Veniam', 'Quis'],
+        mafioso: false
       },
       {
-        name: 'Chi\nHyun Chung',
+        name: 'Nostrud\nExercitation',
         photo: null,
-        adjetivos: ['Ignorante', 'Oportunista', 'Mafioso', 'Incapaz'],
-        mafioso: true
+        adjetivos: ['Ullamco', 'Laboris', 'Nisi', 'Ut'],
+        mafioso: false
       }
     ]
   };
