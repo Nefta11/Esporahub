@@ -46,10 +46,10 @@ const TopOfChoiceChartModal = ({ isOpen, onClose, canvas }) => {
     }
   };
 
-  const drawTopOfChoiceChart = () => {
+  const drawTopOfChoiceChart = async () => {
     const canvasElement = document.createElement('canvas');
     const width = 480;
-    const height = 270;
+    const height = 360; // Aumentado para más espacio
     canvasElement.width = width;
     canvasElement.height = height;
     const ctx = canvasElement.getContext('2d');
@@ -66,7 +66,7 @@ const TopOfChoiceChartModal = ({ isOpen, onClose, canvas }) => {
 
     // Leyendas superiores
     const legendY = 35;
-    
+
     // "No votaría por..." (Rojo)
     ctx.beginPath();
     ctx.arc(100, legendY, 4, 0, 2 * Math.PI);
@@ -95,35 +95,81 @@ const TopOfChoiceChartModal = ({ isOpen, onClose, canvas }) => {
 
     // Configuración de barras
     const startY = 60;
-    const barHeight = 35;
-    const spacing = 20;
+    const barHeight = 30;
+    const spacing = 45; // Aumentado para más espacio entre perfiles
     const maxBarWidth = 180;
+
+    // Cargar todas las imágenes de avatares primero
+    const avatarImages = await Promise.all(
+      profiles.map(profile => {
+        if (profile.avatar) {
+          return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = () => resolve(null);
+            img.src = profile.avatar;
+          });
+        }
+        return Promise.resolve(null);
+      })
+    );
 
     profiles.forEach((profile, index) => {
       const y = startY + (index * (barHeight + spacing));
 
       // Avatar y nombre en el centro
       const avatarY = y + (barHeight / 2);
-      
-      // Avatar
-      ctx.beginPath();
-      ctx.arc(centerX, avatarY, 12, 0, 2 * Math.PI);
-      ctx.fillStyle = profile.color || '#E5E7EB';
-      ctx.fill();
-      ctx.strokeStyle = '#000000';
-      ctx.lineWidth = 1;
-      ctx.stroke();
 
-      // Si hay avatar cargado, dibujarlo
-      if (profile.avatar) {
-        const img = new Image();
-        img.src = profile.avatar;
+      // Barra "No votaría" (izquierda, roja)
+      const noVotariaWidth = (profile.noVotaria / 100) * maxBarWidth;
+      ctx.fillStyle = '#C62828';
+      ctx.fillRect(centerX - noVotariaWidth, y, noVotariaWidth, barHeight);
+
+      // Porcentaje "No votaría"
+      if (profile.noVotaria > 0) {
+        ctx.font = 'bold 10px Arial';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.textAlign = 'center';
+        ctx.fillText(`${profile.noVotaria}%`, centerX - (noVotariaWidth / 2), y + (barHeight / 2) + 3);
+      }
+
+      // Barra "Sí votaría" (derecha, verde)
+      const siVotariaWidth = (profile.siVotaria / 100) * maxBarWidth;
+      ctx.fillStyle = '#2E7D32';
+      ctx.fillRect(centerX, y, siVotariaWidth, barHeight);
+
+      // Porcentaje "Sí votaría"
+      if (profile.siVotaria > 0) {
+        ctx.font = 'bold 10px Arial';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.textAlign = 'center';
+        ctx.fillText(`${profile.siVotaria}%`, centerX + (siVotariaWidth / 2), y + (barHeight / 2) + 3);
+      }
+
+      // Avatar (dibujado después de las barras para que esté encima)
+      if (avatarImages[index]) {
         ctx.save();
         ctx.beginPath();
         ctx.arc(centerX, avatarY, 12, 0, 2 * Math.PI);
         ctx.clip();
-        ctx.drawImage(img, centerX - 12, avatarY - 12, 24, 24);
+        ctx.drawImage(avatarImages[index], centerX - 12, avatarY - 12, 24, 24);
         ctx.restore();
+
+        // Borde del avatar
+        ctx.beginPath();
+        ctx.arc(centerX, avatarY, 12, 0, 2 * Math.PI);
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      } else {
+        // Avatar placeholder
+        ctx.beginPath();
+        ctx.arc(centerX, avatarY, 12, 0, 2 * Math.PI);
+        ctx.fillStyle = profile.color || '#E5E7EB';
+        ctx.fill();
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 2;
+        ctx.stroke();
       }
 
       // Nombre del perfil debajo del avatar
@@ -134,32 +180,6 @@ const TopOfChoiceChartModal = ({ isOpen, onClose, canvas }) => {
       nameLines.forEach((line, i) => {
         ctx.fillText(line, centerX, avatarY + 20 + (i * 6));
       });
-
-      // Barra "No votaría" (izquierda, roja)
-      const noVotariaWidth = (profile.noVotaria / 100) * maxBarWidth;
-      ctx.fillStyle = '#C62828';
-      ctx.fillRect(centerX - noVotariaWidth, y, noVotariaWidth, barHeight);
-
-      // Porcentaje "No votaría"
-      if (profile.noVotaria > 0) {
-        ctx.font = 'bold 12px Arial';
-        ctx.fillStyle = '#FFFFFF';
-        ctx.textAlign = 'center';
-        ctx.fillText(`${profile.noVotaria}%`, centerX - (noVotariaWidth / 2), y + (barHeight / 2) + 4);
-      }
-
-      // Barra "Sí votaría" (derecha, verde)
-      const siVotariaWidth = (profile.siVotaria / 100) * maxBarWidth;
-      ctx.fillStyle = '#2E7D32';
-      ctx.fillRect(centerX, y, siVotariaWidth, barHeight);
-
-      // Porcentaje "Sí votaría"
-      if (profile.siVotaria > 0) {
-        ctx.font = 'bold 12px Arial';
-        ctx.fillStyle = '#FFFFFF';
-        ctx.textAlign = 'center';
-        ctx.fillText(`${profile.siVotaria}%`, centerX + (siVotariaWidth / 2), y + (barHeight / 2) + 4);
-      }
     });
 
     return canvasElement;
@@ -168,11 +188,11 @@ const TopOfChoiceChartModal = ({ isOpen, onClose, canvas }) => {
   const handleInsertChart = async () => {
     if (!canvas) return;
 
-    const canvasElement = drawTopOfChoiceChart();
+    const canvasElement = await drawTopOfChoiceChart();
     const dataURL = canvasElement.toDataURL('image/png');
 
     const { Image: FabricImage } = await import('fabric');
-    
+
     const imgElement = new Image();
     imgElement.onload = () => {
       const fabricImg = new FabricImage(imgElement, {

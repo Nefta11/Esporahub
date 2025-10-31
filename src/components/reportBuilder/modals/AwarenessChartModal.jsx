@@ -51,8 +51,8 @@ const AwarenessChartModal = ({ isOpen, onClose, canvas }) => {
     ctx.textAlign = 'left';
     ctx.fillText('Awareness', 40, 60);
 
-    // Leyenda
-    const legendX = 770;
+    // Leyenda (centrada)
+    const legendX = 600;
     const legendY = 50;
 
     ctx.fillStyle = '#14B8A6';
@@ -63,8 +63,8 @@ const AwarenessChartModal = ({ isOpen, onClose, canvas }) => {
     ctx.fillText('Alcance', legendX + 30, legendY + 15);
 
     ctx.fillStyle = '#0D7377';
-    ctx.fillRect(legendX + 120, legendY, 20, 20);
-    ctx.fillText('Impresiones', legendX + 150, legendY + 15);
+    ctx.fillRect(legendX + 150, legendY, 20, 20);
+    ctx.fillText('Impresiones', legendX + 180, legendY + 15);
 
     // Calcular máximo valor para escala
     const maxValue = Math.max(...profiles.map(p => Math.max(p.alcance, p.impresiones)));

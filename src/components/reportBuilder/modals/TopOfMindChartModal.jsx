@@ -79,9 +79,9 @@ const TopOfMindChartModal = ({ isOpen, onClose, canvas }) => {
     ctx.fillText('Top Of Mind', 30, 35);
 
     // Perfiles con avatares (parte superior)
-    const avatarY = 20;
+    const avatarY = 47; // Bajado 5% (27px adicionales)
     const avatarSpacing = 100;
-    const startAvatarX = 130;
+    const startAvatarX = 350; // Movido más al centro
 
     profiles.forEach((profile, index) => {
       const x = startAvatarX + (index * avatarSpacing);
@@ -127,7 +127,7 @@ const TopOfMindChartModal = ({ isOpen, onClose, canvas }) => {
     });
 
     // Leyenda
-    const legendY = 60;
+    const legendY = 90;
     const legendItems = [
       { text: 'Positivo', color: '#10B981', symbol: '+' },
       { text: 'Neutro', color: '#F59E0B', symbol: '●' },
@@ -149,7 +149,7 @@ const TopOfMindChartModal = ({ isOpen, onClose, canvas }) => {
     });
 
     // Temas con barras
-    const startY = 85;
+    const startY = 110;
     const barHeight = 35;
     const spacing = 5;
     const maxWidth = 700;
