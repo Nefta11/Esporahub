@@ -36,9 +36,10 @@ import {
   autoInsertAmplificadoresChart,
   autoInsertActivacionPorTema,
   autoInsertHumorSocial
-  ,
-  autoInsertHumorHistogram
 } from './utils/autoInsertHelpers';
+import {
+  autoInsertHumorHistogram
+} from './utils/autoInsertHelpers2';
 import {
   autoInsertBenchmarkSocialMedia,
   autoInsertBenchmarkSocialMediaExternas,
