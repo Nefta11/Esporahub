@@ -32,6 +32,7 @@ const EditorSidebar = ({
   onOpenHumorHistogramModal,
   onOpenPerfilesArquetiposModal,
   onOpenPerfilIdentificacionModal,
+  onOpenPerfilPersonasModal,
   layers,
   selectedLayer,
   onSelectLayer,
@@ -270,6 +271,16 @@ const EditorSidebar = ({
               <button className="tool-card" onClick={onOpenPerfilIdentificacionModal} title="Identificación de Perfil">
                 <Users size={24} />
                 <span>Identificación</span>
+              </button>
+            )}
+
+          {/* Herramienta Análisis Comparativo de Perfil (Perfil Personas) */}
+          {currentFilmina &&
+            currentFilmina.title === 'Análisis Comparativo de Perfil' &&
+            typeof onOpenPerfilPersonasModal === 'function' && (
+              <button className="tool-card" onClick={onOpenPerfilPersonasModal} title="Análisis Comparativo de Perfil">
+                <Users size={24} />
+                <span>Perfil Personas</span>
               </button>
             )}
 

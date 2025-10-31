@@ -588,3 +588,288 @@ export const autoInsertPerfilIdentificacion = async (canvas, data = {}) => {
   img.src = dataURL;
 };
 
+// Auto-insert for "Análisis Comparativo de Perfil" (Perfil Personas)
+export const autoInsertPerfilPersonas = async (canvas) => {
+  if (!canvas) return;
+
+  const data = {
+    title: 'Perfil:',
+    subtitle: 'Transformador/Impulsor',
+    footnote: '*Adjetivación realizada el 06.Abril.2025',
+    company: 'Rizoma',
+    adjetivos: {
+      title: 'Adjetivos',
+      items: ['Transformador', 'Impulsor', 'Innovador', 'Fuerte/firme']
+    },
+    contraAdjetivos: {
+      title: 'Contra Adjetivos',
+      items: ['Mafioso', 'Impuesto', 'Ignorante', 'Lejano']
+    },
+    definiciones: [
+      {
+        term: 'Ineficaz',
+        color: '#E8E8E8',
+        description: 'Su gestión sigue siendo criticada por su falta de acción y la demora en resolver el problema de la basura.'
+      },
+      {
+        term: 'Mafioso',
+        color: '#E57373',
+        description: 'Es visto como alguien con una mala reputación, evidentemente por su cercanía a la venta del filo y las grandes cantidades de presencia.'
+      },
+      {
+        term: 'Incongruente',
+        color: '#AED581',
+        description: 'Gran parte de la población considera que tiene acuerdos secretos con el MAS, razón por la cual no ha sido perseguido o enunciado.'
+      },
+      {
+        term: 'Experimentado',
+        color: '#FFD54F',
+        description: 'Reconocen su trayectoria política y comentan que es quien se ve mejor preparado.'
+      }
+    ],
+    personas: [
+      {
+        name: 'Manfred\nReyes Villa',
+        photo: null,
+        adjetivos: ['Ineficaz', 'Mafioso', 'Incongruente', 'Experimentado'],
+        mafioso: true
+      },
+      {
+        name: 'Tuto\nQuiroga',
+        photo: null,
+        adjetivos: ['Traidor', 'Oportunista', 'Experimentado', 'Mafioso'],
+        mafioso: true
+      },
+      {
+        name: 'Samuel\nDoria',
+        photo: null,
+        adjetivos: ['Mafioso', 'Abusivo', 'Ambicioso', 'Demagogo'],
+        mafioso: true
+      },
+      {
+        name: 'Luis\nCamacho',
+        photo: null,
+        adjetivos: ['Mafioso', 'Oportunista', 'Ambicioso', 'Impuesto'],
+        mafioso: true
+      },
+      {
+        name: 'Andrónico\nRodriguez',
+        photo: null,
+        adjetivos: ['Traidor', 'Subordinado', 'Ineficaz', 'Mafioso'],
+        mafioso: true
+      },
+      {
+        name: 'Chi\nHyun Chung',
+        photo: null,
+        adjetivos: ['Ignorante', 'Oportunista', 'Mafioso', 'Incapaz'],
+        mafioso: true
+      }
+    ]
+  };
+
+  const tempCanvas = document.createElement('canvas');
+  const width = 1600;
+  const height = 900;
+  tempCanvas.width = width;
+  tempCanvas.height = height;
+  const ctx = tempCanvas.getContext('2d');
+
+  // Background
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, width, height);
+
+  // Title section
+  ctx.fillStyle = '#666';
+  ctx.font = '32px Arial';
+  ctx.textAlign = 'left';
+  ctx.fillText(data.title, 170, 60);
+
+  ctx.fillStyle = '#000';
+  ctx.font = 'bold 48px Arial';
+  ctx.fillText(data.subtitle, 70, 120);
+
+  // Draw boxes for Adjetivos and Contra Adjetivos
+  const boxX = 70;
+  const boxY = 160;
+  const boxWidth = 280;
+  const boxHeight = 180;
+
+  // Adjetivos box
+  ctx.strokeStyle = '#000';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
+  ctx.fillStyle = '#000';
+  ctx.font = 'bold 20px Arial';
+  ctx.fillText(data.adjetivos.title, boxX + 10, boxY + 30);
+
+  ctx.fillStyle = '#2196F3';
+  ctx.font = '16px Arial';
+  data.adjetivos.items.forEach((item, i) => {
+    ctx.fillText('• ' + item, boxX + 15, boxY + 60 + (i * 25));
+  });
+
+  // Contra Adjetivos box
+  const boxX2 = boxX + boxWidth + 10;
+  ctx.strokeRect(boxX2, boxY, boxWidth, boxHeight);
+  ctx.fillStyle = '#000';
+  ctx.font = 'bold 20px Arial';
+  ctx.fillText(data.contraAdjetivos.title, boxX2 + 10, boxY + 30);
+
+  ctx.fillStyle = '#E53935';
+  ctx.font = '16px Arial';
+  data.contraAdjetivos.items.forEach((item, i) => {
+    ctx.fillText('• ' + item, boxX2 + 15, boxY + 60 + (i * 25));
+  });
+
+  // Draw definitions
+  let defY = boxY + boxHeight + 30;
+  data.definiciones.forEach((def, i) => {
+    // Color bar
+    ctx.fillStyle = def.color;
+    ctx.fillRect(60, defY, 10, 60);
+
+    // Term
+    ctx.fillStyle = '#000';
+    ctx.font = 'bold 16px Arial';
+    ctx.fillText(def.term, 80, defY + 15);
+
+    // Description
+    ctx.fillStyle = '#555';
+    ctx.font = '13px Arial';
+    const words = def.description.split(' ');
+    let line = '';
+    let lineY = defY + 35;
+    words.forEach(word => {
+      const testLine = line + word + ' ';
+      const metrics = ctx.measureText(testLine);
+      if (metrics.width > 600 && line !== '') {
+        ctx.fillText(line, 80, lineY);
+        line = word + ' ';
+        lineY += 18;
+      } else {
+        line = testLine;
+      }
+    });
+    ctx.fillText(line, 80, lineY);
+
+    defY += 80;
+  });
+
+  // Draw personas in grid (3 columns, 2 rows)
+  const startX = 750;
+  const startY = 100;
+  const personWidth = 260;
+  const personHeight = 280;
+  const gapX = 20;
+  const gapY = 30;
+
+  data.personas.forEach((persona, i) => {
+    const col = i % 3;
+    const row = Math.floor(i / 3);
+    const x = startX + (col * (personWidth + gapX));
+    const y = startY + (row * (personHeight + gapY));
+
+    // Draw person card
+    ctx.strokeStyle = '#999';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x, y, personWidth, personHeight);
+
+    // Photo circle
+    ctx.beginPath();
+    ctx.arc(x + personWidth / 2, y + 50, 35, 0, Math.PI * 2);
+    ctx.strokeStyle = '#666';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.fillStyle = '#f0f0f0';
+    ctx.fill();
+
+    // Name
+    ctx.fillStyle = '#000';
+    ctx.font = 'bold 16px Arial';
+    ctx.textAlign = 'center';
+    const nameLines = persona.name.split('\n');
+    nameLines.forEach((line, lineIndex) => {
+      ctx.fillText(line, x + personWidth / 2, y + 105 + (lineIndex * 18));
+    });
+
+    // Adjetivos list
+    ctx.textAlign = 'left';
+    ctx.font = '13px Arial';
+    let adjetivoY = y + 150;
+    persona.adjetivos.forEach((adj, adjIndex) => {
+      const isMafioso = adj.toLowerCase().includes('mafioso');
+      ctx.fillStyle = isMafioso ? '#E53935' : '#000';
+      ctx.fillText('• ' + adj, x + 15, adjetivoY);
+      adjetivoY += 22;
+    });
+  });
+
+  // Legend
+  const legendY = height - 100;
+  const legendX = startX;
+  ctx.fillStyle = '#666';
+  ctx.font = '14px Arial';
+  ctx.textAlign = 'left';
+  ctx.fillText('Consolidación de adjetivos personales', legendX, legendY);
+
+  // Legend items
+  const items = [
+    { color: '#AED581', text: 'Adjetivos recurrentes' },
+    { color: '#FFD54F', text: 'Adjetivos esporádicos' },
+    { color: '#E57373', text: 'Adjetivos inusuales' }
+  ];
+
+  items.forEach((item, i) => {
+    const itemX = legendX + (i * 180);
+    ctx.fillStyle = item.color;
+    ctx.fillRect(itemX, legendY + 10, 15, 15);
+    ctx.fillStyle = '#333';
+    ctx.font = '12px Arial';
+    ctx.fillText(item.text, itemX + 20, legendY + 22);
+  });
+
+  // Company logo/text
+  ctx.fillStyle = '#999';
+  ctx.font = 'bold 24px Arial';
+  ctx.textAlign = 'right';
+  ctx.fillText(data.company, width - 40, height - 40);
+
+  // Footnote
+  ctx.fillStyle = '#666';
+  ctx.font = '12px Arial';
+  ctx.textAlign = 'right';
+  ctx.fillText(data.footnote, width - 40, height - 20);
+
+  // Convert and insert
+  const dataURL = tempCanvas.toDataURL('image/png');
+  const { Image: FabricImage } = await import('fabric');
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = () => {
+    try {
+      const fabricImg = new FabricImage(img, {
+        left: 60,
+        top: 40,
+        selectable: true,
+        evented: true,
+        hasControls: true,
+        hasBorders: true,
+        hoverCursor: 'move',
+        name: 'perfil-personas'
+      });
+
+      const scale = 960 / fabricImg.width;
+      fabricImg.scaleX = scale;
+      fabricImg.scaleY = scale;
+
+      canvas.add(fabricImg);
+      canvas.setActiveObject(fabricImg);
+      fabricImg.setCoords();
+      canvas.requestRenderAll();
+    } catch (err) {
+      console.error('Error inserting perfil personas:', err);
+    }
+  };
+  img.src = dataURL;
+};
+
