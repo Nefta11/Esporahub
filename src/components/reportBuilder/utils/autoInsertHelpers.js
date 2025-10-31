@@ -1568,89 +1568,97 @@ export const autoInsertTopOfMindChart = async (canvas) => {
     { text: 'Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio.', value: 0, sentiment: 'negative' },
   ];
 
-  const width = 480;
-  const height = 270;
+  // Mejorar calidad con escala 2x
+  const baseWidth = 480;
+  const baseHeight = 270;
+  const scale = 2;
+  const width = baseWidth * scale;
+  const height = baseHeight * scale;
   const canvasElement = document.createElement('canvas');
   canvasElement.width = width;
   canvasElement.height = height;
   const ctx = canvasElement.getContext('2d');
+  
+  // Activar antialiasing
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
 
   // Fondo blanco
   ctx.fillStyle = '#FFFFFF';
   ctx.fillRect(0, 0, width, height);
 
-  // Título principal
-  ctx.font = 'bold 9px Arial';
+  // Título principal (escalado)
+  ctx.font = `bold ${9 * scale}px Arial`;
   ctx.fillStyle = '#000000';
   ctx.textAlign = 'left';
-  ctx.fillText('Top Of Mind', 15, 18);
+  ctx.fillText('Top Of Mind', 15 * scale, 18 * scale);
 
-  // Perfiles con avatares (parte superior)
-  const avatarY = 10;
-  const avatarSpacing = 50;
-  const startAvatarX = 65;
+  // Perfiles con avatares - mejor distribuidos y centrados (escalado)
+  const avatarY = 12 * scale;
+  const avatarSpacing = 60 * scale; // Más espacio entre avatares
+  const startAvatarX = 95 * scale; // Más a la derecha para evitar superposición
 
   profiles.forEach((profile, index) => {
     const x = startAvatarX + (index * avatarSpacing);
 
-    // Círculo placeholder para avatar
+    // Círculo placeholder para avatar (escalado)
     ctx.beginPath();
-    ctx.arc(x, avatarY, 10, 0, 2 * Math.PI);
+    ctx.arc(x, avatarY, 10 * scale, 0, 2 * Math.PI);
     ctx.fillStyle = '#E5E7EB';
     ctx.fill();
     ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 1 * scale;
     ctx.stroke();
 
-    // Nombre
+    // Nombre (escalado)
     const nameLines = profile.name.split('\n');
-    ctx.font = 'bold 4.5px Arial';
+    ctx.font = `bold ${4.5 * scale}px Arial`;
     ctx.fillStyle = '#000000';
     ctx.textAlign = 'center';
     nameLines.forEach((line, i) => {
-      ctx.fillText(line, x, avatarY + 15 + (i * 5));
+      ctx.fillText(line, x, avatarY + (15 * scale) + (i * 5 * scale));
     });
   });
 
-  // Leyenda
-  const legendY = 30;
+  // Leyenda (escalado)
+  const legendY = 32 * scale;
   const legendItems = [
     { text: 'Positivo', color: '#10B981', symbol: '+' },
-    { text: 'Neutro', color: '#F59E0B', symbol: '●' },
-    { text: 'Negativo', color: '#EF4444', symbol: '−' }
+    { text: 'Neutro', color: '#FFA500', symbol: '●' },
+    { text: 'Negativo', color: '#DC2626', symbol: '−' }
   ];
 
-  let legendX = width - 125;
+  let legendX = width - (125 * scale);
   legendItems.forEach((item) => {
     ctx.fillStyle = item.color;
-    ctx.font = 'bold 7px Arial';
+    ctx.font = `bold ${7 * scale}px Arial`;
     ctx.textAlign = 'left';
     ctx.fillText(item.symbol, legendX, legendY);
     
-    ctx.font = '5.5px Arial';
+    ctx.font = `${5.5 * scale}px Arial`;
     ctx.fillStyle = '#000000';
-    ctx.fillText(item.text, legendX + 10, legendY);
+    ctx.fillText(item.text, legendX + (10 * scale), legendY);
     
-    legendX += 40;
+    legendX += (40 * scale);
   });
 
-  // Temas con barras
-  const startY = 43;
-  const barHeight = 17.5;
-  const spacing = 2.5;
-  const maxWidth = 350;
-  const maxValue = Math.max(...topics.map(t => t.value));
+  // Temas con barras (escalado)
+  const startY = 45 * scale;
+  const barHeight = 17.5 * scale;
+  const spacing = 2.5 * scale;
+  const maxWidth = 350 * scale;
+  const maxValue = Math.max(...topics.map(t => t.value), 1);
 
   topics.forEach((topic, index) => {
     const y = startY + (index * (barHeight + spacing));
     
-    // Texto del tema (máximo 2 líneas)
-    ctx.font = '4px Arial';
+    // Texto del tema (máximo 2 líneas) (escalado)
+    ctx.font = `${4.5 * scale}px Arial`; // Ligeramente más grande
     ctx.fillStyle = '#000000';
     ctx.textAlign = 'left';
     
     const words = topic.text.split(' ');
-    const maxTextWidth = 335;
+    const maxTextWidth = 335 * scale;
     const lines = [];
     let currentLine = '';
     
@@ -1666,45 +1674,39 @@ export const autoInsertTopOfMindChart = async (canvas) => {
     });
     if (currentLine) lines.push(currentLine.trim());
     
-    // Mostrar máximo 2 líneas
+    // Mostrar máximo 2 líneas (escalado)
     lines.slice(0, 2).forEach((line, i) => {
-      ctx.fillText(line, 40, y + 5 + (i * 5));
+      ctx.fillText(line, 40 * scale, y + (5 * scale) + (i * 5 * scale));
     });
 
-    // Barra de color según sentimiento
-    const barWidth = (topic.value / maxValue) * maxWidth;
+    // Barra de color según sentimiento (escalado)
+    const barWidth = maxValue > 0 ? (topic.value / maxValue) * maxWidth : 0;
     let barColor;
-    switch (topic.sentiment) {
-      case 'positive':
-        barColor = '#10B981';
-        break;
-      case 'negative':
-        barColor = '#EF4444';
-        break;
-      case 'neutral':
-        barColor = '#F59E0B';
-        break;
-      default:
-        barColor = '#6B7280';
+    if (topic.sentiment === 'positive') {
+      barColor = '#10B981';
+    } else if (topic.sentiment === 'negative') {
+      barColor = '#DC2626';
+    } else {
+      barColor = '#FFA500';
     }
     
     ctx.fillStyle = barColor;
-    ctx.fillRect(40, y + 12.5, barWidth, 5);
+    ctx.fillRect(40 * scale, y + (12.5 * scale), barWidth, 5 * scale);
 
-    // Valor numérico
-    ctx.font = 'bold 5.5px Arial';
+    // Valor numérico (escalado)
+    ctx.font = `bold ${5.5 * scale}px Arial`;
     ctx.fillStyle = '#000000';
     ctx.textAlign = 'right';
-    ctx.fillText(topic.value.toLocaleString(), width - 10, y + 16.5);
+    ctx.fillText(topic.value.toLocaleString(), width - (10 * scale), y + (16.5 * scale));
 
-    // Símbolo de sentimiento
-    ctx.font = 'bold 7px Arial';
+    // Símbolo de sentimiento (escalado)
+    ctx.font = `bold ${7 * scale}px Arial`;
     ctx.fillStyle = barColor;
     ctx.textAlign = 'center';
     let symbol = '●';
     if (topic.sentiment === 'positive') symbol = '+';
     if (topic.sentiment === 'negative') symbol = '−';
-    ctx.fillText(symbol, width - 25, y + 16.5);
+    ctx.fillText(symbol, width - (25 * scale), y + (16.5 * scale));
   });
 
   // Importar fabric.Image
@@ -1715,7 +1717,9 @@ export const autoInsertTopOfMindChart = async (canvas) => {
     top: 0,
     selectable: true,
     hasControls: true,
-    name: 'top-of-mind-chart'
+    name: 'top-of-mind-chart',
+    scaleX: 1 / scale, // Escalar de vuelta al tamaño original
+    scaleY: 1 / scale  // Mantiene alta resolución en tamaño correcto
   });
 
   canvas.add(fabricImg);
@@ -1909,82 +1913,76 @@ export const autoInsertTopOfChoiceChart = async (canvas) => {
     { name: 'Personaje 3', avatar: '', color: '#FF9800', noVotaria: 0, siVotaria: 0 },
   ];
 
-  const width = 480;
-  const height = 270;
+  // Aumentar resolución para mejor calidad (escala 3x)
+  const baseWidth = 960;
+  const baseHeight = 540;
+  const scale = 3;
+  const width = baseWidth * scale;
+  const height = baseHeight * scale;
+
   const canvasElement = document.createElement('canvas');
   canvasElement.width = width;
   canvasElement.height = height;
   const ctx = canvasElement.getContext('2d');
 
+  // Activar antialiasing y suavizado
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+
   // Fondo blanco
   ctx.fillStyle = '#FFFFFF';
   ctx.fillRect(0, 0, width, height);
 
-  // Título principal
-  ctx.font = 'bold 9px Arial';
+  // Título principal (escalado)
+  ctx.font = `bold ${27 * scale}px Arial`;
   ctx.fillStyle = '#000000';
   ctx.textAlign = 'left';
-  ctx.fillText('Top of Choice', 15, 18);
+  ctx.fillText('Top of Choice', 45 * scale, 54 * scale);
 
-  // Leyendas superiores
-  const legendY = 35;
+  // Línea central vertical (escalada) - DEFINIR PRIMERO
+  const centerX = width / 2;
+
+  // Leyendas superiores (escaladas y centradas)
+  const legendY = 105 * scale;
   
-  // "No votaría por..." (Rojo)
+  // "No votaría por..." (Rojo) - centrado en el lado izquierdo
+  const leftLegendX = centerX / 2; // Centro del cuadrante izquierdo
   ctx.beginPath();
-  ctx.arc(100, legendY, 4, 0, 2 * Math.PI);
+  ctx.arc(leftLegendX - (90 * scale), legendY, 12 * scale, 0, 2 * Math.PI);
   ctx.fillStyle = '#C62828';
   ctx.fill();
-  ctx.font = '6px Arial';
+  ctx.font = `${18 * scale}px Arial`;
   ctx.fillStyle = '#000000';
   ctx.textAlign = 'left';
-  ctx.fillText('No votaría por...', 110, legendY + 2);
+  ctx.fillText('No votaría por...', leftLegendX - (60 * scale), legendY + (6 * scale));
 
-  // "Votaría por..." (Verde)
+  // "Votaría por..." (Verde) - centrado en el lado derecho
+  const rightLegendX = centerX + (centerX / 2); // Centro del cuadrante derecho
   ctx.beginPath();
-  ctx.arc(width - 110, legendY, 4, 0, 2 * Math.PI);
+  ctx.arc(rightLegendX - (75 * scale), legendY, 12 * scale, 0, 2 * Math.PI);
   ctx.fillStyle = '#2E7D32';
   ctx.fill();
-  ctx.fillText('Votaría por...', width - 100, legendY + 2);
+  ctx.fillText('Votaría por...', rightLegendX - (45 * scale), legendY + (6 * scale));
 
-  // Línea central vertical
-  const centerX = width / 2;
+  // Dibujar la línea central vertical
   ctx.strokeStyle = '#CCCCCC';
-  ctx.lineWidth = 1;
+  ctx.lineWidth = 3 * scale;
   ctx.beginPath();
-  ctx.moveTo(centerX, 50);
-  ctx.lineTo(centerX, height - 30);
+  ctx.moveTo(centerX, 150 * scale);
+  ctx.lineTo(centerX, height - (90 * scale));
   ctx.stroke();
 
-  // Configuración de barras
-  const startY = 60;
-  const barHeight = 35;
-  const spacing = 20;
-  const maxBarWidth = 180;
+  // Configuración de barras (escaladas)
+  const startY = 180 * scale;
+  const barHeight = 90 * scale;
+  const spacing = 135 * scale;
+  const maxBarWidth = 540 * scale;
 
   profiles.forEach((profile, index) => {
     const y = startY + (index * (barHeight + spacing));
-
-    // Avatar y nombre en el centro
     const avatarY = y + (barHeight / 2);
+    const avatarRadius = 36 * scale;
     
-    // Avatar
-    ctx.beginPath();
-    ctx.arc(centerX, avatarY, 12, 0, 2 * Math.PI);
-    ctx.fillStyle = profile.color || '#E5E7EB';
-    ctx.fill();
-    ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    // Nombre del perfil debajo del avatar
-    const nameLines = profile.name.split('\n');
-    ctx.font = 'bold 5px Arial';
-    ctx.fillStyle = '#000000';
-    ctx.textAlign = 'center';
-    nameLines.forEach((line, i) => {
-      ctx.fillText(line, centerX, avatarY + 20 + (i * 6));
-    });
-
     // Barra "No votaría" (izquierda, roja)
     const noVotariaWidth = (profile.noVotaria / 100) * maxBarWidth;
     ctx.fillStyle = '#C62828';
@@ -1992,10 +1990,10 @@ export const autoInsertTopOfChoiceChart = async (canvas) => {
 
     // Porcentaje "No votaría"
     if (profile.noVotaria > 0) {
-      ctx.font = 'bold 12px Arial';
+      ctx.font = `bold ${30 * scale}px Arial`;
       ctx.fillStyle = '#FFFFFF';
       ctx.textAlign = 'center';
-      ctx.fillText(`${profile.noVotaria}%`, centerX - (noVotariaWidth / 2), y + (barHeight / 2) + 4);
+      ctx.fillText(`${profile.noVotaria}%`, centerX - (noVotariaWidth / 2), y + (barHeight / 2) + (9 * scale));
     }
 
     // Barra "Sí votaría" (derecha, verde)
@@ -2005,11 +2003,29 @@ export const autoInsertTopOfChoiceChart = async (canvas) => {
 
     // Porcentaje "Sí votaría"
     if (profile.siVotaria > 0) {
-      ctx.font = 'bold 12px Arial';
+      ctx.font = `bold ${30 * scale}px Arial`;
       ctx.fillStyle = '#FFFFFF';
       ctx.textAlign = 'center';
-      ctx.fillText(`${profile.siVotaria}%`, centerX + (siVotariaWidth / 2), y + (barHeight / 2) + 4);
+      ctx.fillText(`${profile.siVotaria}%`, centerX + (siVotariaWidth / 2), y + (barHeight / 2) + (9 * scale));
     }
+
+    // Avatar placeholder
+    ctx.beginPath();
+    ctx.arc(centerX, avatarY, avatarRadius, 0, 2 * Math.PI);
+    ctx.fillStyle = profile.color || '#E5E7EB';
+    ctx.fill();
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 6 * scale;
+    ctx.stroke();
+
+    // Nombre del perfil debajo del avatar
+    const nameLines = profile.name.split('\n');
+    ctx.font = `bold ${15 * scale}px Arial`;
+    ctx.fillStyle = '#000000';
+    ctx.textAlign = 'center';
+    nameLines.forEach((line, i) => {
+      ctx.fillText(line, centerX, avatarY + (60 * scale) + (i * (18 * scale)));
+    });
   });
 
   // Importar fabric.Image
@@ -2020,7 +2036,9 @@ export const autoInsertTopOfChoiceChart = async (canvas) => {
     top: 0,
     selectable: true,
     hasControls: true,
-    name: 'top-of-choice-chart'
+    name: 'top-of-choice-chart',
+    scaleX: 0.5 / scale, // Reducido a la mitad del tamaño base (50% de 960px = 480px)
+    scaleY: 0.5 / scale, // Mantiene la alta resolución en tamaño más pequeño
   });
 
   canvas.add(fabricImg);
