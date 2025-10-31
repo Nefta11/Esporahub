@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Square, Circle, Triangle, Hexagon, Star } from 'lucide-react';
+import '@/styles/reportBuilder/ChartModals.css';
 
 const ShapePickerModal = ({ isOpen, onClose, onSelectShape }) => {
   const [selectedColor, setSelectedColor] = useState('#1967D2');
@@ -83,8 +84,9 @@ const ShapePickerModal = ({ isOpen, onClose, onSelectShape }) => {
                   className="shape-card"
                   onClick={() => handleSelectShape(shape.id)}
                   title={shape.description}
+                  style={{ '--shape-color': selectedColor }}
                 >
-                  <div className="shape-icon" style={{ color: selectedColor }}>
+                  <div className="shape-icon">
                     <Icon size={48} strokeWidth={1.5} />
                   </div>
                   <h4 className="shape-name">{shape.name}</h4>

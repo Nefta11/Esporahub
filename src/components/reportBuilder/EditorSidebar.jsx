@@ -1,5 +1,5 @@
 import React from 'react';
-import { Type, Square, Image, Minus, Table, PieChart, BarChart3, BarChartHorizontal, Users, Share2, Award, Layers } from 'lucide-react';
+import { Type, Square, Image, Minus, Table, PieChart, BarChart3, BarChartHorizontal, Users, Share2, Award, Layers, CheckSquare, Radio, Activity, Smile } from 'lucide-react';
 
 const EditorSidebar = ({
   onAddText,
@@ -21,6 +21,14 @@ const EditorSidebar = ({
   onOpenBenchmarkAudienciaTableroModal,
   onOpenBenchmarkIntegradoTableroModal,
   onOpenBenchmarkDifusionOficialModal,
+  onOpenAwarenessModal,
+  onOpenTopOfMindModal,
+  onOpenTopOfHeartModal,
+  onOpenTopOfChoiceModal,
+  onOpenTopOfVoiceModal,
+  onOpenAmplificadoresModal,
+  onOpenActivacionPorTemaModal,
+  onOpenHumorSocialModal,
   layers,
   selectedLayer,
   onSelectLayer,
@@ -149,6 +157,86 @@ const EditorSidebar = ({
               <button className="tool-card" onClick={onOpenBenchmarkDifusionOficialModal} title="Benchmark de difusión oficial/alterna">
                 <Share2 size={24} />
                 <span>Benchmark Difusión</span>
+              </button>
+            )}
+
+          {/* Herramienta de Awareness Chart para la filmina Análisis de la conversación -- Awareness */}
+          {currentFilmina &&
+            currentFilmina.title === 'Análisis de la conversación -- Awareness' &&
+            typeof onOpenAwarenessModal === 'function' && (
+              <button className="tool-card" onClick={onOpenAwarenessModal} title="Gráfica de Awareness">
+                <BarChartHorizontal size={24} />
+                <span>Awareness</span>
+              </button>
+            )}
+
+          {/* Herramienta de Top of Mind Chart para la filmina Análisis de la conversación -- Top of mind */}
+          {currentFilmina &&
+            currentFilmina.title === 'Análisis de la conversación -- Top of mind' &&
+            typeof onOpenTopOfMindModal === 'function' && (
+              <button className="tool-card" onClick={onOpenTopOfMindModal} title="Gráfica de Top of Mind">
+                <BarChart3 size={24} />
+                <span>Top of Mind</span>
+              </button>
+            )}
+
+          {/* Herramienta de Top of Heart Chart para la filmina Análisis de la conversación -- Top of heart */}
+          {currentFilmina &&
+            currentFilmina.title === 'Análisis de la conversación -- Top of heart' &&
+            typeof onOpenTopOfHeartModal === 'function' && (
+              <button className="tool-card" onClick={onOpenTopOfHeartModal} title="Gráfica de Top of Heart">
+                <Award size={24} />
+                <span>Top of Heart</span>
+              </button>
+            )}
+
+          {/* Herramienta de Top of Choice Chart para la filmina Análisis de la conversación -- Top of choice */}
+          {currentFilmina &&
+            currentFilmina.title === 'Análisis de la conversación -- Top of choice' &&
+            typeof onOpenTopOfChoiceModal === 'function' && (
+              <button className="tool-card" onClick={onOpenTopOfChoiceModal} title="Gráfica de Top of Choice">
+                <CheckSquare size={24} />
+                <span>Top of Choice</span>
+              </button>
+            )}
+
+          {/* Herramienta de Top of Voice Chart para la filmina Análisis de la conversación -- Top of voice */}
+          {currentFilmina &&
+            currentFilmina.title === 'Análisis de la conversación -- Top of voice' &&
+            typeof onOpenTopOfVoiceModal === 'function' && (
+              <button className="tool-card" onClick={onOpenTopOfVoiceModal} title="Gráfica de Top of Voice">
+                <Radio size={24} />
+                <span>Top of Voice</span>
+              </button>
+            )}
+
+          {/* Herramienta de Amplificadores Chart para la filmina Amplificadores de la conversación */}
+          {currentFilmina &&
+            currentFilmina.title === 'Amplificadores de la conversación' &&
+            typeof onOpenAmplificadoresModal === 'function' && (
+              <button className="tool-card" onClick={onOpenAmplificadoresModal} title="Tabla de Amplificadores">
+                <Users size={24} />
+                <span>Amplificadores</span>
+              </button>
+            )}
+
+          {/* Herramienta de Activación por Tema Chart para la filmina Estudio de activación por tema */}
+          {currentFilmina &&
+            currentFilmina.title === 'Estudio de activación por tema' &&
+            typeof onOpenActivacionPorTemaModal === 'function' && (
+              <button className="tool-card" onClick={onOpenActivacionPorTemaModal} title="Gráfica de Activación">
+                <Activity size={24} />
+                <span>Activación</span>
+              </button>
+            )}
+
+          {/* Herramienta de Humor Social para la filmina Análisis de humor social */}
+          {currentFilmina &&
+            currentFilmina.title === 'Análisis de humor social' &&
+            typeof onOpenHumorSocialModal === 'function' && (
+              <button className="tool-card" onClick={onOpenHumorSocialModal} title="Coordenadas de Humor Social">
+                <Smile size={24} />
+                <span>Humor Social</span>
               </button>
             )}
 

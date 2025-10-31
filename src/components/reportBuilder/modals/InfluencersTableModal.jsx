@@ -1,77 +1,78 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Plus, Trash2 } from 'lucide-react';
 import { Image as FabricImage } from 'fabric';
+import '@/styles/reportBuilder/ChartModals.css';
 
 const InfluencersTableModal = ({ isOpen, onClose, canvas }) => {
   const [title, setTitle] = useState('Influencers (alcance local): Baja California');
   const [subtitle, setSubtitle] = useState('Periodo de análisis: 09 al 29 de abril');
   const [influencers, setInfluencers] = useState([
     { 
-      name: 'Michel Chávez', 
-      username: '@lis.michihn',
+      name: 'Influencer 1', 
+      username: '@influencer1',
       platform: 'TikTok',
       followers: '37.7M',
       topic: 'Música, entretenimiento'
     },
     { 
-      name: 'Braulio Rod', 
-      username: '@brauliorodrg',
+      name: 'Influencer 2', 
+      username: '@influencer2',
       platform: 'TikTok',
       followers: '6.8M',
       topic: 'Comedia, sketch'
     },
     { 
-      name: 'Melissa Muro', 
-      username: '@melissamuroo',
+      name: 'Influencer 3', 
+      username: '@influencer3',
       platform: 'TikTok',
       followers: '2.3M',
       topic: 'Vlog, cocina, humor'
     },
     { 
-      name: 'Diana Montoya', 
-      username: '@montoyadiana_',
+      name: 'Influencer 4', 
+      username: '@influencer4',
       platform: 'TikTok',
       followers: '2.1M',
       topic: 'Belleza'
     },
     { 
-      name: 'Marbella Beltrán', 
-      username: '@marbellalb',
+      name: 'Influencer 5', 
+      username: '@influencer5',
       platform: 'TikTok',
       followers: '1.8M',
       topic: 'Moda, belleza'
     },
     { 
-      name: 'Gisele Peña', 
-      username: '@giselepea',
+      name: 'Influencer 6', 
+      username: '@influencer6',
       platform: 'TikTok',
       followers: '3M',
       topic: 'Moda, estilo de vida'
     },
     { 
-      name: 'Aarón Yera', 
-      username: '@aaronyera',
+      name: 'Influencer 7', 
+      username: '@influencer7',
       platform: 'TikTok',
       followers: '1.8M',
       topic: 'Entretenimiento, contenido social'
     },
     { 
-      name: 'Manny Mata', 
-      username: '@mannymatamx',
+      name: 'Influencer 8', 
+      username: '@influencer8',
       platform: 'TikTok',
       followers: '4.6M',
       topic: 'Comedia, entretenimiento'
     },
     { 
-      name: 'Alex Carlež Verduzco', 
-      username: '@tonystarkmex',
+      name: 'Influencer 9', 
+      username: '@influencer9',
       platform: 'TikTok',
       followers: '1.2M',
       topic: 'Entretenimiento'
     },
     { 
-      name: 'Tony Coblán', 
-      username: 'Tony Coblán music',
+      name: 'Influencer 10', 
+      username: '@influencer10',
       platform: 'Youtube',
       followers: '2.41K',
       topic: 'Música'
@@ -354,71 +355,71 @@ const InfluencersTableModal = ({ isOpen, onClose, canvas }) => {
     setSubtitle('Periodo de análisis: 09 al 29 de abril');
     setInfluencers([
       { 
-        name: 'Michel Chávez', 
-        username: '@lis.michihn',
+        name: 'Influencer 1', 
+        username: '@influencer1',
         platform: 'TikTok',
         followers: '37.7M',
         topic: 'Música, entretenimiento'
       },
       { 
-        name: 'Braulio Rod', 
-        username: '@brauliorodrg',
+        name: 'Influencer 2', 
+        username: '@influencer2',
         platform: 'TikTok',
         followers: '6.8M',
         topic: 'Comedia, sketch'
       },
       { 
-        name: 'Melissa Muro', 
-        username: '@melissamuroo',
+        name: 'Influencer 3', 
+        username: '@influencer3',
         platform: 'TikTok',
         followers: '2.3M',
         topic: 'Vlog, cocina, humor'
       },
       { 
-        name: 'Diana Montoya', 
-        username: '@montoyadiana_',
+        name: 'Influencer 4', 
+        username: '@influencer4',
         platform: 'TikTok',
         followers: '2.1M',
         topic: 'Belleza'
       },
       { 
-        name: 'Marbella Beltrán', 
-        username: '@marbellalb',
+        name: 'Influencer 5', 
+        username: '@influencer5',
         platform: 'TikTok',
         followers: '1.8M',
         topic: 'Moda, belleza'
       },
       { 
-        name: 'Gisele Peña', 
-        username: '@giselepea',
+        name: 'Influencer 6', 
+        username: '@influencer6',
         platform: 'TikTok',
         followers: '3M',
         topic: 'Moda, estilo de vida'
       },
       { 
-        name: 'Aarón Yera', 
-        username: '@aaronyera',
+        name: 'Influencer 7', 
+        username: '@influencer7',
         platform: 'TikTok',
         followers: '1.8M',
         topic: 'Entretenimiento, contenido social'
       },
       { 
-        name: 'Manny Mata', 
-        username: '@mannymatamx',
+        name: 'Influencer 8', 
+        username: '@influencer8',
         platform: 'TikTok',
         followers: '4.6M',
         topic: 'Comedia, entretenimiento'
       },
       { 
-        name: 'Alex Carlež Verduzco', 
-        username: '@tonystarkmex',
+        name: 'Influencer 9', 
+        username: '@influencer9',
         platform: 'TikTok',
         followers: '1.2M',
         topic: 'Entretenimiento'
       },
       { 
-        name: 'Tony Coblán', 
-        username: 'Tony Coblán music',
+        name: 'Influencer 10', 
+        username: '@influencer10',
         platform: 'Youtube',
         followers: '2.41K',
         topic: 'Música'
@@ -429,19 +430,11 @@ const InfluencersTableModal = ({ isOpen, onClose, canvas }) => {
 
   if (!isOpen) return null;
 
-  // Estilos para inputs con mejor visibilidad en dark mode
-  const inputStyle = {
-    width: '100%',
-    border: '1px solid #d0d0d0',
-    backgroundColor: '#ffffff',
-    color: '#000000'
-  };
-
   return (
-    <div className="modal-overlay" onClick={handleClose}>
-      <div className="modal-content modal-large" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '1000px', maxHeight: '90vh', overflowY: 'auto' }}>
+    <div className="chart-modal-overlay" onClick={handleClose}>
+      <div className="chart-modal-container" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h3 className="modal-title">Tabla de Influenciadores</h3>
+          <h3 className="chart-modal-title">Tabla de Influenciadores</h3>
           <button className="modal-close" onClick={handleClose}>
             <X size={20} />
           </button>
@@ -449,55 +442,35 @@ const InfluencersTableModal = ({ isOpen, onClose, canvas }) => {
 
         <div className="modal-body">
           {/* Configuración general */}
-          <div style={{ 
-            marginBottom: '25px', 
-            padding: '20px', 
-            backgroundColor: '#f8f9fa', 
-            borderRadius: '8px',
-            border: '1px solid #e0e0e0'
-          }}>
-            <h4 style={{ marginTop: 0, marginBottom: '15px', color: '#4A3F7A', fontSize: '16px' }}>
+          <div className="chart-form-section">
+            <h4 className="chart-form-section-title">
               Configuración General
             </h4>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+
+            <div className="chart-form-grid">
               <div>
-                <label style={{ 
-                  display: 'block', 
-                  marginBottom: '6px', 
-                  fontWeight: '600', 
-                  fontSize: '13px',
-                  color: '#333'
-                }}>
+                <label className="chart-form-label">
                   Estado/Región:
                 </label>
                 <input
                   type="text"
                   value={title.replace('Influencers (alcance local): ', '')}
                   onChange={(e) => setTitle(`Influencers (alcance local): ${e.target.value}`)}
-                  className="input-field"
+                  className="chart-form-input"
                   placeholder="Baja California"
-                  style={inputStyle}
                 />
               </div>
-              
+
               <div>
-                <label style={{ 
-                  display: 'block', 
-                  marginBottom: '6px', 
-                  fontWeight: '600', 
-                  fontSize: '13px',
-                  color: '#333'
-                }}>
+                <label className="chart-form-label">
                   Periodo de Análisis:
                 </label>
                 <input
                   type="text"
                   value={subtitle.replace('Periodo de análisis: ', '')}
                   onChange={(e) => setSubtitle(`Periodo de análisis: ${e.target.value}`)}
-                  className="input-field"
+                  className="chart-form-input"
                   placeholder="09 al 29 de abril"
-                  style={inputStyle}
                 />
               </div>
             </div>
@@ -513,18 +486,7 @@ const InfluencersTableModal = ({ isOpen, onClose, canvas }) => {
               </button>
             </div>
 
-            <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(5, 1fr) 40px', 
-              gap: '8px', 
-              padding: '10px',
-              backgroundColor: '#f0f0f0',
-              borderRadius: '6px',
-              marginBottom: '10px',
-              fontSize: '12px',
-              fontWeight: '600',
-              color: '#555'
-            }}>
+            <div className="chart-table-header">
               <div>Nombre</div>
               <div>Username</div>
               <div>Plataforma</div>
@@ -534,26 +496,13 @@ const InfluencersTableModal = ({ isOpen, onClose, canvas }) => {
             </div>
 
             {influencers.map((influencer, index) => (
-              <div 
-                key={index} 
-                style={{ 
-                  marginBottom: '12px', 
-                  padding: '15px', 
-                  border: '1px solid #e0e0e0', 
-                  borderRadius: '8px', 
-                  backgroundColor: '#ffffff',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
-                }}
+              <div
+                key={index}
+                className="chart-influencer-row"
               >
-                <div style={{ display: 'grid', gridTemplateColumns: '2fr 2fr 1.5fr 1fr 40px', gap: '12px', marginBottom: '10px', alignItems: 'center' }}>
+                <div className="chart-influencer-grid">
                   <div>
-                    <label style={{ 
-                      display: 'block', 
-                      marginBottom: '4px', 
-                      fontSize: '11px', 
-                      fontWeight: '600',
-                      color: '#666'
-                    }}>
+                    <label className="chart-form-label chart-form-label-small">
                       Nombre
                     </label>
                     <input
@@ -561,19 +510,12 @@ const InfluencersTableModal = ({ isOpen, onClose, canvas }) => {
                       placeholder="Nombre del influencer"
                       value={influencer.name}
                       onChange={(e) => updateInfluencer(index, 'name', e.target.value)}
-                      className="input-field"
-                      style={inputStyle}
+                      className="chart-form-input"
                     />
                   </div>
-                  
+
                   <div>
-                    <label style={{ 
-                      display: 'block', 
-                      marginBottom: '4px', 
-                      fontSize: '11px', 
-                      fontWeight: '600',
-                      color: '#666'
-                    }}>
+                    <label className="chart-form-label chart-form-label-small">
                       Username
                     </label>
                     <input
@@ -581,26 +523,18 @@ const InfluencersTableModal = ({ isOpen, onClose, canvas }) => {
                       placeholder="@username"
                       value={influencer.username}
                       onChange={(e) => updateInfluencer(index, 'username', e.target.value)}
-                      className="input-field"
-                      style={inputStyle}
+                      className="chart-form-input"
                     />
                   </div>
-                  
+
                   <div>
-                    <label style={{ 
-                      display: 'block', 
-                      marginBottom: '4px', 
-                      fontSize: '11px', 
-                      fontWeight: '600',
-                      color: '#666'
-                    }}>
+                    <label className="chart-form-label chart-form-label-small">
                       Plataforma
                     </label>
                     <select
                       value={influencer.platform}
                       onChange={(e) => updateInfluencer(index, 'platform', e.target.value)}
-                      className="input-field"
-                      style={inputStyle}
+                      className="chart-form-input"
                     >
                       <option value="TikTok">TikTok</option>
                       <option value="Instagram">Instagram</option>
@@ -610,15 +544,9 @@ const InfluencersTableModal = ({ isOpen, onClose, canvas }) => {
                       <option value="Twitch">Twitch</option>
                     </select>
                   </div>
-                  
+
                   <div>
-                    <label style={{ 
-                      display: 'block', 
-                      marginBottom: '4px', 
-                      fontSize: '11px', 
-                      fontWeight: '600',
-                      color: '#666'
-                    }}>
+                    <label className="chart-form-label chart-form-label-small">
                       Seguidores
                     </label>
                     <input
@@ -626,32 +554,24 @@ const InfluencersTableModal = ({ isOpen, onClose, canvas }) => {
                       placeholder="37.7M"
                       value={influencer.followers}
                       onChange={(e) => updateInfluencer(index, 'followers', e.target.value)}
-                      className="input-field"
-                      style={inputStyle}
+                      className="chart-form-input"
                     />
                   </div>
-                  
-                  <div style={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '2px' }}>
+
+                  <div className="chart-button-delete">
                     <button
                       className="btn-danger btn-icon"
                       onClick={() => removeInfluencer(index)}
                       disabled={influencers.length <= 1}
                       title="Eliminar influencer"
-                      style={{ width: '36px', height: '36px' }}
                     >
                       <Trash2 size={16} />
                     </button>
                   </div>
                 </div>
-                
+
                 <div>
-                  <label style={{ 
-                    display: 'block', 
-                    marginBottom: '4px', 
-                    fontSize: '11px', 
-                    fontWeight: '600',
-                    color: '#666'
-                  }}>
+                  <label className="chart-form-label chart-form-label-small">
                     Tema / Categoría del Contenido
                   </label>
                   <input
@@ -659,8 +579,7 @@ const InfluencersTableModal = ({ isOpen, onClose, canvas }) => {
                     placeholder="Música, entretenimiento, comedia, etc."
                     value={influencer.topic}
                     onChange={(e) => updateInfluencer(index, 'topic', e.target.value)}
-                    className="input-field"
-                    style={inputStyle}
+                    className="chart-form-input"
                   />
                 </div>
               </div>
@@ -670,17 +589,17 @@ const InfluencersTableModal = ({ isOpen, onClose, canvas }) => {
           {/* Vista previa */}
           <div className="chart-preview">
             <h4>Vista Previa</h4>
-            <div className="preview-container" style={{ maxHeight: '400px', overflowY: 'auto', overflowX: 'auto' }}>
+            <div className="preview-container">
               <canvas ref={canvasRef} width="500" height="500"></canvas>
             </div>
           </div>
         </div>
 
-        <div className="modal-footer">
-          <button className="btn-secondary" onClick={handleClose}>
+        <div className="chart-modal-buttons">
+          <button className="chart-modal-button-cancel" onClick={handleClose}>
             Cancelar
           </button>
-          <button className="btn-primary" onClick={insertTableToCanvas}>
+          <button className="chart-modal-button-insert" onClick={insertTableToCanvas}>
             Insertar Tabla en Canvas
           </button>
         </div>

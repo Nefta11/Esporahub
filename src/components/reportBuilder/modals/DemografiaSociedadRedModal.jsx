@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { Image as FabricImage } from 'fabric';
+import '@/styles/reportBuilder/ChartModals.css';
 
 // Colores y datos iniciales
 const BAR_COLORS = ['#B13B2E', '#E97B2A', '#F7D154'];
@@ -128,70 +129,64 @@ const DemografiaSociedadRedModal = ({ isOpen, onClose, canvas }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content modal-large" onClick={e => e.stopPropagation()} style={{ maxWidth: 700, maxHeight: '95vh', overflowY: 'auto' }}>
+        <div className="chart-modal-overlay" onClick={onClose}>
+            <div className="chart-modal-container" onClick={e => e.stopPropagation()}>
                 <div className="modal-header">
-                    <h3 className="modal-title">Demografía de la Sociedad Red</h3>
+                    <h3 className="chart-modal-title">Demografía de la Sociedad Red</h3>
                     <button className="modal-close" onClick={onClose}><X size={20} /></button>
                 </div>
-                <div className="modal-body">
+                <div>
                     {/* Edición de barras */}
-                    <div style={{ marginBottom: 20 }}>
+                    <div className="chart-form-section">
                         {bars.map((bar, idx) => (
-                            <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                            <div key={idx} className="chart-row-item">
                                 <input type="text" value={bar.label} onChange={e => {
                                     const newBars = [...bars];
                                     newBars[idx].label = e.target.value;
                                     setBars(newBars);
-                                }} style={{ width: 160, fontWeight: 600 }} placeholder="Etiqueta" />
+                                }} className="chart-form-input w-160 font-weight-600" placeholder="Etiqueta" />
                                 <input type="number" min={0} max={100} value={bar.percent} onChange={e => {
                                     const newBars = [...bars];
                                     newBars[idx].percent = Number(e.target.value);
                                     setBars(newBars);
-                                }} style={{ width: 60 }} />
+                                }} className="chart-form-input w-60" />
                                 <span>%</span>
                                 <input type="text" value={bar.rightLabel} onChange={e => {
                                     const newBars = [...bars];
                                     newBars[idx].rightLabel = e.target.value;
                                     setBars(newBars);
-                                }} style={{ width: 180 }} placeholder="Etiqueta derecha (usar \n para salto)" />
+                                }} className="chart-form-input w-180" placeholder="Etiqueta derecha (usar \n para salto)" />
                                 <input type="color" value={bar.color} onChange={e => {
                                     const newBars = [...bars];
                                     newBars[idx].color = e.target.value;
                                     setBars(newBars);
-                                }} style={{ width: 50, height: 35 }} />
+                                }} className="color-input" />
                             </div>
                         ))}
                     </div>
 
                     {/* Vista previa */}
-                    <div style={{ marginTop: 20, padding: 15, background: '#f5f5f5', borderRadius: 8 }}>
-                        <h4 style={{ marginBottom: 10 }}>Vista previa:</h4>
-                        <div style={{ background: '#fff', padding: 20, borderRadius: 4, display: 'flex', alignItems: 'flex-start' }}>
-                            <div style={{ display: 'flex', flexDirection: 'column', width: 100, gap: '2px' }}>
+                    <div className="chart-preview">
+                        <h4>Vista previa:</h4>
+                        <div className="demographics-preview-wrapper">
+                            <div className="demographics-bars-column">
                                 {bars.map((bar, idx) => (
-                                    <div key={idx} style={{
+                                    <div key={idx} className="demographics-bar-item" style={{
                                         height: `${bar.percent * 2}px`,
-                                        background: bar.color,
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        color: '#fff',
-                                        fontWeight: 'bold',
-                                        fontSize: 20
+                                        background: bar.color
                                     }}>
                                         {bar.percent}%
                                     </div>
                                 ))}
                             </div>
-                            <div style={{ marginLeft: 20, display: 'flex', flexDirection: 'column', justifyContent: 'space-around', height: `${bars.reduce((sum, b) => sum + b.percent * 2, 0) + (bars.length - 1) * 2}px` }}>
+                            <div className="demographics-labels-column" style={{ height: `${bars.reduce((sum, b) => sum + b.percent * 2, 0) + (bars.length - 1) * 2}px` }}>
                                 {bars.map((bar, idx) => (
-                                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-                                        <span style={{ fontWeight: 'bold', color: bar.color, fontSize: 16 }}>
+                                    <div key={idx} className="demographics-label-row">
+                                        <span className="demographics-label-primary" style={{ color: bar.color }}>
                                             → {bar.label}
                                         </span>
                                         {bar.rightLabel && (
-                                            <span style={{ fontSize: 12, color: '#666' }}>
+                                            <span className="demographics-label-secondary">
                                                 {bar.rightLabel.replace('\n', ' / ')}
                                             </span>
                                         )}
@@ -201,9 +196,9 @@ const DemografiaSociedadRedModal = ({ isOpen, onClose, canvas }) => {
                         </div>
                     </div>
                 </div>
-                <div className="modal-footer">
-                    <button className="btn-secondary" onClick={onClose}>Cancelar</button>
-                    <button className="btn-primary" onClick={insertChartToCanvas}>Insertar gráfico en Canvas</button>
+                <div className="chart-modal-buttons">
+                    <button className="chart-modal-button-cancel" onClick={onClose}>Cancelar</button>
+                    <button className="chart-modal-button-insert" onClick={insertChartToCanvas}>Insertar gráfico en Canvas</button>
                 </div>
             </div>
         </div>

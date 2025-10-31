@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Plus, Trash2 } from 'lucide-react';
 import { Image as FabricImage } from 'fabric';
+import '@/styles/reportBuilder/ChartModals.css';
 
 const BenchmarkIntegradoTableroModal = ({ isOpen, onClose, canvas }) => {
     // minimal local state and refs required by the component
@@ -273,86 +274,85 @@ const BenchmarkIntegradoTableroModal = ({ isOpen, onClose, canvas }) => {
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content modal-large" onClick={e => e.stopPropagation()} style={{ maxWidth: '1250px', maxHeight: '95vh', overflowY: 'auto' }}>
+            <div className="modal-content modal-xxl" onClick={e => e.stopPropagation()}>
                 <div className="modal-header">
                     <h3 className="modal-title">Benchmark de Mensaje Integrado</h3>
                     <button className="modal-close" onClick={onClose}><X size={20} /></button>
                 </div>
                 <div className="modal-body">
-                    <button className="btn-primary" style={{ marginBottom: 16 }} onClick={addProfile}>
+                    <button className="btn-primary mb-16" onClick={addProfile}>
                         <Plus size={16} /> Agregar Perfil
                     </button>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                    <div className="flex-col-gap-15">
                         {profiles.map((profile, idx) => (
-                            <div key={idx} style={{ padding: 12, border: '1px solid #ddd', borderRadius: 8, background: '#fcfcfc' }}>
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 40px', gap: 10, alignItems: 'center', marginBottom: '10px' }}>
+                            <div key={idx} className="chart-profile-card">
+                                <div className="grid-4-1-auto">
                                     <input
                                         type="text"
                                         placeholder="Nombre"
                                         value={profile.name}
                                         onChange={e => updateProfile(idx, 'name', e.target.value)}
-                                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                                        className="chart-form-input"
                                     />
                                     <input
                                         type="text"
                                         placeholder="Avatar URL"
                                         value={profile.avatarUrl}
                                         onChange={e => updateProfile(idx, 'avatarUrl', e.target.value)}
-                                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                                        className="chart-form-input"
                                     />
                                     <input
                                         type="text"
                                         placeholder="Tag"
                                         value={profile.tag}
                                         onChange={e => updateProfile(idx, 'tag', e.target.value)}
-                                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                                        className="chart-form-input"
                                     />
                                     <input
                                         type="text"
                                         placeholder="Imagen URL"
                                         value={profile.imageUrl}
                                         onChange={e => updateProfile(idx, 'imageUrl', e.target.value)}
-                                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                                        className="chart-form-input"
                                     />
                                     <button
-                                        className="btn-danger btn-icon"
+                                        className="chart-remove-button"
                                         onClick={() => removeProfile(idx)}
                                         disabled={profiles.length <= 1}
-                                        style={{ padding: '8px', borderRadius: '4px', border: 'none', background: '#dc3545', color: '#fff', cursor: profiles.length <= 1 ? 'not-allowed' : 'pointer' }}
                                     >
                                         <Trash2 size={16} />
                                     </button>
                                 </div>
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 8 }}>
+                                <div className="chart-form-grid mb-8">
                                     <input
                                         type="text"
                                         placeholder="Población objetivo"
                                         value={profile.audience}
                                         onChange={e => updateProfile(idx, 'audience', e.target.value)}
-                                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                                        className="chart-form-input"
                                     />
                                     <input
                                         type="text"
                                         placeholder="N° publicaciones"
                                         value={profile.posts}
                                         onChange={e => updateProfile(idx, 'posts', e.target.value)}
-                                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                                        className="chart-form-input"
                                     />
                                 </div>
                                 <textarea
                                     placeholder="Mensaje central"
                                     value={profile.message}
                                     onChange={e => updateProfile(idx, 'message', e.target.value)}
-                                    style={{ width: '100%', minHeight: 60, padding: '8px', borderRadius: '4px', border: '1px solid #ccc', fontFamily: 'Arial, sans-serif' }}
+                                    className="chart-form-textarea"
                                 />
                             </div>
                         ))}
                     </div>
 
-                    <div className="chart-preview" style={{ marginTop: '20px' }}>
-                        <h4>Vista Previa</h4>
-                        <div className="preview-container" style={{ maxHeight: '550px', overflow: 'auto', background: '#f9f9f9', border: '1px solid #ccc', borderRadius: '8px', padding: '10px' }}>
+                    <div className="mt-20">
+                        <h4 className="chart-form-label">Vista Previa</h4>
+                        <div className="canvas-preview-container">
                             <canvas ref={canvasRef}></canvas>
                         </div>
                     </div>

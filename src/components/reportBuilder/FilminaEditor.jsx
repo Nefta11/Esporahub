@@ -2,6 +2,14 @@ import BenchmarkAdjetivacionTableroModal from './modals/BenchmarkAdjetivacionTab
 import BenchmarkAudienciaTableroModal from './modals/BenchmarkAudienciaTableroModal';
 import BenchmarkIntegradoTableroModal from './modals/BenchmarkIntegradoTableroModal';
 import BenchmarkDifusionOficialModal from './modals/BenchmarkDifusionOficialModal';
+import AwarenessChartModal from './modals/AwarenessChartModal';
+import TopOfMindChartModal from './modals/TopOfMindChartModal';
+import TopOfHeartChartModal from './modals/TopOfHeartChartModal';
+import TopOfChoiceChartModal from './modals/TopOfChoiceChartModal';
+import TopOfVoiceChartModal from './modals/TopOfVoiceChartModal';
+import AmplificadoresChartModal from './modals/AmplificadoresChartModal';
+import ActivacionPorTemaModal from './modals/ActivacionPorTemaModal';
+import HumorSocialModal from './modals/HumorSocialModal';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Download } from 'lucide-react';
@@ -18,7 +26,15 @@ import {
   autoInsertAdjetivacionTablero,
   autoInsertAudienciaTablero,
   autoInsertBenchmarkIntegrado,
-  autoInsertBenchmarkDifusionOficial
+  autoInsertBenchmarkDifusionOficial,
+  autoInsertAwarenessChart,
+  autoInsertTopOfMindChart,
+  autoInsertTopOfHeartChart,
+  autoInsertTopOfChoiceChart,
+  autoInsertTopOfVoiceChart,
+  autoInsertAmplificadoresChart,
+  autoInsertActivacionPorTema,
+  autoInsertHumorSocial
 } from './utils/autoInsertHelpers';
 import {
   autoInsertBenchmarkSocialMedia,
@@ -93,11 +109,19 @@ const FilminaEditor = () => {
   useEffect(() => {
     if (!canvasRef.current || !template || !filmina) return;
 
+    // Limpiar canvas anterior
+    disposeCanvas();
+    
     initCanvas(canvasRef.current);
     const canvas = getCanvas();
 
+    if (!canvas) {
+      console.error('Canvas not initialized');
+      return;
+    }
+
     // Cargar imagen de fondo
-    if (filmina.background && canvas) {
+    if (filmina.background) {
       const backgroundImagePath = `/img/${filmina.background}`;
 
       const imgElement = document.createElement('img');
@@ -117,7 +141,8 @@ const FilminaEditor = () => {
             lockScalingX: true,
             lockScalingY: true,
             lockRotation: true,
-            hoverCursor: 'default'
+            hoverCursor: 'default',
+            name: 'background-image'
           });
 
           // Escalar imagen para que cubra todo el canvas (960x540)
@@ -167,6 +192,7 @@ const FilminaEditor = () => {
     canvas.on('object:added', updateLayers);
     canvas.on('object:removed', updateLayers);
     canvas.on('object:modified', updateLayers);
+    canvas.on('mouse:dblclick', handleDoubleClick);
 
     // Keyboard shortcuts
     document.addEventListener('keydown', handleKeyDown);
@@ -193,6 +219,40 @@ const FilminaEditor = () => {
 
   const handleSelectionCleared = useCallback(() => {
     setSelectedObject(null);
+  }, []);
+
+  // Manejo de doble clic para abrir modales de edición
+  const handleDoubleClick = useCallback((e) => {
+    const target = e.target;
+    if (!target || !target.name) return;
+
+    // Mapeo de nombres de gráficas a modales
+    const chartToModalMap = {
+      'benchmark-difusion-oficial': 'benchmarkDifusionOficial',
+      'demographics-table': 'demographics',
+      'social-media-usage-table': 'socialMediaUsage',
+      'influencers-table': 'influencers',
+      'benchmark-matrix': 'benchmarkSocialMediaDonutMatrix',
+      'adjetivacion-tablero': 'benchmarkAdjetivacionTablero',
+      'audiencia-tablero': 'benchmarkAudienciaTablero',
+      'benchmark-integrado': 'benchmarkIntegradoTablero',
+      'awareness-chart': 'awareness',
+      'top-of-mind-chart': 'topOfMind',
+      'top-of-heart-chart': 'topOfHeart',
+      'top-of-choice-chart': 'topOfChoice',
+      'top-of-voice-chart': 'topOfVoice',
+      'amplificadores-chart': 'amplificadores',
+      'activacion-por-tema-chart': 'activacionPorTema',
+      'humor-social-chart': 'humorSocial',
+      'benchmark-social-media': 'benchmarkSocialMedia',
+      'benchmark-social-media-externas': 'benchmarkSocialMediaExternas',
+      'demografia-sociedad-red': 'demografiaSociedadRed'
+    };
+
+    const modalName = chartToModalMap[target.name];
+    if (modalName) {
+      setActiveModal(modalName);
+    }
   }, []);
 
   // Atajos de teclado
@@ -272,6 +332,22 @@ const FilminaEditor = () => {
       autoInsertAudienciaTablero(canvas);
     } else if (filminaTitle === 'Benchmark de mensaje integrado') {
       autoInsertBenchmarkIntegrado(canvas);
+    } else if (filminaTitle === 'Análisis de la conversación -- Awareness') {
+      autoInsertAwarenessChart(canvas);
+    } else if (filminaTitle === 'Análisis de la conversación -- Top of mind') {
+      autoInsertTopOfMindChart(canvas);
+    } else if (filminaTitle === 'Análisis de la conversación -- Top of heart') {
+      autoInsertTopOfHeartChart(canvas);
+    } else if (filminaTitle === 'Análisis de la conversación -- Top of choice') {
+      autoInsertTopOfChoiceChart(canvas);
+    } else if (filminaTitle === 'Análisis de la conversación -- Top of voice') {
+      autoInsertTopOfVoiceChart(canvas);
+    } else if (filminaTitle === 'Amplificadores de la conversación') {
+      autoInsertAmplificadoresChart(canvas);
+    } else if (filminaTitle === 'Estudio de activación por tema') {
+      autoInsertActivacionPorTema(canvas);
+    } else if (filminaTitle === 'Análisis de humor social') {
+      autoInsertHumorSocial(canvas);
     }
   }, [filmina, getCanvas]);
 
@@ -387,6 +463,14 @@ const FilminaEditor = () => {
           onOpenBenchmarkAudienciaTableroModal={() => setActiveModal('benchmarkAudienciaTablero')}
           onOpenBenchmarkIntegradoTableroModal={() => setActiveModal('benchmarkIntegradoTablero')}
           onOpenBenchmarkDifusionOficialModal={() => setActiveModal('benchmarkDifusionOficial')}
+          onOpenAwarenessModal={() => setActiveModal('awareness')}
+          onOpenTopOfMindModal={() => setActiveModal('topOfMind')}
+          onOpenTopOfHeartModal={() => setActiveModal('topOfHeart')}
+          onOpenTopOfChoiceModal={() => setActiveModal('topOfChoice')}
+          onOpenTopOfVoiceModal={() => setActiveModal('topOfVoice')}
+          onOpenAmplificadoresModal={() => setActiveModal('amplificadores')}
+          onOpenActivacionPorTemaModal={() => setActiveModal('activacionPorTema')}
+          onOpenHumorSocialModal={() => setActiveModal('humorSocial')}
           onAddText={() => fabricObject.addText()}
           onAddShape={() => setActiveModal('shape')}
           onAddImage={() => fabricObject.addImage()}
@@ -543,6 +627,54 @@ const FilminaEditor = () => {
         isOpen={activeModal === 'shape'}
         onClose={() => setActiveModal(null)}
         onSelectShape={(type, options) => fabricObject.addShape(type, options)}
+      />
+
+      <AwarenessChartModal
+        isOpen={activeModal === 'awareness'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
+
+      <TopOfMindChartModal
+        isOpen={activeModal === 'topOfMind'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
+
+      <TopOfHeartChartModal
+        isOpen={activeModal === 'topOfHeart'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
+
+      <TopOfChoiceChartModal
+        isOpen={activeModal === 'topOfChoice'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
+
+      <TopOfVoiceChartModal
+        isOpen={activeModal === 'topOfVoice'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
+
+      <AmplificadoresChartModal
+        isOpen={activeModal === 'amplificadores'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
+
+      <ActivacionPorTemaModal
+        isOpen={activeModal === 'activacionPorTema'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
+
+      <HumorSocialModal
+        isOpen={activeModal === 'humorSocial'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
       />
 
       <PageFooter

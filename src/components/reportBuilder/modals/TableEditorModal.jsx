@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Rect, Text, Group } from 'fabric';
+import '@/styles/reportBuilder/ChartModals.css';
 
 const TableEditorModal = ({ isOpen, onClose, canvas }) => {
   const [rows, setRows] = useState(3);
@@ -308,7 +309,7 @@ const TableEditorModal = ({ isOpen, onClose, canvas }) => {
                   <input
                     key={colIndex}
                     type="text"
-                    className="header-input"
+                    className="header-input chart-form-input"
                     value={header}
                     onChange={(e) => handleHeaderChange(colIndex, e.target.value)}
                     placeholder={`Columna ${colIndex + 1}`}
@@ -359,15 +360,17 @@ const TableEditorModal = ({ isOpen, onClose, canvas }) => {
                 <h4>Estilos de Tabla</h4>
                 <div className="styles-grid">
                   <div className="input-group">
-                    <label>Color de Borde:</label>
+                    <label className="chart-form-label">Color de Borde:</label>
                     <div className="color-input-row">
                       <input
                         type="color"
+                        className="chart-form-input"
                         value={styles.borderColor}
                         onChange={(e) => setStyles({...styles, borderColor: e.target.value})}
                       />
                       <input
                         type="text"
+                        className="chart-form-input"
                         value={styles.borderColor}
                         onChange={(e) => setStyles({...styles, borderColor: e.target.value})}
                       />
@@ -375,9 +378,10 @@ const TableEditorModal = ({ isOpen, onClose, canvas }) => {
                   </div>
 
                   <div className="input-group">
-                    <label>Ancho de Borde:</label>
+                    <label className="chart-form-label">Ancho de Borde:</label>
                     <input
                       type="number"
+                      className="chart-form-input"
                       min="1"
                       max="5"
                       value={styles.borderWidth}

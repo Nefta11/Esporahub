@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Plus, Trash2 } from 'lucide-react';
 import { Image as FabricImage } from 'fabric';
+import '@/styles/reportBuilder/ChartModals.css';
 
 // Constantes de redes sociales
 const SOCIAL_NETWORKS = [
@@ -385,52 +386,50 @@ const BenchmarkSocialMediaModal = ({ isOpen, onClose, canvas }) => {
 
     if (!isOpen) return null;
     return (
-        <div className="modal-overlay" onClick={handleClose}>
-            <div className="modal-content modal-large" onClick={e => e.stopPropagation()} style={{ maxWidth: '1100px', maxHeight: '90vh', overflowY: 'auto' }}>
+        <div className="chart-modal-overlay" onClick={handleClose}>
+            <div className="chart-modal-container" onClick={e => e.stopPropagation()}>
                 <div className="modal-header">
-                    <h3 className="modal-title">RRSS Propias: Benchmark Cuantitativo</h3>
+                    <h3 className="chart-modal-title">RRSS Propias: Benchmark Cuantitativo</h3>
                     <button className="modal-close" onClick={handleClose}>
                         <X size={20} />
                     </button>
                 </div>
                 <div className="modal-body">
-                    <button className="btn-primary" style={{ marginBottom: 16 }} onClick={addCharacter}>
+                    <button className="btn-primary chart-add-button" onClick={addCharacter}>
                         <Plus size={16} /> Agregar Personaje
                     </button>
                     {characters.length === 0 && (
-                        <div style={{ color: '#888', fontSize: 14, margin: 20 }}>No hay personajes. Agrega uno para comenzar.</div>
+                        <div className="chart-modal-description">No hay personajes. Agrega uno para comenzar.</div>
                     )}
                     {/* Formulario de Personajes */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                    <div className="characters-form-container">
                         {characters.map((char, idx) => (
-                            <div key={idx} style={{ padding: 15, border: '1px solid #ddd', borderRadius: 8, background: '#fcfcfc' }}>
+                            <div key={idx} className="chart-profile-card">
                                 {/* Fila 1: Nombre, Avatar, Borrar */}
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 40px', gap: 10, alignItems: 'center', marginBottom: '10px' }}>
-                                    <input type="text" placeholder="Nombre" value={char.name} onChange={e => updateCharacter(idx, 'name', e.target.value)} className="input-field" />
-                                    <input type="text" placeholder="Avatar URL" value={char.avatarUrl} onChange={e => updateCharacter(idx, 'avatarUrl', e.target.value)} className="input-field" />
-                                    <button className="btn-danger btn-icon" onClick={() => removeCharacter(idx)} disabled={characters.length <= 1}><Trash2 size={16} /></button>
+                                <div className="character-header-grid">
+                                    <input type="text" placeholder="Nombre" value={char.name} onChange={e => updateCharacter(idx, 'name', e.target.value)} className="chart-form-input" />
+                                    <input type="text" placeholder="Avatar URL" value={char.avatarUrl} onChange={e => updateCharacter(idx, 'avatarUrl', e.target.value)} className="chart-form-input" />
+                                    <button className="chart-remove-button" onClick={() => removeCharacter(idx)} disabled={characters.length <= 1}><Trash2 size={16} /></button>
                                 </div>
                                 {/* Fila 2: Datos de Redes Sociales */}
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 10 }}>
+                                <div className="chart-form-grid-4col">
                                     {SOCIAL_NETWORKS.map(network => (
-                                        <div key={network.key} style={{ background: '#f0f0f0', padding: 8, borderRadius: 4 }}>
-                                            <label style={{ fontSize: '11px', fontWeight: 'bold', color: '#555', display: 'block', marginBottom: 4 }}>{network.label}</label>
-                                            <div style={{ display: 'flex', gap: 5 }}>
-                                                <input 
-                                                    type="text" 
-                                                    placeholder="Seguidores" 
-                                                    value={char[network.key]?.followers || ''} 
-                                                    onChange={e => updateCharacter(idx, network.key, e.target.value, 'followers')} 
-                                                    className="input-field"
-                                                    style={{ fontSize: '12px', padding: '4px 6px' }}
+                                        <div key={network.key} className="network-card">
+                                            <label className="chart-form-label">{network.label}</label>
+                                            <div className="network-inputs">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Seguidores"
+                                                    value={char[network.key]?.followers || ''}
+                                                    onChange={e => updateCharacter(idx, network.key, e.target.value, 'followers')}
+                                                    className="chart-form-input"
                                                 />
-                                                <input 
-                                                    type="text" 
-                                                    placeholder="Posts" 
-                                                    value={char[network.key]?.posts || ''} 
-                                                    onChange={e => updateCharacter(idx, network.key, e.target.value, 'posts')} 
-                                                    className="input-field"
-                                                    style={{ fontSize: '12px', padding: '4px 6px' }}
+                                                <input
+                                                    type="text"
+                                                    placeholder="Posts"
+                                                    value={char[network.key]?.posts || ''}
+                                                    onChange={e => updateCharacter(idx, network.key, e.target.value, 'posts')}
+                                                    className="chart-form-input"
                                                 />
                                             </div>
                                         </div>
@@ -440,24 +439,18 @@ const BenchmarkSocialMediaModal = ({ isOpen, onClose, canvas }) => {
                         ))}
                     </div>
                     {/* Vista Previa */}
-                    <div className="chart-preview" style={{ marginTop: '20px' }}>
+                    <div className="chart-preview">
                         <h4>Vista Previa</h4>
-                        <div className="preview-container" style={{ 
-                            maxHeight: '400px', 
-                            overflowY: 'auto', 
-                            overflowX: 'auto', 
-                            background: '#f4f4f4', 
-                            border: '1px solid #ccc' 
-                        }}>
+                        <div className="preview-container">
                             <canvas ref={canvasRef}></canvas>
                         </div>
                     </div>
                 </div>
-                <div className="modal-footer">
-                    <button className="btn-secondary" onClick={handleClose}>
+                <div className="chart-modal-buttons">
+                    <button className="chart-modal-button-cancel" onClick={handleClose}>
                         Cancelar
                     </button>
-                    <button className="btn-primary" onClick={insertTableToCanvas}>
+                    <button className="chart-modal-button-insert" onClick={insertTableToCanvas}>
                         Insertar Tabla en Canvas
                     </button>
                 </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Plus, Trash2 } from 'lucide-react';
 import { Image as FabricImage } from 'fabric';
+import '@/styles/reportBuilder/ChartModals.css';
 
 const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
   const [platforms, setPlatforms] = useState([
@@ -529,10 +530,10 @@ const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay" onClick={handleClose}>
-      <div className="modal-content modal-large" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '900px', maxHeight: '90vh', overflowY: 'auto' }}>
+    <div className="chart-modal-overlay" onClick={handleClose}>
+      <div className="chart-modal-container" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h3 className="modal-title">Estudio de Uso de Medios Sociales</h3>
+          <h3 className="chart-modal-title">Estudio de Uso de Medios Sociales</h3>
           <button className="modal-close" onClick={handleClose}>
             <X size={20} />
           </button>
@@ -549,7 +550,7 @@ const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
               </button>
             </div>
 
-            <div style={{ marginBottom: '15px', fontSize: '12px', color: '#666' }}>
+            <div className="chart-modal-description">
               <strong>Nota:</strong> Los logos se cargan desde Simple Icons CDN.
               <br />
               Formato: <code>https://cdn.simpleicons.org/[nombre]/[color]</code>
@@ -558,17 +559,17 @@ const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
             </div>
 
             {platforms.map((platform, index) => (
-              <div key={index} style={{ marginBottom: '20px', padding: '15px', border: '1px solid #ddd', borderRadius: '8px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '50px 1fr 1fr 100px 40px', gap: '10px', marginBottom: '10px', alignItems: 'center' }}>
-                  <div style={{ width: '50px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #ddd', borderRadius: '4px' }}>
+              <div key={index} className="chart-profile-card">
+                <div className="chart-form-grid grid-social-media-usage">
+                  <div className="icon-container-50">
                     {loadedLogos[platform.logoUrl] ? (
                       <img
                         src={platform.logoUrl}
                         alt={platform.name}
-                        style={{ width: '32px', height: '32px' }}
+                        className="icon-32"
                       />
                     ) : (
-                      <div style={{ width: '32px', height: '32px', background: platform.color, borderRadius: '4px' }} />
+                      <div className="color-box-32" style={{ background: platform.color }} />
                     )}
                   </div>
                   <input
@@ -576,20 +577,19 @@ const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
                     placeholder="Nombre de la plataforma"
                     value={platform.name}
                     onChange={(e) => updatePlatform(index, 'name', e.target.value)}
-                    className="input-field"
+                    className="chart-form-input"
                   />
                   <input
                     type="color"
                     value={platform.color}
                     onChange={(e) => updatePlatform(index, 'color', e.target.value)}
-                    className="input-color"
-                    style={{ width: '100%', height: '38px' }}
+                    className="chart-form-input color-input"
                   />
-                  <div style={{ fontWeight: 'bold', color: platform.color }}>
+                  <div className="text-bold-colored" style={{ color: platform.color }}>
                     {platform.name}
                   </div>
                   <button
-                    className="btn-danger btn-icon"
+                    className="chart-delete-button"
                     onClick={() => removePlatform(index)}
                     disabled={platforms.length <= 1}
                   >
@@ -597,8 +597,8 @@ const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
                   </button>
                 </div>
 
-                <div style={{ marginBottom: '10px' }}>
-                  <label style={{ fontSize: '11px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+                <div className="chart-form-field">
+                  <label className="chart-form-label">
                     URL del Logo
                   </label>
                   <input
@@ -606,14 +606,13 @@ const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
                     placeholder="https://cdn.simpleicons.org/facebook/1877F2"
                     value={platform.logoUrl}
                     onChange={(e) => updatePlatform(index, 'logoUrl', e.target.value)}
-                    className="input-field"
-                    style={{ fontSize: '11px' }}
+                    className="chart-form-input"
                   />
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '10px' }}>
-                  <div>
-                    <label style={{ fontSize: '11px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+                <div className="chart-form-grid-4col">
+                  <div className="chart-form-field">
+                    <label className="chart-form-label">
                       Usuarios registrados
                     </label>
                     <input
@@ -621,11 +620,11 @@ const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
                       placeholder="2.76M"
                       value={platform.registeredUsers}
                       onChange={(e) => updatePlatform(index, 'registeredUsers', e.target.value)}
-                      className="input-field"
+                      className="chart-form-input"
                     />
                   </div>
-                  <div>
-                    <label style={{ fontSize: '11px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+                  <div className="chart-form-field">
+                    <label className="chart-form-label">
                       Usuarios activos diarios
                     </label>
                     <input
@@ -633,11 +632,11 @@ const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
                       placeholder="1.79 M"
                       value={platform.activeDailyUsers}
                       onChange={(e) => updatePlatform(index, 'activeDailyUsers', e.target.value)}
-                      className="input-field"
+                      className="chart-form-input"
                     />
                   </div>
-                  <div>
-                    <label style={{ fontSize: '11px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+                  <div className="chart-form-field">
+                    <label className="chart-form-label">
                       Horas activas diarias
                     </label>
                     <input
@@ -645,11 +644,11 @@ const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
                       placeholder="1.15 Hrs"
                       value={platform.activeHoursDaily}
                       onChange={(e) => updatePlatform(index, 'activeHoursDaily', e.target.value)}
-                      className="input-field"
+                      className="chart-form-input"
                     />
                   </div>
-                  <div>
-                    <label style={{ fontSize: '11px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+                  <div className="chart-form-field">
+                    <label className="chart-form-label">
                       Usuarios en plataforma
                     </label>
                     <input
@@ -657,7 +656,7 @@ const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
                       placeholder="2.1 M"
                       value={platform.platformUsers}
                       onChange={(e) => updatePlatform(index, 'platformUsers', e.target.value)}
-                      className="input-field"
+                      className="chart-form-input"
                     />
                   </div>
                 </div>
@@ -668,17 +667,17 @@ const SocialMediaUsageModal = ({ isOpen, onClose, canvas }) => {
           {/* Vista previa */}
           <div className="chart-preview">
             <h4>Vista Previa</h4>
-            <div className="preview-container" style={{ maxHeight: '400px', overflowY: 'auto', overflowX: 'auto' }}>
+            <div className="preview-container">
               <canvas ref={canvasRef} width="570" height="350"></canvas>
             </div>
           </div>
         </div>
 
-        <div className="modal-footer">
-          <button className="btn-secondary" onClick={handleClose}>
+        <div className="chart-modal-buttons">
+          <button className="chart-modal-button-cancel" onClick={handleClose}>
             Cancelar
           </button>
-          <button className="btn-primary" onClick={insertTableToCanvas}>
+          <button className="chart-modal-button-insert" onClick={insertTableToCanvas}>
             Insertar Tabla en Canvas
           </button>
         </div>
