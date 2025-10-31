@@ -1,9 +1,45 @@
 import React, { useState } from 'react';
 
+// Datos iniciales con nombres tipo Lorem Ipsum
+const initialSections = [
+    { label: 'Lorem', color: '#F6C358' },
+    { label: 'Ipsum', color: '#F39C12' },
+    { label: 'Dolor', color: '#F08A5D' },
+    { label: 'Sit', color: '#E94E77' },
+    { label: 'Amet', color: '#D7263D' },
+    { label: 'Consectetur', color: '#8E44AD' },
+    { label: 'Adipiscing', color: '#2E9CCA' },
+    { label: 'Elit', color: '#3D6B9B' },
+    { label: 'Sed', color: '#2E8B57' },
+    { label: 'Do', color: '#1F8A70' },
+    { label: 'Eiusmod', color: '#27AE60' },
+    { label: 'Tempor', color: '#9ACD32' }
+];
+
 const PerfilesArquetiposModal = ({ isOpen, onClose, canvas }) => {
     const [title, setTitle] = useState('Arquetipos | Sub-arquetipos');
+    const [footnote, setFootnote] = useState('*Fuente: ejemplo de arquetipos');
+    const [sections, setSections] = useState(initialSections);
 
     if (!isOpen) return null;
+
+    const handleSectionChange = (index, field, value) => {
+        const newSections = [...sections];
+        newSections[index] = { ...newSections[index], [field]: value };
+        setSections(newSections);
+    };
+
+    const handleAddSection = () => {
+        setSections([...sections, { label: 'Nueva Sección', color: '#CCCCCC' }]);
+    };
+
+    const handleRemoveSection = (index) => {
+        if (sections.length <= 3) {
+            alert('Debe haber al menos 3 secciones');
+            return;
+        }
+        setSections(sections.filter((_, i) => i !== index));
+    };
 
     const drawRingChart = () => {
         const c = document.createElement('canvas');
@@ -28,22 +64,6 @@ const PerfilesArquetiposModal = ({ isOpen, onClose, canvas }) => {
         const centerY = height / 2 + 20;
         const outerR = 300;
         const innerR = 220;
-
-        // sample sections around the ring with colors and labels
-        const sections = [
-            { label: 'Transformador', color: '#F6C358' },
-            { label: 'Impulsor', color: '#F39C12' },
-            { label: 'Justiciero', color: '#F08A5D' },
-            { label: 'Generoso', color: '#E94E77' },
-            { label: 'Amigo', color: '#D7263D' },
-            { label: 'Protector', color: '#8E44AD' },
-            { label: 'Héroe', color: '#2E9CCA' },
-            { label: 'Conciliador', color: '#3D6B9B' },
-            { label: 'Líder', color: '#2E8B57' },
-            { label: 'Ejecutivo', color: '#1F8A70' },
-            { label: 'Mentor', color: '#27AE60' },
-            { label: 'Estratega', color: '#9ACD32' }
-        ];
 
         const full = Math.PI * 2;
         const per = full / sections.length;
@@ -94,7 +114,7 @@ const PerfilesArquetiposModal = ({ isOpen, onClose, canvas }) => {
         ctx.font = '12px Arial';
         ctx.fillStyle = '#555';
         ctx.textAlign = 'right';
-        ctx.fillText('*Fuente: ejemplo de arquetipos', width - 40, height - 30);
+        ctx.fillText(footnote, width - 40, height - 30);
 
         return c;
     };
@@ -139,14 +159,80 @@ const PerfilesArquetiposModal = ({ isOpen, onClose, canvas }) => {
 
     return (
         <div className="chart-modal-overlay">
-            <div className="chart-modal-container">
-                <h2 className="chart-modal-title">{title}</h2>
+            <div className="chart-modal-container" style={{ maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto' }}>
+                <h2 className="chart-modal-title">Perfiles y Arquetipos</h2>
+
                 <div className="chart-modal-field">
                     <label>Título</label>
                     <input value={title} onChange={(e) => setTitle(e.target.value)} />
                 </div>
 
-                <div style={{ display: 'flex', gap: '8px', marginTop: 12 }}>
+                <div className="chart-modal-field">
+                    <label>Pie de Página</label>
+                    <input value={footnote} onChange={(e) => setFootnote(e.target.value)} />
+                </div>
+
+                <hr style={{ margin: '20px 0' }} />
+
+                <h3 style={{ marginTop: '0' }}>Secciones del Anillo</h3>
+
+                <div style={{ display: 'grid', gap: '10px', marginBottom: '15px' }}>
+                    {sections.map((section, index) => (
+                        <div key={index} style={{
+                            display: 'grid',
+                            gridTemplateColumns: '1fr 100px 80px',
+                            gap: '10px',
+                            alignItems: 'center',
+                            padding: '10px',
+                            border: '1px solid #ddd',
+                            borderRadius: '4px'
+                        }}>
+                            <div className="chart-modal-field" style={{ margin: 0 }}>
+                                <label style={{ fontSize: '11px', marginBottom: '4px' }}>Sección {index + 1}</label>
+                                <input
+                                    value={section.label}
+                                    onChange={(e) => handleSectionChange(index, 'label', e.target.value)}
+                                    placeholder="Nombre sección"
+                                />
+                            </div>
+                            <div className="chart-modal-field" style={{ margin: 0 }}>
+                                <label style={{ fontSize: '11px', marginBottom: '4px' }}>Color</label>
+                                <input
+                                    type="color"
+                                    value={section.color}
+                                    onChange={(e) => handleSectionChange(index, 'color', e.target.value)}
+                                    style={{ width: '100%', height: '36px' }}
+                                />
+                            </div>
+                            <button
+                                onClick={() => handleRemoveSection(index)}
+                                style={{
+                                    background: '#e74c3c',
+                                    color: 'white',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    padding: '8px 12px',
+                                    borderRadius: '4px',
+                                    fontSize: '12px',
+                                    height: '36px',
+                                    marginTop: '16px'
+                                }}
+                            >
+                                Eliminar
+                            </button>
+                        </div>
+                    ))}
+                </div>
+
+                <button
+                    onClick={handleAddSection}
+                    className="chart-modal-button-insert"
+                    style={{ background: '#2ecc71', width: '100%', marginBottom: '15px' }}
+                >
+                    + Añadir Sección
+                </button>
+
+                <div className="chart-modal-buttons">
                     <button onClick={onClose} className="chart-modal-button-cancel">Cancelar</button>
                     <button onClick={handleInsert} className="chart-modal-button-insert">Insertar Arquetipos</button>
                 </div>

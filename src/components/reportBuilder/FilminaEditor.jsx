@@ -39,7 +39,8 @@ import {
   autoInsertHumorSocial
 } from './utils/autoInsertHelpers';
 import {
-  autoInsertHumorHistogram
+  autoInsertHumorHistogram,
+  autoInsertPerfilesArquetipos
 } from './utils/autoInsertHelpers2';
 import {
   autoInsertBenchmarkSocialMedia,
@@ -250,6 +251,7 @@ const FilminaEditor = () => {
       'activacion-por-tema-chart': 'activacionPorTema',
       'humor-social-chart': 'humorSocial',
       'humor-histogram-chart': 'humorHistogram',
+      'perfiles-arquetipos': 'perfilesArquetipos',
       'benchmark-social-media': 'benchmarkSocialMedia',
       'benchmark-social-media-externas': 'benchmarkSocialMediaExternas',
       'demografia-sociedad-red': 'demografiaSociedadRed'
@@ -356,6 +358,8 @@ const FilminaEditor = () => {
       autoInsertHumorSocial(canvas);
     } else if (filminaTitle === 'Histograma del Humor Social') {
       autoInsertHumorHistogram(canvas);
+    } else if (filminaTitle === 'Perfiles y Arquetipos') {
+      autoInsertPerfilesArquetipos(canvas);
     }
   }, [filmina, getCanvas]);
 
