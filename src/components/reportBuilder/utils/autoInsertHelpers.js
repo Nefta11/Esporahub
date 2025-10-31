@@ -2846,3 +2846,185 @@ export const autoInsertHumorSocial = async (canvas) => {
   };
   img.src = dataURL;
 };
+
+// Auto-insert for "Histograma del Humor Social"
+export const autoInsertHumorHistogram = async (canvas) => {
+  if (!canvas) return;
+
+  const width = 1200;
+  const height = 540;
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = width;
+  tempCanvas.height = height;
+  const ctx = tempCanvas.getContext('2d');
+
+  // Background
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, width, height);
+
+  // Title
+  ctx.fillStyle = '#111';
+  ctx.font = 'bold 22px Arial';
+  ctx.textAlign = 'left';
+  ctx.fillText('Histograma del Humor Social', 30, 44);
+  ctx.font = '14px Arial';
+  ctx.fillStyle = '#444';
+  ctx.fillText('Periodo: 01-Enero-2025 al 30-Junio-2025', 30, 72);
+
+  // Bars
+  // Draw left 6x6 matrix to mimic Humor Social visual
+  const gridLeft = 40;
+  const gridTop = 90;
+  const gridWidth = 420;
+  const gridHeight = 420;
+  const cols = 6;
+  const rows = 6;
+  const cellW = gridWidth / cols;
+  const cellH = gridHeight / rows;
+
+  const emotions = [
+    ['Cultura', 'Odio', 'Miedo', 'Entusiasmo', 'Amor', 'Euforia'],
+    ['Reacción', 'Enojo', 'Irritación', 'Ilusión', 'Admiración', 'Fascinación'],
+    ['Desprecio', 'Desdicha', 'Antipatía', 'Gratitud', 'Afín', 'Júbilo'],
+    ['Vergüenza', 'Desconfianza', 'Rechazo', 'Simetría', 'Benéfico', 'Esperanza'],
+    ['', 'Desconfiado', 'Indeciso', 'Bienestar', 'Confianza', 'Esperanza'],
+    ['Depresión', 'Desprecio', 'Indiferencia', 'Arrepentido', 'Gratitud', 'Optimismo']
+  ];
+
+  for (let r = 0; r < rows; r++) {
+    for (let cidx = 0; cidx < cols; cidx++) {
+      const x = gridLeft + cidx * cellW;
+      const y = gridTop + r * cellH;
+      const hue = (cidx / cols) * 120;
+      const light = 30 + ((cols - r) / cols) * 40;
+      ctx.fillStyle = `hsl(${hue},60%,${light}%)`;
+      ctx.fillRect(x, y, cellW, cellH);
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x, y, cellW, cellH);
+
+      const label = emotions[r] && emotions[r][cidx];
+      if (label) {
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 10px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(label, x + cellW / 2, y + cellH / 2);
+      }
+    }
+  }
+
+  // center axes
+  const centerX = gridLeft + gridWidth / 2;
+  const centerY = gridTop + gridHeight / 2;
+  ctx.strokeStyle = '#000';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(centerX, gridTop);
+  ctx.lineTo(centerX, gridTop + gridHeight);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(gridLeft, centerY);
+  ctx.lineTo(gridLeft + gridWidth, centerY);
+  ctx.stroke();
+
+  // sample avatars plotted
+  const candidates = [
+    { name: 'CLF', x: -1.6, y: -1.8, color: '#C0392B' },
+    { name: 'WF', x: -0.5, y: -1.4, color: '#E67E22' },
+    { name: 'TC', x: 0.2, y: -0.9, color: '#3498DB' },
+    { name: 'JD', x: 1.1, y: -0.5, color: '#9B59B6' }
+  ];
+
+  candidates.forEach((cand) => {
+    const px = centerX + (cand.x / 3) * (gridWidth / 2);
+    const py = centerY - (cand.y / 3) * (gridHeight / 2);
+    ctx.beginPath();
+    ctx.arc(px, py, 18, 0, Math.PI * 2);
+    ctx.fillStyle = cand.color;
+    ctx.fill();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#fff';
+    ctx.stroke();
+  });
+
+  // Right panel profiles with mini-bars
+  const panelLeft = 520;
+  const panelTop = 80;
+  const rowH = 72;
+  const avatarR = 28;
+  const profiles = [
+    { name: 'Clara Luz Flores', color: '#C0392B', value: 32 },
+    { name: 'Waldo Fernández', color: '#E67E22', value: 21 },
+    { name: 'Tatiana Clouthier', color: '#3498DB', value: 27 },
+    { name: 'Judith Díaz', color: '#9B59B6', value: 18 },
+    { name: 'Jesús Nava', color: '#FF69B4', value: 15 },
+    { name: 'Andrés Mijes', color: '#2ECC71', value: 12 }
+  ];
+
+  profiles.forEach((p, i) => {
+    const y = panelTop + i * rowH;
+    ctx.beginPath();
+    ctx.arc(panelLeft + 24, y + 12, avatarR, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.fill();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#fff';
+    ctx.stroke();
+
+    ctx.font = 'bold 13px Arial';
+    ctx.fillStyle = '#111';
+    ctx.textAlign = 'left';
+    ctx.fillText(p.name, panelLeft + 64, y + 8);
+
+    const axisWidth = 200;
+    const w = (p.value / 40) * axisWidth;
+    ctx.fillStyle = '#4CD964';
+    ctx.fillRect(panelLeft + 64, y + 18, w, 12);
+    ctx.strokeStyle = '#6f2d91';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(panelLeft + 64, y + 30);
+    ctx.lineTo(panelLeft + 64 + axisWidth, y + 30);
+    ctx.stroke();
+  });
+
+  // bottom footnote
+  ctx.font = '11px Arial';
+  ctx.fillStyle = '#333';
+  ctx.textAlign = 'right';
+  ctx.fillText('*Humor Social realizado el 11.Diciembre.2024', width - 18, height - 12);
+
+  const dataURL = tempCanvas.toDataURL('image/png');
+  const { Image: FabricImage } = await import('fabric');
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = () => {
+    try {
+      const fabricImg = new FabricImage(img, {
+        left: 60,
+        top: 40,
+        selectable: true,
+        evented: true,
+        hasControls: true,
+        hasBorders: true,
+        name: 'humor-histogram'
+      });
+
+      // scale to fit canvas (960x540)
+      const scaleX = 960 / fabricImg.width;
+      const scaleY = 540 / fabricImg.height;
+      const scale = Math.min(scaleX, scaleY, 1);
+      fabricImg.scaleX = scale;
+      fabricImg.scaleY = scale;
+
+      canvas.add(fabricImg);
+      canvas.setActiveObject(fabricImg);
+      fabricImg.setCoords();
+      canvas.requestRenderAll();
+    } catch (err) {
+      console.error('Error inserting auto histogram:', err);
+    }
+  };
+  img.src = dataURL;
+};

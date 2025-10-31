@@ -10,6 +10,7 @@ import TopOfVoiceChartModal from './modals/TopOfVoiceChartModal';
 import AmplificadoresChartModal from './modals/AmplificadoresChartModal';
 import ActivacionPorTemaModal from './modals/ActivacionPorTemaModal';
 import HumorSocialModal from './modals/HumorSocialModal';
+import HumorHistogramModal from './modals/HumorHistogramModal';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Download } from 'lucide-react';
@@ -35,6 +36,8 @@ import {
   autoInsertAmplificadoresChart,
   autoInsertActivacionPorTema,
   autoInsertHumorSocial
+  ,
+  autoInsertHumorHistogram
 } from './utils/autoInsertHelpers';
 import {
   autoInsertBenchmarkSocialMedia,
@@ -348,6 +351,8 @@ const FilminaEditor = () => {
       autoInsertActivacionPorTema(canvas);
     } else if (filminaTitle === 'Análisis de humor social') {
       autoInsertHumorSocial(canvas);
+    } else if (filminaTitle === 'Histograma del Humor Social') {
+      autoInsertHumorHistogram(canvas);
     }
   }, [filmina, getCanvas]);
 
@@ -471,6 +476,7 @@ const FilminaEditor = () => {
           onOpenAmplificadoresModal={() => setActiveModal('amplificadores')}
           onOpenActivacionPorTemaModal={() => setActiveModal('activacionPorTema')}
           onOpenHumorSocialModal={() => setActiveModal('humorSocial')}
+          onOpenHumorHistogramModal={() => setActiveModal('humorHistogram')}
           onAddText={() => fabricObject.addText()}
           onAddShape={() => setActiveModal('shape')}
           onAddImage={() => fabricObject.addImage()}
@@ -673,6 +679,12 @@ const FilminaEditor = () => {
 
       <HumorSocialModal
         isOpen={activeModal === 'humorSocial'}
+        onClose={() => setActiveModal(null)}
+        canvas={canvas}
+      />
+
+      <HumorHistogramModal
+        isOpen={activeModal === 'humorHistogram'}
         onClose={() => setActiveModal(null)}
         canvas={canvas}
       />

@@ -1,434 +1,426 @@
 import React, { useState } from 'react';
-import { X, Plus, Trash2 } from 'lucide-react';
-import '@/styles/reportBuilder/ChartModals.css';
+import { Image as FabricImage } from 'fabric';
 
-const HumorSocialModal = ({ isOpen, onClose, canvas }) => {
-  const [candidatos, setCandidatos] = useState([
-    {
-      nombre: 'Personaje 1',
-      color: '#8B0000',
-      x: 0,
-      y: 0,
-      sentimientos: [
-        { nombre: 'Sentimiento 1', valor: 0 },
-        { nombre: 'Sentimiento 2', valor: 0 }
-      ]
-    },
-    {
-      nombre: 'Personaje 2',
-      color: '#FF69B4',
-      x: 0,
-      y: 0,
-      sentimientos: [
-        { nombre: 'Sentimiento 1', valor: 0 }
-      ]
-    },
-    {
-      nombre: 'Personaje 3',
-      color: '#4169E1',
-      x: 0,
-      y: 0,
-      sentimientos: [
-        { nombre: 'Sentimiento 1', valor: 0 }
-      ]
+// --- Datos Iniciales de Ejemplo (Usados como estado inicial) ---
+const initialCandidateData = [
+  {
+    id: 'clf',
+    name: 'Clara Luz Flores',
+    logo: 'morena',
+    ringColor: '#A6343C',
+    sentiment: 'Decepción',
+    matrix: { x: -1.8, y: -1.8 },
+    chart: { v: 0.2, h: -0.8, norm_w: 0.5, norm_h: 0.6, norm_dot: [-0.1, -0.1] }
+  },
+  {
+    id: 'wf',
+    name: 'Waldo Fernández',
+    logo: 'morena',
+    ringColor: '#A6343C',
+    sentiment: 'Incertidumbre',
+    matrix: { x: -1.4, y: -1.4 },
+    chart: { v: 0.1, h: -0.3, norm_w: 0.5, norm_h: 0.6, norm_dot: [-0.1, -0.1] }
+  },
+  // ... (puedes añadir más o empezar con un array vacío: [])
+];
+
+// --- Plantilla para nuevo candidato ---
+const newCandidateTemplate = {
+  id: `new_${Date.now()}`,
+  name: 'Nuevo Candidato',
+  logo: 'morena',
+  ringColor: '#A6343C',
+  sentiment: 'Incertidumbre',
+  matrix: { x: 0, y: 0 },
+  chart: { v: 0.1, h: -0.1, norm_w: 0.5, norm_h: 0.6, norm_dot: [-0.1, -0.1] }
+};
+
+
+// --- Definición de la Matriz de Emociones (Sin cambios) ---
+const emotionLabels = [
+  ['Cólera', 'Odio', 'Miedo', 'Entusiasmo', 'Amor', 'Euforia'],
+  ['Repulsión', 'Enojo', 'Irritación', 'Motivación', 'Admiración', 'Fascinación'],
+  ['Desprecio', 'Impotencia', 'Indignación', 'Curiosidad', 'Alegría', 'Orgullo'],
+  ['Vergüenza', 'Desconfianza', 'Vulnerabilidad', 'Satisfacción', 'Confianza', 'Esperanza'],
+  ['Desdén', 'Duda', 'Incertidumbre', 'Aceptación', 'Lealtad', 'Optimismo'],
+  ['Depresión', 'Desolación', 'Inquietud', 'Seguridad', 'Tranquilidad', '']
+];
+
+// --- Colores (Sin cambios) ---
+const getGridColor = (r, c) => {
+  const lightness = 35 + (5 - r) * 5;
+  if (c < 3 && r < 3) return `hsl(0, 60%, ${lightness + 5}%)`;
+  if (c >= 3 && r < 3) return `hsl(120, 60%, ${lightness}%)`;
+  if (c < 3 && r >= 3) return `hsl(0, 65%, ${lightness - 5}%)`;
+  if (c >= 3 && r >= 3) return `hsl(80, 60%, ${lightness - 5}%)`;
+  return '#888';
+};
+
+const getLogoColor = (logo) => {
+  switch (logo) {
+    case 'morena': return '#A6343C';
+    case 'pri': return '#00843D';
+    case 'mc': return '#E67E22';
+    default: return '#999';
+  }
+};
+
+// --- Función de Dibujo Principal (Sin cambios) ---
+// Esta función ya acepta el array de candidatos, así que no necesita cambios.
+const drawHistogram = (candidateData, title, footnote) => {
+  const c = document.createElement('canvas');
+  const width = 1700;
+  const height = 900;
+  c.width = width;
+  c.height = height;
+  const ctx = c.getContext('2d');
+
+  // 1. Fondo
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, width, height);
+
+  // 2. Título (ahora viene de los argumentos)
+  ctx.fillStyle = '#111';
+  ctx.font = 'bold 28px Arial';
+  ctx.textAlign = 'left';
+  ctx.fillText(title, 50, 60);
+
+  // --- 3. Matriz de Emociones (Izquierda) ---
+  const gridLeft = 50;
+  const gridTop = 120;
+  const gridWidth = 600;
+  const gridHeight = 600;
+  const cols = 6;
+  const rows = 6;
+  const cellW = gridWidth / cols;
+  const cellH = gridHeight / rows;
+  const centerX = gridLeft + gridWidth / 2;
+  const centerY = gridTop + gridHeight / 2;
+
+  for (let r = 0; r < rows; r++) {
+    for (let cidx = 0; cidx < cols; cidx++) {
+      const x = gridLeft + cidx * cellW;
+      const y = gridTop + r * cellH;
+      ctx.fillStyle = getGridColor(r, cidx);
+      ctx.fillRect(x, y, cellW, cellH);
+      const label = emotionLabels[r] && emotionLabels[r][cidx];
+      if (label) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.font = 'bold 10px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(label, x + cellW / 2, y + cellH / 2);
+      }
     }
-  ]);
+  }
+
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(centerX, gridTop);
+  ctx.lineTo(centerX, gridTop + gridHeight);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(gridLeft, centerY);
+  ctx.lineTo(gridLeft + gridWidth, centerY);
+  ctx.stroke();
+
+  ctx.fillStyle = '#111';
+  ctx.font = 'bold 14px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('Alta actividad (+)', centerX + gridWidth / 4, gridTop + gridHeight + 20);
+  ctx.fillText('Baja actividad (-)', centerX - gridWidth / 4, gridTop + gridHeight + 20);
+  ctx.save();
+  ctx.translate(gridLeft - 20, centerY);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Agrada (+)', gridHeight / 4, 0);
+  ctx.fillText('Desagrado (-)', -gridHeight / 4, 0);
+  ctx.restore();
+
+  candidateData.forEach((cand) => {
+    const px = centerX + (cand.matrix.x / 3) * (gridWidth / 2);
+    const py = centerY - (cand.matrix.y / 3) * (gridHeight / 2);
+    ctx.beginPath();
+    ctx.arc(px, py, 18, 0, Math.PI * 2);
+    ctx.fillStyle = cand.ringColor;
+    ctx.fill();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#fff';
+    ctx.stroke();
+  });
+
+  // --- 4. Columnas de Perfiles (Derecha) ---
+  const col1Left = 700;
+  const col2Left = 1200;
+  const panelTop = 100;
+  const rowH = 120;
+
+  // Divide los candidatos en dos columnas
+  const col1Data = candidateData.slice(0, Math.ceil(candidateData.length / 2));
+  const col2Data = candidateData.slice(Math.ceil(candidateData.length / 2));
+
+  const drawProfileRow = (ctx, profile, x, y) => {
+    const avatarR = 30;
+    const avatarX = x + avatarR + 10;
+    const avatarY = y + avatarR + 10;
+
+    ctx.beginPath();
+    ctx.arc(avatarX, avatarY, avatarR, 0, Math.PI * 2);
+    ctx.fillStyle = profile.ringColor;
+    ctx.fill();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = '#fff';
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(avatarX + avatarR - 5, avatarY + avatarR - 5, 12, 0, Math.PI * 2);
+    ctx.fillStyle = getLogoColor(profile.logo);
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.font = 'bold 16px Arial';
+    ctx.fillStyle = '#111';
+    ctx.textAlign = 'left';
+    ctx.fillText(profile.name, x + avatarR * 2 + 20, avatarY - 5);
+
+    ctx.font = 'bold 14px Arial';
+    ctx.fillStyle = '#333';
+    ctx.textAlign = 'right';
+    ctx.fillText(profile.sentiment, x + 480, avatarY + 5);
+
+    const chartX = x + 230;
+    const chartY = y + 15;
+    const chartW = 100;
+    const chartH = 80;
+    const cX = chartX + chartW / 2;
+    const cY = chartY + chartH / 2;
+
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cX, chartY);
+    ctx.lineTo(cX, chartY + chartH);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(chartX, cY);
+    ctx.lineTo(chartX + chartW, cY);
+    ctx.stroke();
+
+    const vBarVal = profile.chart.v * (chartH / 2);
+    const hBarVal = profile.chart.h * (chartW / 2);
+
+    ctx.fillStyle = 'rgba(146, 208, 80, 0.7)'; // Green
+    ctx.fillRect(cX + 2, cY - vBarVal, 10, vBarVal);
+
+    ctx.fillStyle = 'rgba(192, 0, 0, 0.7)'; // Red
+    ctx.fillRect(cX, cY - 2, hBarVal, 10);
+
+    const normW = profile.chart.norm_w * (chartW / 2);
+    const normH = profile.chart.norm_h * (chartH / 2);
+    ctx.strokeStyle = '#888';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([2, 2]);
+    ctx.strokeRect(cX - normW / 2, cY - normH / 2, normW, normH);
+    ctx.setLineDash([]);
+
+    const [dotX, dotY] = profile.chart.norm_dot;
+    ctx.beginPath();
+    ctx.arc(cX + dotX * (chartW / 2), cY - dotY * (chartH / 2), 3, 0, Math.PI * 2);
+    ctx.fillStyle = '#0070C0';
+    ctx.fill();
+  };
+
+  col1Data.forEach((p, i) => {
+    drawProfileRow(ctx, p, col1Left, panelTop + i * rowH);
+  });
+  col2Data.forEach((p, i) => {
+    drawProfileRow(ctx, p, col2Left, panelTop + i * rowH);
+  });
+
+  // --- 5. Pie de página (ahora viene de argumentos) ---
+  ctx.font = '12px Arial';
+  ctx.fillStyle = '#555';
+  ctx.textAlign = 'right';
+  ctx.fillText(footnote, width - 50, height - 30);
+
+  return c;
+};
+
+// --- Componente React del Modal (Modificado) ---
+const HumorHistogramModal = ({ isOpen, onClose, canvas }) => {
+  const [title, setTitle] = useState('Humor Social');
+  const [footnote, setFootnote] = useState('*Humor Social realizado el 11.Diciembre.2024');
+
+  // --- ESTE ES EL CAMBIO PRINCIPAL ---
+  // El estado ahora es un array de objetos, no un string JSON.
+  const [candidates, setCandidates] = useState(initialCandidateData);
 
   if (!isOpen) return null;
 
-  const handleCandidatoChange = (index, field, value) => {
-    const newCandidatos = [...candidatos];
-    newCandidatos[index][field] = value;
-    setCandidatos(newCandidatos);
-  };
+  // --- Funciones para manipular el array de candidatos ---
+  const handleCandidateChange = (index, field, value) => {
+    const newCandidates = [...candidates];
+    const candidate = { ...newCandidates[index] }; // Copia el candidato a editar
 
-  const handleAddCandidato = () => {
-    setCandidatos([...candidatos, { 
-      nombre: 'Nuevo\nCandidato', 
-      color: '#808080', 
-      x: 0, 
-      y: 0,
-      sentimientos: [{ nombre: 'Sentimiento', valor: 20 }]
-    }]);
-  };
-
-  const handleRemoveCandidato = (index) => {
-    const newCandidatos = candidatos.filter((_, i) => i !== index);
-    setCandidatos(newCandidatos);
-  };
-
-  const handleSentimientoChange = (candIndex, sentIndex, field, value) => {
-    const newCandidatos = [...candidatos];
-    newCandidatos[candIndex].sentimientos[sentIndex][field] = value;
-    setCandidatos(newCandidatos);
-  };
-
-  const handleAddSentimiento = (candIndex) => {
-    const newCandidatos = [...candidatos];
-    newCandidatos[candIndex].sentimientos.push({ nombre: 'Nuevo', valor: 10 });
-    setCandidatos(newCandidatos);
-  };
-
-  const handleRemoveSentimiento = (candIndex, sentIndex) => {
-    const newCandidatos = [...candidatos];
-    newCandidatos[candIndex].sentimientos.splice(sentIndex, 1);
-    setCandidatos(newCandidatos);
-  };
-
-  const drawHumorSocialChart = () => {
-    const canvasElement = document.createElement('canvas');
-    const width = 960;
-    const height = 540;
-    canvasElement.width = width;
-    canvasElement.height = height;
-    const ctx = canvasElement.getContext('2d');
-
-    // Background
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, width, height);
-
-    // Title
-    ctx.fillStyle = '#000000';
-    ctx.font = 'bold 16px Arial';
-    ctx.textAlign = 'left';
-    ctx.fillText('c. Coordenadas del Humor Social. Benchmark', 25, 30);
-    ctx.font = '12px Arial';
-    ctx.fillText('Nuevo León', 135, 48);
-
-    // Grid configuration
-    const gridLeft = 50;
-    const gridTop = 80;
-    const gridWidth = 420;
-    const gridHeight = 420;
-    const centerX = gridLeft + gridWidth / 2;
-    const centerY = gridTop + gridHeight / 2;
-
-    // Emotion labels for grid (8x8 grid)
-    const emotions = [
-      ['Cultura', 'Odio', 'Miedo', 'Entusiasmo', 'Amor', 'Euforia'],
-      ['Reacción', 'Enojo', 'Irritación', 'Ilusión', 'Admiración', 'Fascinación'],
-      ['Desprecio', 'Desdicha', 'Antipatía', 'Gratitud', 'Afín', 'Júbilo'],
-      ['Vergüenza', 'Desconfianza', 'Rechazo', 'Simetría', 'Benéfico', 'Esperanza'],
-      ['Depresión', 'Desprecio', 'Indiferencia', 'Aceptación', 'Gratitud', 'Optimismo'],
-      ['', 'Desdén', '', 'Arrepentido', 'Confianza', 'Tranquilidad']
-    ];
-
-    const cellWidth = gridWidth / 6;
-    const cellHeight = gridHeight / 6;
-
-    // Color gradient for emotions
-    const getColorForPosition = (col, row) => {
-      const totalCells = 6;
-      const midPoint = totalCells / 2;
-      
-      // Horizontal gradient (left to right: red to green)
-      const hue = ((col / totalCells) * 120); // 0 (red) to 120 (green)
-      
-      // Vertical gradient (top to bottom: darker to lighter)
-      const lightness = 30 + ((totalCells - row) / totalCells) * 40; // 30% to 70%
-      
-      return `hsl(${hue}, 60%, ${lightness}%)`;
-    };
-
-    // Draw emotion grid
-    for (let row = 0; row < 6; row++) {
-      for (let col = 0; col < 6; col++) {
-        const x = gridLeft + col * cellWidth;
-        const y = gridTop + row * cellHeight;
-        
-        ctx.fillStyle = getColorForPosition(col, row);
-        ctx.fillRect(x, y, cellWidth, cellHeight);
-        
-        ctx.strokeStyle = '#FFFFFF';
-        ctx.lineWidth = 1;
-        ctx.strokeRect(x, y, cellWidth, cellHeight);
-        
-        if (emotions[row] && emotions[row][col]) {
-          ctx.fillStyle = '#FFFFFF';
-          ctx.font = 'bold 9px Arial';
-          ctx.textAlign = 'center';
-          ctx.fillText(emotions[row][col], x + cellWidth / 2, y + cellHeight / 2 + 3);
-        }
-      }
+    // Manejar campos anidados (matrix y chart)
+    if (field === 'matrix.x') {
+      candidate.matrix = { ...candidate.matrix, x: parseFloat(value) || 0 };
+    } else if (field === 'matrix.y') {
+      candidate.matrix = { ...candidate.matrix, y: parseFloat(value) || 0 };
+    } else if (field === 'chart.v') {
+      candidate.chart = { ...candidate.chart, v: parseFloat(value) || 0 };
+    } else if (field === 'chart.h') {
+      candidate.chart = { ...candidate.chart, h: parseFloat(value) || 0 };
+    } else {
+      // Campos de primer nivel (name, sentiment, logo, ringColor)
+      candidate[field] = value;
     }
 
-    // Draw axes labels
-    ctx.fillStyle = '#000000';
-    ctx.font = 'bold 11px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('Alta actividad', centerX, gridTop - 15);
-    ctx.fillText('(+)', centerX, gridTop - 3);
-    
-    ctx.save();
-    ctx.translate(gridLeft - 20, centerY);
-    ctx.rotate(-Math.PI / 2);
-    ctx.fillText('Desagradable', 0, 0);
-    ctx.restore();
-    
-    ctx.fillText('(-)', gridLeft - 8, centerY + 15);
-
-    ctx.fillText('Baja actividad', centerX, gridTop + gridHeight + 25);
-    ctx.fillText('(-)', centerX, gridTop + gridHeight + 38);
-    
-    ctx.save();
-    ctx.translate(gridLeft + gridWidth + 20, centerY);
-    ctx.rotate(Math.PI / 2);
-    ctx.fillText('Agradable', 0, 0);
-    ctx.restore();
-    
-    ctx.fillText('(+)', gridLeft + gridWidth + 8, centerY + 15);
-
-    // Draw center axes
-    ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(centerX, gridTop);
-    ctx.lineTo(centerX, gridTop + gridHeight);
-    ctx.stroke();
-    
-    ctx.beginPath();
-    ctx.moveTo(gridLeft, centerY);
-    ctx.lineTo(gridLeft + gridWidth, centerY);
-    ctx.stroke();
-
-    // Draw candidate avatars on grid
-    candidatos.forEach((candidato) => {
-      // Convert coordinates to pixels
-      const pixelX = centerX + (candidato.x / 3) * (gridWidth / 2);
-      const pixelY = centerY - (candidato.y / 3) * (gridHeight / 2);
-      
-      // Draw avatar circle
-      ctx.beginPath();
-      ctx.arc(pixelX, pixelY, 18, 0, 2 * Math.PI);
-      ctx.fillStyle = candidato.color;
-      ctx.fill();
-      ctx.strokeStyle = '#FFFFFF';
-      ctx.lineWidth = 3;
-      ctx.stroke();
-    });
-
-    // Draw right side candidate list with bars
-    const rightX = gridLeft + gridWidth + 50;
-    const startY = gridTop + 20;
-    const candidateHeight = 45;
-
-    candidatos.forEach((candidato, index) => {
-      const y = startY + index * candidateHeight;
-      
-      // Draw avatar
-      ctx.beginPath();
-      ctx.arc(rightX + 20, y + 15, 16, 0, 2 * Math.PI);
-      ctx.fillStyle = candidato.color;
-      ctx.fill();
-      ctx.strokeStyle = '#FFFFFF';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      
-      // Draw name
-      const nameLines = candidato.nombre.split('\n');
-      ctx.font = 'bold 9px Arial';
-      ctx.fillStyle = '#000000';
-      ctx.textAlign = 'left';
-      nameLines.forEach((line, i) => {
-        ctx.fillText(line, rightX + 42, y + 12 + i * 10);
-      });
-      
-      // Draw sentiment bars
-      const barStartX = rightX + 110;
-      const barWidth = 120;
-      const barHeight = 8;
-      const barSpacing = 2;
-      
-      let barY = y + 5;
-      candidato.sentimientos.forEach((sent) => {
-        const sentBarWidth = (sent.valor / 100) * barWidth;
-        
-        // Bar background
-        ctx.fillStyle = '#F0F0F0';
-        ctx.fillRect(barStartX, barY, barWidth, barHeight);
-        
-        // Colored bar
-        ctx.fillStyle = candidato.color;
-        ctx.fillRect(barStartX, barY, sentBarWidth, barHeight);
-        
-        // Sentiment label
-        ctx.font = '7px Arial';
-        ctx.fillStyle = '#000000';
-        ctx.textAlign = 'left';
-        ctx.fillText(sent.nombre, barStartX + barWidth + 5, barY + 6);
-        
-        barY += barHeight + barSpacing;
-      });
-    });
-
-    // Draw "03-Septiembre" label
-    ctx.fillStyle = '#000000';
-    ctx.font = 'bold 9px Arial';
-    ctx.textAlign = 'right';
-    ctx.fillText('03-Septiembre', width - 25, 48);
-
-    return canvasElement;
+    newCandidates[index] = candidate; // Reemplaza el candidato antiguo por el editado
+    setCandidates(newCandidates); // Actualiza el estado
   };
 
-  const handleInsertChart = async () => {
+  const handleAddCandidate = () => {
+    // Añade una copia de la plantilla al final del array
+    setCandidates([...candidates, { ...newCandidateTemplate, id: `new_${Date.now()}` }]);
+  };
+
+  const handleRemoveCandidate = (index) => {
+    // Filtra el array para eliminar el candidato en ese índice
+    setCandidates(candidates.filter((_, i) => i !== index));
+  };
+
+  // --- Función de Inserción (Modificada) ---
+  const handleInsert = async () => {
     if (!canvas) return;
 
-    const canvasElement = drawHumorSocialChart();
-    const dataURL = canvasElement.toDataURL('image/png');
+    // ¡Ya no hay que parsear JSON!
+    // Simplemente usamos el estado 'candidates', 'title', y 'footnote'.
+    const tempCanvas = drawHistogram(candidates, title, footnote);
+    const dataURL = tempCanvas.toDataURL('image/png');
 
-    const { Image: FabricImage } = await import('fabric');
-    
-    const imgElement = new Image();
-    imgElement.onload = () => {
-      const fabricImg = new FabricImage(imgElement, {
-        left: 50,
-        top: 50,
-        selectable: true,
-        hasControls: true,
-      });
+    const { Image: FabricImageClass } = await import('fabric');
 
-      canvas.add(fabricImg);
-      canvas.setActiveObject(fabricImg);
-      canvas.renderAll();
-      onClose();
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      try {
+        const fabricImg = new FabricImageClass(img, {
+          left: 60,
+          top: 60,
+          selectable: true,
+          evented: true,
+          hasControls: true,
+          hasBorders: true,
+          hoverCursor: 'move',
+          name: 'humor-social-chart'
+        });
+
+        const targetWidth = 960;
+        const scale = targetWidth / fabricImg.width;
+        fabricImg.scaleX = scale;
+        fabricImg.scaleY = scale;
+
+        canvas.add(fabricImg);
+        canvas.setActiveObject(fabricImg);
+        fabricImg.setCoords();
+        canvas.requestRenderAll();
+        onClose();
+      } catch (err) {
+        console.error('Error inserting image:', err);
+      }
     };
-    imgElement.src = dataURL;
+    img.src = dataURL;
   };
 
+  // --- JSX del Modal (Modificado) ---
   return (
     <div className="chart-modal-overlay">
-      <div className="chart-modal-container">
-        <h2 className="chart-modal-title">
-          Análisis de Humor Social - Coordenadas
-        </h2>
+      <div className="chart-modal-container" style={{ maxWidth: '900px', maxHeight: '90vh', overflowY: 'auto' }}>
+        <h2 className="chart-modal-title">Gráfico de Humor Social</h2>
 
-        <p className="chart-modal-description">
-          Configura los candidatos, sus posiciones en la matriz de humor y los sentimientos asociados
-        </p>
+        <div className="chart-modal-field">
+          <label>Título del Gráfico</label>
+          <input value={title} onChange={(e) => setTitle(e.target.value)} />
+        </div>
+
+        <div className="chart-modal-field">
+          <label>Pie de Página</label>
+          <input value={footnote} onChange={(e) => setFootnote(e.target.value)} />
+        </div>
+
+        <hr style={{ margin: '20px 0' }} />
+
+        <h3 style={{ marginTop: '0' }}>Candidatos</h3>
+
+        {/* Contenedor de la lista de formularios de candidatos */}
+        <div className="candidate-editor-list">
+          {candidates.map((candidate, index) => (
+            <fieldset key={candidate.id || index} className="candidate-editor-item" style={{ marginBottom: '15px', border: '1px solid #ccc', padding: '10px' }}>
+              <legend style={{ fontWeight: 'bold' }}>{candidate.name || `Candidato ${index + 1}`}</legend>
+
+              <button
+                onClick={() => handleRemoveCandidate(index)}
+                style={{ float: 'right', background: '#e74c3c', color: 'white', border: 'none', cursor: 'pointer' }}
+              >
+                Eliminar
+              </button>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                <div className="chart-modal-field">
+                  <label>Nombre</label>
+                  <input value={candidate.name} onChange={(e) => handleCandidateChange(index, 'name', e.target.value)} />
+                </div>
+                <div className="chart-modal-field">
+                  <label>Sentimiento</label>
+                  <input value={candidate.sentiment} onChange={(e) => handleCandidateChange(index, 'sentiment', e.target.value)} />
+                </div>
+                <div className="chart-modal-field">
+                  <label>Logo (ID: morena, pri, mc)</label>
+                  <input value={candidate.logo} onChange={(e) => handleCandidateChange(index, 'logo', e.target.value)} />
+                </div>
+                <div className="chart-modal-field">
+                  <label>Color Anillo (hex: #A6343C)</label>
+                  <input value={candidate.ringColor} onChange={(e) => handleCandidateChange(index, 'ringColor', e.target.value)} />
+                </div>
+                <div className="chart-modal-field">
+                  <label>Matriz X (-3 a 3)</label>
+                  <input type="number" step="0.1" value={candidate.matrix.x} onChange={(e) => handleCandidateChange(index, 'matrix.x', e.target.value)} />
+                </div>
+                <div className="chart-modal-field">
+                  <label>Matriz Y (-3 a 3)</label>
+                  <input type="number" step="0.1" value={candidate.matrix.y} onChange={(e) => handleCandidateChange(index, 'matrix.y', e.target.value)} />
+                </div>
+                <div className="chart-modal-field">
+                  <label>Chart V (verde, -1 a 1)</label>
+                  <input type="number" step="0.1" value={candidate.chart.v} onChange={(e) => handleCandidateChange(index, 'chart.v', e.target.value)} />
+                </div>
+                <div className="chart-modal-field">
+                  <label>Chart H (rojo, -1 a 1)</label>
+                  <input type="number" step="0.1" value={candidate.chart.h} onChange={(e) => handleCandidateChange(index, 'chart.h', e.target.value)} />
+                </div>
+              </div>
+            </fieldset>
+          ))}
+        </div>
 
         <button
-          onClick={handleAddCandidato}
-          className="chart-add-button"
+          onClick={handleAddCandidate}
+          className="chart-modal-button-insert"
+          style={{ background: '#2ecc71', width: '100%', marginTop: '10px' }}
         >
-          <Plus size={16} />
-          Agregar Candidato
+          + Añadir Candidato
         </button>
 
-        {candidatos.map((candidato, candIndex) => (
-          <div key={candIndex} className="chart-profile-card">
-            <div className="chart-profile-header">
-              <h3>Candidato {candIndex + 1}</h3>
-              <button
-                onClick={() => handleRemoveCandidato(candIndex)}
-                className="chart-remove-button"
-              >
-                <Trash2 size={16} />
-              </button>
-            </div>
-
-            <div className="chart-form-grid-4col">
-              <div className="chart-form-field">
-                <label className="chart-form-label">Nombre (usa \n para separar)</label>
-                <input
-                  type="text"
-                  value={candidato.nombre}
-                  onChange={(e) => handleCandidatoChange(candIndex, 'nombre', e.target.value)}
-                  className="chart-form-input"
-                />
-              </div>
-              <div className="chart-form-field">
-                <label className="chart-form-label">Color</label>
-                <input
-                  type="color"
-                  value={candidato.color}
-                  onChange={(e) => handleCandidatoChange(candIndex, 'color', e.target.value)}
-                  className="chart-form-input"
-                />
-              </div>
-              <div className="chart-form-field">
-                <label className="chart-form-label">Posición X (-3 a 3)</label>
-                <input
-                  type="number"
-                  value={candidato.x}
-                  onChange={(e) => handleCandidatoChange(candIndex, 'x', parseFloat(e.target.value) || 0)}
-                  step="0.1"
-                  min="-3"
-                  max="3"
-                  className="chart-form-input"
-                />
-              </div>
-              <div className="chart-form-field">
-                <label className="chart-form-label">Posición Y (-3 a 3)</label>
-                <input
-                  type="number"
-                  value={candidato.y}
-                  onChange={(e) => handleCandidatoChange(candIndex, 'y', parseFloat(e.target.value) || 0)}
-                  step="0.1"
-                  min="-3"
-                  max="3"
-                  className="chart-form-input"
-                />
-              </div>
-            </div>
-
-            <div className="chart-sentimientos-section">
-              <div className="chart-sentimientos-header">
-                <h4>Sentimientos</h4>
-                <button
-                  onClick={() => handleAddSentimiento(candIndex)}
-                  className="chart-add-sentimiento-button"
-                >
-                  + Sentimiento
-                </button>
-              </div>
-
-              {candidato.sentimientos.map((sent, sentIndex) => (
-                <div key={sentIndex} className="chart-sentimiento-item">
-                  <input
-                    type="text"
-                    placeholder="Sentimiento"
-                    value={sent.nombre}
-                    onChange={(e) => handleSentimientoChange(candIndex, sentIndex, 'nombre', e.target.value)}
-                    className="chart-form-input"
-                  />
-                  <input
-                    type="number"
-                    placeholder="Valor %"
-                    value={sent.valor}
-                    onChange={(e) => handleSentimientoChange(candIndex, sentIndex, 'valor', Math.min(100, Math.max(0, parseInt(e.target.value) || 0)))}
-                    className="chart-form-input chart-sentimiento-valor"
-                    min="0"
-                    max="100"
-                  />
-                  <button
-                    onClick={() => handleRemoveSentimiento(candIndex, sentIndex)}
-                    className="chart-remove-sentimiento-button"
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-
-        <div className="chart-modal-buttons">
-          <button
-            onClick={onClose}
-            className="chart-modal-button-cancel"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={handleInsertChart}
-            className="chart-modal-button-insert"
-          >
-            Insertar Gráfica
-          </button>
+        <div className="chart-modal-buttons" style={{ marginTop: '20px' }}>
+          <button onClick={onClose} className="chart-modal-button-cancel">Cancelar</button>
+          <button onClick={handleInsert} className="chart-modal-button-insert">Insertar Gráfico</button>
         </div>
       </div>
     </div>
   );
 };
 
-export default HumorSocialModal;
+export default HumorHistogramModal;

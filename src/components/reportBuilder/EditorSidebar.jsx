@@ -29,6 +29,7 @@ const EditorSidebar = ({
   onOpenAmplificadoresModal,
   onOpenActivacionPorTemaModal,
   onOpenHumorSocialModal,
+  onOpenHumorHistogramModal,
   layers,
   selectedLayer,
   onSelectLayer,
@@ -237,6 +238,16 @@ const EditorSidebar = ({
               <button className="tool-card" onClick={onOpenHumorSocialModal} title="Coordenadas de Humor Social">
                 <Smile size={24} />
                 <span>Humor Social</span>
+              </button>
+            )}
+
+          {/* Herramienta del Histograma del Humor Social (filmina específica) */}
+          {currentFilmina &&
+            currentFilmina.title === 'Histograma del Humor Social' &&
+            typeof onOpenHumorHistogramModal === 'function' && (
+              <button className="tool-card" onClick={onOpenHumorHistogramModal} title="Histograma del Humor Social">
+                <BarChart3 size={24} />
+                <span>Histograma Humor</span>
               </button>
             )}
 
