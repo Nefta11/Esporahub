@@ -7,40 +7,68 @@ export const autoInsertHumorHistogram = async (canvas) => {
   // Datos de ejemplo para el histograma (usando datos genéricos de Lorem Ipsum)
   const candidateData = [
     {
-      id: 'p1',
-      name: 'Lorem Ipsum',
-      party: 'P1',
-      avatar: '',
-      ringColor: '#A6343C',
-      sentiment: 'Incertidumbre',
-      percentage: '0%',
+      id: "p1",
+      name: "Lorem Ipsum",
+      party: "P1",
+      avatar: "",
+      ringColor: "#A6343C",
+      sentiment: "Incertidumbre",
+      percentage: "0%",
       matrix: { x: 0, y: 0 },
-      chart: { v: 0.1, h: -0.1, norm_w: 0.5, norm_h: 0.6, norm_dot: [-0.1, -0.1] }
+      chart: {
+        v: 0.1,
+        h: -0.1,
+        norm_w: 0.5,
+        norm_h: 0.6,
+        norm_dot: [-0.1, -0.1],
+      },
     },
     {
-      id: 'p2',
-      name: 'Dolor Sit',
-      party: 'P2',
-      avatar: '',
-      ringColor: '#00843D',
-      sentiment: 'Aceptación',
-      percentage: '0%',
+      id: "p2",
+      name: "Dolor Sit",
+      party: "P2",
+      avatar: "",
+      ringColor: "#00843D",
+      sentiment: "Aceptación",
+      percentage: "0%",
       matrix: { x: 0, y: 0 },
-      chart: { v: 0.1, h: 0.1, norm_w: 0.5, norm_h: 0.6, norm_dot: [0.1, 0.1] }
+      chart: { v: 0.1, h: 0.1, norm_w: 0.5, norm_h: 0.6, norm_dot: [0.1, 0.1] },
     },
   ];
 
-  const title = 'Histograma del Humor Social';
-  const footnote = '*Histograma del Humor Social realizado el 11.Diciembre.2024';
+  const title = "Histograma del Humor Social";
+  const footnote =
+    "*Histograma del Humor Social realizado el 11.Diciembre.2024";
 
   // Datos de la matriz de emociones
   const emotionLabels = [
-    ['Cólera', 'Odio', 'Miedo', 'Entusiasmo', 'Amor', 'Euforia'],
-    ['Repulsión', 'Enojo', 'Irritación', 'Motivación', 'Admiración', 'Fascinación'],
-    ['Desprecio', 'Impotencia', 'Indignación', 'Curiosidad', 'Alegría', 'Orgullo'],
-    ['Vergüenza', 'Desconfianza', 'Vulnerabilidad', 'Satisfacción', 'Confianza', 'Esperanza'],
-    ['Desdén', 'Duda', 'Incertidumbre', 'Aceptación', 'Lealtad', 'Optimismo'],
-    ['Depresión', 'Desolación', 'Inquietud', 'Seguridad', 'Tranquilidad', '']
+    ["Cólera", "Odio", "Miedo", "Entusiasmo", "Amor", "Euforia"],
+    [
+      "Repulsión",
+      "Enojo",
+      "Irritación",
+      "Motivación",
+      "Admiración",
+      "Fascinación",
+    ],
+    [
+      "Desprecio",
+      "Impotencia",
+      "Indignación",
+      "Curiosidad",
+      "Alegría",
+      "Orgullo",
+    ],
+    [
+      "Vergüenza",
+      "Desconfianza",
+      "Vulnerabilidad",
+      "Satisfacción",
+      "Confianza",
+      "Esperanza",
+    ],
+    ["Desdén", "Duda", "Incertidumbre", "Aceptación", "Lealtad", "Optimismo"],
+    ["Depresión", "Desolación", "Inquietud", "Seguridad", "Tranquilidad", ""],
   ];
 
   const getGridColor = (r, c) => {
@@ -49,12 +77,12 @@ export const autoInsertHumorHistogram = async (canvas) => {
     if (c >= 3 && r < 3) return `hsl(120, 60%, ${lightness}%)`;
     if (c < 3 && r >= 3) return `hsl(0, 65%, ${lightness - 5}%)`;
     if (c >= 3 && r >= 3) return `hsl(80, 60%, ${lightness - 5}%)`;
-    return '#888';
+    return "#888";
   };
 
   // Precargar todos los avatares
   const avatarImages = await Promise.all(
-    candidateData.map(profile => {
+    candidateData.map((profile) => {
       if (profile.avatar) {
         return new Promise((resolve) => {
           const img = new Image();
@@ -68,21 +96,21 @@ export const autoInsertHumorHistogram = async (canvas) => {
   );
 
   // Crear canvas temporal
-  const tempCanvas = document.createElement('canvas');
+  const tempCanvas = document.createElement("canvas");
   const width = 1700;
   const height = 900;
   tempCanvas.width = width;
   tempCanvas.height = height;
-  const ctx = tempCanvas.getContext('2d');
+  const ctx = tempCanvas.getContext("2d");
 
   // 1. Fondo
-  ctx.fillStyle = '#ffffff';
+  ctx.fillStyle = "#ffffff";
   ctx.fillRect(0, 0, width, height);
 
   // 2. Título
-  ctx.fillStyle = '#111';
-  ctx.font = 'bold 28px Arial';
-  ctx.textAlign = 'left';
+  ctx.fillStyle = "#111";
+  ctx.font = "bold 28px Arial";
+  ctx.textAlign = "left";
   ctx.fillText(title, 50, 60);
 
   // 3. Matriz de Emociones (Izquierda)
@@ -105,16 +133,16 @@ export const autoInsertHumorHistogram = async (canvas) => {
       ctx.fillRect(x, y, cellW, cellH);
       const label = emotionLabels[r] && emotionLabels[r][cidx];
       if (label) {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-        ctx.font = 'bold 10px Arial';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
+        ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+        ctx.font = "bold 10px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
         ctx.fillText(label, x + cellW / 2, y + cellH / 2);
       }
     }
   }
 
-  ctx.strokeStyle = '#fff';
+  ctx.strokeStyle = "#fff";
   ctx.lineWidth = 3;
   ctx.beginPath();
   ctx.moveTo(centerX, gridTop);
@@ -125,16 +153,24 @@ export const autoInsertHumorHistogram = async (canvas) => {
   ctx.lineTo(gridLeft + gridWidth, centerY);
   ctx.stroke();
 
-  ctx.fillStyle = '#111';
-  ctx.font = 'bold 14px Arial';
-  ctx.textAlign = 'center';
-  ctx.fillText('Alta actividad (+)', centerX + gridWidth / 4, gridTop + gridHeight + 20);
-  ctx.fillText('Baja actividad (-)', centerX - gridWidth / 4, gridTop + gridHeight + 20);
+  ctx.fillStyle = "#111";
+  ctx.font = "bold 14px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText(
+    "Alta actividad (+)",
+    centerX + gridWidth / 4,
+    gridTop + gridHeight + 20
+  );
+  ctx.fillText(
+    "Baja actividad (-)",
+    centerX - gridWidth / 4,
+    gridTop + gridHeight + 20
+  );
   ctx.save();
   ctx.translate(gridLeft - 20, centerY);
   ctx.rotate(-Math.PI / 2);
-  ctx.fillText('Agrada (+)', gridHeight / 4, 0);
-  ctx.fillText('Desagrado (-)', -gridHeight / 4, 0);
+  ctx.fillText("Agrada (+)", gridHeight / 4, 0);
+  ctx.fillText("Desagrado (-)", -gridHeight / 4, 0);
   ctx.restore();
 
   candidateData.forEach((cand) => {
@@ -145,7 +181,7 @@ export const autoInsertHumorHistogram = async (canvas) => {
     ctx.fillStyle = cand.ringColor;
     ctx.fill();
     ctx.lineWidth = 3;
-    ctx.strokeStyle = '#fff';
+    ctx.strokeStyle = "#fff";
     ctx.stroke();
   });
 
@@ -174,14 +210,20 @@ export const autoInsertHumorHistogram = async (canvas) => {
       ctx.closePath();
       ctx.clip();
       // Dibujar la imagen centrada en el círculo grande
-      ctx.drawImage(avatarImg, avatarX - avatarR, avatarY - avatarR, avatarR * 2, avatarR * 2);
+      ctx.drawImage(
+        avatarImg,
+        avatarX - avatarR,
+        avatarY - avatarR,
+        avatarR * 2,
+        avatarR * 2
+      );
       ctx.restore();
     }
 
     // Borde del círculo grande con color del anillo
     ctx.beginPath();
     ctx.arc(avatarX, avatarY, avatarR, 0, Math.PI * 2);
-    ctx.fillStyle = avatarImg ? 'transparent' : profile.ringColor;
+    ctx.fillStyle = avatarImg ? "transparent" : profile.ringColor;
     if (!avatarImg) ctx.fill();
     ctx.lineWidth = 4;
     ctx.strokeStyle = profile.ringColor;
@@ -190,31 +232,35 @@ export const autoInsertHumorHistogram = async (canvas) => {
     // Círculo pequeño para la letra del partido (P1, P2, etc.)
     ctx.beginPath();
     ctx.arc(avatarX + avatarR - 5, avatarY + avatarR - 5, 12, 0, Math.PI * 2);
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = "#fff";
     ctx.fill();
     ctx.strokeStyle = profile.ringColor;
     ctx.lineWidth = 2;
     ctx.stroke();
 
     // Dibujar letra del partido en el círculo pequeño
-    ctx.fillStyle = '#333';
-    ctx.font = 'bold 10px Arial';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(profile.party || '', avatarX + avatarR - 5, avatarY + avatarR - 5);
+    ctx.fillStyle = "#333";
+    ctx.font = "bold 10px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(
+      profile.party || "",
+      avatarX + avatarR - 5,
+      avatarY + avatarR - 5
+    );
 
-    ctx.font = 'bold 12px Arial';
-    ctx.fillStyle = '#111';
-    ctx.textAlign = 'left';
+    ctx.font = "bold 12px Arial";
+    ctx.fillStyle = "#111";
+    ctx.textAlign = "left";
     ctx.fillText(profile.name, x + avatarR * 2 + 20, avatarY - 10);
 
-    ctx.font = 'bold 11px Arial';
-    ctx.fillStyle = '#555';
-    ctx.fillText(profile.percentage || '0%', x + avatarR * 2 + 20, avatarY + 5);
+    ctx.font = "bold 11px Arial";
+    ctx.fillStyle = "#555";
+    ctx.fillText(profile.percentage || "0%", x + avatarR * 2 + 20, avatarY + 5);
 
-    ctx.font = 'bold 12px Arial';
-    ctx.fillStyle = '#333';
-    ctx.textAlign = 'left';
+    ctx.font = "bold 12px Arial";
+    ctx.fillStyle = "#333";
+    ctx.textAlign = "left";
     ctx.fillText(profile.sentiment, x + 10, avatarY + 65);
 
     const chartX = x + 120;
@@ -224,7 +270,7 @@ export const autoInsertHumorHistogram = async (canvas) => {
     const cX = chartX + chartW / 2;
     const cY = chartY + chartH / 2;
 
-    ctx.strokeStyle = '#ccc';
+    ctx.strokeStyle = "#ccc";
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(cX, chartY);
@@ -238,15 +284,15 @@ export const autoInsertHumorHistogram = async (canvas) => {
     const vBarVal = profile.chart.v * (chartH / 2);
     const hBarVal = profile.chart.h * (chartW / 2);
 
-    ctx.fillStyle = 'rgba(146, 208, 80, 0.7)';
+    ctx.fillStyle = "rgba(146, 208, 80, 0.7)";
     ctx.fillRect(cX + 2, cY - vBarVal, 10, vBarVal);
 
-    ctx.fillStyle = 'rgba(192, 0, 0, 0.7)';
+    ctx.fillStyle = "rgba(192, 0, 0, 0.7)";
     ctx.fillRect(cX, cY - 2, hBarVal, 10);
 
     const normW = profile.chart.norm_w * (chartW / 2);
     const normH = profile.chart.norm_h * (chartH / 2);
-    ctx.strokeStyle = '#888';
+    ctx.strokeStyle = "#888";
     ctx.lineWidth = 1;
     ctx.setLineDash([2, 2]);
     ctx.strokeRect(cX - normW / 2, cY - normH / 2, normW, normH);
@@ -254,8 +300,14 @@ export const autoInsertHumorHistogram = async (canvas) => {
 
     const [dotX, dotY] = profile.chart.norm_dot;
     ctx.beginPath();
-    ctx.arc(cX + dotX * (chartW / 2), cY - dotY * (chartH / 2), 3, 0, Math.PI * 2);
-    ctx.fillStyle = '#0070C0';
+    ctx.arc(
+      cX + dotX * (chartW / 2),
+      cY - dotY * (chartH / 2),
+      3,
+      0,
+      Math.PI * 2
+    );
+    ctx.fillStyle = "#0070C0";
     ctx.fill();
   };
 
@@ -273,17 +325,17 @@ export const autoInsertHumorHistogram = async (canvas) => {
   });
 
   // 5. Pie de página
-  ctx.font = '12px Arial';
-  ctx.fillStyle = '#555';
-  ctx.textAlign = 'right';
+  ctx.font = "12px Arial";
+  ctx.fillStyle = "#555";
+  ctx.textAlign = "right";
   ctx.fillText(footnote, width - 50, height - 30);
 
   // Convertir a imagen y agregar al canvas
-  const dataURL = tempCanvas.toDataURL('image/png');
-  const { Image: FabricImage } = await import('fabric');
+  const dataURL = tempCanvas.toDataURL("image/png");
+  const { Image: FabricImage } = await import("fabric");
 
   const img = new Image();
-  img.crossOrigin = 'anonymous';
+  img.crossOrigin = "anonymous";
   img.onload = () => {
     try {
       const fabricImg = new FabricImage(img, {
@@ -293,8 +345,8 @@ export const autoInsertHumorHistogram = async (canvas) => {
         evented: true,
         hasControls: true,
         hasBorders: true,
-        hoverCursor: 'move',
-        name: 'humor-histogram-chart'
+        hoverCursor: "move",
+        name: "humor-histogram-chart",
       });
 
       const targetWidth = 960;
@@ -307,7 +359,7 @@ export const autoInsertHumorHistogram = async (canvas) => {
       fabricImg.setCoords();
       canvas.requestRenderAll();
     } catch (err) {
-      console.error('Error inserting histogram:', err);
+      console.error("Error inserting histogram:", err);
     }
   };
   img.src = dataURL;
@@ -317,97 +369,253 @@ export const autoInsertHumorHistogram = async (canvas) => {
 export const autoInsertPerfilesArquetipos = async (canvas) => {
   if (!canvas) return;
 
+  // Datos iniciales basados en la imagen - 2 sub-tipos por arquetipo
+  const data = {
+    title: "Arquetipos | Sub-arquetipos",
+    footnote: "*Fuente: arquetipos de marca",
+    axes: {
+      top: "CAMBIO",
+      right: "CERCANÍA",
+      bottom: "ESTABILIDAD",
+      left: "CONOCIMIENTO",
+    },
+    archeTypes: [
+      {
+        name: "Impulsor",
+        color: "#F6C358",
+        subTypes: ["Visionario", "Catalizador"],
+      },
+      {
+        name: "Justiciero",
+        color: "#F39C12",
+        subTypes: ["Defensor", "Activista"],
+      },
+      {
+        name: "Generoso",
+        color: "#F08A5D",
+        subTypes: ["Altruista", "Humanitario"],
+      },
+      {
+        name: "Amigo",
+        color: "#E94E77",
+        subTypes: ["Leal", "Fiel"],
+      },
+      {
+        name: "Protector",
+        color: "#D7263D",
+        subTypes: ["Guardián", "Vigilante"],
+      },
+      {
+        name: "Héroe",
+        color: "#8E44AD",
+        subTypes: ["Valiente", "Salvador"],
+      },
+      {
+        name: "Conciliador",
+        color: "#2E9CCA",
+        subTypes: ["Mediador", "Pacificador"],
+      },
+      {
+        name: "Líder",
+        color: "#3D6B9B",
+        subTypes: ["Director", "Soberano"],
+      },
+      {
+        name: "Ejecutivo",
+        color: "#2E8B57",
+        subTypes: ["Organizado", "Eficaz"],
+      },
+      {
+        name: "Mentor",
+        color: "#1F8A70",
+        subTypes: ["Maestro", "Orientador"],
+      },
+      {
+        name: "Estratega",
+        color: "#27AE60",
+        subTypes: ["Planificador", "Táctico"],
+      },
+      {
+        name: "Transformador",
+        color: "#9ACD32",
+        subTypes: ["Mago", "Renovador"],
+      },
+    ],
+  };
+
   // Draw a ring chart similar to the modal but for auto-insert
-  const tempCanvas = document.createElement('canvas');
+  const tempCanvas = document.createElement("canvas");
   const width = 1400;
-  const height = 900;
+  const height = 1000;
   tempCanvas.width = width;
   tempCanvas.height = height;
-  const ctx = tempCanvas.getContext('2d');
+  const ctx = tempCanvas.getContext("2d");
 
-  ctx.fillStyle = '#fff';
+  // Background
+  ctx.fillStyle = "#ffffff";
   ctx.fillRect(0, 0, width, height);
 
-  const title = 'Arquetipos | Sub-arquetipos';
-  ctx.fillStyle = '#111';
-  ctx.font = 'bold 28px Arial';
-  ctx.textAlign = 'left';
-  ctx.fillText(title, 40, 50);
+  // Title
+  ctx.fillStyle = "#111";
+  ctx.font = "bold 28px Arial";
+  ctx.textAlign = "left";
+  ctx.fillText(data.title, 40, 50);
 
+  // Ring parameters - anillo más grande
   const centerX = width / 2;
-  const centerY = height / 2 + 20;
+  const centerY = height / 2 + 40;
   const outerR = 300;
-  const innerR = 220;
+  const innerR = 200;
 
-  // Datos tipo Lorem Ipsum
-  const sections = [
-    { label: 'Lorem', color: '#F6C358' },
-    { label: 'Ipsum', color: '#F39C12' },
-    { label: 'Dolor', color: '#F08A5D' },
-    { label: 'Sit', color: '#E94E77' },
-    { label: 'Amet', color: '#D7263D' },
-    { label: 'Consectetur', color: '#8E44AD' },
-    { label: 'Adipiscing', color: '#2E9CCA' },
-    { label: 'Elit', color: '#3D6B9B' },
-    { label: 'Sed', color: '#2E8B57' },
-    { label: 'Do', color: '#1F8A70' },
-    { label: 'Eiusmod', color: '#27AE60' },
-    { label: 'Tempor', color: '#9ACD32' }
-  ];
+  // Draw segments by archetype (not by subtype)
+  data.archeTypes.forEach((archetype, archetypeIndex) => {
+    const numSubTypes = archetype.subTypes.length;
+    const archetypeAngle = (Math.PI * 2) / data.archeTypes.length;
 
-  const full = Math.PI * 2;
-  const per = full / sections.length;
+    const startAngle = -Math.PI / 2 + archetypeIndex * archetypeAngle;
+    const endAngle = startAngle + archetypeAngle;
 
-  // Dibujar segmentos del anillo
-  sections.forEach((s, i) => {
-    const start = -Math.PI / 2 + i * per;
-    const end = start + per;
-
+    // Draw the full archetype segment
     ctx.beginPath();
-    ctx.arc(centerX, centerY, outerR, start, end, false);
-    ctx.arc(centerX, centerY, innerR, end, start, true);
+    ctx.arc(centerX, centerY, outerR, startAngle, endAngle, false);
+    ctx.arc(centerX, centerY, innerR, endAngle, startAngle, true);
     ctx.closePath();
-    ctx.fillStyle = s.color;
+    ctx.fillStyle = archetype.color;
     ctx.fill();
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "#ffffff";
     ctx.stroke();
 
-    // Etiqueta en cada segmento
-    const mid = (start + end) / 2;
-    const labelR = (outerR + innerR) / 2;
-    const lx = centerX + Math.cos(mid) * (labelR + 12);
-    const ly = centerY + Math.sin(mid) * (labelR + 12);
+    // Draw sub-types as a vertical list inside the segment
+    const midAngle = (startAngle + endAngle) / 2;
+    const labelRadius = (outerR + innerR) / 2;
+    const labelX = centerX + Math.cos(midAngle) * labelRadius;
+    const labelY = centerY + Math.sin(midAngle) * labelRadius;
+
     ctx.save();
-    ctx.translate(lx, ly);
-    ctx.rotate(mid + Math.PI / 2);
-    ctx.fillStyle = '#222';
-    ctx.font = 'bold 12px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText(s.label, 0, 0);
+    ctx.translate(labelX, labelY);
+
+    // Ajustar rotación para que el texto siga la curva correctamente
+    let textAngle = midAngle + Math.PI / 2;
+
+    // Si el texto está en la parte inferior del círculo, voltear para que sea legible
+    if (midAngle > Math.PI / 2 && midAngle < (3 * Math.PI) / 2) {
+      textAngle = midAngle - Math.PI / 2;
+    }
+
+    ctx.rotate(textAngle);
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 9px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    // Dibujar cada sub-tipo en una línea vertical
+    const lineHeight = 12;
+    const totalHeight = (numSubTypes - 1) * lineHeight;
+    const startY = -totalHeight / 2;
+
+    archetype.subTypes.forEach((subType, subIndex) => {
+      const yPos = startY + subIndex * lineHeight;
+      ctx.fillText(subType, 0, yPos);
+    });
+
     ctx.restore();
+
+    // Draw archetype name outside the ring
+    const archetypeRadius = outerR + 50;
+    const archetypeX = centerX + Math.cos(midAngle) * archetypeRadius;
+    const archetypeY = centerY + Math.sin(midAngle) * archetypeRadius;
+
+    ctx.fillStyle = "#333";
+    ctx.font = "bold 16px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(archetype.name, archetypeX, archetypeY);
   });
 
-  // Líneas de cuadrícula en cruz
-  ctx.strokeStyle = '#ddd';
+  // Draw crosshair grid
+  const gridExtend = 60;
+  ctx.strokeStyle = "#ddd";
   ctx.lineWidth = 1;
+  ctx.setLineDash([5, 5]);
+
+  // Vertical line
   ctx.beginPath();
-  ctx.moveTo(centerX, centerY - outerR - 40);
-  ctx.lineTo(centerX, centerY + outerR + 40);
-  ctx.moveTo(centerX - outerR - 40, centerY);
-  ctx.lineTo(centerX + outerR + 40, centerY);
+  ctx.moveTo(centerX, centerY - outerR - gridExtend);
+  ctx.lineTo(centerX, centerY + outerR + gridExtend);
   ctx.stroke();
 
-  // Pie de página
-  ctx.font = '12px Arial';
-  ctx.fillStyle = '#555';
-  ctx.textAlign = 'right';
-  ctx.fillText('*Fuente: ejemplo de arquetipos', width - 40, height - 30);
+  // Horizontal line
+  ctx.beginPath();
+  ctx.moveTo(centerX - outerR - gridExtend, centerY);
+  ctx.lineTo(centerX + outerR + gridExtend, centerY);
+  ctx.stroke();
 
-  const dataURL = tempCanvas.toDataURL('image/png');
-  const { Image: FabricImage } = await import('fabric');
+  ctx.setLineDash([]);
+
+  // Draw axes labels with arrows
+  ctx.fillStyle = "#666";
+  ctx.font = "bold 14px Arial";
+  ctx.textAlign = "center";
+
+  // Top label (CAMBIO)
+  ctx.fillText(
+    "+" + data.axes.top.toUpperCase(),
+    centerX - 80,
+    centerY - outerR - 80
+  );
+
+  // Right label (CERCANÍA)
+  ctx.save();
+  ctx.translate(centerX + outerR + 80, centerY - 80);
+  ctx.rotate(Math.PI / 2);
+  ctx.fillText("+" + data.axes.right.toUpperCase(), 0, 0);
+  ctx.restore();
+
+  // Bottom label (ESTABILIDAD)
+  ctx.fillText(
+    "+" + data.axes.bottom.toUpperCase(),
+    centerX - 100,
+    centerY + outerR + 80
+  );
+
+  // Left label (CONOCIMIENTO)
+  ctx.save();
+  ctx.translate(centerX - outerR - 80, centerY - 80);
+  ctx.rotate(Math.PI / 2);
+  ctx.fillText("+" + data.axes.left.toUpperCase(), 0, 0);
+  ctx.restore();
+
+  // Draw axis scale markers
+  ctx.font = "12px Arial";
+  ctx.fillStyle = "#999";
+
+  // Horizontal scale
+  ctx.textBaseline = "middle";
+  ctx.fillText("-2", centerX - outerR - 50, centerY + 20);
+  ctx.fillText("-1", centerX - outerR / 2 - 25, centerY + 20);
+  ctx.fillText("0", centerX, centerY + 20);
+  ctx.fillText("+1", centerX + outerR / 2 + 25, centerY + 20);
+  ctx.fillText("+2", centerX + outerR + 50, centerY + 20);
+
+  // Vertical scale
+  ctx.textAlign = "right";
+  ctx.fillText("+2", centerX - 20, centerY - outerR - 50);
+  ctx.fillText("+1", centerX - 20, centerY - outerR / 2 - 25);
+  ctx.fillText("0", centerX - 20, centerY);
+  ctx.fillText("-1", centerX - 20, centerY + outerR / 2 + 25);
+  ctx.fillText("-2", centerX - 20, centerY + outerR + 50);
+
+  // Footnote
+  ctx.font = "12px Arial";
+  ctx.fillStyle = "#555";
+  ctx.textAlign = "right";
+  ctx.fillText(data.footnote, width - 40, height - 30);
+
+  const dataURL = tempCanvas.toDataURL("image/png");
+  const { Image: FabricImage } = await import("fabric");
   const img = new Image();
-  img.crossOrigin = 'anonymous';
+  img.crossOrigin = "anonymous";
   img.onload = () => {
     try {
       const fabricImg = new FabricImage(img, {
@@ -417,7 +625,7 @@ export const autoInsertPerfilesArquetipos = async (canvas) => {
         evented: true,
         hasControls: true,
         hasBorders: true,
-        name: 'perfiles-arquetipos'
+        name: "perfiles-arquetipos",
       });
 
       const targetWidth = 960;
@@ -430,7 +638,7 @@ export const autoInsertPerfilesArquetipos = async (canvas) => {
       fabricImg.setCoords();
       canvas.requestRenderAll();
     } catch (err) {
-      console.error('Error inserting perfiles arquetipos:', err);
+      console.error("Error inserting perfiles arquetipos:", err);
     }
   };
   img.src = dataURL;
