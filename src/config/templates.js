@@ -88,11 +88,12 @@ export const templates = [
       { id: 30, title: 'Perfiles y Arquetipos', order: 42, background: 'membretesimple.jpeg' },
       { id: 31, title: 'Estudio de Identificación y definición del Perfil', order: 43, background: 'membretesimple.jpeg' },
       { id: 32, title: 'Identificación de los dilemas rentables', order: 44, background: 'membretesimple.jpeg' },
-      { id: 33, title: 'Fracturas Antropológicas', order: 45, background: 'membretesimple.jpeg' },
-      { id: 34, title: 'Matriz de Valores', order: 46, background: 'membretesimple.jpeg' },
-      { id: 35, title: 'Psicografías Generales de los adjetivos', order: 47, background: 'membretesimple.jpeg' },
-      { id: 36, title: 'Semiósferas Generales de los adjetivos', order: 48, background: 'membretesimple.jpeg' },
-      { id: 37, title: 'Subportada A5. Micro-segmentación', order: 49, background: 'subportada2.jpeg' },
+// { id: 33, title: 'Fracturas Antropológicas', order: 45, background: 'membretesimple.jpeg' },
+// { id: 34, title: 'Matriz de Valores', order: 46, background: 'membretesimple.jpeg' },
+// { id: 35, title: 'Psicografías Generales de los adjetivos', order: 47, background: 'membretesimple.jpeg' },
+// { id: 36, title: 'Semiósferas Generales de los adjetivos', order: 48, background: 'membretesimple.jpeg' },
+// { id: 37, title: 'Subportada A5. Micro-segmentación', order: 49, background: 'subportada2.jpeg' },
+
     ],
     canvasConfig: {
       text: 'Benchmark RRSS',
