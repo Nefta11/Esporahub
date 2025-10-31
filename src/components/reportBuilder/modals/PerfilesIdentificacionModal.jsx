@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { autoInsertPerfilIdentificacion } from '../utils/autoInsertHelpers2';
 
 const defaultPositive = [
     'La población digital de Nuevo León busca en su próximo Gobernador la figura arquetípica de un Impulsor',
@@ -96,45 +97,55 @@ const PerfilesIdentificacionModal = ({ isOpen, onClose, canvas }) => {
         ctx.fillText('Impulsor', centerX, centerY + 190);
 
         // Middle and right columns
-            const col1X = cardX + cardW + 60; // positive column
-            const col2X = col1X + 520; // negative column
-            // Move start further down to avoid overlapping header and give more space
-            const colYStart = 160;
+        const col1X = cardX + cardW + 60; // positive column
+        const col2X = col1X + 520; // negative column
+        // Move start further down to avoid overlapping header and give more space
+        const colYStart = 210; // aún más abajo para evitar empalme
 
-            // Positive header
-            ctx.fillStyle = '#14532d';
-            ctx.fillRect(col1X - 12, colYStart - 36, 360, 44);
-            ctx.fillStyle = '#fff';
-            ctx.font = 'bold 20px Arial';
+        // Positive header
+        ctx.fillStyle = '#14532d';
+        ctx.fillRect(col1X - 12, colYStart - 36, 360, 44);
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 20px Arial';
+        ctx.textAlign = 'left';
+        ctx.fillText('Positivo', col1X, colYStart - 8);
+
+        // Negative header
+        ctx.fillStyle = '#4c0519';
+        ctx.fillRect(col2X - 12, colYStart - 36, 360, 44);
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 20px Arial';
+        ctx.fillText('Negativo', col2X, colYStart - 8);
+
+    // Draw bullet lists
+    ctx.fillStyle = '#111827';
+    ctx.font = '14px Arial';
+    const lineHeight = 34;
+    // start lower so the first line doesn't collide with header
+    let y = colYStart + 64;
+    const loremPositive = [
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.',
+            'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.',
+            'Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo.'
+        ];
+        loremPositive.forEach((txt) => {
             ctx.textAlign = 'left';
-            ctx.fillText('Positivo', col1X, colYStart - 8);
+            drawBulletText(ctx, txt, col1X, y, 340, lineHeight);
+            y += estimateLines(txt, 340, ctx) * lineHeight + 16;
+        });
 
-            // Negative header
-            ctx.fillStyle = '#4c0519';
-            ctx.fillRect(col2X - 12, colYStart - 36, 360, 44);
-            ctx.fillStyle = '#fff';
-            ctx.font = 'bold 20px Arial';
-            ctx.fillText('Negativo', col2X, colYStart - 8);
-
-            // Draw bullet lists
-            ctx.fillStyle = '#111827';
-            ctx.font = '15px Arial';
-            const lineHeight = 30;
-            // start lower so the first line doesn't collide with header
-            let y = colYStart + 20;
-            positiveItems.forEach((txt) => {
-                ctx.textAlign = 'left';
-                drawBulletText(ctx, txt, col1X, y, 340, lineHeight);
-                y += estimateLines(txt, 340, ctx) * lineHeight + 12;
-            });
-
-            // Negative column list
-            y = colYStart + 20;
-            negativeItems.forEach((txt) => {
-                ctx.textAlign = 'left';
-                drawBulletText(ctx, txt, col2X, y, 340, lineHeight);
-                y += estimateLines(txt, 340, ctx) * lineHeight + 12;
-            });
+    // Negative column list
+    y = colYStart + 164;
+    const loremNegative = [
+            'Sed posuere consectetur est at lobortis. Etiam porta sem malesuada magna mollis euismod.',
+            'Morbi leo risus, porta ac consectetur ac, vestibulum at eros.',
+            'Maecenas sed diam eget risus varius blandit sit amet non magna.'
+        ];
+        loremNegative.forEach((txt) => {
+            ctx.textAlign = 'left';
+            drawBulletText(ctx, txt, col2X, y, 340, lineHeight);
+            y += estimateLines(txt, 340, ctx) * lineHeight + 16;
+        });
 
         // Footer (logo placeholder and footnote)
         ctx.fillStyle = '#111827';
@@ -193,123 +204,242 @@ const PerfilesIdentificacionModal = ({ isOpen, onClose, canvas }) => {
     };
 
     const handleInsert = async () => {
-        const canvasEl = drawCard(positive, negative);
-        const dataURL = canvasEl.toDataURL('image/png');
-        const { Image: FabricImage } = await import('fabric');
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = () => {
-            try {
-                const fImg = new FabricImage(img, {
-                    left: 40,
-                    top: 30,
-                    selectable: true,
-                    evented: true,
-                    hasControls: true,
-                    hasBorders: true,
-                    name: 'perfil-identificacion'
-                });
-
-                // scale down if needed to fit editor width (target 960)
-                const targetWidth = 920;
-                const scale = targetWidth / fImg.width;
-                fImg.scaleX = scale;
-                fImg.scaleY = scale;
-
-                if (canvas) {
-                    canvas.add(fImg);
-                    canvas.setActiveObject(fImg);
-                    fImg.setCoords();
-                    canvas.requestRenderAll();
-                }
-
-                onClose();
-            } catch (err) {
-                console.error('Insert error', err);
-            }
-        };
-        img.src = dataURL;
+        // Delegate insertion to shared helper so the canvas insertion logic is centralized
+        try {
+            await autoInsertPerfilIdentificacion(canvas, { positive, negative, footnote, title });
+            onClose();
+        } catch (err) {
+            console.error('Error inserting via helper', err);
+        }
     };
 
-        // --- Form handlers for positive / negative lists ---
-        const handleAddPositive = () => {
-            setPositive(prev => [...prev, 'Nuevo ítem positivo']);
-        };
+    // --- Form handlers for positive / negative lists ---
+    const handleAddPositive = () => {
+        setPositive(prev => [...prev, 'Nuevo ítem positivo']);
+    };
 
-        const handleRemovePositive = (index) => {
-            setPositive(prev => prev.filter((_, i) => i !== index));
-        };
+    const handleRemovePositive = (index) => {
+        setPositive(prev => prev.filter((_, i) => i !== index));
+    };
 
-        const handleChangePositive = (index, value) => {
-            setPositive(prev => prev.map((v, i) => i === index ? value : v));
-        };
+    const handleChangePositive = (index, value) => {
+        setPositive(prev => prev.map((v, i) => i === index ? value : v));
+    };
 
-        const handleAddNegative = () => {
-            setNegative(prev => [...prev, 'Nuevo ítem negativo']);
-        };
+    const handleAddNegative = () => {
+        setNegative(prev => [...prev, 'Nuevo ítem negativo']);
+    };
 
-        const handleRemoveNegative = (index) => {
-            setNegative(prev => prev.filter((_, i) => i !== index));
-        };
+    const handleRemoveNegative = (index) => {
+        setNegative(prev => prev.filter((_, i) => i !== index));
+    };
 
-        const handleChangeNegative = (index, value) => {
-            setNegative(prev => prev.map((v, i) => i === index ? value : v));
-        };
+    const handleChangeNegative = (index, value) => {
+        setNegative(prev => prev.map((v, i) => i === index ? value : v));
+    };
 
     return (
-        <div className="chart-modal-overlay">
-            <div className="chart-modal-container" style={{ maxWidth: '900px', maxHeight: '90vh', overflowY: 'auto' }}>
-                <h2 className="chart-modal-title">{title}</h2>
+        <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            background: 'rgba(30, 41, 59, 0.35)',
+            backdropFilter: 'blur(4px)',
+            zIndex: 1000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+        }}>
+            <div style={{
+                background: '#fff',
+                borderRadius: '22px',
+                boxShadow: '0 8px 32px rgba(30,41,59,0.18)',
+                padding: '38px 38px 28px 38px',
+                maxWidth: '950px',
+                width: '100%',
+                maxHeight: '92vh',
+                overflowY: 'auto',
+                border: '1.5px solid #e5e7eb',
+                position: 'relative',
+            }}>
+                <h2 style={{
+                    fontSize: '2rem',
+                    fontWeight: 700,
+                    marginBottom: 18,
+                    color: '#1e293b',
+                    letterSpacing: '-1px',
+                    textAlign: 'center',
+                }}>{title}</h2>
 
-                <div className="chart-modal-field">
-                    <label>Título</label>
-                    <input value={title} onChange={(e) => setTitle(e.target.value)} />
+                <div style={{ marginBottom: 18 }}>
+                    <label style={{ fontWeight: 600, color: '#334155', fontSize: 15 }}>Título</label>
+                    <input value={title} onChange={(e) => setTitle(e.target.value)}
+                        style={{
+                            width: '100%',
+                            padding: '10px 14px',
+                            borderRadius: 8,
+                            border: '1.5px solid #cbd5e1',
+                            marginTop: 4,
+                            fontSize: 16,
+                            outline: 'none',
+                            marginBottom: 2,
+                            background: '#f8fafc',
+                            transition: 'border 0.2s',
+                        }}
+                    />
                 </div>
 
-                        <div style={{ display: 'flex', gap: '12px' }}>
-                            <div style={{ flex: 1 }}>
-                                <label>Positivo (editar cada ítem)</label>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                    {positive.map((item, idx) => (
-                                        <div key={`pos-${idx}`} style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                                            <input
-                                                style={{ flex: 1 }}
-                                                value={item}
-                                                onChange={(e) => handleChangePositive(idx, e.target.value)}
-                                            />
-                                            <button onClick={() => handleRemovePositive(idx)} style={{ background: '#e74c3c', color: '#fff', border: 'none', padding: '6px 8px', cursor: 'pointer' }}>Eliminar</button>
-                                        </div>
-                                    ))}
-                                    <button onClick={handleAddPositive} style={{ background: '#2ecc71', color: '#fff', border: 'none', padding: '8px', cursor: 'pointer', marginTop: '6px' }}>+ Añadir Positivo</button>
+                <div style={{ display: 'flex', gap: '24px', marginBottom: 18 }}>
+                    <div style={{ flex: 1, background: '#f3f4f6', borderRadius: 12, padding: 18 }}>
+                        <label style={{ fontWeight: 600, color: '#166534', fontSize: 15, marginBottom: 6, display: 'block' }}>Positivo (editar cada ítem)</label>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            {positive.map((item, idx) => (
+                                <div key={`pos-${idx}`} style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                    <input
+                                        style={{
+                                            flex: 1,
+                                            padding: '8px 12px',
+                                            borderRadius: 7,
+                                            border: '1.2px solid #cbd5e1',
+                                            fontSize: 15,
+                                            background: '#fff',
+                                            outline: 'none',
+                                            transition: 'border 0.2s',
+                                        }}
+                                        value={item}
+                                        onChange={(e) => handleChangePositive(idx, e.target.value)}
+                                    />
+                                    <button onClick={() => handleRemovePositive(idx)}
+                                        style={{
+                                            background: '#ef4444',
+                                            color: '#fff',
+                                            border: 'none',
+                                            borderRadius: 6,
+                                            padding: '7px 14px',
+                                            fontWeight: 600,
+                                            fontSize: 14,
+                                            cursor: 'pointer',
+                                            transition: 'background 0.2s',
+                                        }}
+                                    >Eliminar</button>
                                 </div>
-                            </div>
-
-                            <div style={{ flex: 1 }}>
-                                <label>Negativo (editar cada ítem)</label>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                    {negative.map((item, idx) => (
-                                        <div key={`neg-${idx}`} style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                                            <input
-                                                style={{ flex: 1 }}
-                                                value={item}
-                                                onChange={(e) => handleChangeNegative(idx, e.target.value)}
-                                            />
-                                            <button onClick={() => handleRemoveNegative(idx)} style={{ background: '#e74c3c', color: '#fff', border: 'none', padding: '6px 8px', cursor: 'pointer' }}>Eliminar</button>
-                                        </div>
-                                    ))}
-                                    <button onClick={handleAddNegative} style={{ background: '#2ecc71', color: '#fff', border: 'none', padding: '8px', cursor: 'pointer', marginTop: '6px' }}>+ Añadir Negativo</button>
-                                </div>
-                            </div>
+                            ))}
+                            <button onClick={handleAddPositive}
+                                style={{
+                                    background: '#22c55e',
+                                    color: '#fff',
+                                    border: 'none',
+                                    borderRadius: 7,
+                                    padding: '10px',
+                                    fontWeight: 700,
+                                    fontSize: 15,
+                                    cursor: 'pointer',
+                                    marginTop: '8px',
+                                    transition: 'background 0.2s',
+                                }}
+                            >+ Añadir Positivo</button>
                         </div>
+                    </div>
 
-                <div className="chart-modal-field">
-                    <label>Pie de página</label>
-                    <input value={footnote} onChange={(e) => setFootnote(e.target.value)} />
+                    <div style={{ flex: 1, background: '#f3f4f6', borderRadius: 12, padding: 18 }}>
+                        <label style={{ fontWeight: 600, color: '#b91c1c', fontSize: 15, marginBottom: 6, display: 'block' }}>Negativo (editar cada ítem)</label>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            {negative.map((item, idx) => (
+                                <div key={`neg-${idx}`} style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                    <input
+                                        style={{
+                                            flex: 1,
+                                            padding: '8px 12px',
+                                            borderRadius: 7,
+                                            border: '1.2px solid #cbd5e1',
+                                            fontSize: 15,
+                                            background: '#fff',
+                                            outline: 'none',
+                                            transition: 'border 0.2s',
+                                        }}
+                                        value={item}
+                                        onChange={(e) => handleChangeNegative(idx, e.target.value)}
+                                    />
+                                    <button onClick={() => handleRemoveNegative(idx)}
+                                        style={{
+                                            background: '#ef4444',
+                                            color: '#fff',
+                                            border: 'none',
+                                            borderRadius: 6,
+                                            padding: '7px 14px',
+                                            fontWeight: 600,
+                                            fontSize: 14,
+                                            cursor: 'pointer',
+                                            transition: 'background 0.2s',
+                                        }}
+                                    >Eliminar</button>
+                                </div>
+                            ))}
+                            <button onClick={handleAddNegative}
+                                style={{
+                                    background: '#22c55e',
+                                    color: '#fff',
+                                    border: 'none',
+                                    borderRadius: 7,
+                                    padding: '10px',
+                                    fontWeight: 700,
+                                    fontSize: 15,
+                                    cursor: 'pointer',
+                                    marginTop: '8px',
+                                    transition: 'background 0.2s',
+                                }}
+                            >+ Añadir Negativo</button>
+                        </div>
+                    </div>
                 </div>
 
-                <div className="chart-modal-buttons" style={{ marginTop: '20px' }}>
-                    <button onClick={onClose} className="chart-modal-button-cancel">Cancelar</button>
-                    <button onClick={handleInsert} className="chart-modal-button-insert">Insertar Gráfico</button>
+                <div style={{ marginBottom: 18 }}>
+                    <label style={{ fontWeight: 600, color: '#334155', fontSize: 15 }}>Pie de página</label>
+                    <input value={footnote} onChange={(e) => setFootnote(e.target.value)}
+                        style={{
+                            width: '100%',
+                            padding: '10px 14px',
+                            borderRadius: 8,
+                            border: '1.5px solid #cbd5e1',
+                            marginTop: 4,
+                            fontSize: 16,
+                            outline: 'none',
+                            background: '#f8fafc',
+                            transition: 'border 0.2s',
+                        }}
+                    />
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 16, marginTop: 28 }}>
+                    <button onClick={onClose}
+                        style={{
+                            background: '#f1f5f9',
+                            color: '#334155',
+                            border: 'none',
+                            borderRadius: 8,
+                            padding: '12px 28px',
+                            fontWeight: 600,
+                            fontSize: 16,
+                            cursor: 'pointer',
+                            transition: 'background 0.2s',
+                        }}
+                    >Cancelar</button>
+                    <button onClick={handleInsert}
+                        style={{
+                            background: 'linear-gradient(90deg,#2563eb 0%,#7c3aed 100%)',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: 8,
+                            padding: '12px 32px',
+                            fontWeight: 700,
+                            fontSize: 16,
+                            cursor: 'pointer',
+                            boxShadow: '0 2px 8px rgba(124,60,237,0.08)',
+                            transition: 'background 0.2s',
+                        }}
+                    >Insertar Gráfico</button>
                 </div>
             </div>
         </div>

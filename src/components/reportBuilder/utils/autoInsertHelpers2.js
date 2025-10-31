@@ -1,10 +1,10 @@
-// Auto-insertar helpers para Histograma del Humor Social y otros gráficos adicionales
+// Auto-insert helpers for report builder: humor histogram, perfiles/arquetipos, perfil identificación
 
-// Auto-insertar Histograma del Humor Social
+// Auto-insert Histograma del Humor Social
 export const autoInsertHumorHistogram = async (canvas) => {
   if (!canvas) return;
 
-  // Datos de ejemplo para el histograma (usando datos genéricos de Lorem Ipsum)
+  // Example data (placeholder)
   const candidateData = [
     {
       id: "p1",
@@ -13,15 +13,8 @@ export const autoInsertHumorHistogram = async (canvas) => {
       avatar: "",
       ringColor: "#A6343C",
       sentiment: "Incertidumbre",
-      percentage: "0%",
-      matrix: { x: 0, y: 0 },
-      chart: {
-        v: 0.1,
-        h: -0.1,
-        norm_w: 0.5,
-        norm_h: 0.6,
-        norm_dot: [-0.1, -0.1],
-      },
+      percentage: "12%",
+      chart: { v: 0.1, h: -0.1, norm_w: 0.5, norm_h: 0.6, norm_dot: [-0.1, -0.1] },
     },
     {
       id: "p2",
@@ -30,310 +23,153 @@ export const autoInsertHumorHistogram = async (canvas) => {
       avatar: "",
       ringColor: "#00843D",
       sentiment: "Aceptación",
-      percentage: "0%",
-      matrix: { x: 0, y: 0 },
+      percentage: "8%",
       chart: { v: 0.1, h: 0.1, norm_w: 0.5, norm_h: 0.6, norm_dot: [0.1, 0.1] },
+    },
+    {
+      id: "p3",
+      name: "Amet Consect",
+      party: "P3",
+      avatar: "",
+      ringColor: "#0070C0",
+      sentiment: "Rechazo",
+      percentage: "5%",
+      chart: { v: -0.2, h: 0.05, norm_w: 0.3, norm_h: 0.4, norm_dot: [0.05, -0.2] },
+    },
+    {
+      id: "p4",
+      name: "Sit Amet",
+      party: "P4",
+      avatar: "",
+      ringColor: "#F39C12",
+      sentiment: "Esperanza",
+      percentage: "18%",
+      chart: { v: 0.3, h: 0.2, norm_w: 0.6, norm_h: 0.5, norm_dot: [0.2, 0.3] },
+    },
+    {
+      id: "p5",
+      name: "Consectetur",
+      party: "P5",
+      avatar: "",
+      ringColor: "#8E44AD",
+      sentiment: "Neutral",
+      percentage: "3%",
+      chart: { v: -0.05, h: -0.15, norm_w: 0.4, norm_h: 0.45, norm_dot: [-0.15, -0.05] },
     },
   ];
 
-  const title = "Histograma del Humor Social";
-  const footnote =
-    "*Histograma del Humor Social realizado el 11.Diciembre.2024";
-
-  // Datos de la matriz de emociones
-  const emotionLabels = [
-    ["Cólera", "Odio", "Miedo", "Entusiasmo", "Amor", "Euforia"],
-    [
-      "Repulsión",
-      "Enojo",
-      "Irritación",
-      "Motivación",
-      "Admiración",
-      "Fascinación",
-    ],
-    [
-      "Desprecio",
-      "Impotencia",
-      "Indignación",
-      "Curiosidad",
-      "Alegría",
-      "Orgullo",
-    ],
-    [
-      "Vergüenza",
-      "Desconfianza",
-      "Vulnerabilidad",
-      "Satisfacción",
-      "Confianza",
-      "Esperanza",
-    ],
-    ["Desdén", "Duda", "Incertidumbre", "Aceptación", "Lealtad", "Optimismo"],
-    ["Depresión", "Desolación", "Inquietud", "Seguridad", "Tranquilidad", ""],
-  ];
-
-  const getGridColor = (r, c) => {
-    const lightness = 35 + (5 - r) * 5;
-    if (c < 3 && r < 3) return `hsl(0, 60%, ${lightness + 5}%)`;
-    if (c >= 3 && r < 3) return `hsl(120, 60%, ${lightness}%)`;
-    if (c < 3 && r >= 3) return `hsl(0, 65%, ${lightness - 5}%)`;
-    if (c >= 3 && r >= 3) return `hsl(80, 60%, ${lightness - 5}%)`;
-    return "#888";
-  };
-
-  // Precargar todos los avatares
-  const avatarImages = await Promise.all(
-    candidateData.map((profile) => {
-      if (profile.avatar) {
-        return new Promise((resolve) => {
-          const img = new Image();
-          img.onload = () => resolve(img);
-          img.onerror = () => resolve(null);
-          img.src = profile.avatar;
-        });
-      }
-      return Promise.resolve(null);
-    })
-  );
-
-  // Crear canvas temporal
-  const tempCanvas = document.createElement("canvas");
-  const width = 1700;
+  const width = 1400;
   const height = 900;
+  const tempCanvas = document.createElement("canvas");
   tempCanvas.width = width;
   tempCanvas.height = height;
   const ctx = tempCanvas.getContext("2d");
 
-  // 1. Fondo
+  // Background
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(0, 0, width, height);
 
-  // 2. Título
+  // Title
   ctx.fillStyle = "#111";
   ctx.font = "bold 28px Arial";
   ctx.textAlign = "left";
-  ctx.fillText(title, 50, 60);
+  ctx.fillText("Histograma del Humor Social", 40, 50);
 
-  // 3. Matriz de Emociones (Izquierda)
-  const gridLeft = 50;
-  const gridTop = 120;
-  const gridWidth = 600;
-  const gridHeight = 600;
-  const cols = 6;
-  const rows = 6;
-  const cellW = gridWidth / cols;
-  const cellH = gridHeight / rows;
-  const centerX = gridLeft + gridWidth / 2;
-  const centerY = gridTop + gridHeight / 2;
+  // Layout: three columns of rows
+  const panelTop = 110;
+  const rowH = 110;
+  const col1Left = 60;
+  const col2Left = 520;
+  const col3Left = 980;
 
-  for (let r = 0; r < rows; r++) {
-    for (let cidx = 0; cidx < cols; cidx++) {
-      const x = gridLeft + cidx * cellW;
-      const y = gridTop + r * cellH;
-      ctx.fillStyle = getGridColor(r, cidx);
-      ctx.fillRect(x, y, cellW, cellH);
-      const label = emotionLabels[r] && emotionLabels[r][cidx];
-      if (label) {
-        ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
-        ctx.font = "bold 10px Arial";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(label, x + cellW / 2, y + cellH / 2);
-      }
-    }
-  }
+  function drawProfileRow(ctx, profile, x, y) {
+    const avatarR = 34;
+    const avatarX = x;
+    const avatarY = y;
 
-  ctx.strokeStyle = "#fff";
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(centerX, gridTop);
-  ctx.lineTo(centerX, gridTop + gridHeight);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(gridLeft, centerY);
-  ctx.lineTo(gridLeft + gridWidth, centerY);
-  ctx.stroke();
-
-  ctx.fillStyle = "#111";
-  ctx.font = "bold 14px Arial";
-  ctx.textAlign = "center";
-  ctx.fillText(
-    "Alta actividad (+)",
-    centerX + gridWidth / 4,
-    gridTop + gridHeight + 20
-  );
-  ctx.fillText(
-    "Baja actividad (-)",
-    centerX - gridWidth / 4,
-    gridTop + gridHeight + 20
-  );
-  ctx.save();
-  ctx.translate(gridLeft - 20, centerY);
-  ctx.rotate(-Math.PI / 2);
-  ctx.fillText("Agrada (+)", gridHeight / 4, 0);
-  ctx.fillText("Desagrado (-)", -gridHeight / 4, 0);
-  ctx.restore();
-
-  candidateData.forEach((cand) => {
-    const px = centerX + (cand.matrix.x / 3) * (gridWidth / 2);
-    const py = centerY - (cand.matrix.y / 3) * (gridHeight / 2);
+    // ring
     ctx.beginPath();
-    ctx.arc(px, py, 18, 0, Math.PI * 2);
-    ctx.fillStyle = cand.ringColor;
+    ctx.arc(avatarX + avatarR, avatarY + avatarR, avatarR + 6, 0, Math.PI * 2);
+    ctx.fillStyle = profile.ringColor || "#ccc";
     ctx.fill();
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = "#fff";
-    ctx.stroke();
-  });
 
-  // 4. Columnas de Perfiles (Derecha) - 3 COLUMNAS
-  const col1Left = 700;
-  const col2Left = 1070;
-  const col3Left = 1440;
-  const panelTop = 100;
-  const rowH = 120;
-
-  const itemsPerCol = Math.ceil(candidateData.length / 3);
-  const col1Data = candidateData.slice(0, itemsPerCol);
-  const col2Data = candidateData.slice(itemsPerCol, itemsPerCol * 2);
-  const col3Data = candidateData.slice(itemsPerCol * 2);
-
-  const drawProfileRow = (ctx, profile, x, y, avatarImg) => {
-    const avatarR = 30;
-    const avatarX = x + avatarR + 10;
-    const avatarY = y + avatarR + 10;
-
-    // Dibujar avatar/logo en el círculo grande si existe
-    if (avatarImg) {
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(avatarX, avatarY, avatarR, 0, Math.PI * 2);
-      ctx.closePath();
-      ctx.clip();
-      // Dibujar la imagen centrada en el círculo grande
-      ctx.drawImage(
-        avatarImg,
-        avatarX - avatarR,
-        avatarY - avatarR,
-        avatarR * 2,
-        avatarR * 2
-      );
-      ctx.restore();
-    }
-
-    // Borde del círculo grande con color del anillo
+    // inner circle (avatar placeholder)
     ctx.beginPath();
-    ctx.arc(avatarX, avatarY, avatarR, 0, Math.PI * 2);
-    ctx.fillStyle = avatarImg ? "transparent" : profile.ringColor;
-    if (!avatarImg) ctx.fill();
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = profile.ringColor;
-    ctx.stroke();
-
-    // Círculo pequeño para la letra del partido (P1, P2, etc.)
-    ctx.beginPath();
-    ctx.arc(avatarX + avatarR - 5, avatarY + avatarR - 5, 12, 0, Math.PI * 2);
+    ctx.arc(avatarX + avatarR, avatarY + avatarR, avatarR, 0, Math.PI * 2);
     ctx.fillStyle = "#fff";
     ctx.fill();
-    ctx.strokeStyle = profile.ringColor;
+
+    // small party circle
+    ctx.beginPath();
+    ctx.arc(avatarX + avatarR + 20, avatarY + avatarR + 20, 12, 0, Math.PI * 2);
+    ctx.fillStyle = "#fff";
+    ctx.fill();
     ctx.lineWidth = 2;
+    ctx.strokeStyle = profile.ringColor || "#aaa";
     ctx.stroke();
 
-    // Dibujar letra del partido en el círculo pequeño
+    // party text
     ctx.fillStyle = "#333";
     ctx.font = "bold 10px Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(
-      profile.party || "",
-      avatarX + avatarR - 5,
-      avatarY + avatarR - 5
-    );
+    ctx.fillText(profile.party || "", avatarX + avatarR + 20, avatarY + avatarR + 20);
 
+    // name and percentage
     ctx.font = "bold 12px Arial";
     ctx.fillStyle = "#111";
     ctx.textAlign = "left";
-    ctx.fillText(profile.name, x + avatarR * 2 + 20, avatarY - 10);
+    ctx.fillText(profile.name, x + avatarR * 2 + 10, avatarY + 12);
 
-    ctx.font = "bold 11px Arial";
+    ctx.font = "11px Arial";
     ctx.fillStyle = "#555";
-    ctx.fillText(profile.percentage || "0%", x + avatarR * 2 + 20, avatarY + 5);
+    ctx.fillText(profile.percentage || "0%", x + avatarR * 2 + 10, avatarY + 32);
 
-    ctx.font = "bold 12px Arial";
-    ctx.fillStyle = "#333";
-    ctx.textAlign = "left";
-    ctx.fillText(profile.sentiment, x + 10, avatarY + 65);
-
+    // small chart box
     const chartX = x + 120;
-    const chartY = y + 15;
-    const chartW = 80;
+    const chartY = y + 10;
+    const chartW = 120;
     const chartH = 70;
+
+    ctx.strokeStyle = "#ddd";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.rect(chartX, chartY, chartW, chartH);
+    ctx.stroke();
+
+    // vertical bar based on v
     const cX = chartX + chartW / 2;
     const cY = chartY + chartH / 2;
+    const vBarVal = (profile.chart?.v || 0) * (chartH / 2);
+    const hBarVal = (profile.chart?.h || 0) * (chartW / 2);
 
-    ctx.strokeStyle = "#ccc";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(cX, chartY);
-    ctx.lineTo(cX, chartY + chartH);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(chartX, cY);
-    ctx.lineTo(chartX + chartW, cY);
-    ctx.stroke();
+    ctx.fillStyle = "rgba(146,208,80,0.8)";
+    if (vBarVal > 0) ctx.fillRect(cX - 6, cY - vBarVal, 12, vBarVal);
+    else ctx.fillRect(cX - 6, cY, 12, Math.abs(vBarVal));
 
-    const vBarVal = profile.chart.v * (chartH / 2);
-    const hBarVal = profile.chart.h * (chartW / 2);
+    ctx.fillStyle = "rgba(192,0,0,0.8)";
+    if (hBarVal > 0) ctx.fillRect(cX, cY - 6, hBarVal, 12);
+    else ctx.fillRect(cX + hBarVal, cY - 6, Math.abs(hBarVal), 12);
+  }
 
-    ctx.fillStyle = "rgba(146, 208, 80, 0.7)";
-    ctx.fillRect(cX + 2, cY - vBarVal, 10, vBarVal);
+  // split into 3 columns
+  const col1 = candidateData.slice(0, 2);
+  const col2 = candidateData.slice(2, 4);
+  const col3 = candidateData.slice(4, 6);
 
-    ctx.fillStyle = "rgba(192, 0, 0, 0.7)";
-    ctx.fillRect(cX, cY - 2, hBarVal, 10);
+  col1.forEach((p, i) => drawProfileRow(ctx, p, col1Left, panelTop + i * rowH));
+  col2.forEach((p, i) => drawProfileRow(ctx, p, col2Left, panelTop + i * rowH));
+  col3.forEach((p, i) => drawProfileRow(ctx, p, col3Left, panelTop + i * rowH));
 
-    const normW = profile.chart.norm_w * (chartW / 2);
-    const normH = profile.chart.norm_h * (chartH / 2);
-    ctx.strokeStyle = "#888";
-    ctx.lineWidth = 1;
-    ctx.setLineDash([2, 2]);
-    ctx.strokeRect(cX - normW / 2, cY - normH / 2, normW, normH);
-    ctx.setLineDash([]);
-
-    const [dotX, dotY] = profile.chart.norm_dot;
-    ctx.beginPath();
-    ctx.arc(
-      cX + dotX * (chartW / 2),
-      cY - dotY * (chartH / 2),
-      3,
-      0,
-      Math.PI * 2
-    );
-    ctx.fillStyle = "#0070C0";
-    ctx.fill();
-  };
-
-  col1Data.forEach((p, i) => {
-    const avatarImg = avatarImages[candidateData.indexOf(p)];
-    drawProfileRow(ctx, p, col1Left, panelTop + i * rowH, avatarImg);
-  });
-  col2Data.forEach((p, i) => {
-    const avatarImg = avatarImages[candidateData.indexOf(p)];
-    drawProfileRow(ctx, p, col2Left, panelTop + i * rowH, avatarImg);
-  });
-  col3Data.forEach((p, i) => {
-    const avatarImg = avatarImages[candidateData.indexOf(p)];
-    drawProfileRow(ctx, p, col3Left, panelTop + i * rowH, avatarImg);
-  });
-
-  // 5. Pie de página
+  // Footer
   ctx.font = "12px Arial";
   ctx.fillStyle = "#555";
   ctx.textAlign = "right";
-  ctx.fillText(footnote, width - 50, height - 30);
+  ctx.fillText("*Datos de muestra", width - 40, height - 30);
 
-  // Convertir a imagen y agregar al canvas
+  // Convert to image and insert into Fabric canvas
   const dataURL = tempCanvas.toDataURL("image/png");
   const { Image: FabricImage } = await import("fabric");
-
   const img = new Image();
   img.crossOrigin = "anonymous";
   img.onload = () => {
@@ -345,7 +181,6 @@ export const autoInsertHumorHistogram = async (canvas) => {
         evented: true,
         hasControls: true,
         hasBorders: true,
-        hoverCursor: "move",
         name: "humor-histogram-chart",
       });
 
@@ -369,81 +204,26 @@ export const autoInsertHumorHistogram = async (canvas) => {
 export const autoInsertPerfilesArquetipos = async (canvas) => {
   if (!canvas) return;
 
-  // Datos iniciales basados en la imagen - 2 sub-tipos por arquetipo
   const data = {
     title: "Arquetipos | Sub-arquetipos",
     footnote: "*Fuente: arquetipos de marca",
-    axes: {
-      top: "CAMBIO",
-      right: "CERCANÍA",
-      bottom: "ESTABILIDAD",
-      left: "CONOCIMIENTO",
-    },
+    axes: { top: "CAMBIO", right: "CERCANÍA", bottom: "ESTABILIDAD", left: "CONOCIMIENTO" },
     archeTypes: [
-      {
-        name: "Impulsor",
-        color: "#F6C358",
-        subTypes: ["Visionario", "Catalizador"],
-      },
-      {
-        name: "Justiciero",
-        color: "#F39C12",
-        subTypes: ["Defensor", "Activista"],
-      },
-      {
-        name: "Generoso",
-        color: "#F08A5D",
-        subTypes: ["Altruista", "Humanitario"],
-      },
-      {
-        name: "Amigo",
-        color: "#E94E77",
-        subTypes: ["Leal", "Fiel"],
-      },
-      {
-        name: "Protector",
-        color: "#D7263D",
-        subTypes: ["Guardián", "Vigilante"],
-      },
-      {
-        name: "Héroe",
-        color: "#8E44AD",
-        subTypes: ["Valiente", "Salvador"],
-      },
-      {
-        name: "Conciliador",
-        color: "#2E9CCA",
-        subTypes: ["Mediador", "Pacificador"],
-      },
-      {
-        name: "Líder",
-        color: "#3D6B9B",
-        subTypes: ["Director", "Soberano"],
-      },
-      {
-        name: "Ejecutivo",
-        color: "#2E8B57",
-        subTypes: ["Organizado", "Eficaz"],
-      },
-      {
-        name: "Mentor",
-        color: "#1F8A70",
-        subTypes: ["Maestro", "Orientador"],
-      },
-      {
-        name: "Estratega",
-        color: "#27AE60",
-        subTypes: ["Planificador", "Táctico"],
-      },
-      {
-        name: "Transformador",
-        color: "#9ACD32",
-        subTypes: ["Mago", "Renovador"],
-      },
+      { name: "Impulsor", color: "#F6C358", subTypes: ["Visionario", "Catalizador"] },
+      { name: "Justiciero", color: "#F39C12", subTypes: ["Defensor", "Activista"] },
+      { name: "Generoso", color: "#F08A5D", subTypes: ["Altruista", "Humanitario"] },
+      { name: "Amigo", color: "#E94E77", subTypes: ["Leal", "Fiel"] },
+      { name: "Protector", color: "#D7263D", subTypes: ["Guardián", "Vigilante"] },
+      { name: "Héroe", color: "#8E44AD", subTypes: ["Valiente", "Salvador"] },
+      { name: "Conciliador", color: "#2E9CCA", subTypes: ["Mediador", "Pacificador"] },
+      { name: "Líder", color: "#3D6B9B", subTypes: ["Director", "Soberano"] },
+      { name: "Ejecutivo", color: "#2E8B57", subTypes: ["Organizado", "Eficaz"] },
+      { name: "Mentor", color: "#1F8A70", subTypes: ["Maestro", "Orientador"] },
+      { name: "Estratega", color: "#27AE60", subTypes: ["Planificador", "Táctico"] },
+      { name: "Transformador", color: "#9ACD32", subTypes: ["Mago", "Renovador"] },
     ],
   };
 
-  // Draw a ring chart similar to the modal but for auto-insert
   const tempCanvas = document.createElement("canvas");
   const width = 1400;
   const height = 1000;
@@ -461,21 +241,17 @@ export const autoInsertPerfilesArquetipos = async (canvas) => {
   ctx.textAlign = "left";
   ctx.fillText(data.title, 40, 50);
 
-  // Ring parameters - anillo más grande
+  // Ring params
   const centerX = width / 2;
   const centerY = height / 2 + 40;
   const outerR = 300;
   const innerR = 200;
 
-  // Draw segments by archetype (not by subtype)
   data.archeTypes.forEach((archetype, archetypeIndex) => {
-    const numSubTypes = archetype.subTypes.length;
     const archetypeAngle = (Math.PI * 2) / data.archeTypes.length;
-
     const startAngle = -Math.PI / 2 + archetypeIndex * archetypeAngle;
     const endAngle = startAngle + archetypeAngle;
 
-    // Draw the full archetype segment
     ctx.beginPath();
     ctx.arc(centerX, centerY, outerR, startAngle, endAngle, false);
     ctx.arc(centerX, centerY, innerR, endAngle, startAngle, true);
@@ -486,46 +262,33 @@ export const autoInsertPerfilesArquetipos = async (canvas) => {
     ctx.strokeStyle = "#ffffff";
     ctx.stroke();
 
-    // Draw sub-types as a vertical list inside the segment
+    // label
     const midAngle = (startAngle + endAngle) / 2;
     const labelRadius = (outerR + innerR) / 2;
     const labelX = centerX + Math.cos(midAngle) * labelRadius;
     const labelY = centerY + Math.sin(midAngle) * labelRadius;
-
     ctx.save();
     ctx.translate(labelX, labelY);
-
-    // Ajustar rotación para que el texto siga la curva correctamente
     let textAngle = midAngle + Math.PI / 2;
-
-    // Si el texto está en la parte inferior del círculo, voltear para que sea legible
-    if (midAngle > Math.PI / 2 && midAngle < (3 * Math.PI) / 2) {
-      textAngle = midAngle - Math.PI / 2;
-    }
-
+    if (midAngle > Math.PI / 2 && midAngle < (3 * Math.PI) / 2) textAngle = midAngle - Math.PI / 2;
     ctx.rotate(textAngle);
     ctx.fillStyle = "#fff";
     ctx.font = "bold 9px Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-
-    // Dibujar cada sub-tipo en una línea vertical
     const lineHeight = 12;
-    const totalHeight = (numSubTypes - 1) * lineHeight;
+    const totalHeight = (archetype.subTypes.length - 1) * lineHeight;
     const startY = -totalHeight / 2;
-
     archetype.subTypes.forEach((subType, subIndex) => {
       const yPos = startY + subIndex * lineHeight;
       ctx.fillText(subType, 0, yPos);
     });
-
     ctx.restore();
 
-    // Draw archetype name outside the ring
+    // archetype name outside
     const archetypeRadius = outerR + 50;
     const archetypeX = centerX + Math.cos(midAngle) * archetypeRadius;
     const archetypeY = centerY + Math.sin(midAngle) * archetypeRadius;
-
     ctx.fillStyle = "#333";
     ctx.font = "bold 16px Arial";
     ctx.textAlign = "center";
@@ -533,80 +296,39 @@ export const autoInsertPerfilesArquetipos = async (canvas) => {
     ctx.fillText(archetype.name, archetypeX, archetypeY);
   });
 
-  // Draw crosshair grid
+  // grid
   const gridExtend = 60;
   ctx.strokeStyle = "#ddd";
   ctx.lineWidth = 1;
   ctx.setLineDash([5, 5]);
-
-  // Vertical line
   ctx.beginPath();
   ctx.moveTo(centerX, centerY - outerR - gridExtend);
   ctx.lineTo(centerX, centerY + outerR + gridExtend);
   ctx.stroke();
-
-  // Horizontal line
   ctx.beginPath();
   ctx.moveTo(centerX - outerR - gridExtend, centerY);
   ctx.lineTo(centerX + outerR + gridExtend, centerY);
   ctx.stroke();
-
   ctx.setLineDash([]);
 
-  // Draw axes labels with arrows
+  // axes labels
   ctx.fillStyle = "#666";
   ctx.font = "bold 14px Arial";
   ctx.textAlign = "center";
-
-  // Top label (CAMBIO)
-  ctx.fillText(
-    "+" + data.axes.top.toUpperCase(),
-    centerX - 80,
-    centerY - outerR - 80
-  );
-
-  // Right label (CERCANÍA)
+  ctx.fillText("+" + data.axes.top.toUpperCase(), centerX - 80, centerY - outerR - 80);
   ctx.save();
   ctx.translate(centerX + outerR + 80, centerY - 80);
   ctx.rotate(Math.PI / 2);
   ctx.fillText("+" + data.axes.right.toUpperCase(), 0, 0);
   ctx.restore();
-
-  // Bottom label (ESTABILIDAD)
-  ctx.fillText(
-    "+" + data.axes.bottom.toUpperCase(),
-    centerX - 100,
-    centerY + outerR + 80
-  );
-
-  // Left label (CONOCIMIENTO)
+  ctx.fillText("+" + data.axes.bottom.toUpperCase(), centerX - 100, centerY + outerR + 80);
   ctx.save();
   ctx.translate(centerX - outerR - 80, centerY - 80);
   ctx.rotate(Math.PI / 2);
   ctx.fillText("+" + data.axes.left.toUpperCase(), 0, 0);
   ctx.restore();
 
-  // Draw axis scale markers
-  ctx.font = "12px Arial";
-  ctx.fillStyle = "#999";
-
-  // Horizontal scale
-  ctx.textBaseline = "middle";
-  ctx.fillText("-2", centerX - outerR - 50, centerY + 20);
-  ctx.fillText("-1", centerX - outerR / 2 - 25, centerY + 20);
-  ctx.fillText("0", centerX, centerY + 20);
-  ctx.fillText("+1", centerX + outerR / 2 + 25, centerY + 20);
-  ctx.fillText("+2", centerX + outerR + 50, centerY + 20);
-
-  // Vertical scale
-  ctx.textAlign = "right";
-  ctx.fillText("+2", centerX - 20, centerY - outerR - 50);
-  ctx.fillText("+1", centerX - 20, centerY - outerR / 2 - 25);
-  ctx.fillText("0", centerX - 20, centerY);
-  ctx.fillText("-1", centerX - 20, centerY + outerR / 2 + 25);
-  ctx.fillText("-2", centerX - 20, centerY + outerR + 50);
-
-  // Footnote
+  // footnote
   ctx.font = "12px Arial";
   ctx.fillStyle = "#555";
   ctx.textAlign = "right";
@@ -645,23 +367,28 @@ export const autoInsertPerfilesArquetipos = async (canvas) => {
 };
 
 // Auto-insert for "Estudio de Identificación y definición del Perfil"
-export const autoInsertPerfilIdentificacion = async (canvas) => {
+export const autoInsertPerfilIdentificacion = async (canvas, data = {}) => {
   if (!canvas) return;
 
-  // Default positive/negative bullets
-  const positive = [
+  // allow caller to pass positive/negative/footnote/title
+  const positive = data.positive || [
     "La población digital de Nuevo León busca en su próximo Gobernador la figura arquetípica de un Impulsor",
     "Quieren que posea un carácter fuerte para combatir problemas de inseguridad y criminalidad",
     "Buscan un enfoque renovado de la política que transforme la manera de abordar los problemas del Estado",
   ];
 
-  const negative = [
+  const negative = data.negative || [
     "Les enfadaría que haga mega obras sin dar cuentas claras sobre el gasto público",
     "No desean a alguien que se limite a aparecer en redes sociales mientras permanece ausente",
     "Les enojaría que sus promesas de campaña no llegaran a realizarse o fueran ineficientes",
   ];
 
-  // Draw to temp canvas
+  // Ajustes para evitar empalme de textos
+  const col1X = 40 + 360 + 60;
+  const col2X = col1X + 520;
+    const colYStart = 210; // aún más abajo para evitar empalme
+  const lineHeight = 34; // más espacio
+
   const tempCanvas = document.createElement("canvas");
   const width = 1400;
   const height = 720;
@@ -689,7 +416,7 @@ export const autoInsertPerfilIdentificacion = async (canvas) => {
   ctx.closePath();
   ctx.fill();
 
-  // Draw donut segments
+  // Donut ring
   const centerX = cardX + cardW / 2;
   const centerY = cardY + 140;
   const outerR = 90;
@@ -736,10 +463,6 @@ export const autoInsertPerfilIdentificacion = async (canvas) => {
   ctx.fillText("Impulsor", centerX, centerY + 190);
 
   // Middle and right columns
-  const col1X = cardX + cardW + 60;
-  const col2X = col1X + 520;
-  const colYStart = 80;
-
   // Headers
   ctx.fillStyle = "#14532d";
   ctx.fillRect(col1X - 12, colYStart - 36, 360, 44);
@@ -756,29 +479,35 @@ export const autoInsertPerfilIdentificacion = async (canvas) => {
 
   // Bulleted lists
   ctx.fillStyle = "#111827";
-  ctx.font = "15px Arial";
-  const lineHeight = 28;
-  let y = colYStart + 10;
-  positive.forEach((txt) => {
-    drawBulletText(ctx, txt, col1X, y, 340, lineHeight);
-    y += estimateLines(txt, 340, ctx) * lineHeight + 8;
-  });
+  ctx.font = "14px Arial";
+  let y = colYStart + 20;
+    const loremPositive = [
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.",
+      "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.",
+      "Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo."
+    ];
+    loremPositive.forEach((txt) => {
+      drawBulletText(ctx, txt, col1X, y, 340, lineHeight);
+      y += estimateLines(txt, 340, ctx) * lineHeight + 16;
+    });
 
-  y = colYStart + 10;
-  negative.forEach((txt) => {
-    drawBulletText(ctx, txt, col2X, y, 340, lineHeight);
-    y += estimateLines(txt, 340, ctx) * lineHeight + 8;
-  });
+  y = colYStart + 20;
+    const loremNegative = [
+      "Sed posuere consectetur est at lobortis. Etiam porta sem malesuada magna mollis euismod.",
+      "Morbi leo risus, porta ac consectetur ac, vestibulum at eros.",
+      "Maecenas sed diam eget risus varius blandit sit amet non magna."
+    ];
+    loremNegative.forEach((txt) => {
+      drawBulletText(ctx, txt, col2X, y, 340, lineHeight);
+      y += estimateLines(txt, 340, ctx) * lineHeight + 16;
+    });
 
   // Footer
   ctx.font = "12px Arial";
   ctx.fillStyle = "#555";
   ctx.textAlign = "right";
-  ctx.fillText(
-    "*Perfil realizado el 11.Diciembre.2024",
-    width - 40,
-    height - 30
-  );
+  const foot = data.footnote || "*Perfil realizado el 11.Diciembre.2024";
+  ctx.fillText(foot, width - 40, height - 30);
 
   // helpers
   function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
@@ -858,3 +587,4 @@ export const autoInsertPerfilIdentificacion = async (canvas) => {
   };
   img.src = dataURL;
 };
+
