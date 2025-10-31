@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { X, Plus, Trash2 } from 'lucide-react';
 import { Image as FabricImage } from 'fabric';
+import '@/styles/reportBuilder/ChartModals.css';
 
 const SOCIAL_ICONS = [
     { key: 'facebook', icon: 'https://cdn.simpleicons.org/facebook/1877F2' },
@@ -23,10 +24,10 @@ const initialState = {
         name: 'Personaje 1',
         avatar: '',
     },
-    message: '',
-    numPosts: 301,
+    message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    numPosts: 0,
     collage: [], // {src, file}
-    radar: [28, 23, 18, 17, 14],
+    radar: [0, 0, 0, 0, 0],
     topPosts: [
         { src: '', network: 'facebook' },
         { src: '', network: 'instagram' },
@@ -375,122 +376,127 @@ const BenchmarkAdjetivacionTableroModal = ({ isOpen, onClose, canvas, filminaTit
     if (!isOpen) return null;
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content modal-large" onClick={e => e.stopPropagation()} style={{ maxWidth: 1300, maxHeight: '98vh', overflowY: 'hidden', display: 'flex', flexDirection: 'column' }}>
+        <div className="chart-modal-overlay" onClick={onClose}>
+            <div className="chart-modal-container modal-large" onClick={e => e.stopPropagation()}>
                 <div className="modal-header">
-                    <h3 className="modal-title">Tablero de Análisis de Contenido y Mensaje</h3>
+                    <h3 className="chart-modal-title">Tablero de Análisis de Contenido y Mensaje</h3>
                     <button className="modal-close" onClick={onClose}><X size={20} /></button>
                 </div>
-                <div className="modal-body" style={{ overflowY: 'auto', maxHeight: 'calc(98vh - 140px)', paddingRight: '10px' }}>
+                <div className="modal-body modal-body-scrollable">
                     {/* Tipo de análisis */}
-                    <div style={{ backgroundColor: '#f0f9ff', border: '2px solid #b13b2e', borderRadius: 8, padding: 12, marginBottom: 18 }}>
-                        <div style={{ fontWeight: 'bold', fontSize: 16, color: '#b13b2e', marginBottom: 4 }}>
+                    <div className="chart-profile-card analysis-type-card">
+                        <div className="analysis-type-title">
                             Tipo de análisis: {analysisType.source} - {analysisType.type}
                         </div>
-                        <div style={{ fontSize: 13, color: '#555' }}>
+                        <div className="chart-modal-description">
                             {analysisType.description}
                         </div>
                     </div>
                     {/* Perfil */}
-                    <div style={{ display: 'flex', gap: 20, marginBottom: 18 }}>
-                        <div>
-                            <label>Nombre:</label>
-                            <input type="text" value={state.profile.name} onChange={e => handleProfileChange('name', e.target.value)} style={{ width: 180, marginRight: 10 }} />
-                            <label>Avatar:</label>
-                            <input type="file" accept="image/*" onChange={e => {
-                                const file = e.target.files[0];
-                                if (!file) return;
-                                const reader = new FileReader();
-                                reader.onload = ev => handleProfileChange('avatar', ev.target.result);
-                                reader.readAsDataURL(file);
-                            }} />
+                    <div className="chart-profile-card">
+                        <h3>Perfil y Mensaje</h3>
+                        <div className="chart-form-grid">
+                            <div className="chart-form-field">
+                                <label className="chart-form-label">Nombre:</label>
+                                <input type="text" value={state.profile.name} onChange={e => handleProfileChange('name', e.target.value)} className="chart-form-input" />
+                            </div>
+                            <div className="chart-form-field">
+                                <label className="chart-form-label">Avatar:</label>
+                                <input type="file" accept="image/*" onChange={e => {
+                                    const file = e.target.files[0];
+                                    if (!file) return;
+                                    const reader = new FileReader();
+                                    reader.onload = ev => handleProfileChange('avatar', ev.target.result);
+                                    reader.readAsDataURL(file);
+                                }} className="chart-form-input" />
+                            </div>
                         </div>
-                        <div style={{ flex: 1 }}>
-                            <label>Mensaje (Análisis IA):</label>
-                            <textarea value={state.message} onChange={handleMessageChange} rows={4} style={{ width: '100%' }} placeholder="Análisis estratégico del mensaje..." />
+                        <div className="chart-form-field">
+                            <label className="chart-form-label">Mensaje (Análisis IA):</label>
+                            <textarea value={state.message} onChange={handleMessageChange} rows={4} className="chart-form-textarea" placeholder="Análisis estratégico del mensaje..." />
                         </div>
                     </div>
                     {/* Volumen y collage */}
-                    <div style={{ marginBottom: 18 }}>
-                        <label>Número de publicaciones:</label>
-                        <input type="number" value={state.numPosts} onChange={handleNumPostsChange} style={{ width: 80, marginRight: 20 }} />
-                        <label>Imágenes para collage:</label>
-                        <input type="file" accept="image/*" multiple onChange={handleCollageUpload} />
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8 }}>
+                    <div className="chart-profile-card">
+                        <h3>Volumen y Galería</h3>
+                        <div className="chart-form-grid-single">
+                            <div className="chart-form-field">
+                                <label className="chart-form-label">Número de publicaciones:</label>
+                                <input type="number" value={state.numPosts} onChange={handleNumPostsChange} className="chart-form-input" />
+                            </div>
+                        </div>
+                        <div className="chart-form-field">
+                            <label className="chart-form-label">Imágenes para collage:</label>
+                            <input type="file" accept="image/*" multiple onChange={handleCollageUpload} className="chart-form-input" />
+                        </div>
+                        <div className="flex-wrap-gap-6-mt-8">
                             {state.collage.map((img, idx) => (
-                                <div key={idx} style={{ position: 'relative' }}>
-                                    <img src={img.src} alt="collage" style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 4, border: '1px solid #ccc' }} />
-                                    <button onClick={() => handleRemoveCollage(idx)} style={{ position: 'absolute', top: -8, right: -8, background: '#fff', border: '1px solid #ccc', borderRadius: '50%', width: 18, height: 18, cursor: 'pointer' }}><Trash2 size={12} /></button>
+                                <div key={idx} className="position-relative">
+                                    <img src={img.src} alt="collage" className="collage-thumbnail" />
+                                    <button onClick={() => handleRemoveCollage(idx)} className="chart-remove-button delete-button-absolute"><Trash2 size={12} /></button>
                                 </div>
                             ))}
                         </div>
                     </div>
                     {/* Radar */}
-                    <div style={{ marginBottom: 18 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-                            <label>Adjetivación (Tono):</label>
-                            <span style={{
-                                fontWeight: 'bold',
-                                fontSize: 14,
-                                color: state.radar.reduce((a, b) => a + b, 0) === 100 ? '#059669' : '#dc2626',
-                                backgroundColor: state.radar.reduce((a, b) => a + b, 0) === 100 ? '#d1fae5' : '#fee2e2',
-                                padding: '4px 12px',
-                                borderRadius: 6
-                            }}>
+                    <div className="chart-profile-card">
+                        <div className="flex-row-gap-10-mb-8-center mb-12">
+                            <h3 style={{ margin: 0 }}>Adjetivación (Tono):</h3>
+                            <span className={`badge-total ${state.radar.reduce((a, b) => a + b, 0) === 100 ? 'valid' : 'invalid'}`}>
                                 Total: {state.radar.reduce((a, b) => a + b, 0)}%
                             </span>
                         </div>
-                        <div style={{ display: 'flex', gap: 10 }}>
+                        <div className="chart-form-grid-4col">
                             {RADAR_AXES.map((ax, idx) => (
-                                <div key={ax} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                    <span style={{ fontWeight: 'bold', fontSize: 13 }}>{ax}</span>
-                                    <input type="number" min={0} max={100} value={state.radar[idx]} onChange={e => handleRadarChange(idx, e.target.value)} style={{ width: 50 }} />
-                                    <span>%</span>
+                                <div key={ax} className="chart-form-field">
+                                    <label className="chart-form-label text-center">{ax}</label>
+                                    <input type="number" min={0} max={100} value={state.radar[idx]} onChange={e => handleRadarChange(idx, e.target.value)} className="chart-form-input" />
+                                    <span className="text-center font-size-12">%</span>
                                 </div>
                             ))}
                         </div>
                     </div>
                     {/* Top posts */}
-                    <div style={{ marginBottom: 18 }}>
-                        <label>Publicaciones TOP:</label>
+                    <div className="chart-profile-card">
+                        <h3>Publicaciones TOP</h3>
                         {/* Primera fila: 3 redes sociales */}
-                        <div style={{ display: 'flex', gap: 18, marginTop: 8, justifyContent: 'center' }}>
+                        <div className="flex-row-gap-18-mt-8-center">
                             {state.topPosts.slice(0, 3).map((post, idx) => {
                                 const socialIcon = SOCIAL_ICONS.find(ic => ic.key === post.network);
                                 return (
-                                    <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                                            {socialIcon && <img src={socialIcon.icon} alt={post.network} style={{ width: 20, height: 20 }} />}
-                                            <span style={{ fontWeight: 'bold', fontSize: 14, textTransform: 'capitalize' }}>{post.network}</span>
+                                    <div key={idx} className="flex-col-gap-6-center">
+                                        <div className="flex-row-gap-6-mb-4-center">
+                                            {socialIcon && <img src={socialIcon.icon} alt={post.network} className="icon-small" />}
+                                            <span className="label-bold-14">{post.network}</span>
                                         </div>
-                                        <input type="file" accept="image/*" onChange={e => handleTopUpload(idx, e)} />
-                                        {post.src && <img src={post.src} alt="top" style={{ width: 100, height: 110, objectFit: 'cover', borderRadius: 4, border: '2px solid #ccc' }} />}
+                                        <input type="file" accept="image/*" onChange={e => handleTopUpload(idx, e)} className="chart-form-input w-120" />
+                                        {post.src && <img src={post.src} alt="top" className="post-preview-image" />}
                                     </div>
                                 );
                             })}
                         </div>
                         {/* Segunda fila: 2 redes sociales */}
-                        <div style={{ display: 'flex', gap: 18, marginTop: 12, justifyContent: 'center' }}>
+                        <div className="flex-row-gap-18-mt-12-center">
                             {state.topPosts.slice(3, 5).map((post, idx) => {
                                 const actualIdx = idx + 3;
                                 const socialIcon = SOCIAL_ICONS.find(ic => ic.key === post.network);
                                 return (
-                                    <div key={actualIdx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                                            {socialIcon && <img src={socialIcon.icon} alt={post.network} style={{ width: 20, height: 20 }} />}
-                                            <span style={{ fontWeight: 'bold', fontSize: 14, textTransform: 'capitalize' }}>{post.network}</span>
+                                    <div key={actualIdx} className="flex-col-gap-6-center">
+                                        <div className="flex-row-gap-6-mb-4-center">
+                                            {socialIcon && <img src={socialIcon.icon} alt={post.network} className="icon-small" />}
+                                            <span className="label-bold-14">{post.network}</span>
                                         </div>
-                                        <input type="file" accept="image/*" onChange={e => handleTopUpload(actualIdx, e)} />
-                                        {post.src && <img src={post.src} alt="top" style={{ width: 100, height: 110, objectFit: 'cover', borderRadius: 4, border: '2px solid #ccc' }} />}
+                                        <input type="file" accept="image/*" onChange={e => handleTopUpload(actualIdx, e)} className="chart-form-input w-120" />
+                                        {post.src && <img src={post.src} alt="top" className="post-preview-image" />}
                                     </div>
                                 );
                             })}
                         </div>
                     </div>
                 </div>
-                <div className="modal-footer">
-                    <button className="btn-secondary" onClick={onClose}>Cancelar</button>
-                    <button className="btn-primary" onClick={insertTableroToCanvas}>Insertar Tablero en Canvas</button>
+                <div className="chart-modal-buttons">
+                    <button className="chart-modal-button-cancel" onClick={onClose}>Cancelar</button>
+                    <button className="chart-modal-button-insert" onClick={insertTableroToCanvas}>Insertar Tablero en Canvas</button>
                 </div>
             </div>
         </div>

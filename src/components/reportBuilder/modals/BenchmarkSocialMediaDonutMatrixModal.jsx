@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Plus, Trash2 } from 'lucide-react';
 import { Image as FabricImage } from 'fabric';
+import '@/styles/reportBuilder/ChartModals.css';
 
 // Categorías y colores
 const DONUT_CATEGORIES = [
@@ -143,7 +144,7 @@ const DonutChartCell = ({ data, colors, labels, size = 80 }) => {
 
     }, [data, colors, labels, size]);
 
-    return <canvas ref={canvasRef} width={size} height={size} style={{ width: size, height: size }} />;
+    return <canvas ref={canvasRef} width={size} height={size} />;
 };
 
 // Migrar personajes para asegurar que todos tengan donutData para todas las redes
@@ -465,100 +466,68 @@ const BenchmarkSocialMediaDonutMatrixModal = ({
     if (!isOpen) return null;
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content modal-large" onClick={e => e.stopPropagation()} style={{ maxWidth: '1400px', maxHeight: '95vh', overflowY: 'auto' }}>
+        <div className="chart-modal-overlay" onClick={onClose}>
+            <div className="chart-modal-container modal-xl" onClick={e => e.stopPropagation()}>
                 <div className="modal-header">
-                    <h3 className="modal-title">{title}</h3>
+                    <h3 className="chart-modal-title">{title}</h3>
                     <button className="modal-close" onClick={onClose}><X size={20} /></button>
                 </div>
                 <div className="modal-body">
                     {/* Formulario para agregar personaje */}
-                    <div style={{ display: 'flex', gap: 10, marginBottom: 20, alignItems: 'center', background: '#f0f7ff', padding: '12px 16px', borderRadius: 8 }}>
+                    <div className="add-character-form">
                         <input
                             type="text"
                             placeholder="Nombre del personaje"
                             value={newCharName}
                             onChange={e => setNewCharName(e.target.value)}
-                            style={{ width: 200, fontSize: 14, padding: '6px 10px', border: '1px solid #ccc', borderRadius: 6 }}
+                            className="chart-form-input w-200"
                         />
                         <input
                             type="text"
                             placeholder="URL del avatar (opcional)"
                             value={newCharAvatar}
                             onChange={e => setNewCharAvatar(e.target.value)}
-                            style={{ width: 280, fontSize: 14, padding: '6px 10px', border: '1px solid #ccc', borderRadius: 6 }}
+                            className="chart-form-input w-280"
                         />
-                        <button className="btn-primary" type="button" onClick={addCharacter} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px' }}>
+                        <button className="btn-primary btn-with-icon" type="button" onClick={addCharacter}>
                             <Plus size={16} /> Agregar personaje
                         </button>
                     </div>
 
                     {/* Vista de edición con controles */}
-                    <div style={{ marginBottom: 20 }}>
+                    <div className="mb-20">
                         {characters.map((char, charIdx) => (
-                            <div key={charIdx} style={{
-                                background: '#f9fafb',
-                                padding: 12,
-                                borderRadius: 8,
-                                marginBottom: 12,
-                                border: '1px solid #e5e7eb'
-                            }}>
-                                <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 12 }}>
+                            <div key={charIdx} className="chart-profile-card">
+                                <div className="character-edit-row">
                                     <input
                                         type="text"
                                         value={char.name}
                                         onChange={e => updateCharName(charIdx, e.target.value)}
-                                        style={{
-                                            fontWeight: 600,
-                                            fontSize: 14,
-                                            border: '1px solid #d1d5db',
-                                            borderRadius: 4,
-                                            padding: '6px 10px',
-                                            flex: 1,
-                                            background: '#fff'
-                                        }}
+                                        className="chart-form-input flex-1 font-weight-600 font-size-14"
                                         placeholder="Nombre"
                                     />
                                     <input
                                         type="text"
                                         value={char.avatarUrl}
                                         onChange={e => updateCharAvatar(charIdx, e.target.value)}
-                                        style={{
-                                            fontSize: 12,
-                                            border: '1px solid #d1d5db',
-                                            borderRadius: 4,
-                                            padding: '6px 10px',
-                                            flex: 2,
-                                            color: '#6b7280'
-                                        }}
+                                        className="chart-form-input flex-2 font-size-12 text-gray"
                                         placeholder="URL del avatar"
                                     />
                                     <button
                                         type="button"
                                         onClick={() => removeCharacter(charIdx)}
-                                        style={{
-                                            background: '#ef4444',
-                                            border: 'none',
-                                            color: '#fff',
-                                            cursor: 'pointer',
-                                            padding: '6px 12px',
-                                            borderRadius: 6,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: 6,
-                                            fontWeight: 500
-                                        }}
+                                        className="chart-delete-button"
                                     >
                                         <Trash2 size={14} /> Eliminar
                                     </button>
                                 </div>
 
                                 {/* Controles para editar valores por red social */}
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
+                                <div className="grid-5-col">
                                     {SOCIAL_NETWORKS.map((net) => (
-                                        <div key={net.key} style={{ background: '#fff', padding: 8, borderRadius: 6, border: '1px solid #e5e7eb' }}>
-                                            <div style={{ fontSize: 11, fontWeight: 600, marginBottom: 6, textAlign: 'center' }}>{net.label}</div>
-                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 3 }}>
+                                        <div key={net.key} className="network-card">
+                                            <div className="network-label">{net.label}</div>
+                                            <div className="grid-2-col">
                                                 {DONUT_CATEGORIES.map((cat, catIdx) => (
                                                     <input
                                                         key={cat.key}
@@ -567,15 +536,7 @@ const BenchmarkSocialMediaDonutMatrixModal = ({
                                                         max={100}
                                                         value={char.donutData[net.key][catIdx]}
                                                         onChange={e => updateDonutValue(charIdx, net.key, catIdx, e.target.value)}
-                                                        style={{
-                                                            width: '100%',
-                                                            fontSize: 10,
-                                                            border: '1px solid #d1d5db',
-                                                            borderRadius: 3,
-                                                            textAlign: 'center',
-                                                            padding: '3px',
-                                                            background: '#fff'
-                                                        }}
+                                                        className="chart-form-input input-small"
                                                         title={cat.label}
                                                         placeholder={cat.label.substring(0, 4)}
                                                     />
@@ -589,73 +550,31 @@ const BenchmarkSocialMediaDonutMatrixModal = ({
                     </div>
 
                     {/* Vista previa limpia para exportar (SIN controles de edición) */}
-                    <div ref={previewRef} style={{
-                        background: '#ffffff',
-                        padding: '12px 10px',
-                        display: 'inline-block',
-                        fontFamily: 'Arial, sans-serif'
-                    }}>
+                    <div ref={previewRef} className="preview-wrapper">
                         {/* Leyenda de categorías - estilo compacto horizontal */}
-                        <div style={{
-                            display: 'flex',
-                            gap: 10,
-                            marginBottom: 10,
-                            flexWrap: 'wrap',
-                            alignItems: 'center',
-                            justifyContent: 'flex-start',
-                            paddingBottom: 8
-                        }}>
+                        <div className="preview-legend">
                             {DONUT_CATEGORIES.map(cat => (
-                                <div key={cat.key} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                                    <span style={{
-                                        width: 10,
-                                        height: 10,
-                                        borderRadius: 2,
-                                        background: cat.color,
-                                        display: 'inline-block'
-                                    }}></span>
-                                    <span style={{ fontSize: 9, fontWeight: 500, color: '#1f2937' }}>{cat.label}</span>
+                                <div key={cat.key} className="legend-item">
+                                    <span className="legend-color-box" style={{ background: cat.color }}></span>
+                                    <span className="legend-label">{cat.label}</span>
                                 </div>
                             ))}
                         </div>
 
                         {/* Header con íconos de redes sociales y leyenda extendida */}
-                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 24 }}>
-                            <div style={{ width: 100 }}></div>
+                        <div className="preview-header">
+                            <div className="preview-header-spacer"></div>
                             {SOCIAL_NETWORKS_FOR_LEGEND.map(net => (
-                                <div key={net.key} style={{
-                                    width: 90,
-                                    textAlign: 'center',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    height: 38
-                                }}>
+                                <div key={net.key} className="social-icon-cell">
                                     {socialIconImages[net.key] ? (
                                         <img
                                             src={socialIconImages[net.key].src}
                                             alt={net.label}
                                             title={net.label}
-                                            style={{
-                                                width: 32,
-                                                height: 32,
-                                                display: 'block',
-                                                margin: '0 auto'
-                                            }}
+                                            className="social-icon-image"
                                         />
                                     ) : (
-                                        <div style={{
-                                            width: 32,
-                                            height: 32,
-                                            background: '#e5e7eb',
-                                            borderRadius: '50%',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            fontSize: 8,
-                                            fontWeight: 600,
-                                            color: '#6b7280'
-                                        }}>
+                                        <div className="social-icon-placeholder">
                                             {net.label.substring(0, 2)}
                                         </div>
                                     )}
@@ -665,37 +584,19 @@ const BenchmarkSocialMediaDonutMatrixModal = ({
 
                         {/* Filas de personajes - SOLO VISUALIZACIÓN */}
                         {characters.map((char, charIdx) => (
-                            <div key={charIdx} style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                marginBottom: 18 // Más espacio entre filas
-                            }}>
+                            <div key={charIdx} className="character-preview-row">
                                 {/* Columna de personaje */}
-                                <div style={{ width: 100, display: 'flex', alignItems: 'center', gap: 8, paddingRight: 8 }}>
-                                    <div style={{ position: 'relative', flexShrink: 0 }}>
+                                <div className="character-preview-info">
+                                    <div className="character-avatar-wrapper">
                                         <img
                                             src={char.avatarUrl}
                                             alt={char.name}
                                             crossOrigin="anonymous"
-                                            style={{
-                                                width: 42,
-                                                height: 42,
-                                                borderRadius: '50%',
-                                                objectFit: 'cover',
-                                                border: '3px solid #b13b2e',
-                                                background: '#fff'
-                                            }}
+                                            className="character-avatar"
                                         />
                                     </div>
-                                    <div style={{ flex: 1, minWidth: 0 }}>
-                                        <div style={{
-                                            fontWeight: 700,
-                                            fontSize: 10,
-                                            color: '#1f2937',
-                                            lineHeight: 1.2,
-                                            wordBreak: 'break-word',
-                                            marginTop: 6 // Separación extra entre nombre y gráficos
-                                        }}>
+                                    <div className="character-name-wrapper">
+                                        <div className="character-name-text">
                                             {char.name}
                                         </div>
                                     </div>
@@ -703,15 +604,7 @@ const BenchmarkSocialMediaDonutMatrixModal = ({
 
                                 {/* Columnas de redes sociales con donas - SOLO VISUALIZACIÓN */}
                                 {SOCIAL_NETWORKS.map((net) => (
-                                    <div key={net.key} style={{
-                                        width: 90,
-                                        textAlign: 'center',
-                                        position: 'relative',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                    }}>
+                                    <div key={net.key} className="donut-cell">
                                         <DonutChartCell
                                             data={char.donutData[net.key]}
                                             colors={DONUT_CATEGORIES.map(c => c.color)}
@@ -724,9 +617,9 @@ const BenchmarkSocialMediaDonutMatrixModal = ({
                         ))}
                     </div>
                 </div>
-                <div className="modal-footer">
-                    <button className="btn-secondary" onClick={onClose}>Cancelar</button>
-                    <button className="btn-primary" onClick={insertMatrixToCanvas}>Insertar Matriz en Canvas</button>
+                <div className="chart-modal-buttons">
+                    <button className="chart-modal-button-cancel" onClick={onClose}>Cancelar</button>
+                    <button className="chart-modal-button-insert" onClick={insertMatrixToCanvas}>Insertar Matriz en Canvas</button>
                 </div>
             </div>
         </div>

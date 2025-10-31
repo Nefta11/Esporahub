@@ -4,7 +4,21 @@
       "Bash(npm install jspdf)",
       "Bash(dir:*)",
       "Bash(npm install:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(npm run build:*)",
+      "Bash(for class in \"chart-form-field\" \"chart-form-grid\" \"chart-form-input\" \"chart-form-label\" \"chart-modal-button-cancel\" \"chart-modal-button-insert\" \"chart-modal-buttons\" \"chart-modal-container\" \"chart-modal-overlay\" \"chart-modal-title\" \"chart-profile-card\")",
+      "Bash(do)",
+      "Bash(if grep -q \"\\.$class\" \"C:\\Users\\Usuario\\Desktop\\esporadix\\esporahub\\src\\styles\\reportBuilder\\ChartModals.css\")",
+      "Bash(then)",
+      "Bash(echo:*)",
+      "Bash(else)",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(for class in \"chart-add-button\" \"chart-delete-button\" \"chart-form-field\" \"chart-form-input\" \"chart-form-label\" \"chart-modal-button-cancel\" \"chart-modal-button-insert\" \"chart-modal-buttons\" \"chart-modal-container\" \"chart-modal-overlay\" \"chart-modal-title\" \"chart-profile-card\" \"chart-row-item\")",
+      "Bash(do echo -n \"$class: \")",
+      "Bash(sort:*)",
+      "Bash(for file in src/components/reportBuilder/modals/DemographicsTableModal.jsx src/components/reportBuilder/modals/SocialMediaUsageModal.jsx src/components/reportBuilder/modals/BenchmarkDifusionOficialModal.jsx)",
+      "Bash(do echo \"=== $file ===\")"
     ],
     "deny": [],
     "ask": []

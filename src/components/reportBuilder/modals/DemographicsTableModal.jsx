@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Plus, Trash2 } from 'lucide-react';
 import { Image as FabricImage } from 'fabric';
+import '@/styles/reportBuilder/ChartModals.css';
 
 const DemographicsTableModal = ({ isOpen, onClose, canvas }) => {
   const [tables, setTables] = useState([
@@ -316,7 +317,7 @@ const DemographicsTableModal = ({ isOpen, onClose, canvas }) => {
 
   return (
     <div className="modal-overlay" onClick={handleClose}>
-      <div className="modal-content modal-large" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '900px', maxHeight: '90vh', overflowY: 'auto' }}>
+      <div className="modal-content modal-900" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h3 className="modal-title">Tablas Demográficas General y Digital</h3>
           <button className="modal-close" onClick={handleClose}>
@@ -336,18 +337,17 @@ const DemographicsTableModal = ({ isOpen, onClose, canvas }) => {
             </div>
 
             {tables.map((table, tableIndex) => (
-              <div key={tableIndex} style={{ marginBottom: '30px', padding: '15px', border: '1px solid #ddd', borderRadius: '8px' }}>
-                <div style={{ display: 'flex', gap: '10px', marginBottom: '15px', alignItems: 'center' }}>
+              <div key={tableIndex} className="chart-profile-card">
+                <div className="chart-profile-header">
                   <input
                     type="text"
                     placeholder="Título de la categoría"
                     value={table.title}
                     onChange={(e) => updateTable(tableIndex, 'title', e.target.value)}
-                    className="input-field"
-                    style={{ flex: 1, fontWeight: 'bold' }}
+                    className="chart-form-input"
                   />
                   <button
-                    className="btn-danger btn-icon"
+                    className="chart-remove-button"
                     onClick={() => removeTable(tableIndex)}
                     disabled={tables.length <= 1}
                   >
@@ -356,68 +356,69 @@ const DemographicsTableModal = ({ isOpen, onClose, canvas }) => {
                 </div>
 
                 {/* Filas de datos */}
-                <div style={{ marginLeft: '20px' }}>
-                  <div style={{ display: 'flex', gap: '10px', marginBottom: '10px', fontWeight: 'bold', fontSize: '12px' }}>
-                    <div style={{ flex: 2 }}>Etiqueta</div>
-                    <div style={{ flex: 1 }}>General</div>
-                    <div style={{ flex: 1 }}>Digital</div>
-                    <div style={{ width: '50px' }}>Color</div>
-                    <div style={{ width: '40px' }}></div>
+                <div className="chart-form-grid-4col">
+                  <div className="chart-sentimientos-header">
+                    <h4 className="text-left">Etiqueta</h4>
+                  </div>
+                  <div className="chart-sentimientos-header">
+                    <h4 className="text-left">General</h4>
+                  </div>
+                  <div className="chart-sentimientos-header">
+                    <h4 className="text-left">Digital</h4>
+                  </div>
+                  <div className="chart-sentimientos-header">
+                    <h4 className="text-left">Color</h4>
                   </div>
 
                   {table.rows.map((row, rowIndex) => (
-                    <div key={rowIndex} style={{ display: 'flex', gap: '10px', marginBottom: '8px', alignItems: 'center' }}>
+                    <React.Fragment key={rowIndex}>
                       <input
                         type="text"
                         placeholder="Etiqueta"
                         value={row.label}
                         onChange={(e) => updateRow(tableIndex, rowIndex, 'label', e.target.value)}
-                        className="input-field"
-                        style={{ flex: 2 }}
+                        className="chart-form-input"
                       />
                       <input
                         type="text"
                         placeholder="General"
                         value={row.general}
                         onChange={(e) => updateRow(tableIndex, rowIndex, 'general', e.target.value)}
-                        className="input-field"
-                        style={{ flex: 1 }}
+                        className="chart-form-input"
                       />
                       <input
                         type="text"
                         placeholder="Digital"
                         value={row.digital}
                         onChange={(e) => updateRow(tableIndex, rowIndex, 'digital', e.target.value)}
-                        className="input-field"
-                        style={{ flex: 1 }}
+                        className="chart-form-input"
                       />
-                      <input
-                        type="color"
-                        value={row.color}
-                        onChange={(e) => updateRow(tableIndex, rowIndex, 'color', e.target.value)}
-                        className="input-color"
-                        style={{ width: '50px' }}
-                      />
-                      <button
-                        className="btn-danger btn-icon"
-                        onClick={() => removeRow(tableIndex, rowIndex)}
-                        disabled={table.rows.length <= 1}
-                        style={{ width: '40px' }}
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
+                      <div className="flex-row-gap-8-center">
+                        <input
+                          type="color"
+                          value={row.color}
+                          onChange={(e) => updateRow(tableIndex, rowIndex, 'color', e.target.value)}
+                          className="color-input"
+                        />
+                        <button
+                          className="chart-delete-button"
+                          onClick={() => removeRow(tableIndex, rowIndex)}
+                          disabled={table.rows.length <= 1}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </React.Fragment>
                   ))}
-
-                  <button
-                    className="btn-secondary btn-sm"
-                    onClick={() => addRow(tableIndex)}
-                    style={{ marginTop: '10px' }}
-                  >
-                    <Plus size={14} />
-                    Agregar Fila
-                  </button>
                 </div>
+
+                <button
+                  className="chart-add-button"
+                  onClick={() => addRow(tableIndex)}
+                >
+                  <Plus size={14} />
+                  Agregar Fila
+                </button>
               </div>
             ))}
           </div>
@@ -425,17 +426,17 @@ const DemographicsTableModal = ({ isOpen, onClose, canvas }) => {
           {/* Vista previa */}
           <div className="chart-preview">
             <h4>Vista Previa</h4>
-            <div className="preview-container" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+            <div className="preview-container">
               <canvas ref={canvasRef} width="500" height="600"></canvas>
             </div>
           </div>
         </div>
 
-        <div className="modal-footer">
-          <button className="btn-secondary" onClick={handleClose}>
+        <div className="chart-modal-buttons">
+          <button className="chart-modal-button-cancel" onClick={handleClose}>
             Cancelar
           </button>
-          <button className="btn-primary" onClick={insertTableToCanvas}>
+          <button className="chart-modal-button-insert" onClick={insertTableToCanvas}>
             Insertar Tablas en Canvas
           </button>
         </div>

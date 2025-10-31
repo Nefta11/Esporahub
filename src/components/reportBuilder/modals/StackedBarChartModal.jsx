@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Plus, Trash2 } from 'lucide-react';
 import { Image as FabricImage } from 'fabric';
+import '@/styles/reportBuilder/ChartModals.css';
 
 const StackedBarChartModal = ({ isOpen, onClose, canvas }) => {
   const [title, setTitle] = useState('');
@@ -340,12 +341,8 @@ const StackedBarChartModal = ({ isOpen, onClose, canvas }) => {
           <div className="segments-section">
             <div className="section-header">
               <h4>Segmentos</h4>
-              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                <span style={{ 
-                  fontSize: '14px', 
-                  color: totalPercentage === 100 ? '#22c55e' : '#ef4444',
-                  fontWeight: 'bold'
-                }}>
+              <div className="section-header-controls">
+                <span className={`total-percentage ${totalPercentage === 100 ? 'total-complete' : 'total-incomplete'}`}>
                   Total: {totalPercentage}%
                 </span>
                 <button className="btn-secondary btn-sm" onClick={normalizePercentages}>
@@ -360,15 +357,14 @@ const StackedBarChartModal = ({ isOpen, onClose, canvas }) => {
 
             <div className="segments-list">
               {segments.map((segment, index) => (
-                <div key={index} className="segment-item" style={{ marginBottom: '12px' }}>
-                  <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                <div key={index} className="segment-item">
+                  <div className="segment-controls">
                     <input
                       type="text"
                       placeholder="Nombre del segmento"
                       value={segment.label}
                       onChange={(e) => updateSegment(index, 'label', e.target.value)}
                       className="input-field input-segment-label"
-                      style={{ flex: 2 }}
                     />
                     <div className="percentage-input-group">
                       <input
@@ -404,9 +400,8 @@ const StackedBarChartModal = ({ isOpen, onClose, canvas }) => {
                     placeholder="Descripción o etiqueta adicional (opcional, usa Enter para múltiples líneas)"
                     value={segment.description}
                     onChange={(e) => updateSegment(index, 'description', e.target.value)}
-                    className="input-field"
+                    className="chart-form-textarea"
                     rows="2"
-                    style={{ width: '100%', resize: 'vertical' }}
                   />
                 </div>
               ))}

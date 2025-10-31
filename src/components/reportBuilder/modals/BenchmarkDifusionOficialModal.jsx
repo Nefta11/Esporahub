@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 import { Image as FabricImage } from 'fabric';
+import '@/styles/reportBuilder/ChartModals.css';
 
 const DEFAULT_PROFILES = [
     {
@@ -211,47 +212,45 @@ const BenchmarkDifusionOficialModal = ({ isOpen, onClose, canvas }) => {
 
     if (!isOpen) return null;
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content modal-large" onClick={e => e.stopPropagation()} style={{ maxWidth: '900px', maxHeight: '95vh', overflowY: 'auto' }}>
-                <div className="modal-header">
-                    <h3 className="modal-title">Benchmark de Difusión Oficial</h3>
-                    <button className="modal-close" onClick={onClose}><X size={20} /></button>
-                </div>
-                <div className="modal-body">
-                    <div style={{ display: 'grid', gap: 12 }}>
-                        <h4>Configuración</h4>
+        <div className="chart-modal-overlay" onClick={onClose}>
+            <div className="chart-modal-container" onClick={e => e.stopPropagation()}>
+                <h3 className="chart-modal-title">Benchmark de Difusión Oficial</h3>
+                <button className="modal-close" onClick={onClose}><X size={20} /></button>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 12 }}>
-                            {profiles.map((p, i) => (
-                                <div key={i} style={{ padding: 12, borderRadius: 8, border: '1px solid #e6e6e6', background: '#fff' }}>
-                                    <h5 style={{ margin: '0 0 8px 0' }}>Perfil {i + 1}</h5>
-                                    <div style={{ display: 'grid', gap: 8 }}>
-                                        <label style={{ fontSize: 12, opacity: 0.8 }}>Nombre</label>
-                                        <input className="property-input" value={p.name} onChange={(e) => updateProfileField(i, 'name', e.target.value)} />
-                                        <label style={{ fontSize: 12, opacity: 0.8 }}>Partido / Tag</label>
-                                        <input className="property-input" value={p.partido} onChange={(e) => updateProfileField(i, 'partido', e.target.value)} />
-                                        <label style={{ fontSize: 12, opacity: 0.8 }}>Inversión</label>
-                                        <input className="property-input" value={p.inversion} onChange={(e) => updateProfileField(i, 'inversion', e.target.value)} />
-                                        <label style={{ fontSize: 12, opacity: 0.8 }}>No. Anuncios</label>
-                                        <input className="property-input" value={p.anuncios} onChange={(e) => updateProfileField(i, 'anuncios', e.target.value)} />
-                                        <label style={{ fontSize: 12, opacity: 0.8 }}>Avatar URL (opcional)</label>
-                                        <input className="property-input" value={p.avatarUrl} onChange={(e) => updateProfileField(i, 'avatarUrl', e.target.value)} />
-                                    </div>
+                <div>
+                    <h4>Configuración</h4>
+
+                    <div className="chart-form-grid-single">
+                        {profiles.map((p, i) => (
+                            <div key={i} className="chart-profile-card">
+                                <h5 className="profile-heading">Perfil {i + 1}</h5>
+                                <div className="grid-gap-8">
+                                    <label className="chart-form-label">Nombre</label>
+                                    <input className="chart-form-input" value={p.name} onChange={(e) => updateProfileField(i, 'name', e.target.value)} />
+                                    <label className="chart-form-label">Partido / Tag</label>
+                                    <input className="chart-form-input" value={p.partido} onChange={(e) => updateProfileField(i, 'partido', e.target.value)} />
+                                    <label className="chart-form-label">Inversión</label>
+                                    <input className="chart-form-input" value={p.inversion} onChange={(e) => updateProfileField(i, 'inversion', e.target.value)} />
+                                    <label className="chart-form-label">No. Anuncios</label>
+                                    <input className="chart-form-input" value={p.anuncios} onChange={(e) => updateProfileField(i, 'anuncios', e.target.value)} />
+                                    <label className="chart-form-label">Avatar URL (opcional)</label>
+                                    <input className="chart-form-input" value={p.avatarUrl} onChange={(e) => updateProfileField(i, 'avatarUrl', e.target.value)} />
                                 </div>
-                            ))}
-                        </div>
-
-                        <div className="chart-preview" style={{ marginTop: '6px' }}>
-                            <h4>Vista Previa</h4>
-                            <div className="preview-container" style={{ maxHeight: '400px', overflow: 'auto', background: '#f9f9f9', border: '1px solid #ccc', borderRadius: '8px', padding: '10px' }}>
-                                <canvas ref={canvasRef}></canvas>
                             </div>
+                        ))}
+                    </div>
+
+                    <div className="canvas-preview-mt-20">
+                        <h4>Vista Previa</h4>
+                        <div className="preview-container-400">
+                            <canvas ref={canvasRef}></canvas>
                         </div>
                     </div>
                 </div>
-                <div className="modal-footer">
-                    <button className="btn-secondary" onClick={onClose}>Cancelar</button>
-                    <button className="btn-primary" onClick={insertToCanvas}>Insertar en Canvas</button>
+
+                <div className="chart-modal-buttons">
+                    <button className="chart-modal-button-cancel" onClick={onClose}>Cancelar</button>
+                    <button className="chart-modal-button-insert" onClick={insertToCanvas}>Insertar en Canvas</button>
                 </div>
             </div>
         </div>
