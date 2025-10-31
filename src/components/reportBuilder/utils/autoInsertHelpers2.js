@@ -956,26 +956,26 @@ export const autoInsertDilemasRentables = async (canvas) => {
   if (!canvas) return;
 
   const data = {
-    company: 'Rizoma',
+    company: 'Partido 1',
     lado1: {
-      title: 'Populismo & Estable',
-      subtitle: '(Bolivariano)',
+      title: 'Lorem Ipsum & Dolor Sit',
+      subtitle: '(Amet Consectetur)',
       color: '#C62828',
       caracteristicas: [
-        { text: 'Figuras titeres', subItems: ['Luisa González', 'Lenin Moreno', 'Andrés Arauz', 'Revolución Ciudadana'] },
-        { text: 'Corrupción', subItems: ['Sobornos (2012-2016)', 'Arroz verde', 'Petroquimidor'] },
-        { text: 'Autoritario', subItems: ['Políticas extractivistas', 'Restricciones a EE.UU.', 'Ley de Aguas', 'Represión indígena', 'en Dayuma'] }
+        { text: 'Lorem ipsum dolor', subItems: ['Personaje 1', 'Personaje 2', 'Personaje 3', 'Lorem ipsum dolor'] },
+        { text: 'Sit amet consectetur', subItems: ['Adipiscing elit (2020-2024)', 'Sed do eiusmod', 'Tempor incididunt'] },
+        { text: 'Ut labore dolore', subItems: ['Magna aliqua enim', 'Ad minim veniam', 'Quis nostrud exercitation', 'Ullamco laboris nisi', 'Ut aliquip ex ea'] }
       ]
     },
     lado2: {
-      title: 'Gobierno Realista & Inestable',
+      title: 'Commodo Consequat & Duis Aute',
       subtitle: '',
       color: '#1565C0',
       caracteristicas: [
-        { text: 'Inestabilidad económica', subItems: ['Aranceles', 'Recesión', 'Reducción del PIB'] },
-        { text: 'Inestabilidad de seguridad', subItems: ['Lucha de carteles', 'Druso armado en TV', 'Militares custodiando', 'a niños'] },
-        { text: 'Inestabilidad energética', subItems: ['Apagones eléctricos', 'Sequías', 'Dependencia hidroeléctrica'] },
-        { text: 'Inestabilidad internacional', subItems: ['Vicepresidenta oriunda', 'Reparación de migrantes', 'Invasión embajada de México', 'Subordinación a EE.UU.'] }
+        { text: 'Irure dolor reprehenderit', subItems: ['Voluptate velit esse', 'Cillum dolore fugiat', 'Nulla pariatur excepteur'] },
+        { text: 'Sint occaecat cupidatat', subItems: ['Non proident sunt', 'Culpa qui officia', 'Deserunt mollit anim', 'Id est laborum'] },
+        { text: 'Sed ut perspiciatis', subItems: ['Unde omnis iste', 'Natus error accusantium', 'Doloremque laudantium'] },
+        { text: 'Totam rem aperiam', subItems: ['Eaque ipsa quae', 'Ab illo inventore', 'Veritatis quasi architecto', 'Beatae vitae dicta'] }
       ]
     }
   };

@@ -101,8 +101,8 @@ const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
 
     const drawDilemasChart = () => {
         const c = document.createElement('canvas');
-        const width = 1600;
-        const height = 700;
+        const width = 1800;
+        const height = 900;
         c.width = width;
         c.height = height;
         const ctx = c.getContext('2d');
@@ -112,155 +112,207 @@ const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
         ctx.fillRect(0, 0, width, height);
 
         const centerX = width / 2;
-        const centerY = height / 2 - 20;
+        const centerY = height / 2;
 
         // Helper function to draw text boxes with borders
-        const drawTextBox = (text, x, y, borderColor = '#666') => {
-            ctx.font = '12px Arial';
-            const padding = 6;
+        const drawTextBox = (text, x, y, borderColor = '#666', bgColor = '#fff') => {
+            ctx.font = '13px Arial';
+            const padding = 8;
             const metrics = ctx.measureText(text);
             const boxWidth = metrics.width + padding * 2;
-            const boxHeight = 20;
+            const boxHeight = 24;
+
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(x - boxWidth / 2, y - boxHeight / 2, boxWidth, boxHeight);
 
             ctx.strokeStyle = borderColor;
             ctx.lineWidth = 1.5;
             ctx.strokeRect(x - boxWidth / 2, y - boxHeight / 2, boxWidth, boxHeight);
-            
+
             ctx.fillStyle = '#000';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(text, x, y);
 
-            return boxHeight;
+            return { width: boxWidth, height: boxHeight };
         };
 
-        // Draw LEFT SIDE (Populismo)
-        const leftX = 250;
-        const leftStartY = 150;
+        // Helper function to draw curved arrows
+        const drawCurvedArrow = (fromX, fromY, toX, toY, color, curveAmount = 0) => {
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.moveTo(fromX, fromY);
+
+            if (curveAmount !== 0) {
+                const midX = (fromX + toX) / 2;
+                const midY = (fromY + toY) / 2 + curveAmount;
+                ctx.quadraticCurveTo(midX, midY, toX, toY);
+            } else {
+                ctx.lineTo(toX, toY);
+            }
+
+            ctx.stroke();
+        };
+
+        // Draw LEFT SIDE
+        const leftMainX = 360;
+        const leftMainY = centerY;
+        const leftMainWidth = 320;
+        const leftMainHeight = 110;
 
         // Left main box
         ctx.fillStyle = data.lado1.color;
-        ctx.fillRect(leftX - 150, centerY - 50, 300, 100);
+        ctx.fillRect(leftMainX - leftMainWidth / 2, leftMainY - leftMainHeight / 2, leftMainWidth, leftMainHeight);
+
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 22px Arial';
+        ctx.font = 'bold 24px Arial';
         ctx.textAlign = 'center';
-        ctx.fillText(data.lado1.title, leftX, centerY - 15);
+        ctx.textBaseline = 'middle';
+        ctx.fillText(data.lado1.title, leftMainX, leftMainY - 12);
+
         if (data.lado1.subtitle) {
             ctx.font = '16px Arial';
-            ctx.fillText(data.lado1.subtitle, leftX, centerY + 15);
+            ctx.fillText(data.lado1.subtitle, leftMainX, leftMainY + 18);
         }
 
-        // Left characteristics
-        let currentY = leftStartY;
+        // Left characteristics positions - más espaciadas
+        const leftCaracPositions = [
+            { x: 200, y: 160 },
+            { x: 200, y: centerY },
+            { x: 200, y: 740 }
+        ];
+
         data.lado1.caracteristicas.forEach((carac, caracIndex) => {
-            const caracX = leftX + 120;
-            
+            if (caracIndex >= leftCaracPositions.length) return;
+
+            const pos = leftCaracPositions[caracIndex];
+
             // Main characteristic box
             ctx.fillStyle = data.lado1.color;
-            ctx.font = 'bold 14px Arial';
+            ctx.font = 'bold 16px Arial';
             const caracMetrics = ctx.measureText(carac.text);
-            const caracBoxWidth = caracMetrics.width + 20;
-            const caracBoxHeight = 30;
-            
-            ctx.fillRect(caracX - caracBoxWidth / 2, currentY - caracBoxHeight / 2, caracBoxWidth, caracBoxHeight);
+            const caracBoxWidth = caracMetrics.width + 30;
+            const caracBoxHeight = 38;
+
+            ctx.fillRect(pos.x - caracBoxWidth / 2, pos.y - caracBoxHeight / 2, caracBoxWidth, caracBoxHeight);
             ctx.fillStyle = '#ffffff';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(carac.text, caracX, currentY);
+            ctx.fillText(carac.text, pos.x, pos.y);
 
-            // Draw arrow from main box to characteristic
-            ctx.strokeStyle = data.lado1.color;
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.moveTo(leftX + 150, centerY);
-            ctx.lineTo(caracX - caracBoxWidth / 2, currentY);
-            ctx.stroke();
+            // Draw curved arrow from main box to characteristic
+            const fromX = leftMainX - leftMainWidth / 2;
+            const fromY = leftMainY;
+            const toX = pos.x + caracBoxWidth / 2;
+            const toY = pos.y;
 
-            // Sub-items
-            let subY = currentY - (carac.subItems.length - 1) * 15;
+            let curveAmount = 0;
+            if (caracIndex === 0) curveAmount = -80;
+            if (caracIndex === 2) curveAmount = 80;
+
+            drawCurvedArrow(fromX, fromY, toX, toY, data.lado1.color, curveAmount);
+
+            // Sub-items - positioned to the left with more spacing
+            const subStartY = pos.y - (carac.subItems.length - 1) * 18;
             carac.subItems.forEach((sub, subIndex) => {
-                const subX = caracX + caracBoxWidth / 2 + 80;
-                drawTextBox(sub, subX, subY);
-                subY += 30;
+                const subX = pos.x - caracBoxWidth / 2 - 110;
+                const subY = subStartY + (subIndex * 36);
+                drawTextBox(sub, subX, subY, '#999');
             });
-
-            currentY += 120;
         });
 
         // VS Badge in center
+        const vsRadius = 55;
         ctx.fillStyle = '#000000';
         ctx.beginPath();
-        ctx.arc(centerX, centerY, 50, 0, Math.PI * 2);
+        ctx.arc(centerX, centerY, vsRadius, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 32px Arial';
+        ctx.font = 'bold 40px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText('VS', centerX, centerY);
 
-        // Draw RIGHT SIDE (Gobierno Realista)
-        const rightX = width - 250;
-        const rightStartY = 150;
+        // Draw RIGHT SIDE
+        const rightMainX = width - 360;
+        const rightMainY = centerY;
+        const rightMainWidth = 320;
+        const rightMainHeight = 110;
 
         // Right main box
         ctx.fillStyle = data.lado2.color;
-        ctx.fillRect(rightX - 150, centerY - 50, 300, 100);
+        ctx.fillRect(rightMainX - rightMainWidth / 2, rightMainY - rightMainHeight / 2, rightMainWidth, rightMainHeight);
+
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 20px Arial';
+        ctx.font = 'bold 22px Arial';
         ctx.textAlign = 'center';
-        
-        // Split title into lines if needed
+        ctx.textBaseline = 'middle';
+
+        // Split title into two lines
         const titleWords = data.lado2.title.split(' ');
         const midPoint = Math.ceil(titleWords.length / 2);
         const line1 = titleWords.slice(0, midPoint).join(' ');
         const line2 = titleWords.slice(midPoint).join(' ');
-        
-        ctx.fillText(line1, rightX, centerY - 15);
-        ctx.fillText(line2, rightX, centerY + 15);
 
-        // Right characteristics
-        currentY = rightStartY;
+        ctx.fillText(line1, rightMainX, rightMainY - 12);
+        ctx.fillText(line2, rightMainX, rightMainY + 18);
+
+        // Right characteristics positions - más espaciadas
+        const rightCaracPositions = [
+            { x: width - 200, y: 140 },
+            { x: width - 200, y: 310 },
+            { x: width - 200, y: 590 },
+            { x: width - 200, y: 760 }
+        ];
+
         data.lado2.caracteristicas.forEach((carac, caracIndex) => {
-            const caracX = rightX - 120;
-            
+            if (caracIndex >= rightCaracPositions.length) return;
+
+            const pos = rightCaracPositions[caracIndex];
+
             // Main characteristic box
             ctx.fillStyle = data.lado2.color;
-            ctx.font = 'bold 13px Arial';
+            ctx.font = 'bold 15px Arial';
             const caracMetrics = ctx.measureText(carac.text);
-            const caracBoxWidth = Math.max(caracMetrics.width + 20, 200);
-            const caracBoxHeight = 30;
-            
-            ctx.fillRect(caracX - caracBoxWidth / 2, currentY - caracBoxHeight / 2, caracBoxWidth, caracBoxHeight);
+            const caracBoxWidth = Math.max(caracMetrics.width + 30, 210);
+            const caracBoxHeight = 38;
+
+            ctx.fillRect(pos.x - caracBoxWidth / 2, pos.y - caracBoxHeight / 2, caracBoxWidth, caracBoxHeight);
             ctx.fillStyle = '#ffffff';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(carac.text, caracX, currentY);
+            ctx.fillText(carac.text, pos.x, pos.y);
 
-            // Draw arrow from main box to characteristic
-            ctx.strokeStyle = data.lado2.color;
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.moveTo(rightX - 150, centerY);
-            ctx.lineTo(caracX + caracBoxWidth / 2, currentY);
-            ctx.stroke();
+            // Draw curved arrow from main box to characteristic
+            const fromX = rightMainX + rightMainWidth / 2;
+            const fromY = rightMainY;
+            const toX = pos.x - caracBoxWidth / 2;
+            const toY = pos.y;
 
-            // Sub-items
-            let subY = currentY - (carac.subItems.length - 1) * 15;
+            let curveAmount = 0;
+            if (caracIndex === 0) curveAmount = -100;
+            if (caracIndex === 1) curveAmount = -40;
+            if (caracIndex === 2) curveAmount = 40;
+            if (caracIndex === 3) curveAmount = 100;
+
+            drawCurvedArrow(fromX, fromY, toX, toY, data.lado2.color, curveAmount);
+
+            // Sub-items - positioned to the right with more spacing
+            const subStartY = pos.y - (carac.subItems.length - 1) * 18;
             carac.subItems.forEach((sub, subIndex) => {
-                const subX = caracX - caracBoxWidth / 2 - 90;
-                drawTextBox(sub, subX, subY);
-                subY += 30;
+                const subX = pos.x + caracBoxWidth / 2 + 110;
+                const subY = subStartY + (subIndex * 36);
+                drawTextBox(sub, subX, subY, '#999');
             });
-
-            currentY += 90;
         });
 
         // Company logo
         ctx.fillStyle = '#999';
-        ctx.font = 'bold 20px Arial';
+        ctx.font = 'bold 22px Arial';
         ctx.textAlign = 'right';
-        ctx.fillText(data.company, width - 40, height - 30);
+        ctx.fillText(data.company, width - 50, height - 40);
 
         return c;
     };
@@ -318,10 +370,10 @@ const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
                     {/* LADO 1 - IZQUIERDO */}
                     <div style={{ border: '3px solid ' + data.lado1.color, borderRadius: '12px', padding: '20px', backgroundColor: '#fafafa' }}>
                         <h3 style={{ color: data.lado1.color, marginTop: 0 }}>Lado 1 (Izquierdo)</h3>
-                        
+
                         <div className="chart-modal-field">
                             <label>Título Principal</label>
-                            <input 
+                            <input
                                 value={data.lado1.title}
                                 onChange={(e) => handleLadoChange('lado1', 'title', e.target.value)}
                                 style={{ fontWeight: 'bold' }}
@@ -330,7 +382,7 @@ const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
 
                         <div className="chart-modal-field">
                             <label>Subtítulo</label>
-                            <input 
+                            <input
                                 value={data.lado1.subtitle}
                                 onChange={(e) => handleLadoChange('lado1', 'subtitle', e.target.value)}
                             />
@@ -338,7 +390,7 @@ const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
 
                         <div className="chart-modal-field">
                             <label>Color</label>
-                            <input 
+                            <input
                                 type="color"
                                 value={data.lado1.color}
                                 onChange={(e) => handleLadoChange('lado1', 'color', e.target.value)}
@@ -448,10 +500,10 @@ const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
                     {/* LADO 2 - DERECHO */}
                     <div style={{ border: '3px solid ' + data.lado2.color, borderRadius: '12px', padding: '20px', backgroundColor: '#fafafa' }}>
                         <h3 style={{ color: data.lado2.color, marginTop: 0 }}>Lado 2 (Derecho)</h3>
-                        
+
                         <div className="chart-modal-field">
                             <label>Título Principal</label>
-                            <input 
+                            <input
                                 value={data.lado2.title}
                                 onChange={(e) => handleLadoChange('lado2', 'title', e.target.value)}
                                 style={{ fontWeight: 'bold' }}
@@ -460,7 +512,7 @@ const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
 
                         <div className="chart-modal-field">
                             <label>Subtítulo</label>
-                            <input 
+                            <input
                                 value={data.lado2.subtitle}
                                 onChange={(e) => handleLadoChange('lado2', 'subtitle', e.target.value)}
                             />
@@ -468,7 +520,7 @@ const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
 
                         <div className="chart-modal-field">
                             <label>Color</label>
-                            <input 
+                            <input
                                 type="color"
                                 value={data.lado2.color}
                                 onChange={(e) => handleLadoChange('lado2', 'color', e.target.value)}
