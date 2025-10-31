@@ -9,6 +9,7 @@ export const autoInsertHumorHistogram = async (canvas) => {
     {
       id: 'p1',
       name: 'Lorem Ipsum',
+      party: 'P1',
       avatar: '',
       ringColor: '#A6343C',
       sentiment: 'Incertidumbre',
@@ -19,6 +20,7 @@ export const autoInsertHumorHistogram = async (canvas) => {
     {
       id: 'p2',
       name: 'Dolor Sit',
+      party: 'P2',
       avatar: '',
       ringColor: '#00843D',
       sentiment: 'Aceptación',
@@ -159,7 +161,7 @@ export const autoInsertHumorHistogram = async (canvas) => {
   const col2Data = candidateData.slice(itemsPerCol, itemsPerCol * 2);
   const col3Data = candidateData.slice(itemsPerCol * 2);
 
-  const drawProfileRow = (ctx, profile, x, y, avatarImg, partyLetter) => {
+  const drawProfileRow = (ctx, profile, x, y, avatarImg) => {
     const avatarR = 30;
     const avatarX = x + avatarR + 10;
     const avatarY = y + avatarR + 10;
@@ -199,7 +201,7 @@ export const autoInsertHumorHistogram = async (canvas) => {
     ctx.font = 'bold 10px Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(partyLetter, avatarX + avatarR - 5, avatarY + avatarR - 5);
+    ctx.fillText(profile.party || '', avatarX + avatarR - 5, avatarY + avatarR - 5);
 
     ctx.font = 'bold 12px Arial';
     ctx.fillStyle = '#111';
@@ -259,21 +261,15 @@ export const autoInsertHumorHistogram = async (canvas) => {
 
   col1Data.forEach((p, i) => {
     const avatarImg = avatarImages[candidateData.indexOf(p)];
-    const partyIndex = candidateData.indexOf(p) + 1;
-    const partyLetter = `P${partyIndex}`;
-    drawProfileRow(ctx, p, col1Left, panelTop + i * rowH, avatarImg, partyLetter);
+    drawProfileRow(ctx, p, col1Left, panelTop + i * rowH, avatarImg);
   });
   col2Data.forEach((p, i) => {
     const avatarImg = avatarImages[candidateData.indexOf(p)];
-    const partyIndex = candidateData.indexOf(p) + 1;
-    const partyLetter = `P${partyIndex}`;
-    drawProfileRow(ctx, p, col2Left, panelTop + i * rowH, avatarImg, partyLetter);
+    drawProfileRow(ctx, p, col2Left, panelTop + i * rowH, avatarImg);
   });
   col3Data.forEach((p, i) => {
     const avatarImg = avatarImages[candidateData.indexOf(p)];
-    const partyIndex = candidateData.indexOf(p) + 1;
-    const partyLetter = `P${partyIndex}`;
-    drawProfileRow(ctx, p, col3Left, panelTop + i * rowH, avatarImg, partyLetter);
+    drawProfileRow(ctx, p, col3Left, panelTop + i * rowH, avatarImg);
   });
 
   // 5. Pie de página

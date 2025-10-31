@@ -292,21 +292,15 @@ const HumorHistogramModal = ({ isOpen, onClose, canvas }) => {
         // Dibujar las tres columnas
         col1Data.forEach((p, i) => {
             const avatarImg = avatarImages[candidateData.indexOf(p)];
-            const partyIndex = candidateData.indexOf(p) + 1;
-            const partyLetter = `P${partyIndex}`;
-            drawProfileRow(ctx, p, col1Left, panelTop + i * rowH, avatarImg, partyLetter);
+            drawProfileRow(ctx, p, col1Left, panelTop + i * rowH, avatarImg);
         });
         col2Data.forEach((p, i) => {
             const avatarImg = avatarImages[candidateData.indexOf(p)];
-            const partyIndex = candidateData.indexOf(p) + 1;
-            const partyLetter = `P${partyIndex}`;
-            drawProfileRow(ctx, p, col2Left, panelTop + i * rowH, avatarImg, partyLetter);
+            drawProfileRow(ctx, p, col2Left, panelTop + i * rowH, avatarImg);
         });
         col3Data.forEach((p, i) => {
             const avatarImg = avatarImages[candidateData.indexOf(p)];
-            const partyIndex = candidateData.indexOf(p) + 1;
-            const partyLetter = `P${partyIndex}`;
-            drawProfileRow(ctx, p, col3Left, panelTop + i * rowH, avatarImg, partyLetter);
+            drawProfileRow(ctx, p, col3Left, panelTop + i * rowH, avatarImg);
         });
 
         // --- 5. Pie de página ---
@@ -438,6 +432,10 @@ const HumorHistogramModal = ({ isOpen, onClose, canvas }) => {
                                 <div className="chart-modal-field">
                                     <label>Nombre</label>
                                     <input value={candidate.name} onChange={(e) => handleCandidateChange(index, 'name', e.target.value)} />
+                                </div>
+                                <div className="chart-modal-field">
+                                    <label>Partido/Referencia</label>
+                                    <input value={candidate.party} onChange={(e) => handleCandidateChange(index, 'party', e.target.value)} placeholder="P1, MC, MORENA, etc." />
                                 </div>
                                 <div className="chart-modal-field">
                                     <label>Porcentaje</label>
