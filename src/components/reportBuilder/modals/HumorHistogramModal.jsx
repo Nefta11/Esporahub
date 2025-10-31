@@ -6,6 +6,7 @@ const initialCandidateData = [
     {
         id: 'personaje1',
         name: 'Lorem Ipsum',
+        party: 'P1',
         avatar: '',
         ringColor: '#A6343C',
         sentiment: 'Incertidumbre',
@@ -16,6 +17,7 @@ const initialCandidateData = [
     {
         id: 'personaje2',
         name: 'Dolor Sit',
+        party: 'P2',
         avatar: '',
         ringColor: '#00843D',
         sentiment: 'Aceptación',
@@ -29,6 +31,7 @@ const initialCandidateData = [
 const newCandidateTemplate = {
     id: `new_${Date.now()}`,
     name: 'Nuevo Personaje',
+    party: 'P',
     avatar: '',
     ringColor: '#A6343C',
     sentiment: 'Incertidumbre',
@@ -183,40 +186,42 @@ const HumorHistogramModal = ({ isOpen, onClose, canvas }) => {
             const avatarX = x + avatarR + 10;
             const avatarY = y + avatarR + 10;
 
-            ctx.beginPath();
-            ctx.arc(avatarX, avatarY, avatarR, 0, Math.PI * 2);
-            ctx.fillStyle = profile.ringColor;
-            ctx.fill();
-            ctx.lineWidth = 4;
-            ctx.strokeStyle = '#fff';
-            ctx.stroke();
-
-            // Dibujar avatar/logo si existe
+            // Dibujar avatar/logo en el círculo grande si existe
             if (avatarImg) {
                 ctx.save();
                 ctx.beginPath();
-                ctx.arc(avatarX + avatarR - 5, avatarY + avatarR - 5, 12, 0, Math.PI * 2);
+                ctx.arc(avatarX, avatarY, avatarR, 0, Math.PI * 2);
                 ctx.closePath();
                 ctx.clip();
-                ctx.drawImage(avatarImg, avatarX + avatarR - 17, avatarY + avatarR - 17, 24, 24);
+                // Dibujar la imagen centrada en el círculo grande
+                ctx.drawImage(avatarImg, avatarX - avatarR, avatarY - avatarR, avatarR * 2, avatarR * 2);
                 ctx.restore();
-
-                // Borde del avatar pequeño
-                ctx.beginPath();
-                ctx.arc(avatarX + avatarR - 5, avatarY + avatarR - 5, 12, 0, Math.PI * 2);
-                ctx.strokeStyle = '#fff';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-            } else {
-                // Placeholder si no hay avatar
-                ctx.beginPath();
-                ctx.arc(avatarX + avatarR - 5, avatarY + avatarR - 5, 12, 0, Math.PI * 2);
-                ctx.fillStyle = '#999';
-                ctx.fill();
-                ctx.strokeStyle = '#fff';
-                ctx.lineWidth = 2;
-                ctx.stroke();
             }
+
+            // Borde del círculo grande con color del anillo
+            ctx.beginPath();
+            ctx.arc(avatarX, avatarY, avatarR, 0, Math.PI * 2);
+            ctx.fillStyle = avatarImg ? 'transparent' : profile.ringColor;
+            if (!avatarImg) ctx.fill();
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = profile.ringColor;
+            ctx.stroke();
+
+            // Círculo pequeño para la letra del partido (P1, P2, etc.)
+            ctx.beginPath();
+            ctx.arc(avatarX + avatarR - 5, avatarY + avatarR - 5, 12, 0, Math.PI * 2);
+            ctx.fillStyle = '#fff';
+            ctx.fill();
+            ctx.strokeStyle = profile.ringColor;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Dibujar letra del partido en el círculo pequeño
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 10px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(profile.party || '', avatarX + avatarR - 5, avatarY + avatarR - 5);
 
             // Nombre
             ctx.font = 'bold 12px Arial';
@@ -287,15 +292,21 @@ const HumorHistogramModal = ({ isOpen, onClose, canvas }) => {
         // Dibujar las tres columnas
         col1Data.forEach((p, i) => {
             const avatarImg = avatarImages[candidateData.indexOf(p)];
-            drawProfileRow(ctx, p, col1Left, panelTop + i * rowH, avatarImg);
+            const partyIndex = candidateData.indexOf(p) + 1;
+            const partyLetter = `P${partyIndex}`;
+            drawProfileRow(ctx, p, col1Left, panelTop + i * rowH, avatarImg, partyLetter);
         });
         col2Data.forEach((p, i) => {
             const avatarImg = avatarImages[candidateData.indexOf(p)];
-            drawProfileRow(ctx, p, col2Left, panelTop + i * rowH, avatarImg);
+            const partyIndex = candidateData.indexOf(p) + 1;
+            const partyLetter = `P${partyIndex}`;
+            drawProfileRow(ctx, p, col2Left, panelTop + i * rowH, avatarImg, partyLetter);
         });
         col3Data.forEach((p, i) => {
             const avatarImg = avatarImages[candidateData.indexOf(p)];
-            drawProfileRow(ctx, p, col3Left, panelTop + i * rowH, avatarImg);
+            const partyIndex = candidateData.indexOf(p) + 1;
+            const partyLetter = `P${partyIndex}`;
+            drawProfileRow(ctx, p, col3Left, panelTop + i * rowH, avatarImg, partyLetter);
         });
 
         // --- 5. Pie de página ---
