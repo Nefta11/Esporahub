@@ -221,90 +221,82 @@ export const autoInsertDemographicsTable = async (canvas) => {
 
   const tables = defaultDemographicsData;
 
-  // Crear canvas temporal
+  // Crear canvas temporal con las mismas dimensiones del modal
   const tempCanvas = document.createElement('canvas');
-  const padding = 20;
-  const titleHeight = 30;
-  const rowHeight = 28;
-  const columnWidths = [150, 120, 120];
-  const tableSpacing = 25;
+  tempCanvas.width = 600;
 
-  let totalHeight = padding;
+  // Calcular altura necesaria (igual que en el modal)
+  let totalHeight = 40;
   tables.forEach(table => {
-    totalHeight += titleHeight + (table.rows.length * rowHeight) + tableSpacing;
+    totalHeight += 50 + (table.rows.length * 35) + 40;
   });
-
-  tempCanvas.width = columnWidths.reduce((a, b) => a + b, 0) + (padding * 2);
   tempCanvas.height = totalHeight;
-  const ctx = tempCanvas.getContext('2d');
+
+  const tempCtx = tempCanvas.getContext('2d');
 
   // Fondo blanco
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+  tempCtx.fillStyle = '#ffffff';
+  tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
 
-  let currentY = padding;
+  // Configuración (igual que en el modal)
+  const startX = 40;
+  let currentY = 40;
+  const tableSpacing = 40;
+  const columnWidths = [140, 100, 100];
+  const rowHeight = 35;
 
-  tables.forEach((table, tableIndex) => {
+  tables.forEach((table) => {
     // Título de la tabla
-    ctx.fillStyle = '#1f2937';
-    ctx.font = 'bold 16px Arial';
-    ctx.textAlign = 'left';
-    ctx.fillText(table.title, padding, currentY + 20);
+    tempCtx.fillStyle = '#000000';
+    tempCtx.font = 'bold 20px Arial';
+    tempCtx.textAlign = 'left';
+    tempCtx.fillText(table.title, startX, currentY);
+    currentY += 10;
 
-    currentY += titleHeight;
+    // Encabezados
+    tempCtx.fillStyle = '#9E9E9E';
+    tempCtx.fillRect(startX + columnWidths[0], currentY, columnWidths[1], 30);
+    tempCtx.fillRect(startX + columnWidths[0] + columnWidths[1], currentY, columnWidths[2], 30);
 
-    // Headers
-    const headers = ['', 'General', 'Digital'];
-    ctx.fillStyle = '#f3f4f6';
-    ctx.fillRect(padding, currentY, columnWidths.reduce((a, b) => a + b, 0), 24);
+    tempCtx.fillStyle = '#ffffff';
+    tempCtx.font = 'bold 14px Arial';
+    tempCtx.textAlign = 'center';
+    tempCtx.fillText('General', startX + columnWidths[0] + columnWidths[1] / 2, currentY + 20);
+    tempCtx.fillText('Digital', startX + columnWidths[0] + columnWidths[1] + columnWidths[2] / 2, currentY + 20);
 
-    ctx.fillStyle = '#374151';
-    ctx.font = 'bold 12px Arial';
-    ctx.textAlign = 'center';
-    let headerX = padding;
-    headers.forEach((header, idx) => {
-      if (idx > 0) {
-        ctx.fillText(header, headerX + columnWidths[idx] / 2, currentY + 16);
-      }
-      headerX += columnWidths[idx];
-    });
-
-    currentY += 24;
+    currentY += 30;
 
     // Filas
     table.rows.forEach((row, rowIndex) => {
-      const rowY = currentY + (rowIndex * rowHeight);
+      // Fondo de las celdas de datos
+      const bgColor = rowIndex % 2 === 0 ? '#E0E0E0' : '#F5F5F5';
+      tempCtx.fillStyle = bgColor;
+      tempCtx.fillRect(startX + columnWidths[0], currentY, columnWidths[1], rowHeight);
+      tempCtx.fillRect(startX + columnWidths[0] + columnWidths[1], currentY, columnWidths[2], rowHeight);
 
-      // Fondo alternado
-      if (rowIndex % 2 === 0) {
-        ctx.fillStyle = '#ffffff';
-      } else {
-        ctx.fillStyle = '#f9fafb';
-      }
-      ctx.fillRect(padding, rowY, columnWidths.reduce((a, b) => a + b, 0), rowHeight);
+      // Label (con color)
+      tempCtx.fillStyle = row.color;
+      tempCtx.font = 'bold 16px Arial';
+      tempCtx.textAlign = 'left';
+      tempCtx.fillText(row.label, startX, currentY + 22);
 
-      // Borde
-      ctx.strokeStyle = '#e5e7eb';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(padding, rowY, columnWidths.reduce((a, b) => a + b, 0), rowHeight);
+      // Valores
+      tempCtx.fillStyle = '#000000';
+      tempCtx.font = '16px Arial';
+      tempCtx.textAlign = 'center';
+      tempCtx.fillText(row.general, startX + columnWidths[0] + columnWidths[1] / 2, currentY + 22);
+      tempCtx.fillText(row.digital, startX + columnWidths[0] + columnWidths[1] + columnWidths[2] / 2, currentY + 22);
 
-      // Label
-      ctx.fillStyle = '#1f2937';
-      ctx.font = 'bold 11px Arial';
-      ctx.textAlign = 'left';
-      ctx.fillText(row.label, padding + 10, rowY + 18);
+      // Bordes
+      tempCtx.strokeStyle = '#ffffff';
+      tempCtx.lineWidth = 2;
+      tempCtx.strokeRect(startX + columnWidths[0], currentY, columnWidths[1], rowHeight);
+      tempCtx.strokeRect(startX + columnWidths[0] + columnWidths[1], currentY, columnWidths[2], rowHeight);
 
-      // General value
-      ctx.fillStyle = row.color;
-      ctx.font = 'bold 12px Arial';
-      ctx.textAlign = 'center';
-      ctx.fillText(row.general, padding + columnWidths[0] + columnWidths[1] / 2, rowY + 18);
-
-      // Digital value
-      ctx.fillText(row.digital, padding + columnWidths[0] + columnWidths[1] + columnWidths[2] / 2, rowY + 18);
+      currentY += rowHeight;
     });
 
-    currentY += table.rows.length * rowHeight + tableSpacing;
+    currentY += tableSpacing;
   });
 
   // Convertir a imagen y agregar al canvas
@@ -313,11 +305,11 @@ export const autoInsertDemographicsTable = async (canvas) => {
 
   imgElement.onload = () => {
     const fabricImg = new FabricImage(imgElement, {
-      left: 50,
-      top: 150,
-      scaleX: 0.8,
-      scaleY: 0.8,
-      name: 'demographics-table' // Identificador para detectar si ya existe
+      left: 100,
+      top: 100,
+      scaleX: 0.5,
+      scaleY: 0.5,
+      name: 'demographics-table'
     });
     canvas.add(fabricImg);
     canvas.renderAll();
