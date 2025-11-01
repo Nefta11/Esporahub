@@ -709,214 +709,27 @@ export const autoInsertPerfilPersonas = async (canvas) => {
 export const autoInsertDilemasRentables = async (canvas) => {
   if (!canvas) return;
 
-  const data = {
-    company: 'Partido 1',
-    lado1: {
-      title: 'Lorem Ipsum & Dolor Sit',
-      subtitle: '(Amet Consectetur)',
-      color: '#C62828',
-      caracteristicas: [
-        { text: 'Lorem ipsum dolor', subItems: ['Personaje 1', 'Personaje 2', 'Personaje 3', 'Lorem ipsum dolor'] },
-        { text: 'Sit amet consectetur', subItems: ['Adipiscing elit (2020-2024)', 'Sed do eiusmod', 'Tempor incididunt'] },
-        { text: 'Ut labore dolore', subItems: ['Magna aliqua enim', 'Ad minim veniam', 'Quis nostrud exercitation', 'Ullamco laboris nisi', 'Ut aliquip ex ea'] }
-      ]
-    },
-    lado2: {
-      title: 'Commodo Consequat & Duis Aute',
-      subtitle: '',
-      color: '#1565C0',
-      caracteristicas: [
-        { text: 'Irure dolor reprehenderit', subItems: ['Voluptate velit esse', 'Cillum dolore fugiat', 'Nulla pariatur excepteur'] },
-        { text: 'Sint occaecat cupidatat', subItems: ['Non proident sunt', 'Culpa qui officia', 'Deserunt mollit anim', 'Id est laborum'] },
-        { text: 'Sed ut perspiciatis', subItems: ['Unde omnis iste', 'Natus error accusantium', 'Doloremque laudantium'] },
-        { text: 'Totam rem aperiam', subItems: ['Eaque ipsa quae', 'Ab illo inventore', 'Veritatis quasi architecto', 'Beatae vitae dicta'] }
-      ]
-    }
-  };
+  const { initialDilemasData, drawDilemasChartFromData } = await import('../modals/DilemasRentablesModal.jsx');
+  const canvasElement = drawDilemasChartFromData(initialDilemasData.izquierda, initialDilemasData.derecha);
+  const dataURL = canvasElement.toDataURL('image/png', 1.0);
 
-  const c = document.createElement('canvas');
-  const width = 1200;
-  const height = 550;
-  c.width = width;
-  c.height = height;
-  const ctx = c.getContext('2d');
-
-  // Background
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, width, height);
-
-  const centerX = width / 2;
-  const centerY = height / 2 - 15;
-
-  // Helper function to draw text boxes with borders
-  const drawTextBox = (text, x, y, borderColor = '#666') => {
-    ctx.font = '9px Arial';
-    const padding = 5;
-    const metrics = ctx.measureText(text);
-    const boxWidth = metrics.width + padding * 2;
-    const boxHeight = 16;
-
-    ctx.strokeStyle = borderColor;
-    ctx.lineWidth = 1.2;
-    ctx.strokeRect(x - boxWidth / 2, y - boxHeight / 2, boxWidth, boxHeight);
-
-    ctx.fillStyle = '#000';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(text, x, y);
-
-    return boxHeight;
-  };
-
-  // Draw LEFT SIDE
-  const leftX = 190;
-  const leftStartY = 110;
-
-  // Left main box
-  ctx.fillStyle = data.lado1.color;
-  ctx.fillRect(leftX - 115, centerY - 38, 230, 76);
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 17px Arial';
-  ctx.textAlign = 'center';
-  ctx.fillText(data.lado1.title, leftX, centerY - 11);
-  if (data.lado1.subtitle) {
-    ctx.font = '13px Arial';
-    ctx.fillText(data.lado1.subtitle, leftX, centerY + 11);
-  }
-
-  // Left characteristics
-  let currentY = leftStartY;
-  data.lado1.caracteristicas.forEach((carac) => {
-    const caracX = leftX + 90;
-
-    // Main characteristic box
-    ctx.fillStyle = data.lado1.color;
-    ctx.font = 'bold 11px Arial';
-    const caracMetrics = ctx.measureText(carac.text);
-    const caracBoxWidth = caracMetrics.width + 16;
-    const caracBoxHeight = 24;
-
-    ctx.fillRect(caracX - caracBoxWidth / 2, currentY - caracBoxHeight / 2, caracBoxWidth, caracBoxHeight);
-    ctx.fillStyle = '#ffffff';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(carac.text, caracX, currentY);
-
-    // Draw arrow from main box to characteristic
-    ctx.strokeStyle = data.lado1.color;
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    ctx.moveTo(leftX + 115, centerY);
-    ctx.lineTo(caracX - caracBoxWidth / 2, currentY);
-    ctx.stroke();
-
-    // Sub-items
-    let subY = currentY - (carac.subItems.length - 1) * 12;
-    carac.subItems.forEach((sub) => {
-      const subX = caracX + caracBoxWidth / 2 + 60;
-      drawTextBox(sub, subX, subY);
-      subY += 24;
-    });
-
-    currentY += 90;
-  });
-
-  // VS Badge in center
-  ctx.fillStyle = '#000000';
-  ctx.beginPath();
-  ctx.arc(centerX, centerY, 38, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 24px Arial';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText('VS', centerX, centerY);
-
-  // Draw RIGHT SIDE
-  const rightX = width - 190;
-  const rightStartY = 110;
-
-  // Right main box
-  ctx.fillStyle = data.lado2.color;
-  ctx.fillRect(rightX - 115, centerY - 38, 230, 76);
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 15px Arial';
-  ctx.textAlign = 'center';
-
-  // Split title into lines if needed
-  const titleWords = data.lado2.title.split(' ');
-  const midPoint = Math.ceil(titleWords.length / 2);
-  const line1 = titleWords.slice(0, midPoint).join(' ');
-  const line2 = titleWords.slice(midPoint).join(' ');
-
-  ctx.fillText(line1, rightX, centerY - 11);
-  ctx.fillText(line2, rightX, centerY + 11);
-
-  // Right characteristics
-  currentY = rightStartY;
-  data.lado2.caracteristicas.forEach((carac) => {
-    const caracX = rightX - 90;
-
-    // Main characteristic box
-    ctx.fillStyle = data.lado2.color;
-    ctx.font = 'bold 10px Arial';
-    const caracMetrics = ctx.measureText(carac.text);
-    const caracBoxWidth = Math.max(caracMetrics.width + 16, 155);
-    const caracBoxHeight = 24;
-
-    ctx.fillRect(caracX - caracBoxWidth / 2, currentY - caracBoxHeight / 2, caracBoxWidth, caracBoxHeight);
-    ctx.fillStyle = '#ffffff';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(carac.text, caracX, currentY);
-
-    // Draw arrow from main box to characteristic
-    ctx.strokeStyle = data.lado2.color;
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    ctx.moveTo(rightX - 115, centerY);
-    ctx.lineTo(caracX + caracBoxWidth / 2, currentY);
-    ctx.stroke();
-
-    // Sub-items
-    let subY = currentY - (carac.subItems.length - 1) * 12;
-    carac.subItems.forEach((sub) => {
-      const subX = caracX - caracBoxWidth / 2 - 68;
-      drawTextBox(sub, subX, subY);
-      subY += 24;
-    });
-
-    currentY += 68;
-  });
-
-  // Company logo
-  ctx.fillStyle = '#999';
-  ctx.font = 'bold 16px Arial';
-  ctx.textAlign = 'right';
-  ctx.fillText(data.company, width - 30, height - 22);
-
-  // Convert and insert
-  const dataURL = c.toDataURL('image/png');
   const { Image: FabricImage } = await import('fabric');
   const img = new Image();
   img.crossOrigin = 'anonymous';
   img.onload = () => {
     try {
       const fabricImg = new FabricImage(img, {
-        left: 60,
-        top: 40,
+        left: 50,
+        top: 30,
         selectable: true,
         evented: true,
         hasControls: true,
         hasBorders: true,
         hoverCursor: 'move',
-        name: 'dilemas-rentables'
+        scaleX: 0.38,
+        scaleY: 0.38,
+        name: 'dilemas-rentables-chart'
       });
-
-      const scale = 750 / fabricImg.width;
-      fabricImg.scaleX = scale;
-      fabricImg.scaleY = scale;
 
       canvas.add(fabricImg);
       canvas.setActiveObject(fabricImg);

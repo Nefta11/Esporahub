@@ -2,14 +2,18 @@ import React, { useState } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 import '@/styles/reportBuilder/DilemasRentablesModal.css';
 
-const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
-  const [caracteristicasIzquierda, setCaracteristicasIzquierda] = useState([
-    { titulo: 'Característica 1', subitems: ['Sub-item 1', 'Sub-item 2'] }
-  ]);
+// Datos iniciales con Lorem Ipsum
+const initialCaracteristicasIzquierda = [
+  { titulo: 'Lorem ipsum dolor', subitems: ['Lorem ipsum', 'Dolor sit amet', 'Consectetur adipiscing'] }
+];
 
-  const [caracteristicasDerecha, setCaracteristicasDerecha] = useState([
-    { titulo: 'Característica 1', subitems: ['Sub-item 1', 'Sub-item 2'] }
-  ]);
+const initialCaracteristicasDerecha = [
+  { titulo: 'Sed do eiusmod', subitems: ['Tempor incididunt', 'Ut labore et dolore'] }
+];
+
+const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
+  const [caracteristicasIzquierda, setCaracteristicasIzquierda] = useState(initialCaracteristicasIzquierda);
+  const [caracteristicasDerecha, setCaracteristicasDerecha] = useState(initialCaracteristicasDerecha);
 
   if (!isOpen) return null;
 
@@ -79,7 +83,7 @@ const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
     setCaracteristicasDerecha(newCaract);
   };
 
-  const drawDilemasChart = () => {
+  const drawDilemasChart = (izquierda = caracteristicasIzquierda, derecha = caracteristicasDerecha) => {
     const canvasElement = document.createElement('canvas');
     const width = 1920;
     const height = 1080;
@@ -223,112 +227,76 @@ const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
       return { x, y, width: maxWidth, height: totalHeight };
     };
 
-    // LADO IZQUIERDO (ROJO) - Gobierno Populismo & Estable
+    // LADO IZQUIERDO (ROJO)
     const leftColor = '#8B1A1A';
     const leftMainBox = drawBox(
       150,
       centerY - 60,
-      'Gobierno',
-      'Populismo & Estable',
-      ['(Bolivariano)'],
+      'Lorem Ipsum',
+      'Dolor & Sit Amet',
+      ['(Consectetur)'],
       leftColor,
       350
     );
 
-    // Cajas adicionales izquierda - superior
+    // Cajas adicionales izquierda - basadas en los datos
     const leftBoxes = [];
 
-    // Figuras "títeres"
-    leftBoxes.push(drawBox(
-      80,
-      80,
-      'Figuras "títeres"',
-      null,
-      ['Luisa González', 'Lenin Moreno', 'Andrés Arauz', 'Revolución Ciudadana'],
-      leftColor,
-      220
-    ));
+    // Calcular posiciones dinámicamente
+    const leftPositions = [
+      { x: 80, y: 80 },
+      { x: 320, y: 50 },
+      { x: 80, y: centerY + 180 }
+    ];
 
-    // Corrupción
-    leftBoxes.push(drawBox(
-      320,
-      50,
-      'Corrupción',
-      null,
-      ['Yachay', 'Singue', 'Odebrecht', 'Sobornos (2012-2016)', 'Petroecuador', 'Arroz verde'],
-      leftColor,
-      200
-    ));
+    izquierda.forEach((caract, index) => {
+      const pos = leftPositions[index] || { x: 80, y: 80 + (index * 150) };
+      leftBoxes.push(drawBox(
+        pos.x,
+        pos.y,
+        caract.titulo,
+        null,
+        caract.subitems,
+        leftColor,
+        250
+      ));
+    });
 
-    // Autoritario
-    leftBoxes.push(drawBox(
-      80,
-      centerY + 180,
-      'Autoritario',
-      null,
-      ['Políticas extractivistas', 'Restricciones a EE.UU.', 'Ley de Aguas', 'Represión indígena', 'en Dayumá'],
-      leftColor,
-      250
-    ));
-
-    // LADO DERECHO (AZUL) - Gobierno Realista & Inestable
+    // LADO DERECHO (AZUL)
     const rightColor = '#1E5A96';
     const rightMainBox = drawBox(
       width - 500,
       centerY - 60,
-      'Gobierno',
-      'Realista & Inestable',
+      'Adipiscing Elit',
+      'Tempor & Incididunt',
       [],
       rightColor,
       350
     );
 
-    // Cajas adicionales derecha
+    // Cajas adicionales derecha - basadas en los datos
     const rightBoxes = [];
 
-    // Inestabilidad económica
-    rightBoxes.push(drawBox(
-      width - 320,
-      60,
-      'Inestabilidad',
-      'económica',
-      ['Aranceles', 'Recesión', 'Reducción del PIB'],
-      rightColor,
-      240
-    ));
+    // Calcular posiciones dinámicamente
+    const rightPositions = [
+      { x: width - 320, y: 60 },
+      { x: width - 480, y: centerY - 270 },
+      { x: width - 420, y: centerY + 180 },
+      { x: width - 780, y: centerY + 250 }
+    ];
 
-    // Inestabilidad de seguridad
-    rightBoxes.push(drawBox(
-      width - 480,
-      centerY - 270,
-      'Inestabilidad',
-      'de seguridad',
-      ['Lucha de cárteles', 'Grupo armado en TV', 'Militares desaparecen', 'a niños'],
-      rightColor,
-      280
-    ));
-
-    // Inestabilidad energética
-    rightBoxes.push(drawBox(
-      width - 420,
-      centerY + 180,
-      'Inestabilidad',
-      'energética',
-      ['Apagones eléctricos', 'Sequías', 'Dependencia hidroeléctrica'],
-      rightColor,
-      270
-    ));
-
-    // Inestabilidad internacional
-    rightBoxes.push(drawBox(
-      width - 780,
-      centerY + 250,
-      'Inestabilidad',
-      'internacional',
-      ['Vicepresidenta exiliada', 'Repatriación de migrantes', 'Invasión embajada de México', 'Subordinación a EE.UU.'],
-      rightColor,
-      300
-    ));
+    derecha.forEach((caract, index) => {
+      const pos = rightPositions[index] || { x: width - 320, y: 60 + (index * 150) };
+      rightBoxes.push(drawBox(
+        pos.x,
+        pos.y,
+        caract.titulo,
+        null,
+        caract.subitems,
+        rightColor,
+        280
+      ));
+    });
 
     // DIBUJAR FLECHAS desde cajas principales hacia VS
     const vsLeft = centerX - vsCircleRadius - 15;
@@ -606,6 +574,276 @@ const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
       </div>
     </div>
   );
+};
+
+// Exportar datos y función de dibujo para reutilización
+export const initialDilemasData = {
+  izquierda: initialCaracteristicasIzquierda,
+  derecha: initialCaracteristicasDerecha
+};
+
+export const drawDilemasChartFromData = (izquierda, derecha) => {
+  const canvasElement = document.createElement('canvas');
+  const width = 1920;
+  const height = 1080;
+  canvasElement.width = width;
+  canvasElement.height = height;
+  const ctx = canvasElement.getContext('2d');
+
+  // Configuración de alta calidad
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+
+  // Fondo blanco
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(0, 0, width, height);
+
+  const centerX = width / 2;
+  const centerY = height / 2;
+  const vsCircleRadius = 65;
+  const cornerRadius = 8;
+
+  // Función para dibujar rectángulo con bordes redondeados
+  const drawRoundedRect = (x, y, w, h, r, fillColor, strokeColor, lineWidth = 3) => {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.arcTo(x + w, y, x + w, y + r, r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+    ctx.lineTo(x + r, y + h);
+    ctx.arcTo(x, y + h, x, y + h - r, r);
+    ctx.lineTo(x, y + r);
+    ctx.arcTo(x, y, x + r, y, r);
+    ctx.closePath();
+
+    ctx.fillStyle = fillColor;
+    ctx.fill();
+    ctx.strokeStyle = strokeColor;
+    ctx.lineWidth = lineWidth;
+    ctx.stroke();
+  };
+
+  // Función para dibujar flecha curva
+  const drawCurvedArrow = (fromX, fromY, toX, toY, color, curvature = 0.3) => {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 4;
+    ctx.setLineDash([]);
+
+    const midX = (fromX + toX) / 2;
+    const midY = (fromY + toY) / 2;
+    const dx = toX - fromX;
+    const dy = toY - fromY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    const cpX = midX + (-dy / dist) * dist * curvature;
+    const cpY = midY + (dx / dist) * dist * curvature;
+
+    ctx.beginPath();
+    ctx.moveTo(fromX, fromY);
+    ctx.quadraticCurveTo(cpX, cpY, toX, toY);
+    ctx.stroke();
+
+    const angle = Math.atan2(toY - cpY, toX - cpX);
+    const arrowLength = 15;
+    const arrowWidth = 10;
+
+    ctx.beginPath();
+    ctx.moveTo(toX, toY);
+    ctx.lineTo(
+      toX - arrowLength * Math.cos(angle) - arrowWidth * Math.sin(angle),
+      toY - arrowLength * Math.sin(angle) + arrowWidth * Math.cos(angle)
+    );
+    ctx.lineTo(
+      toX - arrowLength * Math.cos(angle) + arrowWidth * Math.sin(angle),
+      toY - arrowLength * Math.sin(angle) - arrowWidth * Math.cos(angle)
+    );
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+  };
+
+  // Función para dibujar caja con título y subitems
+  const drawBox = (x, y, titulo, subtitulo, subitems, color, maxWidth = 280) => {
+    const padding = 15;
+    const lineHeight = 24;
+    const titleHeight = subtitulo ? 65 : 50;
+    const subitemHeight = subitems.length * lineHeight + 20;
+    const totalHeight = titleHeight + subitemHeight;
+
+    drawRoundedRect(x, y, maxWidth, totalHeight, cornerRadius, '#FFFFFF', color, 4);
+
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(x + cornerRadius, y);
+    ctx.lineTo(x + maxWidth - cornerRadius, y);
+    ctx.arcTo(x + maxWidth, y, x + maxWidth, y + cornerRadius, cornerRadius);
+    ctx.lineTo(x + maxWidth, y + titleHeight);
+    ctx.lineTo(x, y + titleHeight);
+    ctx.lineTo(x, y + cornerRadius);
+    ctx.arcTo(x, y, x + cornerRadius, y, cornerRadius);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = 'bold 19px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    if (subtitulo) {
+      ctx.fillText(titulo, x + maxWidth / 2, y + 20);
+      ctx.font = '15px Arial';
+      ctx.fillText(subtitulo, x + maxWidth / 2, y + 42);
+    } else {
+      ctx.fillText(titulo, x + maxWidth / 2, y + titleHeight / 2);
+    }
+
+    ctx.fillStyle = color;
+    ctx.font = '15px Arial';
+    ctx.textAlign = 'left';
+
+    subitems.forEach((subitem, index) => {
+      const subY = y + titleHeight + 10 + (index * lineHeight);
+
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(x + padding, subY + lineHeight / 2, 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = color;
+      ctx.fillText(subitem, x + padding + 10, subY + lineHeight / 2);
+    });
+
+    return { x, y, width: maxWidth, height: totalHeight };
+  };
+
+  // LADO IZQUIERDO (ROJO)
+  const leftColor = '#8B1A1A';
+  const leftMainBox = drawBox(
+    150,
+    centerY - 60,
+    'Lorem Ipsum',
+    'Dolor & Sit Amet',
+    ['(Consectetur)'],
+    leftColor,
+    350
+  );
+
+  const leftBoxes = [];
+  const leftPositions = [
+    { x: 80, y: 80 },
+    { x: 320, y: 50 },
+    { x: 80, y: centerY + 180 }
+  ];
+
+  izquierda.forEach((caract, index) => {
+    const pos = leftPositions[index] || { x: 80, y: 80 + (index * 150) };
+    leftBoxes.push(drawBox(
+      pos.x,
+      pos.y,
+      caract.titulo,
+      null,
+      caract.subitems,
+      leftColor,
+      250
+    ));
+  });
+
+  // LADO DERECHO (AZUL)
+  const rightColor = '#1E5A96';
+  const rightMainBox = drawBox(
+    width - 500,
+    centerY - 60,
+    'Adipiscing Elit',
+    'Tempor & Incididunt',
+    [],
+    rightColor,
+    350
+  );
+
+  const rightBoxes = [];
+  const rightPositions = [
+    { x: width - 320, y: 60 },
+    { x: width - 480, y: centerY - 270 },
+    { x: width - 420, y: centerY + 180 },
+    { x: width - 780, y: centerY + 250 }
+  ];
+
+  derecha.forEach((caract, index) => {
+    const pos = rightPositions[index] || { x: width - 320, y: 60 + (index * 150) };
+    rightBoxes.push(drawBox(
+      pos.x,
+      pos.y,
+      caract.titulo,
+      null,
+      caract.subitems,
+      rightColor,
+      280
+    ));
+  });
+
+  // DIBUJAR FLECHAS
+  const vsLeft = centerX - vsCircleRadius - 15;
+  const vsRight = centerX + vsCircleRadius + 15;
+  const vsTop = centerY - vsCircleRadius / 2;
+  const vsBottom = centerY + vsCircleRadius / 2;
+
+  drawCurvedArrow(
+    leftMainBox.x + leftMainBox.width,
+    leftMainBox.y + leftMainBox.height / 2,
+    vsLeft,
+    centerY,
+    leftColor,
+    0.2
+  );
+
+  leftBoxes.forEach(box => {
+    const fromX = box.x + box.width;
+    const fromY = box.y + box.height / 2;
+    const toY = fromY < centerY ? vsTop : (fromY > centerY ? vsBottom : centerY);
+    drawCurvedArrow(fromX, fromY, vsLeft, toY, leftColor, 0.15);
+  });
+
+  drawCurvedArrow(
+    rightMainBox.x,
+    rightMainBox.y + rightMainBox.height / 2,
+    vsRight,
+    centerY,
+    rightColor,
+    -0.2
+  );
+
+  rightBoxes.forEach(box => {
+    const fromX = box.x;
+    const fromY = box.y + box.height / 2;
+    const toY = fromY < centerY ? vsTop : (fromY > centerY ? vsBottom : centerY);
+    drawCurvedArrow(fromX, fromY, vsRight, toY, rightColor, -0.15);
+  });
+
+  // Círculo central "VS"
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+  ctx.shadowBlur = 12;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 4;
+
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, vsCircleRadius, 0, Math.PI * 2);
+  ctx.fillStyle = '#000000';
+  ctx.fill();
+
+  ctx.shadowColor = 'transparent';
+
+  ctx.strokeStyle = '#FFFFFF';
+  ctx.lineWidth = 4;
+  ctx.stroke();
+
+  ctx.font = 'bold 48px Arial';
+  ctx.fillStyle = '#FFFFFF';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('VS', centerX, centerY);
+
+  return canvasElement;
 };
 
 export default DilemasRentablesModal;
