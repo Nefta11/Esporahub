@@ -18,7 +18,9 @@
       "Bash(do echo -n \"$class: \")",
       "Bash(sort:*)",
       "Bash(for file in src/components/reportBuilder/modals/DemographicsTableModal.jsx src/components/reportBuilder/modals/SocialMediaUsageModal.jsx src/components/reportBuilder/modals/BenchmarkDifusionOficialModal.jsx)",
-      "Bash(do echo \"=== $file ===\")"
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(awk:*)",
+      "Bash(python:*)"
     ],
     "deny": [],
     "ask": []
