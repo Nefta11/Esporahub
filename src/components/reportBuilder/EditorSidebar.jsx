@@ -89,7 +89,7 @@ const EditorSidebar = ({
 
       {/* Elementos Básicos */}
       <section className="tools-section">
-        <h3 className="section-title">ELEMENTOS BÁSICOS</h3>
+        <h3 className="section-title" style={{ textAlign: 'center' }}>ELEMENTOS<br/>BÁSICOS</h3>
         <div className="tools-grid">
           <button className="tool-card" onClick={onAddText} title="Agregar Texto">
             <Type size={24} />
