@@ -556,14 +556,79 @@ export const autoInsertSocialMediaUsageTable = async (canvas) => {
 
 // Datos por defecto para Influencers
 export const defaultInfluencersData = {
-  title: 'Influencers (alcance local): Baja California',
-  subtitle: 'Periodo de análisis: 09 al 29 de abril',
+  title: 'Lorem ipsum',
+  subtitle: 'Lorem ipsum',
   influencers: [
-    { name: 'Influencer 1', username: '@influencer1', platform: 'TikTok', followers: '0', topic: 'Música, entretenimiento' },
-    { name: 'Influencer 2', username: '@influencer2', platform: 'TikTok', followers: '0', topic: 'Comedia, sketch' },
-    { name: 'Influencer 3', username: '@influencer3', platform: 'TikTok', followers: '0', topic: 'Vlog, cocina, humor' },
-    { name: 'Influencer 4', username: '@influencer4', platform: 'TikTok', followers: '0', topic: 'Belleza' },
-    { name: 'Influencer 5', username: '@influencer5', platform: 'TikTok', followers: '0', topic: 'Moda, belleza' }
+    {
+      name: 'Lorem ipsum',
+      username: 'Lorem ipsum',
+      platform: 'TikTok',
+      followers: '0',
+      topic: 'Lorem ipsum'
+    },
+    {
+      name: 'Lorem ipsum',
+      username: 'Lorem ipsum',
+      platform: 'TikTok',
+      followers: '0',
+      topic: 'Lorem ipsum'
+    },
+    {
+      name: 'Lorem ipsum',
+      username: 'Lorem ipsum',
+      platform: 'TikTok',
+      followers: '0',
+      topic: 'Lorem ipsum'
+    },
+    {
+      name: 'Lorem ipsum',
+      username: 'Lorem ipsum',
+      platform: 'TikTok',
+      followers: '0',
+      topic: 'Lorem ipsum'
+    },
+    {
+      name: 'Lorem ipsum',
+      username: 'Lorem ipsum',
+      platform: 'TikTok',
+      followers: '0',
+      topic: 'Lorem ipsum'
+    },
+    {
+      name: 'Lorem ipsum',
+      username: 'Lorem ipsum',
+      platform: 'TikTok',
+      followers: '0',
+      topic: 'Lorem ipsum'
+    },
+    {
+      name: 'Lorem ipsum',
+      username: 'Lorem ipsum',
+      platform: 'TikTok',
+      followers: '0',
+      topic: 'Lorem ipsum'
+    },
+    {
+      name: 'Lorem ipsum',
+      username: 'Lorem ipsum',
+      platform: 'TikTok',
+      followers: '0',
+      topic: 'Lorem ipsum'
+    },
+    {
+      name: 'Lorem ipsum',
+      username: 'Lorem ipsum',
+      platform: 'TikTok',
+      followers: '0',
+      topic: 'Lorem ipsum'
+    },
+    {
+      name: 'Lorem ipsum',
+      username: 'Lorem ipsum',
+      platform: 'Youtube',
+      followers: '0',
+      topic: 'Lorem ipsum'
+    }
   ]
 };
 
@@ -572,94 +637,129 @@ export const autoInsertInfluencersTable = async (canvas) => {
   if (!canvas) return;
 
   const { title, subtitle, influencers } = defaultInfluencersData;
+
+  // Crear canvas temporal con las mismas dimensiones que en el modal
   const tempCanvas = document.createElement('canvas');
-  const padding = 20;
-  const titleHeight = 40;
-  const subtitleHeight = 30;
-  const headerHeight = 35;
-  const rowHeight = 45;
-  const columnWidths = [200, 150, 100, 120, 200];
+  tempCanvas.width = 1100;
+  tempCanvas.height = 150 + (influencers.length * 50);
+  const tempCtx = tempCanvas.getContext('2d');
 
-  tempCanvas.width = columnWidths.reduce((a, b) => a + b, 0) + (padding * 2);
-  tempCanvas.height = padding + titleHeight + subtitleHeight + headerHeight + (influencers.length * rowHeight) + padding;
-  const ctx = tempCanvas.getContext('2d');
+  // Fondo blanco
+  tempCtx.fillStyle = '#ffffff';
+  tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
 
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+  // Configuración igual que el modal
+  const startX = 30;
+  let currentY = 30;
+  const rowHeight = 50;
+  const headerHeight = 60;
+  const columnWidths = [180, 180, 160, 120, 250];
 
-  let currentY = padding;
-  ctx.fillStyle = '#1f2937';
-  ctx.font = 'bold 18px Arial';
-  ctx.textAlign = 'left';
-  ctx.fillText(title, padding, currentY + 25);
-  currentY += titleHeight;
+  // Título
+  if (title) {
+    tempCtx.fillStyle = '#4A3F7A';
+    tempCtx.font = 'bold 24px Arial';
+    tempCtx.textAlign = 'left';
+    tempCtx.fillText(title, startX, currentY + 20);
+    currentY += 35;
+  }
 
-  ctx.fillStyle = '#6b7280';
-  ctx.font = '14px Arial';
-  ctx.fillText(subtitle, padding, currentY + 18);
-  currentY += subtitleHeight;
+  // Subtítulo
+  if (subtitle) {
+    tempCtx.fillStyle = '#666666';
+    tempCtx.font = '16px Arial';
+    tempCtx.fillText(subtitle, startX, currentY + 15);
+    currentY += 30;
+  }
 
-  const headers = ['Nombre', 'Usuario', 'Plataforma', 'Seguidores', 'Temática'];
-  ctx.fillStyle = '#1967D2';
-  ctx.fillRect(padding, currentY, columnWidths.reduce((a, b) => a + b, 0), headerHeight);
+  // Encabezados de tabla
+  const headers = ['Nombre', 'Username', 'Red más popular', 'Seguidores', 'Tema'];
+  tempCtx.fillStyle = '#4A3F7A';
+  tempCtx.fillRect(startX, currentY, columnWidths.reduce((a, b) => a + b, 0), headerHeight);
 
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 13px Arial';
-  ctx.textAlign = 'center';
-  let headerX = padding;
-  headers.forEach((header, idx) => {
-    ctx.fillText(header, headerX + columnWidths[idx] / 2, currentY + 22);
-    headerX += columnWidths[idx];
+  tempCtx.fillStyle = '#ffffff';
+  tempCtx.font = 'bold 16px Arial';
+  tempCtx.textAlign = 'center';
+
+  let currentX = startX;
+  headers.forEach((header, index) => {
+    tempCtx.fillText(header, currentX + columnWidths[index] / 2, currentY + headerHeight / 2 + 6);
+    currentX += columnWidths[index];
   });
 
   currentY += headerHeight;
 
-  influencers.forEach((influencer, rowIndex) => {
-    const rowY = currentY + (rowIndex * rowHeight);
-    ctx.fillStyle = rowIndex % 2 === 0 ? '#ffffff' : '#f9fafb';
-    ctx.fillRect(padding, rowY, columnWidths.reduce((a, b) => a + b, 0), rowHeight);
+  // Filas de datos
+  influencers.forEach((influencer, index) => {
+    // Fondo de fila alternado
+    const bgColor = index % 2 === 0 ? '#f9f9f9' : '#ffffff';
+    tempCtx.fillStyle = bgColor;
+    tempCtx.fillRect(startX, currentY, columnWidths.reduce((a, b) => a + b, 0), rowHeight);
 
-    ctx.strokeStyle = '#e5e7eb';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(padding, rowY, columnWidths.reduce((a, b) => a + b, 0), rowHeight);
+    // Borde superior
+    tempCtx.strokeStyle = '#e0e0e0';
+    tempCtx.lineWidth = 1;
+    tempCtx.beginPath();
+    tempCtx.moveTo(startX, currentY);
+    tempCtx.lineTo(startX + columnWidths.reduce((a, b) => a + b, 0), currentY);
+    tempCtx.stroke();
 
-    ctx.fillStyle = '#1f2937';
-    ctx.font = 'bold 12px Arial';
-    ctx.textAlign = 'left';
-    ctx.fillText(influencer.name, padding + 10, rowY + 28);
+    // Datos
+    tempCtx.fillStyle = '#000000';
+    tempCtx.font = '15px Arial';
+    tempCtx.textAlign = 'left';
 
-    ctx.fillStyle = '#6b7280';
-    ctx.font = '11px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText(influencer.username, padding + columnWidths[0] + columnWidths[1] / 2, rowY + 28);
+    currentX = startX;
 
-    ctx.fillStyle = '#1967D2';
-    ctx.font = 'bold 11px Arial';
-    ctx.fillText(influencer.platform, padding + columnWidths[0] + columnWidths[1] + columnWidths[2] / 2, rowY + 28);
+    // Nombre
+    tempCtx.fillText(influencer.name, currentX + 10, currentY + rowHeight / 2 + 5);
+    currentX += columnWidths[0];
 
-    ctx.fillStyle = '#059669';
-    ctx.font = 'bold 12px Arial';
-    ctx.fillText(influencer.followers, padding + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3] / 2, rowY + 28);
+    // Username
+    tempCtx.fillText(influencer.username, currentX + 10, currentY + rowHeight / 2 + 5);
+    currentX += columnWidths[1];
 
-    ctx.fillStyle = '#6b7280';
-    ctx.font = '11px Arial';
-    ctx.textAlign = 'left';
-    ctx.fillText(influencer.topic, padding + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3] + 10, rowY + 28);
+    // Plataforma
+    tempCtx.textAlign = 'center';
+    tempCtx.fillText(influencer.platform, currentX + columnWidths[2] / 2, currentY + rowHeight / 2 + 5);
+    currentX += columnWidths[2];
+
+    // Seguidores
+    tempCtx.fillText(influencer.followers, currentX + columnWidths[3] / 2, currentY + rowHeight / 2 + 5);
+    currentX += columnWidths[3];
+
+    // Tema
+    tempCtx.textAlign = 'left';
+    tempCtx.fillText(influencer.topic, currentX + 10, currentY + rowHeight / 2 + 5);
+
+    currentY += rowHeight;
   });
 
+  // Borde inferior de la tabla
+  tempCtx.strokeStyle = '#4A3F7A';
+  tempCtx.lineWidth = 3;
+  tempCtx.beginPath();
+  tempCtx.moveTo(startX, currentY);
+  tempCtx.lineTo(startX + columnWidths.reduce((a, b) => a + b, 0), currentY);
+  tempCtx.stroke();
+
+  // Convertir canvas a imagen y agregar al canvas principal
   const dataURL = tempCanvas.toDataURL('image/png');
   const imgElement = new Image();
+
   imgElement.onload = () => {
     const fabricImg = new FabricImage(imgElement, {
       left: 50,
-      top: 150,
-      scaleX: 0.9,
-      scaleY: 0.9,
+      top: 50,
+      scaleX: 0.65,
+      scaleY: 0.65,
       name: 'influencers-table'
     });
     canvas.add(fabricImg);
+    canvas.setActiveObject(fabricImg);
     canvas.renderAll();
   };
+
   imgElement.src = dataURL;
 };
 
@@ -1420,8 +1520,8 @@ export const autoInsertAwarenessChart = async (canvas) => {
     { name: 'Personaje 3', avatar: '', alcance: 0, impresiones: 0, color: '#0D7377' },
   ];
 
-  const width = 480;
-  const height = 270;
+  const width = 960;
+  const height = 540;
   const canvasElement = document.createElement('canvas');
   canvasElement.width = width;
   canvasElement.height = height;
@@ -1432,56 +1532,75 @@ export const autoInsertAwarenessChart = async (canvas) => {
   ctx.fillRect(0, 0, width, height);
 
   // Título
-  ctx.font = 'bold 14px Arial';
+  ctx.font = 'bold 28px Arial';
   ctx.fillStyle = '#000000';
   ctx.textAlign = 'left';
-  ctx.fillText('Awareness', 20, 30);
+  ctx.fillText('Awareness', 40, 60);
 
-  // Leyenda
-  const legendX = 360;
-  const legendY = 25;
-  
+  // Leyenda (centrada)
+  const legendX = 600;
+  const legendY = 50;
+
   ctx.fillStyle = '#14B8A6';
-  ctx.fillRect(legendX, legendY, 10, 10);
-  ctx.font = '8px Arial';
+  ctx.fillRect(legendX, legendY, 20, 20);
+  ctx.font = '16px Arial';
   ctx.fillStyle = '#000000';
   ctx.textAlign = 'left';
-  ctx.fillText('Alcance', legendX + 15, legendY + 8);
+  ctx.fillText('Alcance', legendX + 30, legendY + 15);
 
   ctx.fillStyle = '#0D7377';
-  ctx.fillRect(legendX + 60, legendY, 10, 10);
-  ctx.fillText('Impresiones', legendX + 75, legendY + 8);
+  ctx.fillRect(legendX + 150, legendY, 20, 20);
+  ctx.fillText('Impresiones', legendX + 180, legendY + 15);
 
   // Calcular máximo valor para escala
   const maxValue = Math.max(...profiles.map(p => Math.max(p.alcance, p.impresiones)));
-  const scale = maxValue > 0 ? 325 / maxValue : 0;
+  const scale = maxValue > 0 ? 650 / maxValue : 0;
 
   // Configuración de barras
-  const barHeight = 17;
-  const profileSpacing = 55;
-  const startY = 70;
-  const startX = 60;
+  const barHeight = 35;
+  const profileSpacing = 110;
+  const startY = 140;
+  const startX = 120;
 
   profiles.forEach((profile, index) => {
     const yPos = startY + (index * profileSpacing);
 
-    // Círculo placeholder para avatar
-    ctx.beginPath();
-    ctx.arc(35, yPos + 10, 17, 0, 2 * Math.PI);
-    ctx.fillStyle = '#E5E7EB';
-    ctx.fill();
-    ctx.strokeStyle = profile.color;
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
+    // Avatar
+    if (profile.avatar) {
+      const img = new Image();
+      img.src = profile.avatar;
+      img.onload = () => {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(70, yPos + 20, 35, 0, 2 * Math.PI);
+        ctx.closePath();
+        ctx.clip();
+        ctx.drawImage(img, 35, yPos - 15, 70, 70);
+        ctx.restore();
 
-    // Nombre (multilinea)
-    ctx.font = 'bold 7px Arial';
+        // Borde del avatar
+        ctx.beginPath();
+        ctx.arc(70, yPos + 20, 35, 0, 2 * Math.PI);
+        ctx.strokeStyle = profile.color;
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      };
+    } else {
+      // Círculo placeholder
+      ctx.beginPath();
+      ctx.arc(70, yPos + 20, 35, 0, 2 * Math.PI);
+      ctx.fillStyle = '#E5E7EB';
+      ctx.fill();
+      ctx.strokeStyle = profile.color;
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+
+    // Nombre
+    ctx.font = 'bold 14px Arial';
     ctx.fillStyle = '#000000';
     ctx.textAlign = 'center';
-    const nameLines = profile.name.split('\n');
-    nameLines.forEach((line, i) => {
-      ctx.fillText(line, 35, yPos + 35 + (i * 8));
-    });
+    ctx.fillText(profile.name, 70, yPos + 70);
 
     // Barra de Alcance (verde claro)
     const alcanceWidth = profile.alcance * scale;
@@ -1489,45 +1608,47 @@ export const autoInsertAwarenessChart = async (canvas) => {
     ctx.fillRect(startX, yPos, alcanceWidth, barHeight);
 
     // Valor de Alcance
-    ctx.font = 'bold 7px Arial';
+    ctx.font = 'bold 14px Arial';
     ctx.fillStyle = '#000000';
     ctx.textAlign = 'left';
-    ctx.fillText(profile.alcance.toLocaleString(), startX + alcanceWidth + 5, yPos + 11);
+    ctx.fillText(profile.alcance.toLocaleString(), startX + alcanceWidth + 10, yPos + 22);
 
     // Barra de Impresiones (verde oscuro)
     const impresionesWidth = profile.impresiones * scale;
     ctx.fillStyle = '#0D7377';
-    ctx.fillRect(startX, yPos + barHeight + 4, impresionesWidth, barHeight);
+    ctx.fillRect(startX, yPos + barHeight + 8, impresionesWidth, barHeight);
 
     // Valor de Impresiones
-    ctx.fillText(profile.impresiones.toLocaleString(), startX + impresionesWidth + 5, yPos + barHeight + 15);
+    ctx.fillText(profile.impresiones.toLocaleString(), startX + impresionesWidth + 10, yPos + barHeight + 30);
   });
 
   // Grid lines
   ctx.strokeStyle = '#E5E7EB';
-  ctx.lineWidth = 0.5;
+  ctx.lineWidth = 1;
   const gridSteps = 5;
   for (let i = 0; i <= gridSteps; i++) {
-    const x = startX + (325 / gridSteps) * i;
+    const x = startX + (650 / gridSteps) * i;
     ctx.beginPath();
-    ctx.moveTo(x, 50);
-    ctx.lineTo(x, height - 20);
+    ctx.moveTo(x, 100);
+    ctx.lineTo(x, height - 40);
     ctx.stroke();
 
     // Etiquetas del eje X
     const value = maxValue > 0 ? Math.round((maxValue / gridSteps) * i) : 0;
-    ctx.font = '6px Arial';
+    ctx.font = '12px Arial';
     ctx.fillStyle = '#6B7280';
     ctx.textAlign = 'center';
-    ctx.fillText(value.toLocaleString(), x, height - 10);
+    ctx.fillText(value.toLocaleString(), x, height - 20);
   }
 
   // Importar fabric.Image
   const { Image: FabricImage } = await import('fabric');
 
   const fabricImg = new FabricImage(canvasElement, {
-    left: 0,
-    top: 0,
+    left: 50,
+    top: 50,
+    scaleX: 0.8,
+    scaleY: 0.8,
     selectable: true,
     hasControls: true,
     name: 'awareness-chart'

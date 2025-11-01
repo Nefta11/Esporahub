@@ -4,78 +4,78 @@ import { Image as FabricImage } from 'fabric';
 import '@/styles/reportBuilder/ChartModals.css';
 
 const InfluencersTableModal = ({ isOpen, onClose, canvas }) => {
-  const [title, setTitle] = useState('Influencers (alcance local): Baja California');
-  const [subtitle, setSubtitle] = useState('Periodo de análisis: 09 al 29 de abril');
+  const [title, setTitle] = useState('Lorem ipsum');
+  const [subtitle, setSubtitle] = useState('Lorem ipsum');
   const [influencers, setInfluencers] = useState([
-    { 
-      name: 'Influencer 1', 
-      username: '@influencer1',
+    {
+      name: 'Lorem ipsum',
+      username: 'Lorem ipsum',
       platform: 'TikTok',
-      followers: '37.7M',
-      topic: 'Música, entretenimiento'
+      followers: '0',
+      topic: 'Lorem ipsum'
     },
-    { 
-      name: 'Influencer 2', 
-      username: '@influencer2',
+    {
+      name: 'Lorem ipsum',
+      username: 'Lorem ipsum',
       platform: 'TikTok',
-      followers: '6.8M',
-      topic: 'Comedia, sketch'
+      followers: '0',
+      topic: 'Lorem ipsum'
     },
-    { 
-      name: 'Influencer 3', 
-      username: '@influencer3',
+    {
+      name: 'Lorem ipsum',
+      username: 'Lorem ipsum',
       platform: 'TikTok',
-      followers: '2.3M',
-      topic: 'Vlog, cocina, humor'
+      followers: '0',
+      topic: 'Lorem ipsum'
     },
-    { 
-      name: 'Influencer 4', 
-      username: '@influencer4',
+    {
+      name: 'Lorem ipsum',
+      username: 'Lorem ipsum',
       platform: 'TikTok',
-      followers: '2.1M',
-      topic: 'Belleza'
+      followers: '0',
+      topic: 'Lorem ipsum'
     },
-    { 
-      name: 'Influencer 5', 
-      username: '@influencer5',
+    {
+      name: 'Lorem ipsum',
+      username: 'Lorem ipsum',
       platform: 'TikTok',
-      followers: '1.8M',
-      topic: 'Moda, belleza'
+      followers: '0',
+      topic: 'Lorem ipsum'
     },
-    { 
-      name: 'Influencer 6', 
-      username: '@influencer6',
+    {
+      name: 'Lorem ipsum',
+      username: 'Lorem ipsum',
       platform: 'TikTok',
-      followers: '3M',
-      topic: 'Moda, estilo de vida'
+      followers: '0',
+      topic: 'Lorem ipsum'
     },
-    { 
-      name: 'Influencer 7', 
-      username: '@influencer7',
+    {
+      name: 'Lorem ipsum',
+      username: 'Lorem ipsum',
       platform: 'TikTok',
-      followers: '1.8M',
-      topic: 'Entretenimiento, contenido social'
+      followers: '0',
+      topic: 'Lorem ipsum'
     },
-    { 
-      name: 'Influencer 8', 
-      username: '@influencer8',
+    {
+      name: 'Lorem ipsum',
+      username: 'Lorem ipsum',
       platform: 'TikTok',
-      followers: '4.6M',
-      topic: 'Comedia, entretenimiento'
+      followers: '0',
+      topic: 'Lorem ipsum'
     },
-    { 
-      name: 'Influencer 9', 
-      username: '@influencer9',
+    {
+      name: 'Lorem ipsum',
+      username: 'Lorem ipsum',
       platform: 'TikTok',
-      followers: '1.2M',
-      topic: 'Entretenimiento'
+      followers: '0',
+      topic: 'Lorem ipsum'
     },
-    { 
-      name: 'Influencer 10', 
-      username: '@influencer10',
+    {
+      name: 'Lorem ipsum',
+      username: 'Lorem ipsum',
       platform: 'Youtube',
-      followers: '2.41K',
-      topic: 'Música'
+      followers: '0',
+      topic: 'Lorem ipsum'
     }
   ]);
   const canvasRef = useRef(null);
@@ -200,12 +200,12 @@ const InfluencersTableModal = ({ isOpen, onClose, canvas }) => {
   const addInfluencer = () => {
     setInfluencers([
       ...influencers,
-      { 
-        name: 'Nuevo Influencer', 
-        username: '@username',
+      {
+        name: 'Lorem ipsum',
+        username: 'Lorem ipsum',
         platform: 'TikTok',
-        followers: '0K',
-        topic: 'Tema'
+        followers: '0',
+        topic: 'Lorem ipsum'
       }
     ]);
   };
@@ -339,90 +339,91 @@ const InfluencersTableModal = ({ isOpen, onClose, canvas }) => {
         left: 50,
         top: 50,
         scaleX: 0.65,
-        scaleY: 0.65
+        scaleY: 0.65,
+        name: 'influencers-table'
       });
       canvas.add(fabricImg);
       canvas.setActiveObject(fabricImg);
       canvas.renderAll();
       handleClose();
     };
-    
+
     imgElement.src = dataURL;
   };
 
   const handleClose = () => {
-    setTitle('Influencers (alcance local): Baja California');
-    setSubtitle('Periodo de análisis: 09 al 29 de abril');
+    setTitle('Lorem ipsum');
+    setSubtitle('Lorem ipsum');
     setInfluencers([
-      { 
-        name: 'Influencer 1', 
-        username: '@influencer1',
+      {
+        name: 'Lorem ipsum',
+        username: 'Lorem ipsum',
         platform: 'TikTok',
-        followers: '37.7M',
-        topic: 'Música, entretenimiento'
+        followers: '0',
+        topic: 'Lorem ipsum'
       },
-      { 
-        name: 'Influencer 2', 
-        username: '@influencer2',
+      {
+        name: 'Lorem ipsum',
+        username: 'Lorem ipsum',
         platform: 'TikTok',
-        followers: '6.8M',
-        topic: 'Comedia, sketch'
+        followers: '0',
+        topic: 'Lorem ipsum'
       },
-      { 
-        name: 'Influencer 3', 
-        username: '@influencer3',
+      {
+        name: 'Lorem ipsum',
+        username: 'Lorem ipsum',
         platform: 'TikTok',
-        followers: '2.3M',
-        topic: 'Vlog, cocina, humor'
+        followers: '0',
+        topic: 'Lorem ipsum'
       },
-      { 
-        name: 'Influencer 4', 
-        username: '@influencer4',
+      {
+        name: 'Lorem ipsum',
+        username: 'Lorem ipsum',
         platform: 'TikTok',
-        followers: '2.1M',
-        topic: 'Belleza'
+        followers: '0',
+        topic: 'Lorem ipsum'
       },
-      { 
-        name: 'Influencer 5', 
-        username: '@influencer5',
+      {
+        name: 'Lorem ipsum',
+        username: 'Lorem ipsum',
         platform: 'TikTok',
-        followers: '1.8M',
-        topic: 'Moda, belleza'
+        followers: '0',
+        topic: 'Lorem ipsum'
       },
-      { 
-        name: 'Influencer 6', 
-        username: '@influencer6',
+      {
+        name: 'Lorem ipsum',
+        username: 'Lorem ipsum',
         platform: 'TikTok',
-        followers: '3M',
-        topic: 'Moda, estilo de vida'
+        followers: '0',
+        topic: 'Lorem ipsum'
       },
-      { 
-        name: 'Influencer 7', 
-        username: '@influencer7',
+      {
+        name: 'Lorem ipsum',
+        username: 'Lorem ipsum',
         platform: 'TikTok',
-        followers: '1.8M',
-        topic: 'Entretenimiento, contenido social'
+        followers: '0',
+        topic: 'Lorem ipsum'
       },
-      { 
-        name: 'Influencer 8', 
-        username: '@influencer8',
+      {
+        name: 'Lorem ipsum',
+        username: 'Lorem ipsum',
         platform: 'TikTok',
-        followers: '4.6M',
-        topic: 'Comedia, entretenimiento'
+        followers: '0',
+        topic: 'Lorem ipsum'
       },
-      { 
-        name: 'Influencer 9', 
-        username: '@influencer9',
+      {
+        name: 'Lorem ipsum',
+        username: 'Lorem ipsum',
         platform: 'TikTok',
-        followers: '1.2M',
-        topic: 'Entretenimiento'
+        followers: '0',
+        topic: 'Lorem ipsum'
       },
-      { 
-        name: 'Influencer 10', 
-        username: '@influencer10',
+      {
+        name: 'Lorem ipsum',
+        username: 'Lorem ipsum',
         platform: 'Youtube',
-        followers: '2.41K',
-        topic: 'Música'
+        followers: '0',
+        topic: 'Lorem ipsum'
       }
     ]);
     onClose();
@@ -450,27 +451,27 @@ const InfluencersTableModal = ({ isOpen, onClose, canvas }) => {
             <div className="chart-form-grid">
               <div>
                 <label className="chart-form-label">
-                  Estado/Región:
+                  Título:
                 </label>
                 <input
                   type="text"
-                  value={title.replace('Influencers (alcance local): ', '')}
-                  onChange={(e) => setTitle(`Influencers (alcance local): ${e.target.value}`)}
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
                   className="chart-form-input"
-                  placeholder="Baja California"
+                  placeholder="Lorem ipsum"
                 />
               </div>
 
               <div>
                 <label className="chart-form-label">
-                  Periodo de Análisis:
+                  Subtítulo:
                 </label>
                 <input
                   type="text"
-                  value={subtitle.replace('Periodo de análisis: ', '')}
-                  onChange={(e) => setSubtitle(`Periodo de análisis: ${e.target.value}`)}
+                  value={subtitle}
+                  onChange={(e) => setSubtitle(e.target.value)}
                   className="chart-form-input"
-                  placeholder="09 al 29 de abril"
+                  placeholder="Lorem ipsum"
                 />
               </div>
             </div>
@@ -507,7 +508,7 @@ const InfluencersTableModal = ({ isOpen, onClose, canvas }) => {
                     </label>
                     <input
                       type="text"
-                      placeholder="Nombre del influencer"
+                      placeholder="Lorem ipsum"
                       value={influencer.name}
                       onChange={(e) => updateInfluencer(index, 'name', e.target.value)}
                       className="chart-form-input"
@@ -520,7 +521,7 @@ const InfluencersTableModal = ({ isOpen, onClose, canvas }) => {
                     </label>
                     <input
                       type="text"
-                      placeholder="@username"
+                      placeholder="Lorem ipsum"
                       value={influencer.username}
                       onChange={(e) => updateInfluencer(index, 'username', e.target.value)}
                       className="chart-form-input"
@@ -551,7 +552,7 @@ const InfluencersTableModal = ({ isOpen, onClose, canvas }) => {
                     </label>
                     <input
                       type="text"
-                      placeholder="37.7M"
+                      placeholder="0"
                       value={influencer.followers}
                       onChange={(e) => updateInfluencer(index, 'followers', e.target.value)}
                       className="chart-form-input"
@@ -576,7 +577,7 @@ const InfluencersTableModal = ({ isOpen, onClose, canvas }) => {
                   </label>
                   <input
                     type="text"
-                    placeholder="Música, entretenimiento, comedia, etc."
+                    placeholder="Lorem ipsum"
                     value={influencer.topic}
                     onChange={(e) => updateInfluencer(index, 'topic', e.target.value)}
                     className="chart-form-input"

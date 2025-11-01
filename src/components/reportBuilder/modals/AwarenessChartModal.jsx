@@ -157,10 +157,13 @@ const AwarenessChartModal = ({ isOpen, onClose, canvas }) => {
 
     // Agregar al canvas de Fabric
     const fabricImg = new FabricImage(canvasElement, {
-      left: 0,
-      top: 0,
+      left: 50,
+      top: 50,
+      scaleX: 0.8,
+      scaleY: 0.8,
       selectable: true,
       hasControls: true,
+      name: 'awareness-chart'
     });
 
     canvas.add(fabricImg);

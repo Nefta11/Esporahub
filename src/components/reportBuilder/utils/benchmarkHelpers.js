@@ -2,31 +2,31 @@ import { Image as FabricImage } from 'fabric';
 
 const defaultBenchmarkData = [
   {
-    name: 'Personaje 1',
+    name: 'Lorem ipsum',
     avatarUrl: 'https://placehold.co/100x100/EBF4FF/333333?text=P1',
-    facebook: { followers: '318.6K', posts: '155' },
-    x: { followers: '1.3K', posts: '2' },
-    instagram: { followers: '55.3K', posts: '103' },
-    tiktok: { followers: '486.6K', posts: '41' },
-    youtube: { followers: '406', posts: '0' },
+    facebook: { followers: '0', posts: '0' },
+    x: { followers: '0', posts: '0' },
+    instagram: { followers: '0', posts: '0' },
+    tiktok: { followers: '0', posts: '0' },
+    youtube: { followers: '0', posts: '0' },
   },
   {
-    name: 'Personaje 2',
+    name: 'Lorem ipsum',
     avatarUrl: 'https://placehold.co/100x100/FFEBEB/333333?text=P2',
-    facebook: { followers: '595K', posts: '54' },
-    x: { followers: '49K', posts: '27' },
-    instagram: { followers: '33.2K', posts: '41' },
-    tiktok: { followers: '11.8K', posts: '14' },
-    youtube: { followers: '1.5K', posts: '1' },
+    facebook: { followers: '0', posts: '0' },
+    x: { followers: '0', posts: '0' },
+    instagram: { followers: '0', posts: '0' },
+    tiktok: { followers: '0', posts: '0' },
+    youtube: { followers: '0', posts: '0' },
   },
   {
-    name: 'Personaje 3',
+    name: 'Lorem ipsum',
     avatarUrl: 'https://placehold.co/100x100/EBFFF5/333333?text=P3',
-    facebook: { followers: '1.4M', posts: '218' },
-    x: { followers: '16.3K', posts: '26' },
-    instagram: { followers: '19.3K', posts: '121' },
-    tiktok: { followers: '149.6K', posts: '16' },
-    youtube: { followers: '102K', posts: '32' },
+    facebook: { followers: '0', posts: '0' },
+    x: { followers: '0', posts: '0' },
+    instagram: { followers: '0', posts: '0' },
+    tiktok: { followers: '0', posts: '0' },
+    youtube: { followers: '0', posts: '0' },
   },
 ];
 
@@ -178,31 +178,31 @@ export const autoInsertBenchmarkSocialMedia = async (canvas) => {
 
   const characters = [
     {
-      name: 'Personaje 1',
+      name: 'Lorem ipsum',
       avatarUrl: 'https://placehold.co/100x100/EBF4FF/333333?text=P1',
-      facebook: { followers: '318.6K', posts: '155' },
-      x: { followers: '1.3K', posts: '2' },
-      instagram: { followers: '55.3K', posts: '103' },
-      tiktok: { followers: '486.6K', posts: '41' },
-      youtube: { followers: '406', posts: '0' },
+      facebook: { followers: '0', posts: '0' },
+      x: { followers: '0', posts: '0' },
+      instagram: { followers: '0', posts: '0' },
+      tiktok: { followers: '0', posts: '0' },
+      youtube: { followers: '0', posts: '0' },
     },
     {
-      name: 'Personaje 2',
+      name: 'Lorem ipsum',
       avatarUrl: 'https://placehold.co/100x100/FFEBEB/333333?text=P2',
-      facebook: { followers: '595K', posts: '54' },
-      x: { followers: '49K', posts: '27' },
-      instagram: { followers: '33.2K', posts: '41' },
-      tiktok: { followers: '11.8K', posts: '14' },
-      youtube: { followers: '1.5K', posts: '1' },
+      facebook: { followers: '0', posts: '0' },
+      x: { followers: '0', posts: '0' },
+      instagram: { followers: '0', posts: '0' },
+      tiktok: { followers: '0', posts: '0' },
+      youtube: { followers: '0', posts: '0' },
     },
     {
-      name: 'Personaje 3',
+      name: 'Lorem ipsum',
       avatarUrl: 'https://placehold.co/100x100/EBFFF5/333333?text=P3',
-      facebook: { followers: '1.4M', posts: '218' },
-      x: { followers: '16.3K', posts: '26' },
-      instagram: { followers: '19.3K', posts: '121' },
-      tiktok: { followers: '149.6K', posts: '16' },
-      youtube: { followers: '102K', posts: '32' },
+      facebook: { followers: '0', posts: '0' },
+      x: { followers: '0', posts: '0' },
+      instagram: { followers: '0', posts: '0' },
+      tiktok: { followers: '0', posts: '0' },
+      youtube: { followers: '0', posts: '0' },
     },
   ];
 
@@ -246,7 +246,7 @@ export const autoInsertBenchmarkSocialMedia = async (canvas) => {
   const ROW_H = 65;
   const ROW_NUM_W = 50;
   const PERSONAJE_W = 200;
-  const DATA_SUB_W = 95;
+  const DATA_SUB_W = 110;
   const DATA_COL_W = DATA_SUB_W * 2;
   const AVATAR_SIZE = 45;
 
@@ -385,8 +385,8 @@ export const autoInsertBenchmarkSocialMedia = async (canvas) => {
     const fabricImg = new FabricImage(imgElement, {
       left: 50,
       top: 150,
-      scaleX: 0.8,
-      scaleY: 0.8,
+      scaleX: 0.7,
+      scaleY: 0.7,
       name: 'benchmark-social-media'
     });
     canvas.add(fabricImg);
@@ -468,7 +468,7 @@ export const autoInsertBenchmarkSocialMediaExternas = async (canvas) => {
   const ROW_H = 65;
   const ROW_NUM_W = 50;
   const PERSONAJE_W = 200;
-  const DATA_SUB_W = 95;
+  const DATA_SUB_W = 110;
   const DATA_COL_W = DATA_SUB_W * 2;
   const AVATAR_SIZE = 45;
 
