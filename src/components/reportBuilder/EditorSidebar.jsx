@@ -1,5 +1,5 @@
 import React from 'react';
-import { Type, Square, Image, Minus, Table, PieChart, BarChart3, BarChartHorizontal, Users, Share2, Award, Layers, CheckSquare, Radio, Activity, Smile } from 'lucide-react';
+import { Type, Square, Image, Minus, Table, PieChart, BarChart3, BarChartHorizontal, Users, Share2, Award, Layers, CheckSquare, Radio, Activity, Smile, Download } from 'lucide-react';
 
 const EditorSidebar = ({
   onAddText,
@@ -37,7 +37,9 @@ const EditorSidebar = ({
   layers,
   selectedLayer,
   onSelectLayer,
-  currentFilmina
+  currentFilmina,
+  isExporting,
+  onExportPDF
 }) => {
 
   // Detectar si ya existe un gráfico específico en el canvas
@@ -73,9 +75,21 @@ const EditorSidebar = ({
 
   return (
     <aside className="editor-sidebar-left">
+      {/* Botón Exportar PDF */}
+      <section className="tools-section export-section">
+        <button
+          className="export-button-sidebar"
+          onClick={onExportPDF}
+          disabled={isExporting}
+        >
+          <Download size={20} />
+          <span>{isExporting ? 'Exportando...' : 'Exportar PDF'}</span>
+        </button>
+      </section>
+
       {/* Elementos Básicos */}
       <section className="tools-section">
-        <h3 className="section-title">Elementos Básicos</h3>
+        <h3 className="section-title">ELEMENTOS BÁSICOS</h3>
         <div className="tools-grid">
           <button className="tool-card" onClick={onAddText} title="Agregar Texto">
             <Type size={24} />
@@ -98,7 +112,7 @@ const EditorSidebar = ({
 
       {/* Herramientas Avanzadas */}
       <section className="tools-section">
-        <h3 className="section-title">Herramientas Avanzadas</h3>
+        <h3 className="section-title">HERRAMIENTAS AVANZADAS</h3>
         <div className="tools-grid">
           <button className="tool-card" onClick={onOpenTableModal} title="Editor de Tablas">
             <Table size={24} />

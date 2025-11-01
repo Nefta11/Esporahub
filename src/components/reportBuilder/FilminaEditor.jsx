@@ -469,23 +469,13 @@ const FilminaEditor = () => {
         showUserName={true}
       />
 
-      {/* Export Button Bar */}
-      <div className="editor-toolbar">
-        <button
-          className="export-button"
-          onClick={handleExportPDF}
-          disabled={isExporting}
-        >
-          <Download size={20} />
-          <span>{isExporting ? 'Exportando...' : 'Exportar PDF'}</span>
-        </button>
-      </div>
-
       {/* Main Content - 3 columnas */}
       <div className="editor-content">
         {/* Sidebar izquierdo - Herramientas */}
 
         <EditorSidebar
+          isExporting={isExporting}
+          onExportPDF={handleExportPDF}
           onOpenBenchmarkAdjetivacionTableroModal={() => setActiveModal('benchmarkAdjetivacionTablero')}
           onOpenBenchmarkAudienciaTableroModal={() => setActiveModal('benchmarkAudienciaTablero')}
           onOpenBenchmarkIntegradoTableroModal={() => setActiveModal('benchmarkIntegradoTablero')}
