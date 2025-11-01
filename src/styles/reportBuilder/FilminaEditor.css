@@ -26,7 +26,7 @@
 
 /* Editor Header */
 .editor-header {
-  height: 80px;
+  height: 64px;
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   border-bottom: 0.5px solid;
@@ -258,9 +258,9 @@
 /* Canvas Area */
 .editor-canvas-area {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 32px;
+  padding: 8px 16px;
   overflow: auto;
 }
 

@@ -6,11 +6,11 @@
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   border-right: 0.5px solid;
-  padding: 24px 16px;
+  padding: 16px 12px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
 }
 
 .dark-theme .editor-sidebar-left {
@@ -26,7 +26,7 @@
 .tools-section {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .export-section {
@@ -47,17 +47,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 14px 20px;
+  gap: 8px;
+  padding: 10px 16px;
   border: none;
-  border-radius: 12px;
-  font-size: 16px;
+  border-radius: 10px;
+  font-size: 13px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
   background: linear-gradient(135deg, #0066cc 0%, #0A84FF 100%);
   color: white;
   box-shadow: 0 2px 8px rgba(0, 122, 255, 0.25);
+}
+
+.export-button-sidebar svg {
+  width: 18px;
+  height: 18px;
 }
 
 .export-button-sidebar:hover {
@@ -76,18 +81,19 @@
 }
 
 .section-title {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   opacity: 0.6;
   margin: 0;
+  line-height: 1.3;
 }
 
 .tools-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
+  gap: 6px;
 }
 
 .tool-card {
@@ -95,14 +101,19 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 12px 8px;
-  border-radius: 12px;
+  gap: 4px;
+  padding: 8px 6px;
+  border-radius: 10px;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
+}
+
+.tool-card svg {
+  width: 20px;
+  height: 20px;
 }
 
 .dark-theme .tool-card {
