@@ -114,34 +114,40 @@ const AmplificadoresChartModal = ({ isOpen, onClose, canvas }) => {
 
   const drawAmplificadoresChart = () => {
     const canvasElement = document.createElement('canvas');
-    const width = 960;
-    const height = 540;
+    // Aumentamos la resolución para mejor calidad
+    const width = 2000; // Aumentado para más padding derecho
+    const height = 1080;
     canvasElement.width = width;
     canvasElement.height = height;
     const ctx = canvasElement.getContext('2d');
+
+    // Configuración de alta calidad
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
 
     // Background
     ctx.fillStyle = '#F5F5F5';
     ctx.fillRect(0, 0, width, height);
 
-    // Title
+    // Title con mejor calidad
     ctx.fillStyle = '#000000';
-    ctx.font = 'bold 18px Arial';
+    ctx.font = 'bold 32px Arial, sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText('Amplificadores de la conversación', 25, 35);
+    ctx.fillText('Amplificadores de la conversación', 40, 60);
 
-    // Column configuration
-    const startY = 60;
-    const avatarCol = 25;
-    const avatarWidth = 95;
-    const colWidth = 280;
+    // Column configuration - ajustado para mejor distribución
+    const startY = 100;
+    const avatarCol = 30;
+    const avatarWidth = 180;
+    const colWidth = 570;
     const mediosX = avatarCol + avatarWidth;
     const outletsX = mediosX + colWidth;
     const influenciadoresX = outletsX + colWidth;
-    const rowHeight = 32;
-    const headerHeight = 30;
+    const rowHeight = 195; // Aumentado 40% más para mayor espacio vertical
+    const headerHeight = 60;
+    const avatarRadius = 55; // Radio del círculo del avatar
 
-    // Draw column headers
+    // Draw column headers con mejor diseño
     const headers = [
       { title: 'Medios', x: mediosX },
       { title: 'Outlets', x: outletsX, subtitle: 'Impacto' },
@@ -152,18 +158,18 @@ const AmplificadoresChartModal = ({ isOpen, onClose, canvas }) => {
       ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(header.x, startY, colWidth, headerHeight);
       ctx.strokeStyle = '#00BCD4';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 3;
       ctx.strokeRect(header.x, startY, colWidth, headerHeight);
 
-      ctx.font = 'bold 14px Arial';
+      ctx.font = 'bold 26px Arial, sans-serif';
       ctx.fillStyle = '#000000';
       ctx.textAlign = 'left';
-      ctx.fillText(header.title, header.x + 10, startY + 20);
+      ctx.fillText(header.title, header.x + 20, startY + 38);
 
       if (header.subtitle) {
-        ctx.font = '11px Arial';
+        ctx.font = '20px Arial, sans-serif';
         ctx.textAlign = 'right';
-        ctx.fillText(header.subtitle, header.x + colWidth - 10, startY + 20);
+        ctx.fillText(header.subtitle, header.x + colWidth - 40, startY + 38);
       }
     });
 
@@ -171,10 +177,18 @@ const AmplificadoresChartModal = ({ isOpen, onClose, canvas }) => {
 
     // Draw each profile
     profiles.forEach((profile, profileIndex) => {
+      // Calcular el número real de filas necesarias para cada columna
+      const mediosRows = profile.medios.length || 0;
+      const outletsRows = profile.outlets.length || 0;
+      const influenciadoresRows = profile.influenciadores.length || 0;
+      
+      // Si outlets está vacío, cuenta como 1 fila para el mensaje
+      const effectiveOutletsRows = outletsRows === 0 ? 1 : outletsRows;
+      
       const maxRows = Math.max(
-        profile.medios.length || 1,
-        profile.outlets.length || 1,
-        profile.influenciadores.length || 1
+        mediosRows || 1,
+        effectiveOutletsRows,
+        influenciadoresRows || 1
       );
       const sectionHeight = maxRows * rowHeight;
 
@@ -182,157 +196,177 @@ const AmplificadoresChartModal = ({ isOpen, onClose, canvas }) => {
       ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(avatarCol, currentY, avatarWidth, sectionHeight);
       ctx.strokeStyle = '#00BCD4';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 3;
       ctx.strokeRect(avatarCol, currentY, avatarWidth, sectionHeight);
 
-      // Draw avatar circle
+      // Draw avatar circle con mejor calidad
       const avatarCenterY = currentY + sectionHeight / 2;
       ctx.beginPath();
-      ctx.arc(avatarCol + avatarWidth / 2, avatarCenterY, 28, 0, 2 * Math.PI);
+      ctx.arc(avatarCol + avatarWidth / 2, avatarCenterY, avatarRadius, 0, 2 * Math.PI);
       ctx.fillStyle = profile.color;
       ctx.fill();
       ctx.strokeStyle = '#FFFFFF';
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 5;
       ctx.stroke();
 
-      // Draw profile name
+      // Draw profile name con mejor tipografía
       const nameLines = profile.name.split('\n');
-      ctx.font = 'bold 11px Arial';
+      ctx.font = 'bold 18px Arial, sans-serif';
       ctx.fillStyle = '#000000';
       ctx.textAlign = 'center';
-      const nameY = avatarCenterY + 45;
+      const nameY = avatarCenterY + avatarRadius + 25;
       nameLines.forEach((line, i) => {
-        ctx.fillText(line, avatarCol + avatarWidth / 2, nameY + i * 14);
+        ctx.fillText(line, avatarCol + avatarWidth / 2, nameY + i * 22);
       });
 
-      // Draw Medios column
+      // Draw Medios column con mejor diseño
       for (let i = 0; i < maxRows; i++) {
         const y = currentY + i * rowHeight;
+        const medio = profile.medios[i];
+        
+        // Solo dibujar celda si hay datos o si es necesario para mantener estructura
         ctx.fillStyle = '#FFFFFF';
         ctx.fillRect(mediosX, y, colWidth, rowHeight);
         ctx.strokeStyle = '#CCCCCC';
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 2;
         ctx.strokeRect(mediosX, y, colWidth, rowHeight);
 
-        const medio = profile.medios[i];
-        if (medio) {
-          // Green tag for medio name
-          ctx.fillStyle = '#4CAF50';
-          const tagWidth = ctx.measureText(medio.medio).width + 16;
-          ctx.fillRect(mediosX + 8, y + 6, tagWidth, 18);
+        if (medio && medio.medio) {
+          // Green tag for medio name - mejor diseño
+          ctx.font = 'bold 18px Arial, sans-serif';
+          const medioText = medio.medio || '';
+          const tagWidth = Math.max(ctx.measureText(medioText).width + 30, 100);
           
-          ctx.font = 'bold 10px Arial';
+          ctx.fillStyle = '#4CAF50';
+          ctx.fillRect(mediosX + 15, y + 70, tagWidth, 36);
+          
           ctx.fillStyle = '#FFFFFF';
           ctx.textAlign = 'left';
-          ctx.fillText(medio.medio, mediosX + 16, y + 18);
+          ctx.fillText(medioText, mediosX + 30, y + 95);
 
-          // Title
-          ctx.font = '9px Arial';
+          // Title - mejor espaciado y en nueva línea
+          ctx.font = '16px Arial, sans-serif';
           ctx.fillStyle = '#000000';
-          const maxTitleWidth = colWidth - 60;
-          let titulo = medio.titulo;
-          if (ctx.measureText(titulo).width > maxTitleWidth) {
-            while (ctx.measureText(titulo + '...').width > maxTitleWidth && titulo.length > 0) {
-              titulo = titulo.slice(0, -1);
-            }
-            titulo += '...';
+          const titleStartX = mediosX + tagWidth + 25;
+          const maxTitleWidth = colWidth - tagWidth - 110;
+          let titulo = medio.titulo || '';
+          
+          // Truncar título si es muy largo
+          while (ctx.measureText(titulo).width > maxTitleWidth && titulo.length > 0) {
+            titulo = titulo.slice(0, -1);
           }
-          ctx.fillText(titulo, mediosX + 8, y + 28);
+          if (titulo.length < (medio.titulo || '').length) {
+            titulo = titulo.trim() + '...';
+          }
+          
+          ctx.fillText(titulo, titleStartX, y + 88);
 
-          // Impact number
-          ctx.font = 'bold 11px Arial';
+          // Impact number - mejor posición y más pequeño
+          ctx.font = 'bold 20px Arial, sans-serif';
           ctx.textAlign = 'right';
-          ctx.fillText(medio.impacto.toString(), mediosX + colWidth - 10, y + 20);
+          ctx.fillText((medio.impacto || 0).toString(), mediosX + colWidth - 40, y + 102);
           ctx.textAlign = 'left';
         }
       }
 
-      // Draw Outlets column
+      // Draw Outlets column con mejor diseño
       if (profile.outlets.length === 0) {
-        // "Sin datos para el análisis" message
+        // "Sin datos para el análisis" message - ocupar toda la sección
         ctx.fillStyle = '#FFFFFF';
         ctx.fillRect(outletsX, currentY, colWidth, sectionHeight);
         ctx.strokeStyle = '#CCCCCC';
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 2;
         ctx.strokeRect(outletsX, currentY, colWidth, sectionHeight);
 
-        ctx.font = 'bold 13px Arial';
-        ctx.fillStyle = '#999999';
+        ctx.font = 'bold 22px Arial, sans-serif';
+        ctx.fillStyle = '#CCCCCC';
         ctx.textAlign = 'center';
-        ctx.fillText('Sin datos para', outletsX + colWidth / 2, avatarCenterY - 8);
-        ctx.fillText('el análisis', outletsX + colWidth / 2, avatarCenterY + 8);
+        ctx.fillText('Sin datos para', outletsX + colWidth / 2, avatarCenterY - 15);
+        ctx.fillText('el análisis', outletsX + colWidth / 2, avatarCenterY + 20);
         ctx.textAlign = 'left';
       } else {
         for (let i = 0; i < maxRows; i++) {
           const y = currentY + i * rowHeight;
+          const outlet = profile.outlets[i];
+          
           ctx.fillStyle = '#FFFFFF';
           ctx.fillRect(outletsX, y, colWidth, rowHeight);
           ctx.strokeStyle = '#CCCCCC';
-          ctx.lineWidth = 1;
+          ctx.lineWidth = 2;
           ctx.strokeRect(outletsX, y, colWidth, rowHeight);
 
-          const outlet = profile.outlets[i];
-          if (outlet) {
-            // Colored tag for outlet
+          if (outlet && outlet.outlet) {
+            // Colored tag for outlet - mejor diseño
             const outletColors = {
               'SDP Noticias': '#FF4444',
               'Notigram': '#4CAF50',
               'Contacto Politico': '#2196F3',
+              'Contacto Hoy': '#2196F3',
               'LJA.MX': '#FF9800',
             };
-            ctx.fillStyle = outletColors[outlet.outlet] || '#9E9E9E';
-            ctx.fillRect(outletsX + 8, y + 7, 90, 18);
             
-            ctx.font = 'bold 9px Arial';
+            ctx.font = 'bold 16px Arial, sans-serif';
+            const outletText = outlet.outlet || '';
+            const outletTextWidth = ctx.measureText(outletText).width;
+            const tagWidth = Math.max(outletTextWidth + 24, 90);
+            
+            ctx.fillStyle = outletColors[outlet.outlet] || '#9E9E9E';
+            ctx.fillRect(outletsX + 15, y + 70, tagWidth, 36);
+            
             ctx.fillStyle = '#FFFFFF';
             ctx.textAlign = 'center';
-            ctx.fillText(outlet.outlet, outletsX + 53, y + 19);
+            ctx.fillText(outletText, outletsX + 15 + tagWidth / 2, y + 94);
             ctx.textAlign = 'left';
 
-            // Title
-            ctx.font = '9px Arial';
+            // Title - mejor espaciado
+            ctx.font = '16px Arial, sans-serif';
             ctx.fillStyle = '#000000';
-            const maxTitleWidth = colWidth - 140;
-            let titulo = outlet.titulo;
-            if (ctx.measureText(titulo).width > maxTitleWidth) {
-              while (ctx.measureText(titulo + '...').width > maxTitleWidth && titulo.length > 0) {
-                titulo = titulo.slice(0, -1);
-              }
-              titulo += '...';
+            const titleStartX = outletsX + tagWidth + 25;
+            const maxTitleWidth = colWidth - tagWidth - 110;
+            let titulo = outlet.titulo || '';
+            
+            while (ctx.measureText(titulo).width > maxTitleWidth && titulo.length > 0) {
+              titulo = titulo.slice(0, -1);
             }
-            ctx.fillText(titulo, outletsX + 105, y + 19);
+            if (titulo.length < (outlet.titulo || '').length) {
+              titulo = titulo.trim() + '...';
+            }
+            
+            ctx.fillText(titulo, titleStartX, y + 88);
 
-            // Impact number
-            ctx.font = 'bold 11px Arial';
+            // Impact number - mejor posición
+            ctx.font = 'bold 20px Arial, sans-serif';
             ctx.textAlign = 'right';
-            ctx.fillText(outlet.impacto.toString(), outletsX + colWidth - 10, y + 20);
+            ctx.fillText((outlet.impacto || 0).toString(), outletsX + colWidth - 40, y + 102);
             ctx.textAlign = 'left';
           }
         }
       }
 
-      // Draw Influenciadores column
+      // Draw Influenciadores column con mejor diseño
       for (let i = 0; i < maxRows; i++) {
         const y = currentY + i * rowHeight;
+        const influencer = profile.influenciadores[i];
+        
         ctx.fillStyle = '#FFFFFF';
         ctx.fillRect(influenciadoresX, y, colWidth, rowHeight);
         ctx.strokeStyle = '#CCCCCC';
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 2;
         ctx.strokeRect(influenciadoresX, y, colWidth, rowHeight);
 
-        const influencer = profile.influenciadores[i];
-        if (influencer) {
-          // Username
-          ctx.font = 'bold 11px Arial';
+        if (influencer && influencer.username) {
+          // Username con mejor tipografía
+          ctx.font = 'bold 22px Arial, sans-serif';
           ctx.fillStyle = '#E91E63';
           ctx.textAlign = 'left';
-          ctx.fillText(influencer.username, influenciadoresX + 10, y + 20);
+          ctx.fillText(influencer.username || '', influenciadoresX + 20, y + 102);
 
-          // Followers count
-          ctx.font = 'bold 11px Arial';
+          // Followers count con mejor formato
+          ctx.font = 'bold 22px Arial, sans-serif';
           ctx.fillStyle = '#000000';
           ctx.textAlign = 'right';
-          ctx.fillText(influencer.seguidores.toLocaleString('en-US'), influenciadoresX + colWidth - 10, y + 20);
+          const followers = influencer.seguidores || 0;
+          ctx.fillText(followers.toLocaleString('en-US'), influenciadoresX + colWidth - 40, y + 102);
           ctx.textAlign = 'left';
         }
       }
@@ -347,17 +381,20 @@ const AmplificadoresChartModal = ({ isOpen, onClose, canvas }) => {
     if (!canvas) return;
 
     const canvasElement = drawAmplificadoresChart();
-    const dataURL = canvasElement.toDataURL('image/png');
+    const dataURL = canvasElement.toDataURL('image/png', 1.0);
 
     const { Image: FabricImage } = await import('fabric');
     
     const imgElement = new Image();
     imgElement.onload = () => {
       const fabricImg = new FabricImage(imgElement, {
-        left: 50,
-        top: 50,
+        left: 0,
+        top: 0,
+        scaleX: 0.5, // Escalar a 50% para que se ajuste (1920 -> 960)
+        scaleY: 0.5, // Escalar a 50% para que se ajuste (1080 -> 540)
         selectable: true,
         hasControls: true,
+        name: 'amplificadores-chart'
       });
 
       canvas.add(fabricImg);
@@ -374,12 +411,44 @@ const AmplificadoresChartModal = ({ isOpen, onClose, canvas }) => {
         <h2 className="chart-modal-title">
           Amplificadores de la Conversación
         </h2>
+        
+        <p className="chart-modal-description">
+          Configure los amplificadores de la conversación para cada personaje. 
+          Los valores comenzarán en 0 y puede personalizarlos según su análisis.
+        </p>
 
         {profiles.map((profile, profileIndex) => (
           <div key={profileIndex} className="chart-profile-card">
-            <h3>
-              Perfil {profileIndex + 1}: {profile.name.replace('\n', ' ')}
-            </h3>
+            <div className="chart-profile-header">
+              <h3>Perfil {profileIndex + 1}</h3>
+            </div>
+
+            {/* Nombre del Personaje */}
+            <div className="chart-form-field">
+              <label className="chart-form-label">
+                Nombre del Personaje
+              </label>
+              <input
+                type="text"
+                placeholder="Ej: José Ramón Enríquez"
+                value={profile.name}
+                onChange={(e) => handleProfileChange(profileIndex, 'name', e.target.value)}
+                className="chart-form-input"
+              />
+            </div>
+
+            {/* Color del Avatar */}
+            <div className="chart-form-field">
+              <label className="chart-form-label">
+                Color del Avatar
+              </label>
+              <input
+                type="color"
+                value={profile.color}
+                onChange={(e) => handleProfileChange(profileIndex, 'color', e.target.value)}
+                className="color-input"
+              />
+            </div>
 
             {/* Medios Section */}
             <div className="chart-form-field">

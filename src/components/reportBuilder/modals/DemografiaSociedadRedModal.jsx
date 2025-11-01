@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Image as FabricImage } from 'fabric';
 import '@/styles/reportBuilder/ChartModals.css';
@@ -6,13 +6,25 @@ import '@/styles/reportBuilder/ChartModals.css';
 // Colores y datos iniciales
 const BAR_COLORS = ['#B13B2E', '#E97B2A', '#F7D154'];
 const INITIAL_BARS = [
-    { label: 'Internet', percent: 78, color: BAR_COLORS[0], rightLabel: 'Clases A,B,C,D\nJóvenes' },
-    { label: 'Anfibios', percent: 18, color: BAR_COLORS[1], rightLabel: '' },
-    { label: 'Medios Tradicionales', percent: 4, color: BAR_COLORS[2], rightLabel: 'Amas de casa\n3ra Edad' },
+    { label: 'Tema 1', percent: 0, color: BAR_COLORS[0], rightLabel: '' },
+    { label: 'Tema 2', percent: 0, color: BAR_COLORS[1], rightLabel: '' },
+    { label: 'Tema 3', percent: 0, color: BAR_COLORS[2], rightLabel: '' },
 ];
 
 const DemografiaSociedadRedModal = ({ isOpen, onClose, canvas }) => {
     const [bars, setBars] = useState(INITIAL_BARS);
+
+    // Cargar datos del gráfico existente si ya está en el canvas
+    useEffect(() => {
+        if (isOpen && canvas) {
+            const existingChart = canvas.getObjects().find(obj => obj.name === 'demografia-sociedad-red');
+            if (existingChart && existingChart.chartData) {
+                setBars(existingChart.chartData);
+            } else {
+                setBars(INITIAL_BARS);
+            }
+        }
+    }, [isOpen, canvas]);
 
     // Exportar gráfico al canvas
     const insertChartToCanvas = () => {
@@ -42,7 +54,9 @@ const DemografiaSociedadRedModal = ({ isOpen, onClose, canvas }) => {
         let currentY = topPad;
 
         bars.forEach((bar, i) => {
-            const barHeight = (bar.percent / 100) * totalHeight;
+            // Usar altura mínima de 50px cuando el porcentaje es 0 para que sea visible
+            const calculatedHeight = (bar.percent / 100) * totalHeight;
+            const barHeight = bar.percent === 0 ? 50 : calculatedHeight;
 
             // Dibujar la barra
             ctx.fillStyle = bar.color;
@@ -112,11 +126,20 @@ const DemografiaSociedadRedModal = ({ isOpen, onClose, canvas }) => {
         const dataURL = tempCanvas.toDataURL('image/png');
         const imgElement = new window.Image();
         imgElement.onload = () => {
+            // Buscar y eliminar el gráfico existente
+            const existingChart = canvas.getObjects().find(obj => obj.name === 'demografia-sociedad-red');
+            if (existingChart) {
+                canvas.remove(existingChart);
+            }
+
+            // Crear nuevo gráfico con los datos actualizados
             const fabricImg = new FabricImage(imgElement, {
                 left: 50,
                 top: 50,
                 scaleX: 0.85,
-                scaleY: 0.85
+                scaleY: 0.85,
+                name: 'demografia-sociedad-red',
+                chartData: bars // Guardar los datos para futuras ediciones
             });
             canvas.add(fabricImg);
             canvas.setActiveObject(fabricImg);

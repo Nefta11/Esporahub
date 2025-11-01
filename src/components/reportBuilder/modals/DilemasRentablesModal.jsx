@@ -1,640 +1,524 @@
 import React, { useState } from 'react';
-
-// Datos iniciales del dilema
-const initialData = {
-    company: 'Rizoma',
-    lado1: {
-        title: 'Populismo & Estable',
-        subtitle: '(Bolivariano)',
-        color: '#C62828',
-        caracteristicas: [
-            { text: 'Figuras titeres', subItems: ['Luisa González', 'Lenin Moreno', 'Andrés Arauz', 'Revolución Ciudadana'] },
-            { text: 'Corrupción', subItems: ['Sobornos (2012-2016)', 'Arroz verde', 'Petroquimidor'] },
-            { text: 'Autoritario', subItems: ['Políticas extractivistas', 'Restricciones a EE.UU.', 'Ley de Aguas', 'Represión indígena', 'en Dayuma'] }
-        ]
-    },
-    lado2: {
-        title: 'Gobierno Realista & Inestable',
-        subtitle: '',
-        color: '#1565C0',
-        caracteristicas: [
-            { text: 'Inestabilidad económica', subItems: ['Aranceles', 'Recesión', 'Reducción del PIB'] },
-            { text: 'Inestabilidad de seguridad', subItems: ['Lucha de carteles', 'Druso armado en TV', 'Militares custodiando', 'a niños'] },
-            { text: 'Inestabilidad energética', subItems: ['Apagones eléctricos', 'Sequías', 'Dependencia hidroeléctrica'] },
-            { text: 'Inestabilidad internacional', subItems: ['Vicepresidenta oriunda', 'Reparación de migrantes', 'Invasión embajada de México', 'Subordinación a EE.UU.'] }
-        ]
-    }
-};
+import { Plus, Trash2 } from 'lucide-react';
+import '@/styles/reportBuilder/DilemasRentablesModal.css';
 
 const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
-    const [data, setData] = useState(initialData);
+  const [caracteristicasIzquierda, setCaracteristicasIzquierda] = useState([
+    { titulo: 'Característica 1', subitems: ['Sub-item 1', 'Sub-item 2'] }
+  ]);
+  
+  const [caracteristicasDerecha, setCaracteristicasDerecha] = useState([
+    { titulo: 'Característica 1', subitems: ['Sub-item 1', 'Sub-item 2'] }
+  ]);
 
-    if (!isOpen) return null;
+  if (!isOpen) return null;
 
-    const handleLadoChange = (lado, field, value) => {
-        setData({
-            ...data,
-            [lado]: { ...data[lado], [field]: value }
-        });
+  // Handlers para características izquierda
+  const handleCaracteristicaIzqChange = (index, value) => {
+    const newCaract = [...caracteristicasIzquierda];
+    newCaract[index].titulo = value;
+    setCaracteristicasIzquierda(newCaract);
+  };
+
+  const handleSubitemIzqChange = (caracIndex, subIndex, value) => {
+    const newCaract = [...caracteristicasIzquierda];
+    newCaract[caracIndex].subitems[subIndex] = value;
+    setCaracteristicasIzquierda(newCaract);
+  };
+
+  const handleAddCaracteristicaIzq = () => {
+    setCaracteristicasIzquierda([...caracteristicasIzquierda, { titulo: 'Nueva característica', subitems: ['Sub-item 1'] }]);
+  };
+
+  const handleRemoveCaracteristicaIzq = (index) => {
+    setCaracteristicasIzquierda(caracteristicasIzquierda.filter((_, i) => i !== index));
+  };
+
+  const handleAddSubitemIzq = (caracIndex) => {
+    const newCaract = [...caracteristicasIzquierda];
+    newCaract[caracIndex].subitems.push('Nuevo sub-item');
+    setCaracteristicasIzquierda(newCaract);
+  };
+
+  const handleRemoveSubitemIzq = (caracIndex, subIndex) => {
+    const newCaract = [...caracteristicasIzquierda];
+    newCaract[caracIndex].subitems = newCaract[caracIndex].subitems.filter((_, i) => i !== subIndex);
+    setCaracteristicasIzquierda(newCaract);
+  };
+
+  // Handlers para características derecha
+  const handleCaracteristicaDerChange = (index, value) => {
+    const newCaract = [...caracteristicasDerecha];
+    newCaract[index].titulo = value;
+    setCaracteristicasDerecha(newCaract);
+  };
+
+  const handleSubitemDerChange = (caracIndex, subIndex, value) => {
+    const newCaract = [...caracteristicasDerecha];
+    newCaract[caracIndex].subitems[subIndex] = value;
+    setCaracteristicasDerecha(newCaract);
+  };
+
+  const handleAddCaracteristicaDer = () => {
+    setCaracteristicasDerecha([...caracteristicasDerecha, { titulo: 'Nueva característica', subitems: ['Sub-item 1'] }]);
+  };
+
+  const handleRemoveCaracteristicaDer = (index) => {
+    setCaracteristicasDerecha(caracteristicasDerecha.filter((_, i) => i !== index));
+  };
+
+  const handleAddSubitemDer = (caracIndex) => {
+    const newCaract = [...caracteristicasDerecha];
+    newCaract[caracIndex].subitems.push('Nuevo sub-item');
+    setCaracteristicasDerecha(newCaract);
+  };
+
+  const handleRemoveSubitemDer = (caracIndex, subIndex) => {
+    const newCaract = [...caracteristicasDerecha];
+    newCaract[caracIndex].subitems = newCaract[caracIndex].subitems.filter((_, i) => i !== subIndex);
+    setCaracteristicasDerecha(newCaract);
+  };
+
+  const drawDilemasChart = () => {
+    const canvasElement = document.createElement('canvas');
+    const width = 1920;
+    const height = 1080;
+    canvasElement.width = width;
+    canvasElement.height = height;
+    const ctx = canvasElement.getContext('2d');
+
+    // Configuración de alta calidad
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+
+    // Fondo blanco
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, width, height);
+
+    // Configuración optimizada para evitar encimamiento
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const sideWidth = 520;  // Aún más reducido para máxima separación
+    const sideHeight = 980; // Aumentado para dar más espacio vertical
+    const cornerRadius = 20;
+    const vsCircleRadius = 100;
+    const gap = 300;  // MUCHO más espacio entre el borde del rectángulo y el círculo VS
+
+    // Función para dibujar rectángulo con bordes redondeados
+    const drawRoundedRect = (x, y, w, h, r, fillColor, strokeColor) => {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.arcTo(x + w, y, x + w, y + r, r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+      ctx.lineTo(x + r, y + h);
+      ctx.arcTo(x, y + h, x, y + h - r, r);
+      ctx.lineTo(x, y + r);
+      ctx.arcTo(x, y, x + r, y, r);
+      ctx.closePath();
+
+      ctx.fillStyle = fillColor;
+      ctx.fill();
+      ctx.strokeStyle = strokeColor;
+      ctx.lineWidth = 4;
+      ctx.stroke();
     };
 
-    const handleCaracteristicaChange = (lado, index, field, value) => {
-        const newCaracteristicas = [...data[lado].caracteristicas];
-        newCaracteristicas[index] = { ...newCaracteristicas[index], [field]: value };
-        setData({
-            ...data,
-            [lado]: { ...data[lado], caracteristicas: newCaracteristicas }
-        });
-    };
+    // Calcular posiciones de los rectángulos
+    const leftX = centerX - gap - sideWidth - 80; // Movido 80px más hacia la izquierda
+    const rightX = centerX + gap;
+    const rectY = centerY - sideHeight / 2;
 
-    const handleSubItemChange = (lado, caracIndex, subIndex, value) => {
-        const newCaracteristicas = [...data[lado].caracteristicas];
-        newCaracteristicas[caracIndex].subItems[subIndex] = value;
-        setData({
-            ...data,
-            [lado]: { ...data[lado], caracteristicas: newCaracteristicas }
-        });
-    };
+    // PASO 1: Dibujar flechas conectoras PRIMERO (debajo de todo)
+    const arrowStartY = rectY + 110; // Posición Y donde inician las flechas (fuera del header)
 
-    const handleAddSubItem = (lado, caracIndex) => {
-        const newCaracteristicas = [...data[lado].caracteristicas];
-        newCaracteristicas[caracIndex].subItems.push('Nuevo ítem');
-        setData({
-            ...data,
-            [lado]: { ...data[lado], caracteristicas: newCaracteristicas }
-        });
-    };
+    // Flechas desde lado izquierdo hacia VS
+    ctx.strokeStyle = '#CC0000';
+    ctx.lineWidth = 5;
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 0.5; // Semi-transparente para que no distraiga
 
-    const handleRemoveSubItem = (lado, caracIndex, subIndex) => {
-        const newCaracteristicas = [...data[lado].caracteristicas];
-        if (newCaracteristicas[caracIndex].subItems.length <= 1) {
-            alert('Debe haber al menos 1 sub-ítem');
-            return;
-        }
-        newCaracteristicas[caracIndex].subItems.splice(subIndex, 1);
-        setData({
-            ...data,
-            [lado]: { ...data[lado], caracteristicas: newCaracteristicas }
-        });
-    };
+    ctx.beginPath();
+    ctx.moveTo(leftX + sideWidth, arrowStartY);
+    ctx.lineTo(centerX - vsCircleRadius - 15, centerY - 35);
+    ctx.stroke();
 
-    const handleAddCaracteristica = (lado) => {
-        const newCaracteristicas = [...data[lado].caracteristicas];
-        newCaracteristicas.push({ text: 'Nueva característica', subItems: ['Ítem 1'] });
-        setData({
-            ...data,
-            [lado]: { ...data[lado], caracteristicas: newCaracteristicas }
-        });
-    };
+    ctx.beginPath();
+    ctx.moveTo(leftX + sideWidth, arrowStartY);
+    ctx.lineTo(centerX - vsCircleRadius - 15, centerY + 35);
+    ctx.stroke();
 
-    const handleRemoveCaracteristica = (lado, index) => {
-        const newCaracteristicas = data[lado].caracteristicas.filter((_, i) => i !== index);
-        if (newCaracteristicas.length < 1) {
-            alert('Debe haber al menos 1 característica');
-            return;
-        }
-        setData({
-            ...data,
-            [lado]: { ...data[lado], caracteristicas: newCaracteristicas }
-        });
-    };
+    // Flechas desde lado derecho hacia VS
+    ctx.strokeStyle = '#0066CC';
+    ctx.beginPath();
+    ctx.moveTo(rightX, arrowStartY);
+    ctx.lineTo(centerX + vsCircleRadius + 15, centerY - 35);
+    ctx.stroke();
 
-    const drawDilemasChart = () => {
-        const c = document.createElement('canvas');
-        const width = 1800;
-        const height = 900;
-        c.width = width;
-        c.height = height;
-        const ctx = c.getContext('2d');
+    ctx.beginPath();
+    ctx.moveTo(rightX, arrowStartY);
+    ctx.lineTo(centerX + vsCircleRadius + 15, centerY + 35);
+    ctx.stroke();
 
-        // Background
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, width, height);
+    ctx.globalAlpha = 1.0; // Restaurar opacidad
 
-        const centerX = width / 2;
-        const centerY = height / 2;
+    // PASO 2: Dibujar rectángulos de fondo
+    drawRoundedRect(leftX, rectY, sideWidth, sideHeight, cornerRadius, '#FFFFFF', '#CC0000');
+    drawRoundedRect(rightX, rectY, sideWidth, sideHeight, cornerRadius, '#FFFFFF', '#0066CC');
 
-        // Helper function to draw text boxes with borders
-        const drawTextBox = (text, x, y, borderColor = '#666', bgColor = '#fff') => {
-            ctx.font = '13px Arial';
-            const padding = 8;
-            const metrics = ctx.measureText(text);
-            const boxWidth = metrics.width + padding * 2;
-            const boxHeight = 24;
+    // PASO 3: Dibujar headers con fondo de color
+    const headerHeight = 100;
 
-            ctx.fillStyle = bgColor;
-            ctx.fillRect(x - boxWidth / 2, y - boxHeight / 2, boxWidth, boxHeight);
+    // Header izquierdo (Rojo) con esquinas redondeadas superiores
+    ctx.fillStyle = '#CC0000';
+    ctx.beginPath();
+    ctx.moveTo(leftX + cornerRadius, rectY);
+    ctx.lineTo(leftX + sideWidth - cornerRadius, rectY);
+    ctx.arcTo(leftX + sideWidth, rectY, leftX + sideWidth, rectY + cornerRadius, cornerRadius);
+    ctx.lineTo(leftX + sideWidth, rectY + headerHeight);
+    ctx.lineTo(leftX, rectY + headerHeight);
+    ctx.lineTo(leftX, rectY + cornerRadius);
+    ctx.arcTo(leftX, rectY, leftX + cornerRadius, rectY, cornerRadius);
+    ctx.closePath();
+    ctx.fill();
 
-            ctx.strokeStyle = borderColor;
-            ctx.lineWidth = 1.5;
-            ctx.strokeRect(x - boxWidth / 2, y - boxHeight / 2, boxWidth, boxHeight);
+    // Header derecho (Azul) con esquinas redondeadas superiores
+    ctx.fillStyle = '#0066CC';
+    ctx.beginPath();
+    ctx.moveTo(rightX + cornerRadius, rectY);
+    ctx.lineTo(rightX + sideWidth - cornerRadius, rectY);
+    ctx.arcTo(rightX + sideWidth, rectY, rightX + sideWidth, rectY + cornerRadius, cornerRadius);
+    ctx.lineTo(rightX + sideWidth, rectY + headerHeight);
+    ctx.lineTo(rightX, rectY + headerHeight);
+    ctx.lineTo(rightX, rectY + cornerRadius);
+    ctx.arcTo(rightX, rectY, rightX + cornerRadius, rectY, cornerRadius);
+    ctx.closePath();
+    ctx.fill();
 
-            ctx.fillStyle = '#000';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(text, x, y);
+    // PASO 4: Textos de los headers
+    ctx.fillStyle = '#FFFFFF';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
 
-            return { width: boxWidth, height: boxHeight };
-        };
+    // Título izquierdo
+    ctx.font = 'bold 34px Arial';
+    ctx.fillText('Lorem Ipsum & Dolor Sit', leftX + sideWidth / 2, rectY + 38);
+    ctx.font = '23px Arial';
+    ctx.fillText('(Amet Consectetur)', leftX + sideWidth / 2, rectY + 70);
 
-        // Helper function to draw curved arrows
-        const drawCurvedArrow = (fromX, fromY, toX, toY, color, curveAmount = 0) => {
-            ctx.strokeStyle = color;
-            ctx.lineWidth = 2.5;
-            ctx.beginPath();
-            ctx.moveTo(fromX, fromY);
+    // Título derecho
+    ctx.font = 'bold 34px Arial';
+    ctx.fillText('Consequat &', rightX + sideWidth / 2, rectY + 38);
+    ctx.font = '23px Arial';
+    ctx.fillText('Duis Aute', rightX + sideWidth / 2, rectY + 70);
 
-            if (curveAmount !== 0) {
-                const midX = (fromX + toX) / 2;
-                const midY = (fromY + toY) / 2 + curveAmount;
-                ctx.quadraticCurveTo(midX, midY, toX, toY);
-            } else {
-                ctx.lineTo(toX, toY);
-            }
+    // PASO 5: Función para dibujar características sin encimamiento
+    const drawCaracteristicas = (x, y, caracteristicas, color) => {
+      let currentY = y + headerHeight + 45; // AÚN MÁS espacio después del header
+      const itemHeight = 58;  // Más alto para mejor legibilidad y separación
+      const subitemHeight = 50; // Más alto para mejor legibilidad y separación
+      const margin = 50;  // MÁS margen a los lados
+      const itemWidth = sideWidth - (margin * 2);
+      const padding = 20;
+      const spaceBetweenItems = 15; // MÁS espacio entre items de lista
+      const spaceBetweenGroups = 35; // MÁS espacio entre grupos de características
+      const maxContentHeight = sideHeight - headerHeight - 70;
 
-            ctx.stroke();
-        };
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
 
-        // Draw LEFT SIDE
-        const leftMainX = 360;
-        const leftMainY = centerY;
-        const leftMainWidth = 320;
-        const leftMainHeight = 110;
+      caracteristicas.forEach((caract, index) => {
+        // Verificar si hay espacio suficiente
+        if (currentY - (y + headerHeight) > maxContentHeight) return;
 
-        // Left main box
-        ctx.fillStyle = data.lado1.color;
-        ctx.fillRect(leftMainX - leftMainWidth / 2, leftMainY - leftMainHeight / 2, leftMainWidth, leftMainHeight);
+        // Caja de característica principal con sombra sutil
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.08)';
+        ctx.shadowBlur = 4;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 2;
 
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = '#F5F5F5';
+        ctx.fillRect(x + margin, currentY, itemWidth, itemHeight);
+
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
+
+        ctx.strokeStyle = '#D0D0D0';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x + margin, currentY, itemWidth, itemHeight);
+
+        // Texto de característica principal
         ctx.font = 'bold 24px Arial';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(data.lado1.title, leftMainX, leftMainY - 12);
+        ctx.fillStyle = '#1a1a1a';
+        ctx.fillText(caract.titulo, x + margin + padding, currentY + itemHeight / 2);
+        currentY += itemHeight + spaceBetweenItems; // Usar espaciado definido
 
-        if (data.lado1.subtitle) {
-            ctx.font = '16px Arial';
-            ctx.fillText(data.lado1.subtitle, leftMainX, leftMainY + 18);
+        // Subitems
+        caract.subitems.forEach((subitem, subIndex) => {
+          if (currentY - (y + headerHeight) > maxContentHeight) return;
+
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillRect(x + margin, currentY, itemWidth, subitemHeight);
+          ctx.strokeStyle = '#E8E8E8';
+          ctx.lineWidth = 1.5;
+          ctx.strokeRect(x + margin, currentY, itemWidth, subitemHeight);
+
+          // Bullet point
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          ctx.arc(x + margin + padding + 6, currentY + subitemHeight / 2, 4, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.font = '21px Arial';
+          ctx.fillStyle = '#4a4a4a';
+          ctx.fillText(subitem, x + margin + padding + 20, currentY + subitemHeight / 2);
+          currentY += subitemHeight + spaceBetweenItems; // Usar espaciado consistente
+        });
+
+        // Espacio extra entre grupos de características (solo si no es el último)
+        if (index < caracteristicas.length - 1) {
+          currentY += spaceBetweenGroups;
         }
-
-        // Left characteristics positions - más espaciadas
-        const leftCaracPositions = [
-            { x: 200, y: 160 },
-            { x: 200, y: centerY },
-            { x: 200, y: 740 }
-        ];
-
-        data.lado1.caracteristicas.forEach((carac, caracIndex) => {
-            if (caracIndex >= leftCaracPositions.length) return;
-
-            const pos = leftCaracPositions[caracIndex];
-
-            // Main characteristic box
-            ctx.fillStyle = data.lado1.color;
-            ctx.font = 'bold 16px Arial';
-            const caracMetrics = ctx.measureText(carac.text);
-            const caracBoxWidth = caracMetrics.width + 30;
-            const caracBoxHeight = 38;
-
-            ctx.fillRect(pos.x - caracBoxWidth / 2, pos.y - caracBoxHeight / 2, caracBoxWidth, caracBoxHeight);
-            ctx.fillStyle = '#ffffff';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(carac.text, pos.x, pos.y);
-
-            // Draw curved arrow from main box to characteristic
-            const fromX = leftMainX - leftMainWidth / 2;
-            const fromY = leftMainY;
-            const toX = pos.x + caracBoxWidth / 2;
-            const toY = pos.y;
-
-            let curveAmount = 0;
-            if (caracIndex === 0) curveAmount = -80;
-            if (caracIndex === 2) curveAmount = 80;
-
-            drawCurvedArrow(fromX, fromY, toX, toY, data.lado1.color, curveAmount);
-
-            // Sub-items - positioned to the left with more spacing
-            const subStartY = pos.y - (carac.subItems.length - 1) * 18;
-            carac.subItems.forEach((sub, subIndex) => {
-                const subX = pos.x - caracBoxWidth / 2 - 110;
-                const subY = subStartY + (subIndex * 36);
-                drawTextBox(sub, subX, subY, '#999');
-            });
-        });
-
-        // VS Badge in center
-        const vsRadius = 55;
-        ctx.fillStyle = '#000000';
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, vsRadius, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 40px Arial';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('VS', centerX, centerY);
-
-        // Draw RIGHT SIDE
-        const rightMainX = width - 360;
-        const rightMainY = centerY;
-        const rightMainWidth = 320;
-        const rightMainHeight = 110;
-
-        // Right main box
-        ctx.fillStyle = data.lado2.color;
-        ctx.fillRect(rightMainX - rightMainWidth / 2, rightMainY - rightMainHeight / 2, rightMainWidth, rightMainHeight);
-
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 22px Arial';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-
-        // Split title into two lines
-        const titleWords = data.lado2.title.split(' ');
-        const midPoint = Math.ceil(titleWords.length / 2);
-        const line1 = titleWords.slice(0, midPoint).join(' ');
-        const line2 = titleWords.slice(midPoint).join(' ');
-
-        ctx.fillText(line1, rightMainX, rightMainY - 12);
-        ctx.fillText(line2, rightMainX, rightMainY + 18);
-
-        // Right characteristics positions - más espaciadas
-        const rightCaracPositions = [
-            { x: width - 200, y: 140 },
-            { x: width - 200, y: 310 },
-            { x: width - 200, y: 590 },
-            { x: width - 200, y: 760 }
-        ];
-
-        data.lado2.caracteristicas.forEach((carac, caracIndex) => {
-            if (caracIndex >= rightCaracPositions.length) return;
-
-            const pos = rightCaracPositions[caracIndex];
-
-            // Main characteristic box
-            ctx.fillStyle = data.lado2.color;
-            ctx.font = 'bold 15px Arial';
-            const caracMetrics = ctx.measureText(carac.text);
-            const caracBoxWidth = Math.max(caracMetrics.width + 30, 210);
-            const caracBoxHeight = 38;
-
-            ctx.fillRect(pos.x - caracBoxWidth / 2, pos.y - caracBoxHeight / 2, caracBoxWidth, caracBoxHeight);
-            ctx.fillStyle = '#ffffff';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(carac.text, pos.x, pos.y);
-
-            // Draw curved arrow from main box to characteristic
-            const fromX = rightMainX + rightMainWidth / 2;
-            const fromY = rightMainY;
-            const toX = pos.x - caracBoxWidth / 2;
-            const toY = pos.y;
-
-            let curveAmount = 0;
-            if (caracIndex === 0) curveAmount = -100;
-            if (caracIndex === 1) curveAmount = -40;
-            if (caracIndex === 2) curveAmount = 40;
-            if (caracIndex === 3) curveAmount = 100;
-
-            drawCurvedArrow(fromX, fromY, toX, toY, data.lado2.color, curveAmount);
-
-            // Sub-items - positioned to the right with more spacing
-            const subStartY = pos.y - (carac.subItems.length - 1) * 18;
-            carac.subItems.forEach((sub, subIndex) => {
-                const subX = pos.x + caracBoxWidth / 2 + 110;
-                const subY = subStartY + (subIndex * 36);
-                drawTextBox(sub, subX, subY, '#999');
-            });
-        });
-
-        // Company logo
-        ctx.fillStyle = '#999';
-        ctx.font = 'bold 22px Arial';
-        ctx.textAlign = 'right';
-        ctx.fillText(data.company, width - 50, height - 40);
-
-        return c;
+      });
     };
 
-    const handleInsert = async () => {
-        if (!canvas) return;
-        const temp = drawDilemasChart();
-        const dataURL = temp.toDataURL('image/png');
+    // PASO 6: Dibujar características
+    drawCaracteristicas(leftX, rectY, caracteristicasIzquierda, '#CC0000');
+    drawCaracteristicas(rightX, rectY, caracteristicasDerecha, '#0066CC');
 
-        const { Image: FabricImage } = await import('fabric');
-        const img = new window.Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = () => {
-            try {
-                const fabricImg = new FabricImage(img, {
-                    left: 60,
-                    top: 40,
-                    selectable: true,
-                    evented: true,
-                    hasControls: true,
-                    hasBorders: true,
-                    hoverCursor: 'move',
-                    name: 'dilemas-rentables'
-                });
+    // PASO 7: Círculo central "VS" con sombra (encima de todo)
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.25)';
+    ctx.shadowBlur = 15;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 5;
 
-                const scale = 960 / fabricImg.width;
-                fabricImg.scaleX = scale;
-                fabricImg.scaleY = scale;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, vsCircleRadius, 0, Math.PI * 2);
+    ctx.fillStyle = '#000000';
+    ctx.fill();
 
-                canvas.add(fabricImg);
-                canvas.setActiveObject(fabricImg);
-                fabricImg.setCoords();
-                canvas.requestRenderAll();
-                onClose();
-            } catch (err) {
-                console.error('Insert error', err);
-            }
-        };
-        img.src = dataURL;
+    // Borde blanco alrededor del círculo VS
+    ctx.shadowColor = 'transparent';
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.lineWidth = 5;
+    ctx.stroke();
+
+    ctx.font = 'bold 60px Arial';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('VS', centerX, centerY);
+
+    return canvasElement;
+  };
+
+  const handleInsertChart = async () => {
+    if (!canvas) return;
+
+    // Buscar gráfica existente de dilemas rentables para conservar su posición y escala
+    const existingChart = canvas.getObjects().find(obj => obj.name === 'dilemas-rentables-chart');
+    
+    // Guardar propiedades de la gráfica existente
+    const existingProps = existingChart ? {
+      left: existingChart.left,
+      top: existingChart.top,
+      scaleX: existingChart.scaleX,
+      scaleY: existingChart.scaleY,
+      angle: existingChart.angle
+    } : {
+      left: 50,
+      top: 30,
+      scaleX: 0.38,  // Escala optimizada para visualización
+      scaleY: 0.38,
+      angle: 0
     };
 
-    return (
-        <div className="chart-modal-overlay">
-            <div className="chart-modal-container" style={{ maxWidth: '1100px', maxHeight: '90vh', overflowY: 'auto' }}>
-                <h2 className="chart-modal-title">Identificación de los Dilemas Rentables</h2>
+    // Eliminar gráfica existente para evitar duplicación
+    if (existingChart) {
+      canvas.remove(existingChart);
+    }
 
-                <div className="chart-modal-field">
-                    <label>Empresa/Logo</label>
-                    <input value={data.company} onChange={(e) => setData({ ...data, company: e.target.value })} />
-                </div>
+    const canvasElement = drawDilemasChart();
+    const dataURL = canvasElement.toDataURL('image/png', 1.0);
 
-                <hr style={{ margin: '20px 0' }} />
+    const { Image: FabricImage } = await import('fabric');
+    
+    const imgElement = new Image();
+    imgElement.onload = () => {
+      const fabricImg = new FabricImage(imgElement, {
+        left: existingProps.left,
+        top: existingProps.top,
+        scaleX: existingProps.scaleX,
+        scaleY: existingProps.scaleY,
+        angle: existingProps.angle,
+        selectable: true,
+        hasControls: true,
+        name: 'dilemas-rentables-chart'
+      });
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                    {/* LADO 1 - IZQUIERDO */}
-                    <div style={{ border: '3px solid ' + data.lado1.color, borderRadius: '12px', padding: '20px', backgroundColor: '#fafafa' }}>
-                        <h3 style={{ color: data.lado1.color, marginTop: 0 }}>Lado 1 (Izquierdo)</h3>
+      canvas.add(fabricImg);
+      canvas.setActiveObject(fabricImg);
+      canvas.renderAll();
+      onClose();
+    };
+    imgElement.src = dataURL;
+  };
 
-                        <div className="chart-modal-field">
-                            <label>Título Principal</label>
-                            <input
-                                value={data.lado1.title}
-                                onChange={(e) => handleLadoChange('lado1', 'title', e.target.value)}
-                                style={{ fontWeight: 'bold' }}
-                            />
-                        </div>
+  return (
+    <div className="dilemas-modal-overlay">
+      <div className="dilemas-modal-container">
+        <h2 className="dilemas-modal-title">
+          Identificación de los Dilemas Rentables
+        </h2>
 
-                        <div className="chart-modal-field">
-                            <label>Subtítulo</label>
-                            <input
-                                value={data.lado1.subtitle}
-                                onChange={(e) => handleLadoChange('lado1', 'subtitle', e.target.value)}
-                            />
-                        </div>
-
-                        <div className="chart-modal-field">
-                            <label>Color</label>
-                            <input
-                                type="color"
-                                value={data.lado1.color}
-                                onChange={(e) => handleLadoChange('lado1', 'color', e.target.value)}
-                                style={{ width: '100%', height: '40px' }}
-                            />
-                        </div>
-
-                        <hr style={{ margin: '15px 0' }} />
-
-                        <h4>Características</h4>
-                        {data.lado1.caracteristicas.map((carac, caracIndex) => (
-                            <div key={caracIndex} style={{
-                                border: '1px solid #ddd',
-                                borderRadius: '8px',
-                                padding: '10px',
-                                marginBottom: '10px',
-                                backgroundColor: 'white'
-                            }}>
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 80px', gap: '8px', marginBottom: '8px' }}>
-                                    <input
-                                        value={carac.text}
-                                        onChange={(e) => handleCaracteristicaChange('lado1', caracIndex, 'text', e.target.value)}
-                                        placeholder="Característica principal"
-                                        style={{ fontWeight: 'bold' }}
-                                    />
-                                    <button
-                                        onClick={() => handleRemoveCaracteristica('lado1', caracIndex)}
-                                        style={{
-                                            background: '#e74c3c',
-                                            color: 'white',
-                                            border: 'none',
-                                            cursor: 'pointer',
-                                            padding: '6px',
-                                            borderRadius: '4px',
-                                            fontSize: '11px'
-                                        }}
-                                    >
-                                        Eliminar
-                                    </button>
-                                </div>
-
-                                <label style={{ fontSize: '11px', color: '#666', display: 'block', marginBottom: '5px' }}>
-                                    Sub-ítems:
-                                </label>
-                                {carac.subItems.map((sub, subIndex) => (
-                                    <div key={subIndex} style={{ display: 'grid', gridTemplateColumns: '1fr 60px', gap: '5px', marginBottom: '5px' }}>
-                                        <input
-                                            value={sub}
-                                            onChange={(e) => handleSubItemChange('lado1', caracIndex, subIndex, e.target.value)}
-                                            placeholder="Sub-ítem"
-                                            style={{ fontSize: '12px', padding: '5px' }}
-                                        />
-                                        <button
-                                            onClick={() => handleRemoveSubItem('lado1', caracIndex, subIndex)}
-                                            style={{
-                                                background: '#95a5a6',
-                                                color: 'white',
-                                                border: 'none',
-                                                cursor: 'pointer',
-                                                padding: '5px',
-                                                borderRadius: '4px',
-                                                fontSize: '10px'
-                                            }}
-                                        >
-                                            Quitar
-                                        </button>
-                                    </div>
-                                ))}
-                                <button
-                                    onClick={() => handleAddSubItem('lado1', caracIndex)}
-                                    style={{
-                                        background: '#3498db',
-                                        color: 'white',
-                                        border: 'none',
-                                        cursor: 'pointer',
-                                        padding: '5px 10px',
-                                        borderRadius: '4px',
-                                        fontSize: '11px',
-                                        width: '100%',
-                                        marginTop: '5px'
-                                    }}
-                                >
-                                    + Sub-ítem
-                                </button>
-                            </div>
-                        ))}
-
-                        <button
-                            onClick={() => handleAddCaracteristica('lado1')}
-                            style={{
-                                background: '#2ecc71',
-                                color: 'white',
-                                border: 'none',
-                                cursor: 'pointer',
-                                padding: '10px',
-                                borderRadius: '6px',
-                                fontSize: '12px',
-                                width: '100%',
-                                marginTop: '10px',
-                                fontWeight: 'bold'
-                            }}
-                        >
-                            + Añadir Característica
-                        </button>
-                    </div>
-
-                    {/* LADO 2 - DERECHO */}
-                    <div style={{ border: '3px solid ' + data.lado2.color, borderRadius: '12px', padding: '20px', backgroundColor: '#fafafa' }}>
-                        <h3 style={{ color: data.lado2.color, marginTop: 0 }}>Lado 2 (Derecho)</h3>
-
-                        <div className="chart-modal-field">
-                            <label>Título Principal</label>
-                            <input
-                                value={data.lado2.title}
-                                onChange={(e) => handleLadoChange('lado2', 'title', e.target.value)}
-                                style={{ fontWeight: 'bold' }}
-                            />
-                        </div>
-
-                        <div className="chart-modal-field">
-                            <label>Subtítulo</label>
-                            <input
-                                value={data.lado2.subtitle}
-                                onChange={(e) => handleLadoChange('lado2', 'subtitle', e.target.value)}
-                            />
-                        </div>
-
-                        <div className="chart-modal-field">
-                            <label>Color</label>
-                            <input
-                                type="color"
-                                value={data.lado2.color}
-                                onChange={(e) => handleLadoChange('lado2', 'color', e.target.value)}
-                                style={{ width: '100%', height: '40px' }}
-                            />
-                        </div>
-
-                        <hr style={{ margin: '15px 0' }} />
-
-                        <h4>Características</h4>
-                        {data.lado2.caracteristicas.map((carac, caracIndex) => (
-                            <div key={caracIndex} style={{
-                                border: '1px solid #ddd',
-                                borderRadius: '8px',
-                                padding: '10px',
-                                marginBottom: '10px',
-                                backgroundColor: 'white'
-                            }}>
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 80px', gap: '8px', marginBottom: '8px' }}>
-                                    <input
-                                        value={carac.text}
-                                        onChange={(e) => handleCaracteristicaChange('lado2', caracIndex, 'text', e.target.value)}
-                                        placeholder="Característica principal"
-                                        style={{ fontWeight: 'bold' }}
-                                    />
-                                    <button
-                                        onClick={() => handleRemoveCaracteristica('lado2', caracIndex)}
-                                        style={{
-                                            background: '#e74c3c',
-                                            color: 'white',
-                                            border: 'none',
-                                            cursor: 'pointer',
-                                            padding: '6px',
-                                            borderRadius: '4px',
-                                            fontSize: '11px'
-                                        }}
-                                    >
-                                        Eliminar
-                                    </button>
-                                </div>
-
-                                <label style={{ fontSize: '11px', color: '#666', display: 'block', marginBottom: '5px' }}>
-                                    Sub-ítems:
-                                </label>
-                                {carac.subItems.map((sub, subIndex) => (
-                                    <div key={subIndex} style={{ display: 'grid', gridTemplateColumns: '1fr 60px', gap: '5px', marginBottom: '5px' }}>
-                                        <input
-                                            value={sub}
-                                            onChange={(e) => handleSubItemChange('lado2', caracIndex, subIndex, e.target.value)}
-                                            placeholder="Sub-ítem"
-                                            style={{ fontSize: '12px', padding: '5px' }}
-                                        />
-                                        <button
-                                            onClick={() => handleRemoveSubItem('lado2', caracIndex, subIndex)}
-                                            style={{
-                                                background: '#95a5a6',
-                                                color: 'white',
-                                                border: 'none',
-                                                cursor: 'pointer',
-                                                padding: '5px',
-                                                borderRadius: '4px',
-                                                fontSize: '10px'
-                                            }}
-                                        >
-                                            Quitar
-                                        </button>
-                                    </div>
-                                ))}
-                                <button
-                                    onClick={() => handleAddSubItem('lado2', caracIndex)}
-                                    style={{
-                                        background: '#3498db',
-                                        color: 'white',
-                                        border: 'none',
-                                        cursor: 'pointer',
-                                        padding: '5px 10px',
-                                        borderRadius: '4px',
-                                        fontSize: '11px',
-                                        width: '100%',
-                                        marginTop: '5px'
-                                    }}
-                                >
-                                    + Sub-ítem
-                                </button>
-                            </div>
-                        ))}
-
-                        <button
-                            onClick={() => handleAddCaracteristica('lado2')}
-                            style={{
-                                background: '#2ecc71',
-                                color: 'white',
-                                border: 'none',
-                                cursor: 'pointer',
-                                padding: '10px',
-                                borderRadius: '6px',
-                                fontSize: '12px',
-                                width: '100%',
-                                marginTop: '10px',
-                                fontWeight: 'bold'
-                            }}
-                        >
-                            + Añadir Característica
-                        </button>
-                    </div>
-                </div>
-
-                <div className="chart-modal-buttons" style={{ marginTop: '20px' }}>
-                    <button onClick={onClose} className="chart-modal-button-cancel">Cancelar</button>
-                    <button onClick={handleInsert} className="chart-modal-button-insert">Insertar Dilemas</button>
-                </div>
-            </div>
+        <div className="dilemas-description">
+          <p>Configura las características de ambos lados del dilema. Cada característica puede tener múltiples sub-items.</p>
         </div>
-    );
+
+        <div className="dilemas-columns">
+          {/* Columna Izquierda - Lorem Ipsum */}
+          <div className="dilemas-column dilemas-left">
+            <h3 className="dilemas-column-title">Lorem Ipsum & Dolor Sit (Lado Izquierdo)</h3>
+            
+            {caracteristicasIzquierda.map((caract, cIndex) => (
+              <div key={cIndex} className="dilemas-card">
+                <div className="dilemas-card-header">
+                  <input
+                    type="text"
+                    value={caract.titulo}
+                    onChange={(e) => handleCaracteristicaIzqChange(cIndex, e.target.value)}
+                    className="dilemas-input dilemas-input-title"
+                    placeholder="Característica principal"
+                  />
+                  <button
+                    onClick={() => handleRemoveCaracteristicaIzq(cIndex)}
+                    className="dilemas-btn-delete"
+                    title="Eliminar característica"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+
+                <div className="dilemas-subitems">
+                  {caract.subitems.map((subitem, sIndex) => (
+                    <div key={sIndex} className="dilemas-subitem-row">
+                      <input
+                        type="text"
+                        value={subitem}
+                        onChange={(e) => handleSubitemIzqChange(cIndex, sIndex, e.target.value)}
+                        className="dilemas-input dilemas-input-subitem"
+                        placeholder="Sub-item"
+                      />
+                      <button
+                        onClick={() => handleRemoveSubitemIzq(cIndex, sIndex)}
+                        className="dilemas-btn-delete-small"
+                        title="Eliminar sub-item"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => handleAddSubitemIzq(cIndex)}
+                    className="dilemas-btn-add-subitem"
+                  >
+                    <Plus size={14} />
+                    Agregar sub-item
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            <button
+              onClick={handleAddCaracteristicaIzq}
+              className="dilemas-btn-add"
+            >
+              <Plus size={16} />
+              Agregar Característica
+            </button>
+          </div>
+
+          {/* Columna Derecha - Consequat */}
+          <div className="dilemas-column dilemas-right">
+            <h3 className="dilemas-column-title">Consequat & Duis Aute (Lado Derecho)</h3>
+            
+            {caracteristicasDerecha.map((caract, cIndex) => (
+              <div key={cIndex} className="dilemas-card">
+                <div className="dilemas-card-header">
+                  <input
+                    type="text"
+                    value={caract.titulo}
+                    onChange={(e) => handleCaracteristicaDerChange(cIndex, e.target.value)}
+                    className="dilemas-input dilemas-input-title"
+                    placeholder="Característica principal"
+                  />
+                  <button
+                    onClick={() => handleRemoveCaracteristicaDer(cIndex)}
+                    className="dilemas-btn-delete"
+                    title="Eliminar característica"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+
+                <div className="dilemas-subitems">
+                  {caract.subitems.map((subitem, sIndex) => (
+                    <div key={sIndex} className="dilemas-subitem-row">
+                      <input
+                        type="text"
+                        value={subitem}
+                        onChange={(e) => handleSubitemDerChange(cIndex, sIndex, e.target.value)}
+                        className="dilemas-input dilemas-input-subitem"
+                        placeholder="Sub-item"
+                      />
+                      <button
+                        onClick={() => handleRemoveSubitemDer(cIndex, sIndex)}
+                        className="dilemas-btn-delete-small"
+                        title="Eliminar sub-item"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => handleAddSubitemDer(cIndex)}
+                    className="dilemas-btn-add-subitem"
+                  >
+                    <Plus size={14} />
+                    Agregar sub-item
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            <button
+              onClick={handleAddCaracteristicaDer}
+              className="dilemas-btn-add"
+            >
+              <Plus size={16} />
+              Agregar Característica
+            </button>
+          </div>
+        </div>
+
+        <div className="dilemas-modal-buttons">
+          <button
+            onClick={onClose}
+            className="dilemas-btn-cancel"
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={handleInsertChart}
+            className="dilemas-btn-insert"
+          >
+            Insertar Gráfica
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default DilemasRentablesModal;

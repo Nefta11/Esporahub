@@ -2193,22 +2193,27 @@ export const autoInsertTopOfVoiceChart = async (canvas) => {
 export const autoInsertAmplificadoresChart = async (canvas) => {
   if (!canvas) return;
 
-  const width = 960;
-  const height = 540;
+  // Alta resolución para mejor calidad
+  const width = 2000; // Aumentado para más padding derecho
+  const height = 1080;
   const canvasElement = document.createElement('canvas');
   canvasElement.width = width;
   canvasElement.height = height;
   const ctx = canvasElement.getContext('2d');
 
+  // Configuración de alta calidad
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+
   // Background
   ctx.fillStyle = '#F5F5F5';
   ctx.fillRect(0, 0, width, height);
 
-  // Title
+  // Title con mejor calidad
   ctx.fillStyle = '#000000';
-  ctx.font = 'bold 18px Arial';
+  ctx.font = 'bold 32px Arial, sans-serif';
   ctx.textAlign = 'left';
-  ctx.fillText('Amplificadores de la conversación', 25, 35);
+  ctx.fillText('Amplificadores de la conversación', 40, 60);
 
   // Sample data matching the reference image
   const profiles = [
@@ -2244,18 +2249,19 @@ export const autoInsertAmplificadoresChart = async (canvas) => {
     },
   ];
 
-  // Column configuration
-  const startY = 60;
-  const avatarCol = 25;
-  const avatarWidth = 95;
-  const colWidth = 280;
+  // Column configuration - ajustado para mejor distribución
+  const startY = 100;
+  const avatarCol = 30;
+  const avatarWidth = 180;
+  const colWidth = 570;
   const mediosX = avatarCol + avatarWidth;
   const outletsX = mediosX + colWidth;
   const influenciadoresX = outletsX + colWidth;
-  const rowHeight = 32;
-  const headerHeight = 30;
+  const rowHeight = 195; // Aumentado 40% más para mayor espacio vertical
+  const headerHeight = 60;
+  const avatarRadius = 55; // Radio del círculo del avatar
 
-  // Draw column headers
+  // Draw column headers con mejor diseño
   const headers = [
     { title: 'Medios', x: mediosX },
     { title: 'Outlets', x: outletsX, subtitle: 'Impacto' },
@@ -2266,18 +2272,18 @@ export const autoInsertAmplificadoresChart = async (canvas) => {
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(header.x, startY, colWidth, headerHeight);
     ctx.strokeStyle = '#00BCD4';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 3;
     ctx.strokeRect(header.x, startY, colWidth, headerHeight);
 
-    ctx.font = 'bold 14px Arial';
+    ctx.font = 'bold 26px Arial, sans-serif';
     ctx.fillStyle = '#000000';
     ctx.textAlign = 'left';
-    ctx.fillText(header.title, header.x + 10, startY + 20);
+    ctx.fillText(header.title, header.x + 20, startY + 38);
 
     if (header.subtitle) {
-      ctx.font = '11px Arial';
+      ctx.font = '20px Arial, sans-serif';
       ctx.textAlign = 'right';
-      ctx.fillText(header.subtitle, header.x + colWidth - 10, startY + 20);
+      ctx.fillText(header.subtitle, header.x + colWidth - 40, startY + 38);
     }
   });
 
@@ -2285,10 +2291,18 @@ export const autoInsertAmplificadoresChart = async (canvas) => {
 
   // Draw each profile
   profiles.forEach((profile, profileIndex) => {
+    // Calcular el número real de filas necesarias para cada columna
+    const mediosRows = profile.medios.length || 0;
+    const outletsRows = profile.outlets.length || 0;
+    const influenciadoresRows = profile.influenciadores.length || 0;
+    
+    // Si outlets está vacío, cuenta como 1 fila para el mensaje
+    const effectiveOutletsRows = outletsRows === 0 ? 1 : outletsRows;
+    
     const maxRows = Math.max(
-      profile.medios.length || 1,
-      profile.outlets.length || 1,
-      profile.influenciadores.length || 1
+      mediosRows || 1,
+      effectiveOutletsRows,
+      influenciadoresRows || 1
     );
     const sectionHeight = maxRows * rowHeight;
 
@@ -2296,157 +2310,177 @@ export const autoInsertAmplificadoresChart = async (canvas) => {
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(avatarCol, currentY, avatarWidth, sectionHeight);
     ctx.strokeStyle = '#00BCD4';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 3;
     ctx.strokeRect(avatarCol, currentY, avatarWidth, sectionHeight);
 
-    // Draw avatar circle
+    // Draw avatar circle con mejor calidad
     const avatarCenterY = currentY + sectionHeight / 2;
     ctx.beginPath();
-    ctx.arc(avatarCol + avatarWidth / 2, avatarCenterY, 28, 0, 2 * Math.PI);
+    ctx.arc(avatarCol + avatarWidth / 2, avatarCenterY, avatarRadius, 0, 2 * Math.PI);
     ctx.fillStyle = profile.color;
     ctx.fill();
     ctx.strokeStyle = '#FFFFFF';
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 5;
     ctx.stroke();
 
-    // Draw profile name
+    // Draw profile name con mejor tipografía
     const nameLines = profile.name.split('\n');
-    ctx.font = 'bold 11px Arial';
+    ctx.font = 'bold 18px Arial, sans-serif';
     ctx.fillStyle = '#000000';
     ctx.textAlign = 'center';
-    const nameY = avatarCenterY + 45;
+    const nameY = avatarCenterY + avatarRadius + 25;
     nameLines.forEach((line, i) => {
-      ctx.fillText(line, avatarCol + avatarWidth / 2, nameY + i * 14);
+      ctx.fillText(line, avatarCol + avatarWidth / 2, nameY + i * 22);
     });
 
-    // Draw Medios column
+    // Draw Medios column con mejor diseño
     for (let i = 0; i < maxRows; i++) {
       const y = currentY + i * rowHeight;
+      const medio = profile.medios[i];
+      
+      // Solo dibujar celda si hay datos o si es necesario para mantener estructura
       ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(mediosX, y, colWidth, rowHeight);
       ctx.strokeStyle = '#CCCCCC';
-      ctx.lineWidth = 1;
+      ctx.lineWidth = 2;
       ctx.strokeRect(mediosX, y, colWidth, rowHeight);
 
-      const medio = profile.medios[i];
-      if (medio) {
-        // Green tag for medio name
-        ctx.fillStyle = '#4CAF50';
-        const tagWidth = ctx.measureText(medio.medio).width + 16;
-        ctx.fillRect(mediosX + 8, y + 6, tagWidth, 18);
+      if (medio && medio.medio) {
+        // Green tag for medio name - mejor diseño
+        ctx.font = 'bold 18px Arial, sans-serif';
+        const medioText = medio.medio || '';
+        const tagWidth = Math.max(ctx.measureText(medioText).width + 30, 100);
         
-        ctx.font = 'bold 10px Arial';
+        ctx.fillStyle = '#4CAF50';
+        ctx.fillRect(mediosX + 15, y + 70, tagWidth, 36);
+        
         ctx.fillStyle = '#FFFFFF';
         ctx.textAlign = 'left';
-        ctx.fillText(medio.medio, mediosX + 16, y + 18);
+        ctx.fillText(medioText, mediosX + 30, y + 95);
 
-        // Title
-        ctx.font = '9px Arial';
+        // Title - mejor espaciado y en nueva línea
+        ctx.font = '16px Arial, sans-serif';
         ctx.fillStyle = '#000000';
-        const maxTitleWidth = colWidth - 60;
-        let titulo = medio.titulo;
-        if (ctx.measureText(titulo).width > maxTitleWidth) {
-          while (ctx.measureText(titulo + '...').width > maxTitleWidth && titulo.length > 0) {
-            titulo = titulo.slice(0, -1);
-          }
-          titulo += '...';
+        const titleStartX = mediosX + tagWidth + 25;
+        const maxTitleWidth = colWidth - tagWidth - 110;
+        let titulo = medio.titulo || '';
+        
+        // Truncar título si es muy largo
+        while (ctx.measureText(titulo).width > maxTitleWidth && titulo.length > 0) {
+          titulo = titulo.slice(0, -1);
         }
-        ctx.fillText(titulo, mediosX + 8, y + 28);
+        if (titulo.length < (medio.titulo || '').length) {
+          titulo = titulo.trim() + '...';
+        }
+        
+        ctx.fillText(titulo, titleStartX, y + 88);
 
-        // Impact number
-        ctx.font = 'bold 11px Arial';
+        // Impact number - mejor posición y más pequeño
+        ctx.font = 'bold 20px Arial, sans-serif';
         ctx.textAlign = 'right';
-        ctx.fillText(medio.impacto.toString(), mediosX + colWidth - 10, y + 20);
+        ctx.fillText((medio.impacto || 0).toString(), mediosX + colWidth - 40, y + 102);
         ctx.textAlign = 'left';
       }
     }
 
-    // Draw Outlets column
+    // Draw Outlets column con mejor diseño
     if (profile.outlets.length === 0) {
-      // "Sin datos para el análisis" message
+      // "Sin datos para el análisis" message - ocupar toda la sección
       ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(outletsX, currentY, colWidth, sectionHeight);
       ctx.strokeStyle = '#CCCCCC';
-      ctx.lineWidth = 1;
+      ctx.lineWidth = 2;
       ctx.strokeRect(outletsX, currentY, colWidth, sectionHeight);
 
-      ctx.font = 'bold 13px Arial';
-      ctx.fillStyle = '#999999';
+      ctx.font = 'bold 22px Arial, sans-serif';
+      ctx.fillStyle = '#CCCCCC';
       ctx.textAlign = 'center';
-      ctx.fillText('Sin datos para', outletsX + colWidth / 2, avatarCenterY - 8);
-      ctx.fillText('el análisis', outletsX + colWidth / 2, avatarCenterY + 8);
+      ctx.fillText('Sin datos para', outletsX + colWidth / 2, avatarCenterY - 15);
+      ctx.fillText('el análisis', outletsX + colWidth / 2, avatarCenterY + 20);
       ctx.textAlign = 'left';
     } else {
       for (let i = 0; i < maxRows; i++) {
         const y = currentY + i * rowHeight;
+        const outlet = profile.outlets[i];
+        
         ctx.fillStyle = '#FFFFFF';
         ctx.fillRect(outletsX, y, colWidth, rowHeight);
         ctx.strokeStyle = '#CCCCCC';
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 2;
         ctx.strokeRect(outletsX, y, colWidth, rowHeight);
 
-        const outlet = profile.outlets[i];
-        if (outlet) {
-          // Colored tag for outlet
+        if (outlet && outlet.outlet) {
+          // Colored tag for outlet - mejor diseño
           const outletColors = {
             'SDP Noticias': '#FF4444',
             'Notigram': '#4CAF50',
             'Contacto Politico': '#2196F3',
+            'Contacto Hoy': '#2196F3',
             'LJA.MX': '#FF9800',
           };
-          ctx.fillStyle = outletColors[outlet.outlet] || '#9E9E9E';
-          ctx.fillRect(outletsX + 8, y + 7, 90, 18);
           
-          ctx.font = 'bold 9px Arial';
+          ctx.font = 'bold 16px Arial, sans-serif';
+          const outletText = outlet.outlet || '';
+          const outletTextWidth = ctx.measureText(outletText).width;
+          const tagWidth = Math.max(outletTextWidth + 24, 90);
+          
+          ctx.fillStyle = outletColors[outlet.outlet] || '#9E9E9E';
+          ctx.fillRect(outletsX + 15, y + 70, tagWidth, 36);
+          
           ctx.fillStyle = '#FFFFFF';
           ctx.textAlign = 'center';
-          ctx.fillText(outlet.outlet, outletsX + 53, y + 19);
+          ctx.fillText(outletText, outletsX + 15 + tagWidth / 2, y + 94);
           ctx.textAlign = 'left';
 
-          // Title
-          ctx.font = '9px Arial';
+          // Title - mejor espaciado
+          ctx.font = '16px Arial, sans-serif';
           ctx.fillStyle = '#000000';
-          const maxTitleWidth = colWidth - 140;
-          let titulo = outlet.titulo;
-          if (ctx.measureText(titulo).width > maxTitleWidth) {
-            while (ctx.measureText(titulo + '...').width > maxTitleWidth && titulo.length > 0) {
-              titulo = titulo.slice(0, -1);
-            }
-            titulo += '...';
+          const titleStartX = outletsX + tagWidth + 25;
+          const maxTitleWidth = colWidth - tagWidth - 110;
+          let titulo = outlet.titulo || '';
+          
+          while (ctx.measureText(titulo).width > maxTitleWidth && titulo.length > 0) {
+            titulo = titulo.slice(0, -1);
           }
-          ctx.fillText(titulo, outletsX + 105, y + 19);
+          if (titulo.length < (outlet.titulo || '').length) {
+            titulo = titulo.trim() + '...';
+          }
+          
+          ctx.fillText(titulo, titleStartX, y + 88);
 
-          // Impact number
-          ctx.font = 'bold 11px Arial';
+          // Impact number - mejor posición
+          ctx.font = 'bold 20px Arial, sans-serif';
           ctx.textAlign = 'right';
-          ctx.fillText(outlet.impacto.toString(), outletsX + colWidth - 10, y + 20);
+          ctx.fillText((outlet.impacto || 0).toString(), outletsX + colWidth - 40, y + 102);
           ctx.textAlign = 'left';
         }
       }
     }
 
-    // Draw Influenciadores column
+    // Draw Influenciadores column con mejor diseño
     for (let i = 0; i < maxRows; i++) {
       const y = currentY + i * rowHeight;
+      const influencer = profile.influenciadores[i];
+      
       ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(influenciadoresX, y, colWidth, rowHeight);
       ctx.strokeStyle = '#CCCCCC';
-      ctx.lineWidth = 1;
+      ctx.lineWidth = 2;
       ctx.strokeRect(influenciadoresX, y, colWidth, rowHeight);
 
-      const influencer = profile.influenciadores[i];
-      if (influencer) {
-        // Username
-        ctx.font = 'bold 11px Arial';
+      if (influencer && influencer.user) {
+        // Username con mejor tipografía
+        ctx.font = 'bold 22px Arial, sans-serif';
         ctx.fillStyle = '#E91E63';
         ctx.textAlign = 'left';
-        ctx.fillText(influencer.user, influenciadoresX + 10, y + 20);
+        ctx.fillText(influencer.user || '', influenciadoresX + 20, y + 102);
 
-        // Followers count
-        ctx.font = 'bold 11px Arial';
+        // Followers count con mejor formato
+        ctx.font = 'bold 22px Arial, sans-serif';
         ctx.fillStyle = '#000000';
         ctx.textAlign = 'right';
-        ctx.fillText(influencer.followers.toLocaleString('en-US'), influenciadoresX + colWidth - 10, y + 20);
+        const followers = influencer.followers || 0;
+        ctx.fillText(followers.toLocaleString('en-US'), influenciadoresX + colWidth - 40, y + 102);
         ctx.textAlign = 'left';
       }
     }
@@ -2454,8 +2488,8 @@ export const autoInsertAmplificadoresChart = async (canvas) => {
     currentY += sectionHeight;
   });
 
-  // Convert to fabric and insert
-  const dataURL = canvasElement.toDataURL('image/png');
+  // Convert to fabric and insert con alta calidad
+  const dataURL = canvasElement.toDataURL('image/png', 1.0);
   const { Image: FabricImage } = await import('fabric');
   const img = new Image();
   img.onload = () => {
@@ -2479,12 +2513,19 @@ export const autoInsertAmplificadoresChart = async (canvas) => {
 export const autoInsertActivacionPorTema = async (canvas) => {
   if (!canvas) return;
 
+  // Aumentar resolución para mejor calidad (x2)
+  const scale = 2;
   const width = 960;
   const height = 540;
   const canvasElement = document.createElement('canvas');
-  canvasElement.width = width;
-  canvasElement.height = height;
+  canvasElement.width = width * scale;
+  canvasElement.height = height * scale;
+  canvasElement.style.width = width + 'px';
+  canvasElement.style.height = height + 'px';
   const ctx = canvasElement.getContext('2d');
+  
+  // Escalar el contexto para mejor renderizado
+  ctx.scale(scale, scale);
 
   // Background
   ctx.fillStyle = '#FFFFFF';
@@ -2492,46 +2533,47 @@ export const autoInsertActivacionPorTema = async (canvas) => {
 
   // Title
   ctx.fillStyle = '#000000';
-  ctx.font = 'bold 18px Arial';
+  ctx.font = 'bold 20px Arial, sans-serif';
   ctx.textAlign = 'left';
-  ctx.fillText('Estudio de activación por tema', 30, 35);
+  ctx.fillText('Estudio de activación por tema', 40, 40);
 
   // Subtitle "Alta Activación" and "Baja Activación"
-  ctx.font = 'bold 14px Arial';
+  ctx.font = '14px Arial, sans-serif';
   ctx.fillStyle = '#2E7D32';
-  ctx.fillText('Alta Activación', 30, 60);
+  ctx.fillText('Alta Activación', 40, 70);
   
   ctx.fillStyle = '#C62828';
   ctx.textAlign = 'right';
-  ctx.fillText('Baja Activación', width - 30, 60);
+  ctx.fillText('Baja Activación', width - 40, 70);
   ctx.textAlign = 'left';
 
   // Vertical indicator line
-  const lineX = width - 50;
+  const lineX = width - 60;
   ctx.strokeStyle = '#4CAF50';
-  ctx.lineWidth = 4;
+  ctx.lineWidth = 6;
   ctx.beginPath();
-  ctx.moveTo(lineX, 80);
-  ctx.lineTo(lineX, 90);
+  ctx.moveTo(lineX, 90);
+  ctx.lineTo(lineX, 105);
   ctx.stroke();
 
   ctx.strokeStyle = '#C62828';
   ctx.beginPath();
-  ctx.moveTo(lineX, height - 80);
-  ctx.lineTo(lineX, height - 70);
+  ctx.moveTo(lineX, height - 70);
+  ctx.lineTo(lineX, height - 55);
   ctx.stroke();
 
   // Draw gradient line indicator on the right
-  const gradientHeight = height - 170;
-  const gradient = ctx.createLinearGradient(0, 90, 0, 90 + gradientHeight);
+  const gradientHeight = height - 165;
+  const gradient = ctx.createLinearGradient(0, 105, 0, 105 + gradientHeight);
   gradient.addColorStop(0, '#4CAF50');
+  gradient.addColorStop(0.5, '#FFC107');
   gradient.addColorStop(1, '#C62828');
   
   ctx.strokeStyle = gradient;
-  ctx.lineWidth = 4;
+  ctx.lineWidth = 6;
   ctx.beginPath();
-  ctx.moveTo(lineX, 90);
-  ctx.lineTo(lineX, 90 + gradientHeight);
+  ctx.moveTo(lineX, 105);
+  ctx.lineTo(lineX, 105 + gradientHeight);
   ctx.stroke();
 
   // Sample data
@@ -2547,9 +2589,9 @@ export const autoInsertActivacionPorTema = async (canvas) => {
   ];
 
   // Chart configuration
-  const startY = 90;
+  const startY = 105;
   const chartHeight = gradientHeight;
-  const barHeight = 35;
+  const barHeight = 38;
   const spacing = (chartHeight - (temas.length * barHeight)) / (temas.length + 1);
 
   // Sort temas by activation (descending)
@@ -2558,36 +2600,61 @@ export const autoInsertActivacionPorTema = async (canvas) => {
   // Draw bars
   sortedTemas.forEach((tema, index) => {
     const y = startY + spacing + index * (barHeight + spacing);
-    const maxBarWidth = width - 180;
-    const barWidth = (tema.activacion / 100) * maxBarWidth;
+    const maxBarWidth = width - 200;
+    const barWidth = Math.max((tema.activacion / 100) * maxBarWidth, 0);
 
-    // Draw bar background
-    ctx.fillStyle = '#F5F5F5';
-    ctx.fillRect(90, y, maxBarWidth, barHeight);
+    // Draw bar background with shadow
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
+    ctx.shadowBlur = 4;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 2;
+    
+    ctx.fillStyle = '#F8F9FA';
+    ctx.fillRect(100, y, maxBarWidth, barHeight);
+    
+    // Reset shadow
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    
     ctx.strokeStyle = '#E0E0E0';
     ctx.lineWidth = 1;
-    ctx.strokeRect(90, y, maxBarWidth, barHeight);
+    ctx.strokeRect(100, y, maxBarWidth, barHeight);
 
     // Draw colored bar
-    ctx.fillStyle = tema.color;
-    ctx.fillRect(90, y, barWidth, barHeight);
+    if (barWidth > 0) {
+      ctx.fillStyle = tema.color;
+      ctx.fillRect(100, y, barWidth, barHeight);
+    }
 
     // Draw tema label
-    ctx.font = 'bold 13px Arial';
-    ctx.fillStyle = '#000000';
+    ctx.font = 'bold 14px Arial, sans-serif';
+    ctx.fillStyle = '#FFFFFF';
     ctx.textAlign = 'left';
-    ctx.fillText(tema.tema, 95, y + 22);
+    
+    // Sombra para el texto
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+    ctx.shadowBlur = 3;
+    ctx.shadowOffsetX = 1;
+    ctx.shadowOffsetY = 1;
+    
+    ctx.fillText(tema.tema, 108, y + 24);
+    
+    // Reset shadow
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
 
     // Draw percentage on the right of the bar
-    ctx.font = 'bold 12px Arial';
-    ctx.fillStyle = '#000000';
+    ctx.font = 'bold 13px Arial, sans-serif';
+    ctx.fillStyle = '#333333';
     ctx.textAlign = 'left';
-    const percentX = 90 + barWidth + 10;
-    ctx.fillText(`${tema.activacion}%`, percentX, y + 22);
+    const percentX = 100 + maxBarWidth + 12;
+    ctx.fillText(`${tema.activacion}%`, percentX, y + 24);
   });
 
   // Convert to fabric and insert
-  const dataURL = canvasElement.toDataURL('image/png');
+  const dataURL = canvasElement.toDataURL('image/png', 1.0);
   const { Image: FabricImage } = await import('fabric');
   const img = new Image();
   img.onload = () => {

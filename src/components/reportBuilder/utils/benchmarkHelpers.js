@@ -621,9 +621,9 @@ export const autoInsertDemografiaSociedadRed = async (canvas) => {
   if (!canvas) return;
 
   const bars = [
-    { label: 'Internet', percent: 78, color: '#B13B2E', rightLabel: 'Clases A,B,C,D\nJóvenes' },
-    { label: 'Anfibios', percent: 18, color: '#E97B2A', rightLabel: '' },
-    { label: 'Medios Tradicionales', percent: 4, color: '#F7D154', rightLabel: 'Amas de casa\n3ra Edad' },
+    { label: 'Tema 1', percent: 0, color: '#B13B2E', rightLabel: '' },
+    { label: 'Tema 2', percent: 0, color: '#E97B2A', rightLabel: '' },
+    { label: 'Tema 3', percent: 0, color: '#F7D154', rightLabel: '' },
   ];
 
   const width = 700;
@@ -648,7 +648,9 @@ export const autoInsertDemografiaSociedadRed = async (canvas) => {
   let currentY = topPad;
 
   bars.forEach((bar) => {
-    const barHeight = (bar.percent / 100) * totalHeight;
+    // Usar altura mínima de 50px cuando el porcentaje es 0 para que sea visible
+    const calculatedHeight = (bar.percent / 100) * totalHeight;
+    const barHeight = bar.percent === 0 ? 50 : calculatedHeight;
 
     // Dibujar la barra
     ctx.fillStyle = bar.color;
@@ -714,7 +716,8 @@ export const autoInsertDemografiaSociedadRed = async (canvas) => {
       top: 150,
       scaleX: 0.9,
       scaleY: 0.9,
-      name: 'demografia-sociedad-red'
+      name: 'demografia-sociedad-red',
+      chartData: bars // Guardar los datos para futuras ediciones
     });
     canvas.add(fabricImg);
     canvas.renderAll();

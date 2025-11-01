@@ -1,0 +1,437 @@
+/* ===================================
+   Modal de Dilemas Rentables
+   Estilos consistentes con ChartModals
+   =================================== */
+
+/* Modal Overlay */
+.dilemas-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.dark-theme .dilemas-modal-overlay {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.light-theme .dilemas-modal-overlay,
+.dilemas-modal-overlay {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Modal Container */
+.dilemas-modal-container {
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 1200px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease-out;
+    width: 90%;
+}
+
+.dark-theme .dilemas-modal-container {
+    background: linear-gradient(135deg,
+        rgba(26, 11, 46, 0.95) 0%,
+        rgba(88, 51, 139, 0.9) 50%,
+        rgba(26, 11, 46, 0.95) 100%
+    );
+    border: 1px solid rgba(147, 112, 219, 0.4);
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.6),
+        0 8px 32px rgba(88, 51, 139, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.light-theme .dilemas-modal-container,
+.dilemas-modal-container {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+/* Modal Title */
+.dilemas-modal-title {
+    margin-top: 0;
+    margin-bottom: 24px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.dark-theme .dilemas-modal-title {
+    color: white;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.light-theme .dilemas-modal-title,
+.dilemas-modal-title {
+    color: #1a202c;
+}
+
+/* Description */
+.dilemas-description {
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.dark-theme .dilemas-description p {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.light-theme .dilemas-description p,
+.dilemas-description p {
+    color: #666;
+    margin: 0;
+}
+
+/* Contenedor de columnas */
+.dilemas-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+/* Columnas individuales */
+.dilemas-column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.dilemas-column-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid;
+}
+
+.dark-theme .dilemas-left .dilemas-column-title {
+    color: #f87171;
+    border-color: #f87171;
+}
+
+.light-theme .dilemas-left .dilemas-column-title,
+.dilemas-left .dilemas-column-title {
+    color: #D32F2F;
+    border-color: #E53935;
+}
+
+.dark-theme .dilemas-right .dilemas-column-title {
+    color: #60a5fa;
+    border-color: #60a5fa;
+}
+
+.light-theme .dilemas-right .dilemas-column-title,
+.dilemas-right .dilemas-column-title {
+    color: #1976D2;
+    border-color: #1E88E5;
+}
+
+/* Cards de características */
+.dilemas-card {
+    border-radius: 12px;
+    padding: 16px;
+    transition: all 0.2s ease;
+    margin-bottom: 12px;
+}
+
+.dark-theme .dilemas-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.light-theme .dilemas-card,
+.dilemas-card {
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.dilemas-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header de la card */
+.dilemas-card-header {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    align-items: flex-start;
+}
+
+/* Inputs */
+.dilemas-input {
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    width: 100%;
+    border: 1px solid;
+}
+
+.dark-theme .dilemas-input {
+    background: rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.light-theme .dilemas-input,
+.dilemas-input {
+    background: white;
+    border-color: #d1d5db;
+    color: #1f2937;
+}
+
+.dilemas-input:focus {
+    outline: none;
+}
+
+.dark-theme .dilemas-input:focus {
+    border-color: #9370db;
+    box-shadow: 0 0 0 3px rgba(147, 112, 219, 0.2);
+}
+
+.light-theme .dilemas-input:focus,
+.dilemas-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.dilemas-input-title {
+    font-weight: 600;
+}
+
+.dilemas-input-subitem {
+    font-size: 13px;
+}
+
+/* Botones de eliminar */
+.dilemas-btn-delete {
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+}
+
+.dilemas-btn-delete:hover {
+    background: #b91c1c;
+    transform: scale(1.05);
+}
+
+.dilemas-btn-delete:active {
+    transform: scale(0.95);
+}
+
+.dilemas-btn-delete-small {
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 7px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+}
+
+.dilemas-btn-delete-small:hover {
+    background: #dc2626;
+    transform: scale(1.05);
+}
+
+.dilemas-btn-delete-small:active {
+    transform: scale(0.95);
+}
+
+/* Sección de subitems */
+.dilemas-subitems {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dilemas-subitem-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+/* Botón agregar sub-item */
+.dilemas-btn-add-subitem {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 12px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    width: 100%;
+    margin-top: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.dilemas-btn-add-subitem:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.dilemas-btn-add-subitem:active {
+    transform: translateY(0);
+}
+
+/* Botón agregar característica */
+.dilemas-btn-add {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    width: 100%;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.dilemas-btn-add:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.dilemas-btn-add:active {
+    transform: translateY(0);
+}
+
+/* Footer con botones de acción */
+.dilemas-modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid;
+}
+
+.dark-theme .dilemas-modal-buttons {
+    border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.light-theme .dilemas-modal-buttons,
+.dilemas-modal-buttons {
+    border-top-color: #e5e7eb;
+}
+
+/* Botón cancelar */
+.dilemas-btn-cancel {
+    padding: 10px 24px;
+    background: #6b7280;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.dilemas-btn-cancel:hover {
+    background: #4b5563;
+    transform: translateY(-1px);
+}
+
+.dilemas-btn-cancel:active {
+    transform: translateY(0);
+}
+
+/* Botón insertar */
+.dilemas-btn-insert {
+    padding: 10px 28px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.dilemas-btn-insert:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.dilemas-btn-insert:active {
+    transform: translateY(0);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dilemas-columns {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .dilemas-modal-container {
+        padding: 24px;
+        width: 95%;
+    }
+
+    .dilemas-modal-title {
+        font-size: 20px;
+    }
+}
