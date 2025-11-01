@@ -48,56 +48,70 @@ const TopOfChoiceChartModal = ({ isOpen, onClose, canvas }) => {
 
   const drawTopOfChoiceChart = async () => {
     const canvasElement = document.createElement('canvas');
-    const width = 480;
-    const height = 360; // Aumentado para más espacio
+    
+    // Aumentar resolución para mejor calidad (escala 3x)
+    const baseWidth = 960;
+    const baseHeight = 540;
+    const scale = 3;
+    const width = baseWidth * scale;
+    const height = baseHeight * scale;
+    
     canvasElement.width = width;
     canvasElement.height = height;
     const ctx = canvasElement.getContext('2d');
+
+    // Activar antialiasing y suavizado
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
 
     // Fondo blanco
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, width, height);
 
-    // Título principal
-    ctx.font = 'bold 9px Arial';
+    // Título principal (escalado)
+    ctx.font = `bold ${27 * scale}px Arial`;
     ctx.fillStyle = '#000000';
     ctx.textAlign = 'left';
-    ctx.fillText('Top of Choice', 15, 18);
+    ctx.fillText('Top of Choice', 45 * scale, 54 * scale);
 
-    // Leyendas superiores
-    const legendY = 35;
+    // Línea central vertical (escalada) - DEFINIR PRIMERO
+    const centerX = width / 2;
 
-    // "No votaría por..." (Rojo)
+    // Leyendas superiores (escaladas y centradas)
+    const legendY = 105 * scale;
+
+    // "No votaría por..." (Rojo) - centrado en el lado izquierdo
+    const leftLegendX = centerX / 2; // Centro del cuadrante izquierdo
     ctx.beginPath();
-    ctx.arc(100, legendY, 4, 0, 2 * Math.PI);
+    ctx.arc(leftLegendX - (90 * scale), legendY, 12 * scale, 0, 2 * Math.PI);
     ctx.fillStyle = '#C62828';
     ctx.fill();
-    ctx.font = '6px Arial';
+    ctx.font = `${18 * scale}px Arial`;
     ctx.fillStyle = '#000000';
     ctx.textAlign = 'left';
-    ctx.fillText('No votaría por...', 110, legendY + 2);
+    ctx.fillText('No votaría por...', leftLegendX - (60 * scale), legendY + (6 * scale));
 
-    // "Votaría por..." (Verde)
+    // "Votaría por..." (Verde) - centrado en el lado derecho
+    const rightLegendX = centerX + (centerX / 2); // Centro del cuadrante derecho
     ctx.beginPath();
-    ctx.arc(width - 110, legendY, 4, 0, 2 * Math.PI);
+    ctx.arc(rightLegendX - (75 * scale), legendY, 12 * scale, 0, 2 * Math.PI);
     ctx.fillStyle = '#2E7D32';
     ctx.fill();
-    ctx.fillText('Votaría por...', width - 100, legendY + 2);
+    ctx.fillText('Votaría por...', rightLegendX - (45 * scale), legendY + (6 * scale));
 
-    // Línea central vertical
-    const centerX = width / 2;
+    // Dibujar la línea central vertical
     ctx.strokeStyle = '#CCCCCC';
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 3 * scale;
     ctx.beginPath();
-    ctx.moveTo(centerX, 50);
-    ctx.lineTo(centerX, height - 30);
+    ctx.moveTo(centerX, 150 * scale);
+    ctx.lineTo(centerX, height - (90 * scale));
     ctx.stroke();
 
-    // Configuración de barras
-    const startY = 60;
-    const barHeight = 30;
-    const spacing = 45; // Aumentado para más espacio entre perfiles
-    const maxBarWidth = 180;
+    // Configuración de barras (escaladas)
+    const startY = 180 * scale;
+    const barHeight = 90 * scale;
+    const spacing = 135 * scale;
+    const maxBarWidth = 540 * scale;
 
     // Cargar todas las imágenes de avatares primero
     const avatarImages = await Promise.all(
@@ -119,6 +133,7 @@ const TopOfChoiceChartModal = ({ isOpen, onClose, canvas }) => {
 
       // Avatar y nombre en el centro
       const avatarY = y + (barHeight / 2);
+      const avatarRadius = 36 * scale;
 
       // Barra "No votaría" (izquierda, roja)
       const noVotariaWidth = (profile.noVotaria / 100) * maxBarWidth;
@@ -127,10 +142,10 @@ const TopOfChoiceChartModal = ({ isOpen, onClose, canvas }) => {
 
       // Porcentaje "No votaría"
       if (profile.noVotaria > 0) {
-        ctx.font = 'bold 10px Arial';
+        ctx.font = `bold ${30 * scale}px Arial`;
         ctx.fillStyle = '#FFFFFF';
         ctx.textAlign = 'center';
-        ctx.fillText(`${profile.noVotaria}%`, centerX - (noVotariaWidth / 2), y + (barHeight / 2) + 3);
+        ctx.fillText(`${profile.noVotaria}%`, centerX - (noVotariaWidth / 2), y + (barHeight / 2) + (9 * scale));
       }
 
       // Barra "Sí votaría" (derecha, verde)
@@ -140,45 +155,57 @@ const TopOfChoiceChartModal = ({ isOpen, onClose, canvas }) => {
 
       // Porcentaje "Sí votaría"
       if (profile.siVotaria > 0) {
-        ctx.font = 'bold 10px Arial';
+        ctx.font = `bold ${30 * scale}px Arial`;
         ctx.fillStyle = '#FFFFFF';
         ctx.textAlign = 'center';
-        ctx.fillText(`${profile.siVotaria}%`, centerX + (siVotariaWidth / 2), y + (barHeight / 2) + 3);
+        ctx.fillText(`${profile.siVotaria}%`, centerX + (siVotariaWidth / 2), y + (barHeight / 2) + (9 * scale));
       }
 
       // Avatar (dibujado después de las barras para que esté encima)
       if (avatarImages[index]) {
+        // Borde blanco exterior para mejor contraste
+        ctx.beginPath();
+        ctx.arc(centerX, avatarY, avatarRadius + (6 * scale), 0, 2 * Math.PI);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fill();
+        
         ctx.save();
         ctx.beginPath();
-        ctx.arc(centerX, avatarY, 12, 0, 2 * Math.PI);
+        ctx.arc(centerX, avatarY, avatarRadius, 0, 2 * Math.PI);
         ctx.clip();
-        ctx.drawImage(avatarImages[index], centerX - 12, avatarY - 12, 24, 24);
+        ctx.drawImage(
+          avatarImages[index], 
+          centerX - avatarRadius, 
+          avatarY - avatarRadius, 
+          avatarRadius * 2, 
+          avatarRadius * 2
+        );
         ctx.restore();
 
         // Borde del avatar
         ctx.beginPath();
-        ctx.arc(centerX, avatarY, 12, 0, 2 * Math.PI);
+        ctx.arc(centerX, avatarY, avatarRadius, 0, 2 * Math.PI);
         ctx.strokeStyle = '#000000';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 6 * scale;
         ctx.stroke();
       } else {
         // Avatar placeholder
         ctx.beginPath();
-        ctx.arc(centerX, avatarY, 12, 0, 2 * Math.PI);
+        ctx.arc(centerX, avatarY, avatarRadius, 0, 2 * Math.PI);
         ctx.fillStyle = profile.color || '#E5E7EB';
         ctx.fill();
         ctx.strokeStyle = '#000000';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 6 * scale;
         ctx.stroke();
       }
 
       // Nombre del perfil debajo del avatar
       const nameLines = profile.name.split('\n');
-      ctx.font = 'bold 5px Arial';
+      ctx.font = `bold ${15 * scale}px Arial`;
       ctx.fillStyle = '#000000';
       ctx.textAlign = 'center';
       nameLines.forEach((line, i) => {
-        ctx.fillText(line, centerX, avatarY + 20 + (i * 6));
+        ctx.fillText(line, centerX, avatarY + (60 * scale) + (i * (18 * scale)));
       });
     });
 
@@ -189,25 +216,23 @@ const TopOfChoiceChartModal = ({ isOpen, onClose, canvas }) => {
     if (!canvas) return;
 
     const canvasElement = await drawTopOfChoiceChart();
-    const dataURL = canvasElement.toDataURL('image/png');
 
     const { Image: FabricImage } = await import('fabric');
 
-    const imgElement = new Image();
-    imgElement.onload = () => {
-      const fabricImg = new FabricImage(imgElement, {
-        left: 100,
-        top: 100,
-        selectable: true,
-        hasControls: true,
-      });
+    const fabricImg = new FabricImage(canvasElement, {
+      left: 100,
+      top: 100,
+      selectable: true,
+      hasControls: true,
+      name: 'top-of-choice-chart',
+      scaleX: 0.5 / 3, // Reducido a la mitad del tamaño base (50% de 960px = 480px)
+      scaleY: 0.5 / 3, // Mantiene la alta resolución en tamaño más pequeño
+    });
 
-      canvas.add(fabricImg);
-      canvas.setActiveObject(fabricImg);
-      canvas.renderAll();
-      onClose();
-    };
-    imgElement.src = dataURL;
+    canvas.add(fabricImg);
+    canvas.setActiveObject(fabricImg);
+    canvas.renderAll();
+    onClose();
   };
 
   return (

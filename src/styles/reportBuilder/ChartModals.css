@@ -29,7 +29,7 @@
 .chart-modal-container {
   border-radius: 16px;
   padding: 32px;
-  max-width: 700px;
+  max-width: 900px;
   max-height: 90vh;
   overflow: auto;
   animation: slideUp 0.3s ease-out;
@@ -89,9 +89,10 @@
 
 /* Profile Card */
 .chart-profile-card {
-  margin-bottom: 24px;
-  padding: 16px;
-  border-radius: 8px;
+  margin-bottom: 28px;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .dark-theme .chart-profile-card {
@@ -408,25 +409,63 @@
 /* Row Item - para items en listas */
 .chart-row-item {
   display: flex;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: 10px;
+  margin-bottom: 12px;
   align-items: center;
+  flex-wrap: wrap;
+}
+
+.chart-row-item input {
+  flex: 1;
+  min-width: 150px;
 }
 
 /* Tema Row - para ActivacionPorTemaModal */
 .tema-row {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: 2fr 140px 80px 45px;
+  gap: 12px;
+  margin-bottom: 12px;
   align-items: center;
+  padding: 10px;
+  background: rgba(128, 128, 128, 0.03);
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.tema-row:hover {
+  background: rgba(128, 128, 128, 0.06);
+}
+
+.dark-theme .tema-row {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.dark-theme .tema-row:hover {
+  background: rgba(255, 255, 255, 0.06);
 }
 
 /* Color Input */
 .color-input {
-  width: 60px !important;
-  padding: 2px !important;
-  height: 38px;
+  width: 100% !important;
+  height: 50px !important;
   cursor: pointer;
+  border-radius: 8px;
+  border: 2px solid #ccc;
+  padding: 4px !important;
+}
+
+.color-input:hover {
+  border-color: #999;
+}
+
+.dark-theme .color-input {
+  background: rgba(255, 255, 255, 0.12);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark-theme .color-input:hover {
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 /* Add Button */
@@ -507,6 +546,12 @@
   background: #FECACA;
   border-color: #F87171;
   transform: scale(1.05);
+}
+
+.chart-delete-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed !important;
+  pointer-events: none;
 }
 
 /* Select Dropdown */
