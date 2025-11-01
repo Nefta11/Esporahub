@@ -193,7 +193,7 @@ const PerfilPersonasModal = ({ isOpen, onClose, canvas }) => {
                     name: 'perfil-personas'
                 });
 
-                const scale = 960 / fabricImg.width;
+                const scale = 700 / fabricImg.width;
                 fabricImg.scaleX = scale;
                 fabricImg.scaleY = scale;
 
@@ -443,8 +443,8 @@ export const drawPerfilChartFromData = async (data) => {
     );
 
     const c = document.createElement('canvas');
-    const width = 1600;
-    const height = 900;
+    const width = 1200;
+    const height = 680;
     c.width = width;
     c.height = height;
     const ctx = c.getContext('2d');
@@ -455,88 +455,88 @@ export const drawPerfilChartFromData = async (data) => {
 
     // Title section
     ctx.fillStyle = '#666';
-    ctx.font = '32px Arial';
+    ctx.font = '24px Arial';
     ctx.textAlign = 'left';
-    ctx.fillText(data.title, 170, 60);
+    ctx.fillText(data.title, 130, 45);
 
     ctx.fillStyle = '#000';
-    ctx.font = 'bold 48px Arial';
-    ctx.fillText(data.subtitle, 70, 120);
+    ctx.font = 'bold 36px Arial';
+    ctx.fillText(data.subtitle, 50, 90);
 
     // Draw boxes for Adjetivos and Contra Adjetivos
-    const boxX = 70;
-    const boxY = 160;
-    const boxWidth = 280;
-    const boxHeight = 180;
+    const boxX = 50;
+    const boxY = 120;
+    const boxWidth = 210;
+    const boxHeight = 135;
 
     // Adjetivos box
     ctx.strokeStyle = '#000';
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 2;
     ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
     ctx.fillStyle = '#000';
-    ctx.font = 'bold 20px Arial';
-    ctx.fillText(data.adjetivos.title, boxX + 10, boxY + 30);
+    ctx.font = 'bold 15px Arial';
+    ctx.fillText(data.adjetivos.title, boxX + 8, boxY + 22);
 
     ctx.fillStyle = '#2196F3';
-    ctx.font = '16px Arial';
+    ctx.font = '12px Arial';
     data.adjetivos.items.forEach((item, i) => {
-        ctx.fillText('• ' + item, boxX + 15, boxY + 60 + (i * 25));
+        ctx.fillText('• ' + item, boxX + 12, boxY + 45 + (i * 19));
     });
 
     // Contra Adjetivos box
-    const boxX2 = boxX + boxWidth + 10;
+    const boxX2 = boxX + boxWidth + 8;
     ctx.strokeRect(boxX2, boxY, boxWidth, boxHeight);
     ctx.fillStyle = '#000';
-    ctx.font = 'bold 20px Arial';
-    ctx.fillText(data.contraAdjetivos.title, boxX2 + 10, boxY + 30);
+    ctx.font = 'bold 15px Arial';
+    ctx.fillText(data.contraAdjetivos.title, boxX2 + 8, boxY + 22);
 
     ctx.fillStyle = '#E53935';
-    ctx.font = '16px Arial';
+    ctx.font = '12px Arial';
     data.contraAdjetivos.items.forEach((item, i) => {
-        ctx.fillText('• ' + item, boxX2 + 15, boxY + 60 + (i * 25));
+        ctx.fillText('• ' + item, boxX2 + 12, boxY + 45 + (i * 19));
     });
 
     // Draw definitions
-    let defY = boxY + boxHeight + 30;
+    let defY = boxY + boxHeight + 20;
     data.definiciones.forEach((def, i) => {
         // Color bar
         ctx.fillStyle = def.color;
-        ctx.fillRect(60, defY, 10, 60);
+        ctx.fillRect(45, defY, 8, 45);
 
         // Term
         ctx.fillStyle = '#000';
-        ctx.font = 'bold 16px Arial';
-        ctx.fillText(def.term, 80, defY + 15);
+        ctx.font = 'bold 12px Arial';
+        ctx.fillText(def.term, 60, defY + 12);
 
         // Description
         ctx.fillStyle = '#555';
-        ctx.font = '13px Arial';
+        ctx.font = '10px Arial';
         const words = def.description.split(' ');
         let line = '';
-        let lineY = defY + 35;
+        let lineY = defY + 28;
         words.forEach(word => {
             const testLine = line + word + ' ';
             const metrics = ctx.measureText(testLine);
-            if (metrics.width > 600 && line !== '') {
-                ctx.fillText(line, 80, lineY);
+            if (metrics.width > 420 && line !== '') {
+                ctx.fillText(line, 60, lineY);
                 line = word + ' ';
-                lineY += 18;
+                lineY += 13;
             } else {
                 line = testLine;
             }
         });
-        ctx.fillText(line, 80, lineY);
+        ctx.fillText(line, 60, lineY);
 
-        defY += 80;
+        defY += 58;
     });
 
     // Draw personas in grid (3 columns, 2 rows)
-    const startX = 750;
-    const startY = 100;
-    const personWidth = 260;
-    const personHeight = 280;
-    const gapX = 20;
-    const gapY = 30;
+    const startX = 540;
+    const startY = 75;
+    const personWidth = 200;
+    const personHeight = 220;
+    const gapX = 15;
+    const gapY = 25;
 
     data.personas.forEach((persona, i) => {
         const col = i % 3;
@@ -546,20 +546,20 @@ export const drawPerfilChartFromData = async (data) => {
 
         // Draw person card
         ctx.strokeStyle = '#999';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 1.5;
         ctx.strokeRect(x, y, personWidth, personHeight);
 
         // Photo circle
         const centerX = x + personWidth / 2;
-        const centerY = y + 50;
-        const radius = 35;
+        const centerY = y + 38;
+        const radius = 28;
 
         ctx.beginPath();
         ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
         ctx.fillStyle = '#f0f0f0';
         ctx.fill();
         ctx.strokeStyle = '#666';
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 2;
         ctx.stroke();
 
         // Si hay avatar cargado, dibujarlo
@@ -575,36 +575,36 @@ export const drawPerfilChartFromData = async (data) => {
             ctx.beginPath();
             ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
             ctx.strokeStyle = '#666';
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 2;
             ctx.stroke();
         }
 
         // Name
         ctx.fillStyle = '#000';
-        ctx.font = 'bold 16px Arial';
+        ctx.font = 'bold 12px Arial';
         ctx.textAlign = 'center';
         const nameLines = persona.name.split('\n');
         nameLines.forEach((line, lineIndex) => {
-            ctx.fillText(line, x + personWidth / 2, y + 105 + (lineIndex * 18));
+            ctx.fillText(line, x + personWidth / 2, y + 78 + (lineIndex * 14));
         });
 
         // Adjetivos list
         ctx.textAlign = 'left';
-        ctx.font = '13px Arial';
-        let adjetivoY = y + 150;
+        ctx.font = '10px Arial';
+        let adjetivoY = y + 113;
         persona.adjetivos.forEach((adj, adjIndex) => {
             const isMafioso = adj.toLowerCase().includes('mafioso');
             ctx.fillStyle = isMafioso ? '#E53935' : '#000';
-            ctx.fillText('• ' + adj, x + 15, adjetivoY);
-            adjetivoY += 22;
+            ctx.fillText('• ' + adj, x + 12, adjetivoY);
+            adjetivoY += 17;
         });
     });
 
     // Legend
-    const legendY = height - 100;
+    const legendY = height - 75;
     const legendX = startX;
     ctx.fillStyle = '#666';
-    ctx.font = '14px Arial';
+    ctx.font = '11px Arial';
     ctx.textAlign = 'left';
     ctx.fillText('Consolidación de adjetivos personales', legendX, legendY);
 
@@ -616,25 +616,25 @@ export const drawPerfilChartFromData = async (data) => {
     ];
 
     items.forEach((item, i) => {
-        const itemX = legendX + (i * 180);
+        const itemX = legendX + (i * 140);
         ctx.fillStyle = item.color;
-        ctx.fillRect(itemX, legendY + 10, 15, 15);
+        ctx.fillRect(itemX, legendY + 8, 12, 12);
         ctx.fillStyle = '#333';
-        ctx.font = '12px Arial';
-        ctx.fillText(item.text, itemX + 20, legendY + 22);
+        ctx.font = '9px Arial';
+        ctx.fillText(item.text, itemX + 16, legendY + 18);
     });
 
     // Company logo/text
     ctx.fillStyle = '#999';
-    ctx.font = 'bold 24px Arial';
+    ctx.font = 'bold 18px Arial';
     ctx.textAlign = 'right';
-    ctx.fillText(data.company, width - 40, height - 40);
+    ctx.fillText(data.company, width - 30, height - 30);
 
     // Footnote
     ctx.fillStyle = '#666';
-    ctx.font = '12px Arial';
+    ctx.font = '10px Arial';
     ctx.textAlign = 'right';
-    ctx.fillText(data.footnote, width - 40, height - 20);
+    ctx.fillText(data.footnote, width - 30, height - 15);
 
     return c;
 };

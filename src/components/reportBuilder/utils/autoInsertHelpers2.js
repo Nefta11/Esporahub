@@ -690,7 +690,7 @@ export const autoInsertPerfilPersonas = async (canvas) => {
         name: 'perfil-personas'
       });
 
-      const scale = 960 / fabricImg.width;
+      const scale = 700 / fabricImg.width;
       fabricImg.scaleX = scale;
       fabricImg.scaleY = scale;
 
