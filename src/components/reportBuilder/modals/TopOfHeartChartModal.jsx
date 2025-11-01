@@ -55,7 +55,7 @@ const TopOfHeartChartModal = ({ isOpen, onClose, canvas }) => {
     }
   };
 
-  const drawTopOfHeartChart = () => {
+  const drawTopOfHeartChart = async () => {
     const canvasElement = document.createElement('canvas');
     const width = 480;
     const height = 270;
@@ -98,6 +98,21 @@ const TopOfHeartChartModal = ({ isOpen, onClose, canvas }) => {
     ctx.lineTo(startX + (archetypes.length * columnWidth), startY);
     ctx.stroke();
 
+    // Cargar todas las imágenes de avatares primero
+    const loadedAvatars = await Promise.all(
+      profiles.map(async (profile) => {
+        if (profile.avatar) {
+          return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = () => resolve(null);
+            img.src = profile.avatar;
+          });
+        }
+        return null;
+      })
+    );
+
     // Dibujar cada perfil
     profiles.forEach((profile, profileIndex) => {
       const y = startY + 10 + (profileIndex * rowHeight);
@@ -112,15 +127,20 @@ const TopOfHeartChartModal = ({ isOpen, onClose, canvas }) => {
       ctx.stroke();
 
       // Si hay avatar cargado, dibujarlo
-      if (profile.avatar) {
-        const img = new Image();
-        img.src = profile.avatar;
+      if (loadedAvatars[profileIndex]) {
         ctx.save();
         ctx.beginPath();
         ctx.arc(35, y + 10, 12, 0, 2 * Math.PI);
         ctx.clip();
-        ctx.drawImage(img, 35 - 12, y + 10 - 12, 24, 24);
+        ctx.drawImage(loadedAvatars[profileIndex], 35 - 12, y + 10 - 12, 24, 24);
         ctx.restore();
+
+        // Redibujar el borde después del clip
+        ctx.beginPath();
+        ctx.arc(35, y + 10, 12, 0, 2 * Math.PI);
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 1;
+        ctx.stroke();
       }
 
       // Nombre del perfil
@@ -219,11 +239,11 @@ const TopOfHeartChartModal = ({ isOpen, onClose, canvas }) => {
   const handleInsertChart = async () => {
     if (!canvas) return;
 
-    const canvasElement = drawTopOfHeartChart();
+    const canvasElement = await drawTopOfHeartChart();
     const dataURL = canvasElement.toDataURL('image/png');
 
     const { Image: FabricImage } = await import('fabric');
-    
+
     const imgElement = new Image();
     imgElement.onload = () => {
       const fabricImg = new FabricImage(imgElement, {
@@ -231,6 +251,7 @@ const TopOfHeartChartModal = ({ isOpen, onClose, canvas }) => {
         top: 100,
         selectable: true,
         hasControls: true,
+        name: 'top-of-heart-chart'
       });
 
       canvas.add(fabricImg);

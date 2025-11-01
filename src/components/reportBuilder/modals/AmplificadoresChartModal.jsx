@@ -112,11 +112,12 @@ const AmplificadoresChartModal = ({ isOpen, onClose, canvas }) => {
     setProfiles(newProfiles);
   };
 
-  const drawAmplificadoresChart = () => {
+  const drawAmplificadoresChart = async () => {
     const canvasElement = document.createElement('canvas');
-    // Aumentamos la resolución para mejor calidad
-    const width = 2000; // Aumentado para más padding derecho
-    const height = 1080;
+    // Mantener el tamaño original del canvas para evitar recortes
+    const scaleFactor = 1.0; // Sin escalar internamente
+    const width = 2000; // Tamaño original
+    const height = 1080; // Tamaño original
     canvasElement.width = width;
     canvasElement.height = height;
     const ctx = canvasElement.getContext('2d');
@@ -125,27 +126,42 @@ const AmplificadoresChartModal = ({ isOpen, onClose, canvas }) => {
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
 
+    // Cargar todas las imágenes de avatares primero
+    const loadedAvatars = await Promise.all(
+      profiles.map(async (profile) => {
+        if (profile.avatar) {
+          return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = () => resolve(null);
+            img.src = profile.avatar;
+          });
+        }
+        return null;
+      })
+    );
+
     // Background
     ctx.fillStyle = '#F5F5F5';
     ctx.fillRect(0, 0, width, height);
 
-    // Title con mejor calidad
+    // Title con mejor calidad (escalado)
     ctx.fillStyle = '#000000';
-    ctx.font = 'bold 32px Arial, sans-serif';
+    ctx.font = `bold ${32 * scaleFactor}px Arial, sans-serif`;
     ctx.textAlign = 'left';
-    ctx.fillText('Amplificadores de la conversación', 40, 60);
+    ctx.fillText('Amplificadores de la conversación', 40 * scaleFactor, 60 * scaleFactor);
 
-    // Column configuration - ajustado para mejor distribución
-    const startY = 100;
-    const avatarCol = 30;
-    const avatarWidth = 180;
-    const colWidth = 570;
+    // Column configuration - escalado proporcionalmente
+    const startY = 100 * scaleFactor;
+    const avatarCol = 30 * scaleFactor;
+    const avatarWidth = 180 * scaleFactor;
+    const colWidth = 570 * scaleFactor;
     const mediosX = avatarCol + avatarWidth;
     const outletsX = mediosX + colWidth;
     const influenciadoresX = outletsX + colWidth;
-    const rowHeight = 195; // Aumentado 40% más para mayor espacio vertical
-    const headerHeight = 60;
-    const avatarRadius = 55; // Radio del círculo del avatar
+    const rowHeight = 195 * scaleFactor;
+    const headerHeight = 60 * scaleFactor;
+    const avatarRadius = 55 * scaleFactor;
 
     // Draw column headers con mejor diseño
     const headers = [
@@ -158,18 +174,18 @@ const AmplificadoresChartModal = ({ isOpen, onClose, canvas }) => {
       ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(header.x, startY, colWidth, headerHeight);
       ctx.strokeStyle = '#00BCD4';
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 3 * scaleFactor;
       ctx.strokeRect(header.x, startY, colWidth, headerHeight);
 
-      ctx.font = 'bold 26px Arial, sans-serif';
+      ctx.font = `bold ${26 * scaleFactor}px Arial, sans-serif`;
       ctx.fillStyle = '#000000';
       ctx.textAlign = 'left';
-      ctx.fillText(header.title, header.x + 20, startY + 38);
+      ctx.fillText(header.title, header.x + 20 * scaleFactor, startY + 38 * scaleFactor);
 
       if (header.subtitle) {
-        ctx.font = '20px Arial, sans-serif';
+        ctx.font = `${20 * scaleFactor}px Arial, sans-serif`;
         ctx.textAlign = 'right';
-        ctx.fillText(header.subtitle, header.x + colWidth - 40, startY + 38);
+        ctx.fillText(header.subtitle, header.x + colWidth - 40 * scaleFactor, startY + 38 * scaleFactor);
       }
     });
 
@@ -196,27 +212,52 @@ const AmplificadoresChartModal = ({ isOpen, onClose, canvas }) => {
       ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(avatarCol, currentY, avatarWidth, sectionHeight);
       ctx.strokeStyle = '#00BCD4';
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 3 * scaleFactor;
       ctx.strokeRect(avatarCol, currentY, avatarWidth, sectionHeight);
 
       // Draw avatar circle con mejor calidad
       const avatarCenterY = currentY + sectionHeight / 2;
+      const avatarCenterX = avatarCol + avatarWidth / 2;
+
       ctx.beginPath();
-      ctx.arc(avatarCol + avatarWidth / 2, avatarCenterY, avatarRadius, 0, 2 * Math.PI);
+      ctx.arc(avatarCenterX, avatarCenterY, avatarRadius, 0, 2 * Math.PI);
       ctx.fillStyle = profile.color;
       ctx.fill();
       ctx.strokeStyle = '#FFFFFF';
-      ctx.lineWidth = 5;
+      ctx.lineWidth = 5 * scaleFactor;
       ctx.stroke();
+
+      // Si hay avatar cargado, dibujarlo
+      if (loadedAvatars[profileIndex]) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(avatarCenterX, avatarCenterY, avatarRadius, 0, 2 * Math.PI);
+        ctx.clip();
+        ctx.drawImage(
+          loadedAvatars[profileIndex],
+          avatarCenterX - avatarRadius,
+          avatarCenterY - avatarRadius,
+          avatarRadius * 2,
+          avatarRadius * 2
+        );
+        ctx.restore();
+
+        // Redibujar el borde después del clip
+        ctx.beginPath();
+        ctx.arc(avatarCenterX, avatarCenterY, avatarRadius, 0, 2 * Math.PI);
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 5 * scaleFactor;
+        ctx.stroke();
+      }
 
       // Draw profile name con mejor tipografía
       const nameLines = profile.name.split('\n');
-      ctx.font = 'bold 18px Arial, sans-serif';
+      ctx.font = `bold ${18 * scaleFactor}px Arial, sans-serif`;
       ctx.fillStyle = '#000000';
       ctx.textAlign = 'center';
-      const nameY = avatarCenterY + avatarRadius + 25;
+      const nameY = avatarCenterY + avatarRadius + 25 * scaleFactor;
       nameLines.forEach((line, i) => {
-        ctx.fillText(line, avatarCol + avatarWidth / 2, nameY + i * 22);
+        ctx.fillText(line, avatarCol + avatarWidth / 2, nameY + i * 22 * scaleFactor);
       });
 
       // Draw Medios column con mejor diseño
@@ -228,29 +269,29 @@ const AmplificadoresChartModal = ({ isOpen, onClose, canvas }) => {
         ctx.fillStyle = '#FFFFFF';
         ctx.fillRect(mediosX, y, colWidth, rowHeight);
         ctx.strokeStyle = '#CCCCCC';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2 * scaleFactor;
         ctx.strokeRect(mediosX, y, colWidth, rowHeight);
 
         if (medio && medio.medio) {
           // Green tag for medio name - mejor diseño
-          ctx.font = 'bold 18px Arial, sans-serif';
+          ctx.font = `bold ${18 * scaleFactor}px Arial, sans-serif`;
           const medioText = medio.medio || '';
-          const tagWidth = Math.max(ctx.measureText(medioText).width + 30, 100);
-          
+          const tagWidth = Math.max(ctx.measureText(medioText).width + 30 * scaleFactor, 100 * scaleFactor);
+
           ctx.fillStyle = '#4CAF50';
-          ctx.fillRect(mediosX + 15, y + 70, tagWidth, 36);
-          
+          ctx.fillRect(mediosX + 15 * scaleFactor, y + 70 * scaleFactor, tagWidth, 36 * scaleFactor);
+
           ctx.fillStyle = '#FFFFFF';
           ctx.textAlign = 'left';
-          ctx.fillText(medioText, mediosX + 30, y + 95);
+          ctx.fillText(medioText, mediosX + 30 * scaleFactor, y + 95 * scaleFactor);
 
           // Title - mejor espaciado y en nueva línea
-          ctx.font = '16px Arial, sans-serif';
+          ctx.font = `${16 * scaleFactor}px Arial, sans-serif`;
           ctx.fillStyle = '#000000';
-          const titleStartX = mediosX + tagWidth + 25;
-          const maxTitleWidth = colWidth - tagWidth - 110;
+          const titleStartX = mediosX + tagWidth + 25 * scaleFactor;
+          const maxTitleWidth = colWidth - tagWidth - 110 * scaleFactor;
           let titulo = medio.titulo || '';
-          
+
           // Truncar título si es muy largo
           while (ctx.measureText(titulo).width > maxTitleWidth && titulo.length > 0) {
             titulo = titulo.slice(0, -1);
@@ -258,13 +299,13 @@ const AmplificadoresChartModal = ({ isOpen, onClose, canvas }) => {
           if (titulo.length < (medio.titulo || '').length) {
             titulo = titulo.trim() + '...';
           }
-          
-          ctx.fillText(titulo, titleStartX, y + 88);
+
+          ctx.fillText(titulo, titleStartX, y + 88 * scaleFactor);
 
           // Impact number - mejor posición y más pequeño
-          ctx.font = 'bold 20px Arial, sans-serif';
+          ctx.font = `bold ${20 * scaleFactor}px Arial, sans-serif`;
           ctx.textAlign = 'right';
-          ctx.fillText((medio.impacto || 0).toString(), mediosX + colWidth - 40, y + 102);
+          ctx.fillText((medio.impacto || 0).toString(), mediosX + colWidth - 40 * scaleFactor, y + 102 * scaleFactor);
           ctx.textAlign = 'left';
         }
       }
@@ -380,18 +421,18 @@ const AmplificadoresChartModal = ({ isOpen, onClose, canvas }) => {
   const handleInsertChart = async () => {
     if (!canvas) return;
 
-    const canvasElement = drawAmplificadoresChart();
+    const canvasElement = await drawAmplificadoresChart();
     const dataURL = canvasElement.toDataURL('image/png', 1.0);
 
     const { Image: FabricImage } = await import('fabric');
-    
+
     const imgElement = new Image();
     imgElement.onload = () => {
       const fabricImg = new FabricImage(imgElement, {
-        left: 0,
-        top: 0,
-        scaleX: 0.5, // Escalar a 50% para que se ajuste (1920 -> 960)
-        scaleY: 0.5, // Escalar a 50% para que se ajuste (1080 -> 540)
+        left: 50,
+        top: 50,
+        scaleX: 0.42, // 0.6 * 0.7 = 0.42 para mantener el tamaño deseado
+        scaleY: 0.42,
         selectable: true,
         hasControls: true,
         name: 'amplificadores-chart'
@@ -447,6 +488,19 @@ const AmplificadoresChartModal = ({ isOpen, onClose, canvas }) => {
                 value={profile.color}
                 onChange={(e) => handleProfileChange(profileIndex, 'color', e.target.value)}
                 className="color-input"
+              />
+            </div>
+
+            {/* Avatar Upload */}
+            <div className="chart-form-field">
+              <label className="chart-form-label">
+                Avatar
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleAvatarUpload(profileIndex, e)}
+                className="chart-form-input"
               />
             </div>
 

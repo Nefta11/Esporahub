@@ -1681,10 +1681,10 @@ export const autoInsertTopOfMindChart = async (canvas) => {
     { text: 'Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio.', value: 0, sentiment: 'negative' },
   ];
 
-  // Mejorar calidad con escala 2x
+  // Mejorar calidad con escala 2.2x (elementos 10% más grandes)
   const baseWidth = 480;
   const baseHeight = 270;
-  const scale = 2;
+  const scale = 2.2;
   const width = baseWidth * scale;
   const height = baseHeight * scale;
   const canvasElement = document.createElement('canvas');
@@ -1826,13 +1826,13 @@ export const autoInsertTopOfMindChart = async (canvas) => {
   const { Image: FabricImage } = await import('fabric');
 
   const fabricImg = new FabricImage(canvasElement, {
-    left: 0,
-    top: 0,
+    left: 50,
+    top: 50,
     selectable: true,
     hasControls: true,
     name: 'top-of-mind-chart',
-    scaleX: 1 / scale, // Escalar de vuelta al tamaño original
-    scaleY: 1 / scale  // Mantiene alta resolución en tamaño correcto
+    scaleX: 0.9 / scale, // 10% más grande que el tamaño base (0.9 en lugar de 1)
+    scaleY: 0.9 / scale  // Mantiene alta resolución en tamaño correcto
   });
 
   canvas.add(fabricImg);
@@ -2307,8 +2307,8 @@ export const autoInsertTopOfVoiceChart = async (canvas) => {
 export const autoInsertAmplificadoresChart = async (canvas) => {
   if (!canvas) return;
 
-  // Alta resolución para mejor calidad
-  const width = 2000; // Aumentado para más padding derecho
+  // Mantener tamaño original para evitar recortes (igual que el modal)
+  const width = 2000;
   const height = 1080;
   const canvasElement = document.createElement('canvas');
   canvasElement.width = width;
@@ -2608,10 +2608,10 @@ export const autoInsertAmplificadoresChart = async (canvas) => {
   const img = new Image();
   img.onload = () => {
     const fabricImg = new FabricImage(img, {
-      left: 0,
-      top: 0,
-      scaleX: 0.5,
-      scaleY: 0.5,
+      left: 50,
+      top: 50,
+      scaleX: 0.42, // Misma escala que el modal
+      scaleY: 0.42,
       selectable: true,
       hasControls: true,
       name: 'amplificadores-chart'

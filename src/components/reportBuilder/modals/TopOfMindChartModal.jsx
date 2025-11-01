@@ -61,10 +61,10 @@ const TopOfMindChartModal = ({ isOpen, onClose, canvas }) => {
   const drawTopOfMindChart = async () => {
     if (!canvas) return;
 
-    // Aumentar resolución para mejor calidad (escala 2x)
+    // Aumentar resolución para mejor calidad (escala 2.2x para elementos 10% más grandes)
     const baseWidth = 480;
     const baseHeight = 270;
-    const scale = 2; // Factor de escala para mejor calidad
+    const scale = 2.2; // Factor de escala para mejor calidad y elementos más grandes
     const width = baseWidth * scale;
     const height = baseHeight * scale;
     
@@ -245,14 +245,15 @@ const TopOfMindChartModal = ({ isOpen, onClose, canvas }) => {
     });
 
     // Importar fabric.Image y agregar al canvas
-    // Escalar de vuelta al tamaño original para el canvas de Fabric
+    // Escalar de vuelta al tamaño original para el canvas de Fabric, pero 10% más grande
     const fabricImg = new FabricImage(canvasElement, {
-      left: 0,
-      top: 0,
+      left: 50,
+      top: 50,
       selectable: true,
       hasControls: true,
-      scaleX: 1 / scale, // Escalar de vuelta al tamaño original
-      scaleY: 1 / scale, // Esto mantiene la alta resolución pero en el tamaño correcto
+      scaleX: 0.9 / scale, // 10% más grande que el tamaño base (0.9 en lugar de 1)
+      scaleY: 0.9 / scale, // Esto mantiene la alta resolución pero en el tamaño correcto
+      name: 'top-of-mind-chart'
     });
 
     canvas.add(fabricImg);
