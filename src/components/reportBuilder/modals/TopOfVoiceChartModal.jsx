@@ -48,7 +48,7 @@ const TopOfVoiceChartModal = ({ isOpen, onClose, canvas }) => {
     }
   };
 
-  const drawTopOfVoiceChart = () => {
+  const drawTopOfVoiceChart = async () => {
     const canvasElement = document.createElement('canvas');
     const width = 480;
     const height = 270;

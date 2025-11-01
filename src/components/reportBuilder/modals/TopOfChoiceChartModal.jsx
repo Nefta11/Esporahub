@@ -140,8 +140,9 @@ const TopOfChoiceChartModal = ({ isOpen, onClose, canvas }) => {
       ctx.fillStyle = '#C62828';
       ctx.fillRect(centerX - noVotariaWidth, y, noVotariaWidth, barHeight);
 
-      // Porcentaje "No votaría"
-      if (profile.noVotaria > 0) {
+      // Porcentaje "No votaría" - solo mostrar si hay suficiente espacio (evitar superposición con avatar)
+      const minBarWidthForText = 80 * scale; // Ancho mínimo para mostrar texto sin superposición
+      if (profile.noVotaria > 0 && noVotariaWidth > minBarWidthForText) {
         ctx.font = `bold ${30 * scale}px Arial`;
         ctx.fillStyle = '#FFFFFF';
         ctx.textAlign = 'center';
@@ -153,8 +154,8 @@ const TopOfChoiceChartModal = ({ isOpen, onClose, canvas }) => {
       ctx.fillStyle = '#2E7D32';
       ctx.fillRect(centerX, y, siVotariaWidth, barHeight);
 
-      // Porcentaje "Sí votaría"
-      if (profile.siVotaria > 0) {
+      // Porcentaje "Sí votaría" - solo mostrar si hay suficiente espacio (evitar superposición con avatar)
+      if (profile.siVotaria > 0 && siVotariaWidth > minBarWidthForText) {
         ctx.font = `bold ${30 * scale}px Arial`;
         ctx.fillStyle = '#FFFFFF';
         ctx.textAlign = 'center';
