@@ -6,7 +6,7 @@ const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
   const [caracteristicasIzquierda, setCaracteristicasIzquierda] = useState([
     { titulo: 'Característica 1', subitems: ['Sub-item 1', 'Sub-item 2'] }
   ]);
-  
+
   const [caracteristicasDerecha, setCaracteristicasDerecha] = useState([
     { titulo: 'Característica 1', subitems: ['Sub-item 1', 'Sub-item 2'] }
   ]);
@@ -95,17 +95,13 @@ const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, width, height);
 
-    // Configuración optimizada para evitar encimamiento
     const centerX = width / 2;
     const centerY = height / 2;
-    const sideWidth = 520;  // Aún más reducido para máxima separación
-    const sideHeight = 980; // Aumentado para dar más espacio vertical
-    const cornerRadius = 20;
-    const vsCircleRadius = 100;
-    const gap = 300;  // MUCHO más espacio entre el borde del rectángulo y el círculo VS
+    const vsCircleRadius = 65;
+    const cornerRadius = 8;
 
     // Función para dibujar rectángulo con bordes redondeados
-    const drawRoundedRect = (x, y, w, h, r, fillColor, strokeColor) => {
+    const drawRoundedRect = (x, y, w, h, r, fillColor, strokeColor, lineWidth = 3) => {
       ctx.beginPath();
       ctx.moveTo(x + r, y);
       ctx.lineTo(x + w - r, y);
@@ -121,190 +117,281 @@ const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
       ctx.fillStyle = fillColor;
       ctx.fill();
       ctx.strokeStyle = strokeColor;
-      ctx.lineWidth = 4;
+      ctx.lineWidth = lineWidth;
       ctx.stroke();
     };
 
-    // Calcular posiciones de los rectángulos
-    const leftX = centerX - gap - sideWidth - 80; // Movido 80px más hacia la izquierda
-    const rightX = centerX + gap;
-    const rectY = centerY - sideHeight / 2;
+    // Función para dibujar flecha curva
+    const drawCurvedArrow = (fromX, fromY, toX, toY, color, curvature = 0.3) => {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 4;
+      ctx.setLineDash([]);
 
-    // PASO 1: Dibujar flechas conectoras PRIMERO (debajo de todo)
-    const arrowStartY = rectY + 110; // Posición Y donde inician las flechas (fuera del header)
+      // Calcular punto de control para la curva
+      const midX = (fromX + toX) / 2;
+      const midY = (fromY + toY) / 2;
+      const dx = toX - fromX;
+      const dy = toY - fromY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
 
-    // Flechas desde lado izquierdo hacia VS
-    ctx.strokeStyle = '#CC0000';
-    ctx.lineWidth = 5;
-    ctx.setLineDash([]);
-    ctx.globalAlpha = 0.5; // Semi-transparente para que no distraiga
+      // Perpendicular para la curva
+      const cpX = midX + (-dy / dist) * dist * curvature;
+      const cpY = midY + (dx / dist) * dist * curvature;
 
-    ctx.beginPath();
-    ctx.moveTo(leftX + sideWidth, arrowStartY);
-    ctx.lineTo(centerX - vsCircleRadius - 15, centerY - 35);
-    ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(fromX, fromY);
+      ctx.quadraticCurveTo(cpX, cpY, toX, toY);
+      ctx.stroke();
 
-    ctx.beginPath();
-    ctx.moveTo(leftX + sideWidth, arrowStartY);
-    ctx.lineTo(centerX - vsCircleRadius - 15, centerY + 35);
-    ctx.stroke();
+      // Dibujar punta de flecha
+      const angle = Math.atan2(toY - cpY, toX - cpX);
+      const arrowLength = 15;
+      const arrowWidth = 10;
 
-    // Flechas desde lado derecho hacia VS
-    ctx.strokeStyle = '#0066CC';
-    ctx.beginPath();
-    ctx.moveTo(rightX, arrowStartY);
-    ctx.lineTo(centerX + vsCircleRadius + 15, centerY - 35);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(rightX, arrowStartY);
-    ctx.lineTo(centerX + vsCircleRadius + 15, centerY + 35);
-    ctx.stroke();
-
-    ctx.globalAlpha = 1.0; // Restaurar opacidad
-
-    // PASO 2: Dibujar rectángulos de fondo
-    drawRoundedRect(leftX, rectY, sideWidth, sideHeight, cornerRadius, '#FFFFFF', '#CC0000');
-    drawRoundedRect(rightX, rectY, sideWidth, sideHeight, cornerRadius, '#FFFFFF', '#0066CC');
-
-    // PASO 3: Dibujar headers con fondo de color
-    const headerHeight = 100;
-
-    // Header izquierdo (Rojo) con esquinas redondeadas superiores
-    ctx.fillStyle = '#CC0000';
-    ctx.beginPath();
-    ctx.moveTo(leftX + cornerRadius, rectY);
-    ctx.lineTo(leftX + sideWidth - cornerRadius, rectY);
-    ctx.arcTo(leftX + sideWidth, rectY, leftX + sideWidth, rectY + cornerRadius, cornerRadius);
-    ctx.lineTo(leftX + sideWidth, rectY + headerHeight);
-    ctx.lineTo(leftX, rectY + headerHeight);
-    ctx.lineTo(leftX, rectY + cornerRadius);
-    ctx.arcTo(leftX, rectY, leftX + cornerRadius, rectY, cornerRadius);
-    ctx.closePath();
-    ctx.fill();
-
-    // Header derecho (Azul) con esquinas redondeadas superiores
-    ctx.fillStyle = '#0066CC';
-    ctx.beginPath();
-    ctx.moveTo(rightX + cornerRadius, rectY);
-    ctx.lineTo(rightX + sideWidth - cornerRadius, rectY);
-    ctx.arcTo(rightX + sideWidth, rectY, rightX + sideWidth, rectY + cornerRadius, cornerRadius);
-    ctx.lineTo(rightX + sideWidth, rectY + headerHeight);
-    ctx.lineTo(rightX, rectY + headerHeight);
-    ctx.lineTo(rightX, rectY + cornerRadius);
-    ctx.arcTo(rightX, rectY, rightX + cornerRadius, rectY, cornerRadius);
-    ctx.closePath();
-    ctx.fill();
-
-    // PASO 4: Textos de los headers
-    ctx.fillStyle = '#FFFFFF';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-
-    // Título izquierdo
-    ctx.font = 'bold 34px Arial';
-    ctx.fillText('Lorem Ipsum & Dolor Sit', leftX + sideWidth / 2, rectY + 38);
-    ctx.font = '23px Arial';
-    ctx.fillText('(Amet Consectetur)', leftX + sideWidth / 2, rectY + 70);
-
-    // Título derecho
-    ctx.font = 'bold 34px Arial';
-    ctx.fillText('Consequat &', rightX + sideWidth / 2, rectY + 38);
-    ctx.font = '23px Arial';
-    ctx.fillText('Duis Aute', rightX + sideWidth / 2, rectY + 70);
-
-    // PASO 5: Función para dibujar características sin encimamiento
-    const drawCaracteristicas = (x, y, caracteristicas, color) => {
-      let currentY = y + headerHeight + 45; // AÚN MÁS espacio después del header
-      const itemHeight = 58;  // Más alto para mejor legibilidad y separación
-      const subitemHeight = 50; // Más alto para mejor legibilidad y separación
-      const margin = 50;  // MÁS margen a los lados
-      const itemWidth = sideWidth - (margin * 2);
-      const padding = 20;
-      const spaceBetweenItems = 15; // MÁS espacio entre items de lista
-      const spaceBetweenGroups = 35; // MÁS espacio entre grupos de características
-      const maxContentHeight = sideHeight - headerHeight - 70;
-
-      ctx.textAlign = 'left';
-      ctx.textBaseline = 'middle';
-
-      caracteristicas.forEach((caract, index) => {
-        // Verificar si hay espacio suficiente
-        if (currentY - (y + headerHeight) > maxContentHeight) return;
-
-        // Caja de característica principal con sombra sutil
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.08)';
-        ctx.shadowBlur = 4;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 2;
-
-        ctx.fillStyle = '#F5F5F5';
-        ctx.fillRect(x + margin, currentY, itemWidth, itemHeight);
-
-        ctx.shadowColor = 'transparent';
-        ctx.shadowBlur = 0;
-
-        ctx.strokeStyle = '#D0D0D0';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(x + margin, currentY, itemWidth, itemHeight);
-
-        // Texto de característica principal
-        ctx.font = 'bold 24px Arial';
-        ctx.fillStyle = '#1a1a1a';
-        ctx.fillText(caract.titulo, x + margin + padding, currentY + itemHeight / 2);
-        currentY += itemHeight + spaceBetweenItems; // Usar espaciado definido
-
-        // Subitems
-        caract.subitems.forEach((subitem, subIndex) => {
-          if (currentY - (y + headerHeight) > maxContentHeight) return;
-
-          ctx.fillStyle = '#FFFFFF';
-          ctx.fillRect(x + margin, currentY, itemWidth, subitemHeight);
-          ctx.strokeStyle = '#E8E8E8';
-          ctx.lineWidth = 1.5;
-          ctx.strokeRect(x + margin, currentY, itemWidth, subitemHeight);
-
-          // Bullet point
-          ctx.fillStyle = color;
-          ctx.beginPath();
-          ctx.arc(x + margin + padding + 6, currentY + subitemHeight / 2, 4, 0, Math.PI * 2);
-          ctx.fill();
-
-          ctx.font = '21px Arial';
-          ctx.fillStyle = '#4a4a4a';
-          ctx.fillText(subitem, x + margin + padding + 20, currentY + subitemHeight / 2);
-          currentY += subitemHeight + spaceBetweenItems; // Usar espaciado consistente
-        });
-
-        // Espacio extra entre grupos de características (solo si no es el último)
-        if (index < caracteristicas.length - 1) {
-          currentY += spaceBetweenGroups;
-        }
-      });
+      ctx.beginPath();
+      ctx.moveTo(toX, toY);
+      ctx.lineTo(
+        toX - arrowLength * Math.cos(angle) - arrowWidth * Math.sin(angle),
+        toY - arrowLength * Math.sin(angle) + arrowWidth * Math.cos(angle)
+      );
+      ctx.lineTo(
+        toX - arrowLength * Math.cos(angle) + arrowWidth * Math.sin(angle),
+        toY - arrowLength * Math.sin(angle) - arrowWidth * Math.cos(angle)
+      );
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
     };
 
-    // PASO 6: Dibujar características
-    drawCaracteristicas(leftX, rectY, caracteristicasIzquierda, '#CC0000');
-    drawCaracteristicas(rightX, rectY, caracteristicasDerecha, '#0066CC');
+    // Función para dibujar caja con título y subitems
+    const drawBox = (x, y, titulo, subtitulo, subitems, color, maxWidth = 280) => {
+      const padding = 15;
+      const lineHeight = 24;
+      const titleHeight = subtitulo ? 65 : 50;
+      const subitemHeight = subitems.length * lineHeight + 20;
+      const totalHeight = titleHeight + subitemHeight;
 
-    // PASO 7: Círculo central "VS" con sombra (encima de todo)
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.25)';
-    ctx.shadowBlur = 15;
+      // Dibujar caja completa con fondo blanco y borde de color
+      drawRoundedRect(x, y, maxWidth, totalHeight, cornerRadius, '#FFFFFF', color, 4);
+
+      // Sección del título (con color de fondo)
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(x + cornerRadius, y);
+      ctx.lineTo(x + maxWidth - cornerRadius, y);
+      ctx.arcTo(x + maxWidth, y, x + maxWidth, y + cornerRadius, cornerRadius);
+      ctx.lineTo(x + maxWidth, y + titleHeight);
+      ctx.lineTo(x, y + titleHeight);
+      ctx.lineTo(x, y + cornerRadius);
+      ctx.arcTo(x, y, x + cornerRadius, y, cornerRadius);
+      ctx.closePath();
+      ctx.fill();
+
+      // Texto del título (blanco sobre fondo de color)
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 19px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      if (subtitulo) {
+        ctx.fillText(titulo, x + maxWidth / 2, y + 20);
+        ctx.font = '15px Arial';
+        ctx.fillText(subtitulo, x + maxWidth / 2, y + 42);
+      } else {
+        ctx.fillText(titulo, x + maxWidth / 2, y + titleHeight / 2);
+      }
+
+      // Subitems (texto del color del borde sobre fondo blanco)
+      ctx.fillStyle = color;
+      ctx.font = '15px Arial';
+      ctx.textAlign = 'left';
+
+      subitems.forEach((subitem, index) => {
+        const subY = y + titleHeight + 10 + (index * lineHeight);
+
+        // Bullet point del color del borde
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(x + padding, subY + lineHeight / 2, 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Texto del subitem del color del borde
+        ctx.fillStyle = color;
+        ctx.fillText(subitem, x + padding + 10, subY + lineHeight / 2);
+      });
+
+      return { x, y, width: maxWidth, height: totalHeight };
+    };
+
+    // LADO IZQUIERDO (ROJO) - Gobierno Populismo & Estable
+    const leftColor = '#8B1A1A';
+    const leftMainBox = drawBox(
+      150,
+      centerY - 60,
+      'Gobierno',
+      'Populismo & Estable',
+      ['(Bolivariano)'],
+      leftColor,
+      350
+    );
+
+    // Cajas adicionales izquierda - superior
+    const leftBoxes = [];
+
+    // Figuras "títeres"
+    leftBoxes.push(drawBox(
+      80,
+      80,
+      'Figuras "títeres"',
+      null,
+      ['Luisa González', 'Lenin Moreno', 'Andrés Arauz', 'Revolución Ciudadana'],
+      leftColor,
+      220
+    ));
+
+    // Corrupción
+    leftBoxes.push(drawBox(
+      320,
+      50,
+      'Corrupción',
+      null,
+      ['Yachay', 'Singue', 'Odebrecht', 'Sobornos (2012-2016)', 'Petroecuador', 'Arroz verde'],
+      leftColor,
+      200
+    ));
+
+    // Autoritario
+    leftBoxes.push(drawBox(
+      80,
+      centerY + 180,
+      'Autoritario',
+      null,
+      ['Políticas extractivistas', 'Restricciones a EE.UU.', 'Ley de Aguas', 'Represión indígena', 'en Dayumá'],
+      leftColor,
+      250
+    ));
+
+    // LADO DERECHO (AZUL) - Gobierno Realista & Inestable
+    const rightColor = '#1E5A96';
+    const rightMainBox = drawBox(
+      width - 500,
+      centerY - 60,
+      'Gobierno',
+      'Realista & Inestable',
+      [],
+      rightColor,
+      350
+    );
+
+    // Cajas adicionales derecha
+    const rightBoxes = [];
+
+    // Inestabilidad económica
+    rightBoxes.push(drawBox(
+      width - 320,
+      60,
+      'Inestabilidad',
+      'económica',
+      ['Aranceles', 'Recesión', 'Reducción del PIB'],
+      rightColor,
+      240
+    ));
+
+    // Inestabilidad de seguridad
+    rightBoxes.push(drawBox(
+      width - 480,
+      centerY - 270,
+      'Inestabilidad',
+      'de seguridad',
+      ['Lucha de cárteles', 'Grupo armado en TV', 'Militares desaparecen', 'a niños'],
+      rightColor,
+      280
+    ));
+
+    // Inestabilidad energética
+    rightBoxes.push(drawBox(
+      width - 420,
+      centerY + 180,
+      'Inestabilidad',
+      'energética',
+      ['Apagones eléctricos', 'Sequías', 'Dependencia hidroeléctrica'],
+      rightColor,
+      270
+    ));
+
+    // Inestabilidad internacional
+    rightBoxes.push(drawBox(
+      width - 780,
+      centerY + 250,
+      'Inestabilidad',
+      'internacional',
+      ['Vicepresidenta exiliada', 'Repatriación de migrantes', 'Invasión embajada de México', 'Subordinación a EE.UU.'],
+      rightColor,
+      300
+    ));
+
+    // DIBUJAR FLECHAS desde cajas principales hacia VS
+    const vsLeft = centerX - vsCircleRadius - 15;
+    const vsRight = centerX + vsCircleRadius + 15;
+    const vsTop = centerY - vsCircleRadius / 2;
+    const vsBottom = centerY + vsCircleRadius / 2;
+
+    // Flecha desde caja principal izquierda
+    drawCurvedArrow(
+      leftMainBox.x + leftMainBox.width,
+      leftMainBox.y + leftMainBox.height / 2,
+      vsLeft,
+      centerY,
+      leftColor,
+      0.2
+    );
+
+    // Flechas desde cajas adicionales izquierda
+    leftBoxes.forEach(box => {
+      const fromX = box.x + box.width;
+      const fromY = box.y + box.height / 2;
+      const toY = fromY < centerY ? vsTop : (fromY > centerY ? vsBottom : centerY);
+      drawCurvedArrow(fromX, fromY, vsLeft, toY, leftColor, 0.15);
+    });
+
+    // Flecha desde caja principal derecha
+    drawCurvedArrow(
+      rightMainBox.x,
+      rightMainBox.y + rightMainBox.height / 2,
+      vsRight,
+      centerY,
+      rightColor,
+      -0.2
+    );
+
+    // Flechas desde cajas adicionales derecha
+    rightBoxes.forEach(box => {
+      const fromX = box.x;
+      const fromY = box.y + box.height / 2;
+      const toY = fromY < centerY ? vsTop : (fromY > centerY ? vsBottom : centerY);
+      drawCurvedArrow(fromX, fromY, vsRight, toY, rightColor, -0.15);
+    });
+
+    // Círculo central "VS"
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+    ctx.shadowBlur = 12;
     ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 5;
+    ctx.shadowOffsetY = 4;
 
     ctx.beginPath();
     ctx.arc(centerX, centerY, vsCircleRadius, 0, Math.PI * 2);
     ctx.fillStyle = '#000000';
     ctx.fill();
 
-    // Borde blanco alrededor del círculo VS
     ctx.shadowColor = 'transparent';
+
+    // Borde blanco del círculo
     ctx.strokeStyle = '#FFFFFF';
-    ctx.lineWidth = 5;
+    ctx.lineWidth = 4;
     ctx.stroke();
 
-    ctx.font = 'bold 60px Arial';
+    // Texto "VS"
+    ctx.font = 'bold 48px Arial';
     ctx.fillStyle = '#FFFFFF';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -318,7 +405,7 @@ const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
 
     // Buscar gráfica existente de dilemas rentables para conservar su posición y escala
     const existingChart = canvas.getObjects().find(obj => obj.name === 'dilemas-rentables-chart');
-    
+
     // Guardar propiedades de la gráfica existente
     const existingProps = existingChart ? {
       left: existingChart.left,
@@ -329,7 +416,7 @@ const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
     } : {
       left: 50,
       top: 30,
-      scaleX: 0.38,  // Escala optimizada para visualización
+      scaleX: 0.38,
       scaleY: 0.38,
       angle: 0
     };
@@ -343,7 +430,7 @@ const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
     const dataURL = canvasElement.toDataURL('image/png', 1.0);
 
     const { Image: FabricImage } = await import('fabric');
-    
+
     const imgElement = new Image();
     imgElement.onload = () => {
       const fabricImg = new FabricImage(imgElement, {
@@ -379,8 +466,8 @@ const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
         <div className="dilemas-columns">
           {/* Columna Izquierda - Lorem Ipsum */}
           <div className="dilemas-column dilemas-left">
-            <h3 className="dilemas-column-title">Lorem Ipsum & Dolor Sit (Lado Izquierdo)</h3>
-            
+            <h3 className="dilemas-column-title">Gobierno Populismo & Estable (Lado Izquierdo)</h3>
+
             {caracteristicasIzquierda.map((caract, cIndex) => (
               <div key={cIndex} className="dilemas-card">
                 <div className="dilemas-card-header">
@@ -441,8 +528,8 @@ const DilemasRentablesModal = ({ isOpen, onClose, canvas }) => {
 
           {/* Columna Derecha - Consequat */}
           <div className="dilemas-column dilemas-right">
-            <h3 className="dilemas-column-title">Consequat & Duis Aute (Lado Derecho)</h3>
-            
+            <h3 className="dilemas-column-title">Gobierno Realista & Inestable (Lado Derecho)</h3>
+
             {caracteristicasDerecha.map((caract, cIndex) => (
               <div key={cIndex} className="dilemas-card">
                 <div className="dilemas-card-header">
