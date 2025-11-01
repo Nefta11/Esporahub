@@ -132,6 +132,21 @@ const TopOfVoiceChartModal = ({ isOpen, onClose, canvas }) => {
       ctx.fill();
     }
 
+    // Cargar todas las imágenes de avatares primero
+    const avatarImages = await Promise.all(
+      profiles.map(profile => {
+        if (profile.avatar) {
+          return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = () => resolve(null);
+            img.src = profile.avatar;
+          });
+        }
+        return Promise.resolve(null);
+      })
+    );
+
     // Leyenda lateral derecha con círculos de progreso
     const legendX = 320;
     const legendStartY = 50;
@@ -171,24 +186,30 @@ const TopOfVoiceChartModal = ({ isOpen, onClose, canvas }) => {
       const avatarX = progressCenterX + 35;
       const avatarRadius = 12;
 
-      ctx.beginPath();
-      ctx.arc(avatarX, progressCenterY, avatarRadius, 0, 2 * Math.PI);
-      ctx.fillStyle = profile.color;
-      ctx.fill();
-      ctx.strokeStyle = '#000000';
-      ctx.lineWidth = 1;
-      ctx.stroke();
-
       // Si hay avatar cargado, dibujarlo
-      if (profile.avatar) {
-        const img = new Image();
-        img.src = profile.avatar;
+      if (avatarImages[index]) {
         ctx.save();
         ctx.beginPath();
         ctx.arc(avatarX, progressCenterY, avatarRadius, 0, 2 * Math.PI);
         ctx.clip();
-        ctx.drawImage(img, avatarX - avatarRadius, progressCenterY - avatarRadius, avatarRadius * 2, avatarRadius * 2);
+        ctx.drawImage(avatarImages[index], avatarX - avatarRadius, progressCenterY - avatarRadius, avatarRadius * 2, avatarRadius * 2);
         ctx.restore();
+
+        // Borde negro del avatar
+        ctx.beginPath();
+        ctx.arc(avatarX, progressCenterY, avatarRadius, 0, 2 * Math.PI);
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      } else {
+        // Placeholder si no hay avatar
+        ctx.beginPath();
+        ctx.arc(avatarX, progressCenterY, avatarRadius, 0, 2 * Math.PI);
+        ctx.fillStyle = profile.color;
+        ctx.fill();
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 1;
+        ctx.stroke();
       }
 
       // Nombre del perfil
@@ -213,10 +234,10 @@ const TopOfVoiceChartModal = ({ isOpen, onClose, canvas }) => {
     return canvasElement;
   };
 
-  const handleInsertChart = () => {
+  const handleInsertChart = async () => {
     if (!canvas) return;
 
-    const canvasElement = drawTopOfVoiceChart();
+    const canvasElement = await drawTopOfVoiceChart();
 
     const fabricImg = new FabricImage(canvasElement, {
       left: 100,
