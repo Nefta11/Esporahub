@@ -20,7 +20,9 @@
       "Bash(for file in src/components/reportBuilder/modals/DemographicsTableModal.jsx src/components/reportBuilder/modals/SocialMediaUsageModal.jsx src/components/reportBuilder/modals/BenchmarkDifusionOficialModal.jsx)",
       "Bash(do echo \"=== $file ===\")",
       "Bash(awk:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(findstr:*)",
+      "Bash(del \"C:\\Users\\nefta\\Downloads\\Esporahub\\src\\components\\reportBuilder\\modals\\DilemasRentablesModal_backup.jsx\")"
     ],
     "deny": [],
     "ask": []
