@@ -183,34 +183,34 @@
 .properties-panel {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding-bottom: 20px;
+  gap: 14px;
+  padding-bottom: 14px;
 }
 
 .properties-placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
+  padding: 28px 14px;
   text-align: center;
   opacity: 0.6;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .property-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 7px;
 }
 
 .property-label {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   opacity: 0.8;
 }
 
 .property-sublabel {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
   opacity: 0.7;
   margin-bottom: 4px;
@@ -220,10 +220,10 @@
 .property-select,
 .property-textarea {
   width: 100%;
-  padding: 10px 12px;
-  border-radius: 8px;
+  padding: 7px 10px;
+  border-radius: 7px;
   border: 1px solid;
-  font-size: 14px;
+  font-size: 13px;
   font-family: var(--font-primary);
   transition: all 0.2s ease;
 }
@@ -273,14 +273,14 @@
 .property-color-row,
 .property-row {
   display: flex;
-  gap: 8px;
+  gap: 7px;
 }
 
 .property-input-color {
-  width: 60px;
-  height: 44px;
+  width: 54px;
+  height: 38px;
   padding: 4px;
-  border-radius: 8px;
+  border-radius: 7px;
   border: 1px solid;
   cursor: pointer;
 }
@@ -298,12 +298,12 @@
 .property-slider-row {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .property-slider {
   flex: 1;
-  height: 6px;
+  height: 5px;
   border-radius: 3px;
   outline: none;
   -webkit-appearance: none;
@@ -321,8 +321,8 @@
 .property-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 18px;
-  height: 18px;
+  width: 17px;
+  height: 17px;
   background: linear-gradient(135deg, #0066cc 0%, #0A84FF 100%);
   border-radius: 50%;
   cursor: pointer;
@@ -330,8 +330,8 @@
 }
 
 .property-slider::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
+  width: 17px;
+  height: 17px;
   background: linear-gradient(135deg, #0066cc 0%, #0A84FF 100%);
   border: none;
   border-radius: 50%;
@@ -343,16 +343,16 @@
   font-size: 12px;
   font-weight: 600;
   opacity: 0.7;
-  min-width: 40px;
+  min-width: 36px;
   text-align: right;
 }
 
 .property-actions {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  margin-top: 12px;
-  padding-top: 12px;
+  gap: 7px;
+  margin-top: 10px;
+  padding-top: 10px;
   border-top: 1px solid;
 }
 
@@ -368,9 +368,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 10px 12px;
-  border-radius: 8px;
+  gap: 5px;
+  padding: 7px 10px;
+  border-radius: 7px;
   border: 1px solid;
   cursor: pointer;
   transition: all 0.2s ease;
