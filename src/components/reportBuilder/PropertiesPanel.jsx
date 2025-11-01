@@ -119,31 +119,6 @@ const PropertiesPanel = ({
           </div>
         </div>
 
-        {/* Posición */}
-        <div className="property-group">
-          <label className="property-label">Posición</label>
-          <div className="property-row">
-            <div className="property-input-group">
-              <label className="property-sublabel">X</label>
-              <input
-                type="number"
-                className="property-input"
-                value={properties.left}
-                onChange={(e) => handleChange('left', parseFloat(e.target.value))}
-              />
-            </div>
-            <div className="property-input-group">
-              <label className="property-sublabel">Y</label>
-              <input
-                type="number"
-                className="property-input"
-                value={properties.top}
-                onChange={(e) => handleChange('top', parseFloat(e.target.value))}
-              />
-            </div>
-          </div>
-        </div>
-
         {/* Tamaño */}
         <div className="property-group">
           <label className="property-label">Tamaño</label>

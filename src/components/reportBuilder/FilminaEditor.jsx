@@ -584,10 +584,41 @@ const FilminaEditor = () => {
           canvas={canvas}
         />
 
-        {/* Canvas central */}
+        {/* Canvas area */}
         <main className="editor-canvas-area">
-          <div className="canvas-wrapper">
-            <canvas ref={canvasRef} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
+            <div className="canvas-wrapper">
+              <canvas ref={canvasRef} />
+            </div>
+            <button
+              className="add-page-button"
+              onClick={() => {
+                // Aquí se puede agregar la lógica para crear una nueva página
+                alert('Funcionalidad de crear nueva página - Por implementar');
+              }}
+              style={{
+                padding: '10px 24px',
+                borderRadius: '8px',
+                border: 'none',
+                background: 'linear-gradient(135deg, #0066cc 0%, #0A84FF 100%)',
+                color: 'white',
+                fontSize: '14px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                boxShadow: '0 2px 8px rgba(0, 122, 255, 0.25)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 122, 255, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 122, 255, 0.25)';
+              }}
+            >
+              + Crear Nueva Página
+            </button>
           </div>
         </main>
 
